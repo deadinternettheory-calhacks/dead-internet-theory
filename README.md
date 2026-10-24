@@ -5,8 +5,7 @@ defined. No runtime, dependencies, deployment, or application code is configured
 
 ## Repository guide
 
-- [SPEC.md](SPEC.md): entrypoint to the canonical project specification.
-- [PROJECT_SPEC.md](PROJECT_SPEC.md): scope, requirements, architecture,
+- [SPEC.md](SPEC.md): canonical specification for scope, requirements, architecture,
   interfaces, validation, open decisions, and architecture decision log.
 - [CONTRIBUTING.md](CONTRIBUTING.md): development workflow, Conventional Commits,
   branches, pull requests, and specification changes.
@@ -22,7 +21,7 @@ selected and implemented. The scaffold does not require installing dependencies.
 ## Specification changes
 
 For work that contradicts an established requirement in
-[PROJECT_SPEC.md](PROJECT_SPEC.md), follow the approval and timestamped-delta
+[SPEC.md](SPEC.md), follow the approval and timestamped-delta
 workflow in [CONTRIBUTING.md](CONTRIBUTING.md). Update the specification, delta,
 and architecture decision log together after approval. TBDs and placeholders are
 unfinished documentation, not established requirements.

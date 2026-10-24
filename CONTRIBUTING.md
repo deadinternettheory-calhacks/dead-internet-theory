@@ -16,7 +16,7 @@ unless the repository explicitly tracks them.
 
 ## Changes to the specification
 
-If proposed work contradicts [PROJECT_SPEC.md](PROJECT_SPEC.md), pause the
+If proposed work contradicts [SPEC.md](SPEC.md), pause the
 conflicting work and first propose a specification change and a timestamped
 Markdown delta in `deltas/` (for example,
 `deltas/YYYY-MM-DDTHH-MM-SSZ-short-description.md`). Describe the affected

@@ -2,8 +2,7 @@
 
 Date: <UTC date and time>
 Status: <record explicit user approval and its context>
-Canonical specification: [PROJECT_SPEC.md](../PROJECT_SPEC.md)
-Entrypoint: [SPEC.md](../SPEC.md)
+Canonical specification: [SPEC.md](../SPEC.md)
 Baseline: <commit or documented baseline; state if Git is not initialized>
 Scope: <affected documentation, implementation, and exclusions>
 
@@ -28,7 +27,7 @@ why no migration is needed.>
 
 ## Architecture decision log
 
-<List the ADR entries added or updated in PROJECT_SPEC.md.>
+<List the ADR entries added or updated in SPEC.md.>
 
 ## Validation and evidence
 

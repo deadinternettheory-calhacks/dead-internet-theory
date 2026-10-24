@@ -1,7 +1,7 @@
 # Specification deltas
 
 This directory records approved changes to established requirements in
-[PROJECT_SPEC.md](../PROJECT_SPEC.md). No changes have been recorded yet.
+[SPEC.md](../SPEC.md). No changes have been recorded yet.
 
 Follow [CONTRIBUTING.md](../CONTRIBUTING.md): propose the affected sections,
 previous and revised requirements, rationale, and intended timestamped filename
