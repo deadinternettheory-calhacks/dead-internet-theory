@@ -45,6 +45,7 @@ export function checkSubmission(
     bad(a.overallCoordinationRisk.evidenceRefs, 'overallCoordinationRisk'),
     ...a.axes.map(x => bad(x.evidenceRefs, `axis ${x.axis}`)),
     ...a.commentAssessments.map(c => bad(c.evidenceRefs, `assessment ${c.commentId}`)),
+    ...a.commentAssessments.flatMap(c => (c.accountSignals?.signals ?? []).map(x => bad(x.evidenceRefs, `account signals on ${c.commentId}`))),
     ...a.clusters.map(c => bad(c.evidenceRefs, `cluster ${c.clusterId}`)),
     ...a.inferredEdges.map(e => bad(e.evidenceRefs, 'inferred edge')),
   ];

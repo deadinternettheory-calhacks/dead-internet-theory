@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import type { EnrichmentJob, EnrichmentRequest, GraphEnvelope } from '../convex/lib/contract';
 import { assembleAnalysis } from '../convex/lib/inference/assemble';
 import { MockCreaoClient } from '../convex/lib/inference/creao';
+import { checkSubmission } from '../convex/lib/inference/evidence';
 import { parseScoring, type ScoringOutput, type TriageOutput } from '../convex/lib/inference/outputs';
 import { buildTriagePacket, sampleHistoryAuthors } from '../convex/lib/inference/packet';
 import { runSequential } from '../convex/lib/inference/pipeline';
@@ -109,5 +110,48 @@ describe('comment-section index', () => {
     const risk = assemble([], quiet, null);
     expect(risk.score).toBe(0);
     expect(risk.explanation).toMatch(/No comment recommended a product/);
+  });
+});
+
+describe('account automation signals', () => {
+  const facts = { authorId: 'a', platform: 'reddit' as const, historyCount: 10, historyPartial: false, productMentionIds: [] as string[], accountAgeDays: null, anchorCommentId: 'reddit:comment:t1_syn01' };
+  const known = new Set(['reddit:comment:t1_syn01', 'reddit:comment:t1_syn_a01', 'reddit:comment:t1_syn_a02', 'reddit:comment:t1_syn_a03']);
+
+  it('re-scores the model’s account rules, keeping only family B with real evidence', async () => {
+    const { scoreAccount } = await import('../convex/lib/inference/scoring');
+    const s = scoreAccount({
+      authorId: 'a',
+      signals: [
+        { id: 'B8', evidence: 'polished prose throughout', evidenceRefs: ['reddit:comment:t1_syn_a01'] },
+        { id: 'B5', evidence: 'style shift', evidenceRefs: ['reddit:comment:invented'] },
+        { id: 'C1', evidence: 'not an account rule', evidenceRefs: ['reddit:comment:t1_syn_a01'] },
+      ],
+      unknown: ['B6'],
+    }, facts, known);
+    expect(s.signals.map(x => x.id)).toEqual(['B8']);
+    expect(s.discarded.join(' ')).toMatch(/B5: no resolvable evidence/);
+    expect(s.discarded.join(' ')).toMatch(/C1: not an account rule/);
+    expect(s.score).toBe(Math.round((100 * 5) / (94 - 8)));
+  });
+
+  it('adds measured brand focus and new-account signals even without a model review, and scores only what was checked', async () => {
+    const { scoreAccount } = await import('../convex/lib/inference/scoring');
+    const s = scoreAccount(undefined, { ...facts, productMentionIds: ['reddit:comment:t1_syn_a01', 'reddit:comment:t1_syn_a02', 'reddit:comment:t1_syn_a03'], accountAgeDays: 12 }, known);
+    expect(s.signals.map(x => [x.id, x.points])).toEqual([['B1', 20], ['B4', 8]]);
+    expect(s.score).toBe(Math.round((100 * 28) / 32));
+  });
+
+  it('has no score without history', async () => {
+    const { scoreAccount } = await import('../convex/lib/inference/scoring');
+    expect(scoreAccount(undefined, { ...facts, historyCount: 0 }, known).score).toBeNull();
+  });
+
+  it('attaches signals to each sampled user’s anchor comment in a contract-valid submission', () => {
+    const { submission } = assembleAnalysis({ graph, triage, analyzedCommentIds: buildTriagePacket(graph).analyzedCommentIds, enrichments: [enrichment], scoring });
+    const withSignals = submission.commentAssessments.filter(c => c.accountSignals);
+    expect(withSignals.length).toBe(6);
+    expect(withSignals.find(c => c.commentId === 'reddit:comment:t1_syn01')!.accountSignals!.signals.map(s => s.ruleId)).toContain('B1');
+    expect(checkSubmission(submission, graph, [enrichment])).toBeNull();
+    expect(JSON.stringify(withSignals)).not.toMatch(/\bbots?\b/i);
   });
 });

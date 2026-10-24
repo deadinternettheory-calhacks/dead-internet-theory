@@ -3,7 +3,8 @@
 // the available evidence or the graph does not support, then sums points and
 // applies caps K1-K6 itself.
 import type { Platform } from '../contract';
-import type { ProposedAssessment, ProposedSignal } from './outputs';
+import type { ProposedAccount, ProposedAssessment, ProposedSignal } from './outputs';
+import { RULES } from './rubric';
 import {
   actionFor,
   RULES_BY_ID,
@@ -150,5 +151,74 @@ export function scoreComment(
     exculpatory,
     capsApplied,
     recommendedAction: actionFor(tier),
+  };
+}
+
+/** Automation-signal index for one sampled account (rubric family B). Not a probability. */
+export interface AccountScore {
+  authorId: string;
+  /** 0-100 share of the evaluable family-B points that fired; null without history. */
+  score: number | null;
+  historyCount: number;
+  signals: ScoredSignal[];
+  unknown: string[];
+  discarded: string[];
+}
+
+/** Facts measured without the model, used as a floor under its proposals. */
+export interface AccountFacts {
+  authorId: string;
+  platform: Platform;
+  historyCount: number;
+  historyPartial: boolean;
+  /** History items mentioning the recommended products, with their IDs. */
+  productMentionIds: string[];
+  /** Account age at the anchor comment, when the profile gives it. */
+  accountAgeDays: number | null;
+  /** Any comment ID of this author, for evidence on profile-based signals. */
+  anchorCommentId: string;
+}
+
+export function scoreAccount(proposal: ProposedAccount | undefined, facts: AccountFacts, knownIds: ReadonlySet<string>): AccountScore {
+  const discarded: string[] = [];
+  if (facts.historyCount === 0) return { authorId: facts.authorId, score: null, historyCount: 0, signals: [], unknown: [], discarded };
+  const bRules = RULES.filter(r => r.family === 'B' && r.platforms.includes(facts.platform));
+  const availability: EvidenceAvailability = {
+    platform: facts.platform,
+    authorHistoryCount: facts.historyCount,
+    authorHistoryPartial: facts.historyPartial,
+    authorHasProfile: facts.accountAgeDays !== null,
+    coRecommenderHistoryCounts: [],
+    rootAuthorHistoryCount: 0,
+    anyUsedHistoryPartial: facts.historyPartial,
+  };
+  const proposed = (proposal?.signals ?? []).filter(s => {
+    if (RULES_BY_ID.get(s.id)?.family === 'B') return true;
+    discarded.push(`${s.id}: not an account rule`);
+    return false;
+  });
+  const signals = acceptSignals(proposed, false, availability, knownIds, discarded);
+  const has = (id: string) => signals.some(s => s.id === id);
+  // Deterministic floor: brand concentration (3+ of 10 recent comments) and a new account.
+  if (!has('B1') && facts.productMentionIds.length >= 3) {
+    signals.push({ id: 'B1', family: 'B', points: 20, evidence: `${facts.productMentionIds.length} of ${facts.historyCount} recent comments mention the recommended products.`, evidenceRefs: facts.productMentionIds.slice(0, 5) });
+  }
+  if (!has('B4') && facts.accountAgeDays !== null && facts.accountAgeDays < 30) {
+    signals.push({ id: 'B4', family: 'B', points: 8, evidence: `The account was ${facts.accountAgeDays} days old at this comment.`, evidenceRefs: [facts.anchorCommentId] });
+  }
+  const fired = new Set(signals.map(s => s.id));
+  // Without a model review, only the measured rules (B1, and B4 when the age is known) were checked.
+  const unchecked = proposal ? proposal.unknown : bRules.map(r => r.id).filter(id => id !== 'B1' && !(id === 'B4' && facts.accountAgeDays !== null));
+  const unknown = Array.from(new Set(unchecked.filter(id => RULES_BY_ID.get(id)?.family === 'B' && !fired.has(id))));
+  const evaluable = bRules.filter(r => !unknown.includes(r.id) || fired.has(r.id));
+  const max = evaluable.reduce((t, r) => t + Math.max(...r.points), 0);
+  const points = signals.reduce((t, s) => t + s.points, 0);
+  return {
+    authorId: facts.authorId,
+    score: max ? Math.min(100, Math.round((100 * points) / max)) : null,
+    historyCount: facts.historyCount,
+    signals,
+    unknown,
+    discarded,
   };
 }

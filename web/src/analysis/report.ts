@@ -30,6 +30,14 @@ export interface CommentRow extends EvidenceItem {
   isRecommendation: boolean;
 }
 
+export interface AccountRow {
+  authorId: string;
+  author: string | null;
+  score: number | null;
+  historyCount: number;
+  signals: { ruleId: string; evidence: string }[];
+}
+
 export interface Report {
   synthetic: boolean;
   post: { title: string | null; text: string; url: string; platform: string; author: string | null; createdAt: string | null };
@@ -39,7 +47,9 @@ export interface Report {
   findings: Finding[];
   axes: { axis: AxisName; title: string; score: number | null; explanation: string; evidence: EvidenceItem[] }[];
   discussion: EvidenceItem[];
-  histories: { id: string; author: string | null; status: string; comments: EvidenceItem[] }[];
+  histories: { id: string; author: string | null; status: string; comments: EvidenceItem[]; account?: AccountRow | null }[];
+  /** Sampled accounts with an automation-signal index, highest first. */
+  accounts: AccountRow[];
   comments: CommentRow[];
   clusters: { id: string; size: number; explanation: string }[];
   coverage: { analyzed: number; retrieved: number; reported: number | null; completeness: string; sentiment: Record<Stance, number>; histories: string | null };
@@ -146,6 +156,11 @@ export function buildReport(analysis: AnalysisResource, graph: GraphEnvelope, en
     : null;
 
   const score = a.overallCoordinationRisk.score;
+  const accounts: AccountRow[] = a.commentAssessments
+    .flatMap(c => (c.accountSignals ? [c.accountSignals] : []))
+    .map(x => ({ authorId: x.authorId, author: handleFor(graph, x.authorId), score: x.score, historyCount: x.historyCount, signals: x.signals.map(s => ({ ruleId: s.ruleId, evidence: s.evidence })) }))
+    .sort((x, y) => (y.score ?? -1) - (x.score ?? -1));
+  const accountByAuthor = new Map(accounts.map(x => [x.authorId, x]));
   return {
     synthetic: isSyntheticGraph(graph),
     post: { title: root.title ?? null, text: root.text, url: root.url, platform: root.platform, author: handleFor(graph, root.authorId), createdAt: root.createdAt },
@@ -155,8 +170,9 @@ export function buildReport(analysis: AnalysisResource, graph: GraphEnvelope, en
     findings,
     axes: a.axes.map(x => ({ axis: x.axis, title: AXIS_TITLE[x.axis], score: x.score, explanation: x.explanation, evidence: evidenceFor(x.evidenceRefs) })),
     discussion: [...comments.values()].filter(c => c.contentStatus === 'visible' && c.text.trim()).map(c => ({ id: c.id, author: handleFor(graph, c.authorId), text: c.text, url: c.url, createdAt: c.createdAt, source: 'discussion' as const })),
+    accounts,
     histories: enrichments.flatMap(j => (j.results ?? []).map(r => ({
-      id: `${j.enrichmentId}:${r.authorId}`, author: handleFor(graph, r.authorId), status: r.status,
+      id: `${j.enrichmentId}:${r.authorId}`, author: handleFor(graph, r.authorId), status: r.status, account: accountByAuthor.get(r.authorId) ?? null,
       comments: r.comments.map(c => ({ id: c.id, author: handleFor(graph, c.authorId), text: c.text, url: c.url, createdAt: c.createdAt, source: 'history' as const })),
     }))),
     comments: rows.sort((x, y) => Number(y.isRecommendation) - Number(x.isRecommendation)),

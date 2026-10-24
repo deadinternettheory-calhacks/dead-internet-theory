@@ -327,6 +327,8 @@ export function buildScoringPacket(graph: GraphEnvelope, triage: TriageOutput, j
 
   const authorIds = Array.from(new Set(recTargets.map(c => c.authorId).filter((a): a is string => !!a)));
   if (index.root.authorId && !authorIds.includes(index.root.authorId)) authorIds.push(index.root.authorId);
+  // Every sampled user with a history, so account signals can be judged for both groups.
+  for (const r of results) if (r.comments.length && !authorIds.includes(r.authorId)) authorIds.push(r.authorId);
   const authors: AuthorEvidence[] = authorIds.map(authorId => {
     const result = resultByAuthor.get(authorId);
     const anchor = result ? index.comment(result.anchorCommentId) : undefined;

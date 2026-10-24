@@ -27,5 +27,18 @@ export const SIGNAL_SOURCES: Record<AxisName, Source[]> = {
   disclosure_concerns: [],
 };
 
+/** Short names and research for the account (family B) rules. */
+export const ACCOUNT_RULES: Record<string, { label: string; sources: Source[] }> = {
+  B1: { label: 'Brand focus', sources: [S.schneider2026] },
+  B2: { label: 'Same recommendation elsewhere', sources: [S.kumar2017] },
+  B3: { label: 'Engagement farming', sources: [S.pilaud2025] },
+  B4: { label: 'New or reactivated account', sources: [S.pilaud2025] },
+  B5: { label: 'Style shift', sources: [S.weerasinghe2022] },
+  B6: { label: 'Shift-like schedule', sources: [S.miller2016] },
+  B7: { label: 'One-sided brand sentiment', sources: [S.pilaud2025] },
+  B8: { label: 'LLM-style writing', sources: [S.trokhymovych2026] },
+  B9: { label: 'Hidden history', sources: [] },
+};
+
 /** Behind the section score's history comparison (brand focus in posting history). */
 export const HISTORY_CONTRAST_SOURCES: Source[] = [S.schneider2026, S.pilaud2025];
