@@ -5,9 +5,10 @@ import { AboutPage } from './AboutPage';
 describe('How it works page', () => {
   const markup = renderToStaticMarkup(<AboutPage />);
 
-  it('renders the title and five FAQ headings in order', () => {
-    expect(markup).toContain('<h1>How it works</h1>');
-    const questions = [...markup.matchAll(/<h2>(.*?)<\/h2>/g)].map((match) => match[1]);
+  it('renders the homepage section and five FAQ headings in order', () => {
+    expect(markup).toContain('id="how-it-works"');
+    expect(markup).toContain('<h2 id="how-it-works-heading">How it works</h2>');
+    const questions = [...markup.matchAll(/<h3>(.*?)<\/h3>/g)].map((match) => match[1]);
     expect(questions).toEqual([
       'What is Dead Internet Theory?',
       'What is astroturfing?',
@@ -22,6 +23,6 @@ describe('How it works page', () => {
     expect(markup).toContain('does not currently generate a score');
     expect(markup).toContain('TikTok and YouTube are not available.');
     expect(markup).toContain('<p class="about-disclaimer">Results are estimates based on public signals. They are not proof of coordinated activity.</p>');
-    expect(markup.indexOf('about-disclaimer')).toBeGreaterThan(markup.lastIndexOf('</h2>'));
+    expect(markup.indexOf('about-disclaimer')).toBeGreaterThan(markup.lastIndexOf('</h3>'));
   });
 });
