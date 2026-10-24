@@ -71,7 +71,6 @@ export function EvidenceExplorer({ report, mode: controlledMode, onModeChange, o
           {phrase && <p className="inspector-observation">{activeIds.has(selected.id) ? 'This comment contains the highlighted phrase.' : 'This comment does not contain this exact phrase.'}</p>}
           {!report.synthetic && selected.url && /^https:\/\//i.test(selected.url) && <a href={selected.url} target="_blank" rel="noopener noreferrer" className="text-link">Open original comment <ArrowUpRight size={14} aria-hidden="true"/></a>}
         </div> : <p className="evidence-empty">Select an available comment to read its evidence.</p>}</div>
-        <div className="inspector-footnote"><span className="inspector-footnote-dot"/><p>Patterns are leads to examine. They do not establish intent or prove that an account is fake.</p></div>
         <button className="mobile-evidence-jump" type="button" onClick={() => jump(visual.current)}>Back to evidence <ArrowUp size={14} aria-hidden="true"/></button>
       </aside>
     </div>

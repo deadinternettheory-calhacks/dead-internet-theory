@@ -7,10 +7,10 @@ import './demo.css';
 
 const STEPS = [
   { label: 'The thread', title: 'It starts with an ordinary question.', description: 'Someone wants a recommendation. Select a node to read the comments that follow.', mode: 'overview' },
-  { label: 'The wording', title: 'Some words start to sound familiar.', description: 'Compare the phrases in the cited recommendations. Select a phrase, then open the comments that contain it.', mode: 'wording' },
-  { label: 'The timing', title: 'Put those comments on a timeline.', description: 'Compare the cited recommendations with the rest of the discussion. Similar timing is a clue to examine, with innocent explanations too.', mode: 'timing' },
-  { label: 'The history', title: 'One comment is only part of the story.', description: 'Explore the returned public-history samples. Partial and unavailable histories are shown explicitly.', mode: 'history' },
-  { label: 'The result', title: 'A finding you can follow back to its source.', description: 'The report brings these observations together, shows its evidence, and explains what it cannot establish.', mode: 'result' },
+  { label: 'The wording', title: 'Look for repeated wording.', description: 'Compare phrases across the recommendations. Select a phrase, then open the comments that contain it.', mode: 'wording' },
+  { label: 'The timing', title: 'Put those comments on a timeline.', description: 'Compare when the recommendations arrived with the rest of the discussion.', mode: 'timing' },
+  { label: 'The history', title: 'One comment is only part of the story.', description: 'Explore the public comment histories of a random sample of commenters.', mode: 'history' },
+  { label: 'The result', title: 'One score you can follow back to its source.', description: 'The report brings these observations together into one score and shows the evidence behind it.', mode: 'result' },
 ] as const;
 
 export function DemoExperience({ report, autoplay = false, onOpenReport }: { report: Report; autoplay?: boolean; onOpenReport: () => void }) {
@@ -24,7 +24,7 @@ export function DemoExperience({ report, autoplay = false, onOpenReport }: { rep
   }, []);
   const { step, playing, go, toggle, pause } = useWalkthrough(autoplay, STEPS.length, inView);
   const current = STEPS[step];
-  return <section className="demo-experience" aria-label="Guided synthetic investigation">
+  return <section className="demo-experience" aria-label="Guided example investigation">
     <div className="demo-controls">
       <div className="demo-controls-start"><button type="button" className="demo-play" onClick={toggle}
         aria-label={playing ? 'Pause walkthrough' : step === STEPS.length - 1 ? 'Replay walkthrough' : 'Play walkthrough'}>
@@ -47,10 +47,10 @@ export function DemoExperience({ report, autoplay = false, onOpenReport }: { rep
       <span className="demo-result-kicker">THE FINDING</span><h3>{report.verdict.label}</h3><p>{report.verdict.description}</p>
       <div className="demo-result-observations">{report.findings.map(f => <span key={f.axis}><Check size={14} aria-hidden="true"/>{f.title}</span>)}</div>
       <button type="button" className="primary-button" onClick={onOpenReport}>Read the full report <ArrowRight size={16} aria-hidden="true"/></button>
-      <small>{report.coverage.analyzed} comments analyzed · {report.coverage.completeness} coverage · synthetic data</small>
+      <small>{report.coverage.analyzed} comments analyzed · {report.coverage.completeness} coverage</small>
     </div> : <EvidenceExplorer report={report} mode={current.mode} onInteraction={pause}
       onModeChange={(mode: EvidenceMode) => go(STEPS.findIndex(s => s.mode === mode))}/>}</div>
-    <div className="demo-scene-footer"><span>Illustrative replay of a completed example</span><div>
+    <div className="demo-scene-footer"><span>Replay of a completed analysis</span><div>
       <button type="button" className="demo-arrow" aria-label="Previous walkthrough step" disabled={step === 0} onClick={() => go(step - 1)}><ArrowLeft size={16} aria-hidden="true"/></button>
       <button type="button" className="demo-next" disabled={step === STEPS.length - 1} onClick={() => go(step + 1)}>Next <ArrowRight size={16} aria-hidden="true"/></button>
     </div></div>

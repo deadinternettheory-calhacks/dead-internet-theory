@@ -15,8 +15,7 @@ export function SiteHeader() {
 export function SiteFooter() {
   const pathname = useLocation().pathname;
   const isHome = pathname === '/';
-  const isHowItWorks = pathname === '/about' || pathname === '/about/';
-  return <footer className={`footer${isHome ? ' home-footer' : ''}`}><div className="footer-main"><span>© 2026 Dead Internet Theory</span></div>{!isHome && !isHowItWorks && <p>Results are estimates based on available public signals. They are not proof of coordinated activity.</p>}</footer>;
+  return <footer className={`footer${isHome ? ' home-footer' : ''}`}><div className="footer-main"><span>© 2026 Dead Internet Theory</span></div><p className="footer-warning">Warning: Dead Internet can make mistakes.</p></footer>;
 }
 function InlineError({ children }: { children: string }) { return <p className="inline-error" role="alert">{children}</p>; }
 export function PostUrlInput({ onSubmit }: { onSubmit: (url: string) => void }) {

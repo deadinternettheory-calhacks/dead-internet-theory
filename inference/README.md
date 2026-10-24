@@ -109,12 +109,16 @@ for application, Apify and upstream-provider retention boundaries.
 3. **Triage.** A bounded packet of the post and every retrieved comment
    (under 180 KB) goes to Claude directly when `ANTHROPIC_API_KEY` is set
    (structured outputs, so the reply is always valid JSON), otherwise to a
-   CREAO run. It returns the subject, each comment's stance, and any product
-   the comment recommends.
+   CREAO run. Each reply carries an excerpt of the comment it answers. It
+   returns the subject as one specific product (brand and model; in a
+   "what should I buy?" thread, the most-recommended one), and for each
+   comment the exact product it is about (`aboutProduct`, read through the
+   reply chain), its stance toward that product, and any product it
+   recommends.
 4. **Sampled histories.** Instead of requesting every user's history, the
    worker randomly picks up to 6 supportive users (any supportive comment or
-   a recommendation of the subject) and up to 6 unsupportive users (critical
-   or mixed; neutral users fill the group when too few are critical), plus
+   any product recommendation) and up to 6 unsupportive users (critical or
+   mixed; users who recommend nothing fill the group when too few), plus
    the post author if they commented. The shuffle is seeded by investigation
    and graph revision, so a retry picks the same users. It is one request,
    Reddit and X only, anchored on each user's own comment. The worker
@@ -174,14 +178,19 @@ unvalidated and should be reviewed with the detection-research owner.
 | `clusters[].coordinationScore` | Family-C points of the strongest member ÷ the platform's family-C maximum × 100. Clusters with no fired family-C rule are dropped. |
 | `inferredEdges` | `SEMANTICALLY_SIMILAR` for recommendation pairs with ≥0.3 content-word overlap; `POTENTIALLY_COORDINATED` between members of each cluster. |
 
-## Mocked example response
+## Website example and test fixtures
 
-`fixtures/synthetic-espresso/` is a fabricated Reddit thread. Three accounts
-post near-identical recommendations 13 minutes apart and defend each other;
-genuine comments are mixed in. The folder includes author histories and
-recorded CREAO replies. `npm run demo` runs the real pipeline on it and writes
-`analysis-resource.json` plus `../web/src/demo/synthetic-report.json`, which
-the website shows at `/example`. `fixtures/contract-example-reddit/` holds
+`fixtures/example-reddit-knife/` is a real r/BuyItForLife thread ("Recommendation
+for BIFL chef's knife?") collected through the hosted backend on 2026-10-24,
+with usernames, author and comment IDs and per-comment links replaced (see the
+retention exception in backend/RETENTION.md). It holds the live Claude triage
+and CREAO scoring replies recorded for it. `npm run demo` runs the pipeline on
+it with those replies and writes `../web/src/demo/example-report.json`, which
+the website shows at `/example`. Its histories are empty until the backend's
+history size fix is deployed; then re-collect them and re-run `npm run demo`.
+
+`fixtures/synthetic-espresso/` is a fabricated thread used only in tests (it is
+written to `../web/src/test/` for UI tests and never shown on the site). `fixtures/contract-example-reddit/` holds
 recorded replies for the backend's fixture-mode Reddit graph, so the local
 end-to-end run works without a CREAO key.
 

@@ -20,7 +20,8 @@ const MIN_STANCES = 5;
 
 export interface SectionInput {
   index: GraphIndex;
-  subjectLabel: string;
+  /** Subject label and every product recommended in the thread; history mentions of any count. */
+  mentionTerms: string[];
   scored: CommentScore[];
   /** True when there were no product recommendations, so nothing was promoted. */
   noRecommendations: boolean;
@@ -62,7 +63,7 @@ function groupStats(authorIds: string[], input: SectionInput): GroupStats {
     const r = byAuthor.get(authorId);
     if (!r) continue;
     if (r.comments.length) {
-      const hits = r.comments.filter(c => mentions(c.text, input.subjectLabel));
+      const hits = r.comments.filter(c => input.mentionTerms.some(term => mentions(c.text, term)));
       rates.push(hits.length / r.comments.length);
       mentionRefs.push(...hits.map(c => c.id).filter(id => input.known.has(id)));
     }
@@ -112,7 +113,7 @@ export function sectionIndex(input: SectionInput): { score: Score; parts: Sectio
   const contrastNotes: string[] = [];
   if (sup.withHistory >= MIN_GROUP && uns.withHistory >= MIN_GROUP && sup.mentionRate !== null && uns.mentionRate !== null) {
     contrasts.push(clamp01((sup.mentionRate - uns.mentionRate) / FULL_MENTION_GAP));
-    contrastNotes.push(`sampled supportive users mention ${input.subjectLabel || 'the subject'} in ${pct(sup.mentionRate)} of their recent comments, unsupportive users in ${pct(uns.mentionRate)}`);
+    contrastNotes.push(`sampled supportive users mention the recommended products in ${pct(sup.mentionRate)} of their recent comments, unsupportive users in ${pct(uns.mentionRate)}`);
     refs.push(...sup.mentionRefs.slice(0, 10));
   }
   if (sup.newShare !== null && uns.newShare !== null) {
@@ -143,7 +144,7 @@ export function sectionIndex(input: SectionInput): { score: Score; parts: Sectio
       score: {
         score: null,
         confidence: null,
-        explanation: `Too little to measure: ${input.analyzedCount} comment(s) analyzed. A missing index is not a low index.`,
+        explanation: `Too little to measure: ${input.analyzedCount} comment(s) analyzed.`,
         evidenceRefs: [],
       },
     };
@@ -166,7 +167,6 @@ export function sectionIndex(input: SectionInput): { score: Score; parts: Sectio
         ...notes,
         `Weights: rubric ${SECTION_WEIGHTS.rubric * 100}%, coordination ${SECTION_WEIGHTS.coordination * 100}%, history contrast ${SECTION_WEIGHTS.historyContrast * 100}%, one-sided support ${SECTION_WEIGHTS.oneSided * 100}%, spread over the parts that could be measured.`,
         sampleNote,
-        'This is an uncalibrated, hand-weighted index for prioritizing review, not a probability or a finding that the discussion was astroturfed.',
       ].join(' '),
       evidenceRefs: Array.from(new Set(refs)).filter(id => input.known.has(id)),
     },

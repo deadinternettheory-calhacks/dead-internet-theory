@@ -65,12 +65,15 @@ const AXIS_TITLE: Record<AxisName, string> = {
 };
 
 /** Cutoffs follow the rubric's tiers (rubrics/product-astroturfing.md section 7), which are uncalibrated. */
+/** Same cut-off as the moderate band of the section score. */
+const FINDING_MIN_SCORE = 35;
+
 export function verdictFor(score: number | null, subject: string): Report['verdict'] {
   const about = subject ? ` about ${subject}` : '';
   if (score === null) return { tone: 'neutral', label: 'We couldn’t measure coordinated promotion here.', description: `There was not enough evidence${about} to apply our checks.` };
-  if (score >= 55) return { tone: 'high', label: 'We found several signs of possible coordinated promotion.', description: `Some recommendations${about} show patterns that often appear in coordinated campaigns. These are signals worth a closer look, not proof.` };
-  if (score >= 35) return { tone: 'medium', label: 'We found some signals worth a closer look.', description: `A few patterns in the recommendations${about} stood out. They have innocent explanations too.` };
-  return { tone: 'low', label: 'We found few signs of coordinated promotion.', description: `The recommendations${about} did not show strong coordination signals. This is not a guarantee that every comment is genuine.` };
+  if (score >= 55) return { tone: 'high', label: 'We found several signs of possible coordinated promotion.', description: `Some recommendations${about} show patterns that often appear in coordinated campaigns.` };
+  if (score >= 35) return { tone: 'medium', label: 'We found some signals worth a closer look.', description: `A few patterns in the recommendations${about} stood out.` };
+  return { tone: 'low', label: 'We found few signs of coordinated promotion.', description: `The recommendations${about} did not show strong coordination signals.` };
 }
 
 export function isSyntheticGraph(graph: GraphEnvelope): boolean {
@@ -103,8 +106,9 @@ export function buildReport(analysis: AnalysisResource, graph: GraphEnvelope, en
     return items;
   };
 
+  // Only signals in the moderate band or above count as standing out; weaker ones stay in the details.
   const ranked = a.axes
-    .filter((x): x is AxisAssessment & { axis: Exclude<AxisName, 'disclosure_concerns'> } => x.axis !== 'disclosure_concerns' && x.score !== null && x.score > 0)
+    .filter((x): x is AxisAssessment & { axis: Exclude<AxisName, 'disclosure_concerns'> } => x.axis !== 'disclosure_concerns' && x.score !== null && x.score >= FINDING_MIN_SCORE)
     .sort((x, y) => (y.score ?? 0) - (x.score ?? 0));
   // Show each quoted comment once, under the first finding that cites it.
   const shown = new Set<string>();

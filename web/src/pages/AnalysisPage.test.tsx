@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { AnalysisPage } from './AnalysisPage';
 import { createInvestigation, getGraph, getInvestigation, idempotencyKeyFor } from '../api/client';
-import { syntheticDemo } from '../demo';
+import { exampleData } from '../demo';
 import type { InvestigationResource } from '../api/contract';
 vi.mock('../api/client', async original => ({
   ...await original<typeof import('../api/client')>(),
@@ -63,15 +63,15 @@ it('shows the collected post and comments while the analysis runs', async () => 
   const analyzing: InvestigationResource = { ...queued, ingestionStatus: 'completed', analysisStatus: 'running', graphRevision: 1 };
   vi.mocked(createInvestigation).mockResolvedValue(analyzing);
   vi.mocked(getInvestigation).mockResolvedValue(analyzing);
-  vi.mocked(getGraph).mockResolvedValue(syntheticDemo.graph);
+  vi.mocked(getGraph).mockResolvedValue(exampleData.graph);
   await render();
   await act(async () => vi.advanceTimersByTimeAsync(0));
   expect(getGraph).toHaveBeenCalledTimes(1);
   expect(container.textContent).toContain('Analyzing the discussion…');
   expect(container.textContent).toContain('Comments we collected');
-  expect(container.textContent).toContain('8 comments collected.');
+  expect(container.textContent).toContain(`${exampleData.graph.coverage.retrievedCommentCount} comments collected.`);
   expect(container.querySelector('[aria-current="step"]')?.textContent).toContain('Analyze the discussion');
-  const firstComment = syntheticDemo.graph.nodes.find(n => n.type === 'comment')!;
+  const firstComment = exampleData.graph.nodes.find(n => n.type === 'comment')!;
   expect(container.textContent).toContain(firstComment.type === 'comment' ? firstComment.text : '');
   await act(async () => vi.advanceTimersByTimeAsync(2500));
   expect(getGraph).toHaveBeenCalledTimes(1);

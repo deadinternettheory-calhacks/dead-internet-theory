@@ -2,7 +2,7 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { exampleReport } from '../../demo/report';
+import { testReport as exampleReport } from '../../test/fixtures';
 import { DemoExperience } from './DemoExperience';
 
 let container: HTMLDivElement;
@@ -35,7 +35,6 @@ it('plays the five prepared scenes, stops at the result, and replays', async () 
     expect(current()).toContain(label);
   }
   expect(container.querySelector('[aria-label="Replay walkthrough"]')).not.toBeNull();
-  expect(container.textContent).toContain('synthetic data');
   await click('Replay walkthrough');
   expect(current()).toContain('The thread');
   expect(container.querySelector('[aria-label="Pause walkthrough"]')).not.toBeNull();

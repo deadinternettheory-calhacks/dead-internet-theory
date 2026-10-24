@@ -11,6 +11,8 @@ export interface TriageComment {
   recommendsProduct: string | null;
   /** True when it recommends the discussion's main subject. */
   recommendsSubject: boolean;
+  /** The exact product the stance is about, resolved from the reply chain; null means the subject. */
+  aboutProduct?: string | null;
   rationale: string;
 }
 
@@ -85,6 +87,7 @@ export const TRIAGE_OUTPUT_SCHEMA = {
           stance: { enum: ['supportive', 'critical', 'neutral', 'mixed', 'unclear'] },
           recommendsProduct: { type: ['string', 'null'] },
           recommendsSubject: { type: 'boolean' },
+          aboutProduct: { type: ['string', 'null'] },
           rationale: { type: 'string' },
         },
       },

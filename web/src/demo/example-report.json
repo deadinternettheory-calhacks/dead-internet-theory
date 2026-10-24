@@ -1,0 +1,4909 @@
+{
+  "investigation": {
+    "schemaVersion": "1.0.0",
+    "investigationId": "inv_example_knife",
+    "sourceUrl": "https://www.reddit.com/r/BuyItForLife/comments/zq4rbu/",
+    "platform": "reddit",
+    "ingestionStatus": "completed",
+    "analysisStatus": "completed",
+    "graphRevision": 1,
+    "graphFingerprint": "9ffe20a2cf5f96fb4c3571e70cead8708238dc89319e3622ac079f0329be337b",
+    "createdAt": "2026-10-24T20:10:47Z",
+    "updatedAt": "2026-10-24T20:40:05Z"
+  },
+  "graph": {
+    "coverage": {
+      "actorRuns": [],
+      "collectedAt": "2026-10-24T20:11:17.272Z",
+      "completeness": "partial",
+      "limitations": [
+        "Platform reports 163 comments; 100 were retained. Reported counts may include unavailable content.",
+        "Usernames and comment IDs are replaced; comment text is unchanged."
+      ],
+      "reportedCommentCount": 163,
+      "retrievedCommentCount": 100,
+      "sortOrder": "new",
+      "sourceSnapshotRef": "snapshot:example-reddit-knife",
+      "truncated": true
+    },
+    "edges": [
+      {
+        "from": "reddit:author:example_23",
+        "to": "reddit:comment:example_c036",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_61",
+        "to": "reddit:comment:example_c098",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_61",
+        "to": "reddit:comment:example_c100",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_28",
+        "to": "reddit:comment:example_c043",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_19",
+        "to": "reddit:comment:example_c028",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_10",
+        "to": "reddit:comment:example_c017",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_12",
+        "to": "reddit:comment:example_c020",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_12",
+        "to": "reddit:comment:example_c051",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_12",
+        "to": "reddit:comment:example_c054",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_12",
+        "to": "reddit:comment:example_c058",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_12",
+        "to": "reddit:comment:example_c060",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_21",
+        "to": "reddit:comment:example_c030",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_21",
+        "to": "reddit:comment:example_c033",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_47",
+        "to": "reddit:comment:example_c071",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_47",
+        "to": "reddit:comment:example_c090",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_20",
+        "to": "reddit:comment:example_c029",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_58",
+        "to": "reddit:comment:example_c093",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_14",
+        "to": "reddit:comment:example_c022",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_59",
+        "to": "reddit:comment:example_c094",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_59",
+        "to": "reddit:comment:example_c097",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_34",
+        "to": "reddit:comment:example_c052",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_35",
+        "to": "reddit:comment:example_c055",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_24",
+        "to": "reddit:comment:example_c037",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_33",
+        "to": "reddit:comment:example_c050",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_33",
+        "to": "reddit:comment:example_c053",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_53",
+        "to": "reddit:comment:example_c078",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_57",
+        "to": "reddit:comment:example_c092",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_15",
+        "to": "reddit:comment:example_c024",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_45",
+        "to": "reddit:comment:example_c069",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_51",
+        "to": "reddit:comment:example_c076",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_18",
+        "to": "reddit:comment:example_c027",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_43",
+        "to": "reddit:comment:example_c067",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_39",
+        "to": "reddit:comment:example_c062",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_36",
+        "to": "reddit:comment:example_c056",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_56",
+        "to": "reddit:comment:example_c091",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_2",
+        "to": "reddit:comment:example_c002",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_44",
+        "to": "reddit:comment:example_c068",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_1",
+        "to": "reddit:comment:example_c001",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_1",
+        "to": "reddit:comment:example_c023",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_25",
+        "to": "reddit:comment:example_c038",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_7",
+        "to": "reddit:comment:example_c007",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_48",
+        "to": "reddit:comment:example_c073",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_16",
+        "to": "reddit:comment:example_c025",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_40",
+        "to": "reddit:comment:example_c064",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_6",
+        "to": "reddit:comment:example_c006",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_6",
+        "to": "reddit:comment:example_c034",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_6",
+        "to": "reddit:comment:example_c035",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_13",
+        "to": "reddit:comment:example_c021",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_38",
+        "to": "reddit:comment:example_c061",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_8",
+        "to": "reddit:comment:example_c008",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_8",
+        "to": "reddit:comment:example_c031",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_5",
+        "to": "reddit:comment:example_c005",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_27",
+        "to": "reddit:comment:example_c042",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_60",
+        "to": "reddit:comment:example_c096",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_42",
+        "to": "reddit:comment:example_c066",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_50",
+        "to": "reddit:comment:example_c075",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_26",
+        "to": "reddit:comment:example_c041",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_4",
+        "to": "reddit:comment:example_c004",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_52",
+        "to": "reddit:comment:example_c077",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_37",
+        "to": "reddit:comment:example_c057",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_37",
+        "to": "reddit:comment:example_c059",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_32",
+        "to": "reddit:comment:example_c049",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_17",
+        "to": "reddit:comment:example_c026",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_55",
+        "to": "reddit:comment:example_c088",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_22",
+        "to": "reddit:comment:example_c032",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_31",
+        "to": "reddit:comment:example_c047",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_31",
+        "to": "reddit:comment:example_c048",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_30",
+        "to": "reddit:comment:example_c046",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_46",
+        "to": "reddit:comment:example_c070",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_41",
+        "to": "reddit:comment:example_c065",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_49",
+        "to": "reddit:comment:example_c074",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_op",
+        "to": "reddit:comment:example_c011",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_op",
+        "to": "reddit:comment:example_c012",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_op",
+        "to": "reddit:comment:example_c013",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_op",
+        "to": "reddit:comment:example_c014",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_op",
+        "to": "reddit:comment:example_c080",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_op",
+        "to": "reddit:comment:example_c081",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_op",
+        "to": "reddit:comment:example_c082",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_op",
+        "to": "reddit:comment:example_c083",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_op",
+        "to": "reddit:comment:example_c084",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_op",
+        "to": "reddit:comment:example_c085",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_op",
+        "to": "reddit:comment:example_c086",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_op",
+        "to": "reddit:comment:example_c095",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_op",
+        "to": "reddit:comment:example_c099",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_54",
+        "to": "reddit:comment:example_c079",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_11",
+        "to": "reddit:comment:example_c019",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_9",
+        "to": "reddit:comment:example_c010",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_3",
+        "to": "reddit:comment:example_c003",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:author:example_29",
+        "to": "reddit:comment:example_c045",
+        "type": "AUTHORED"
+      },
+      {
+        "from": "reddit:comment:example_c001",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c002",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c003",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c004",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c005",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c006",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c007",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c008",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c009",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c010",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c011",
+        "to": "reddit:comment:example_c006",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c012",
+        "to": "reddit:comment:example_c007",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c013",
+        "to": "reddit:comment:example_c008",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c014",
+        "to": "reddit:comment:example_c009",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c015",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c016",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c017",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c018",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c019",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c020",
+        "to": "reddit:comment:example_c004",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c021",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c022",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c023",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c024",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c025",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c026",
+        "to": "reddit:comment:example_c006",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c027",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c028",
+        "to": "reddit:comment:example_c006",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c029",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c030",
+        "to": "reddit:comment:example_c005",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c031",
+        "to": "reddit:comment:example_c013",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c032",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c033",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c034",
+        "to": "reddit:comment:example_c011",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c035",
+        "to": "reddit:comment:example_c026",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c036",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c037",
+        "to": "reddit:comment:example_c004",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c038",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c039",
+        "to": "reddit:comment:example_c020",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c040",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c041",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c042",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c043",
+        "to": "reddit:comment:example_c013",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c044",
+        "to": "reddit:comment:example_c004",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c045",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c046",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c047",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c048",
+        "to": "reddit:comment:example_c006",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c049",
+        "to": "reddit:comment:example_c011",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c050",
+        "to": "reddit:comment:example_c020",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c051",
+        "to": "reddit:comment:example_c050",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c052",
+        "to": "reddit:comment:example_c020",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c053",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c054",
+        "to": "reddit:comment:example_c052",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c055",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c056",
+        "to": "reddit:comment:example_c054",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c057",
+        "to": "reddit:comment:example_c054",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c058",
+        "to": "reddit:comment:example_c057",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c059",
+        "to": "reddit:comment:example_c058",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c060",
+        "to": "reddit:comment:example_c059",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c061",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c062",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c063",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c064",
+        "to": "reddit:comment:example_c013",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c065",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c066",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c067",
+        "to": "reddit:comment:example_c003",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c068",
+        "to": "reddit:comment:example_c003",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c069",
+        "to": "reddit:comment:example_c067",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c070",
+        "to": "reddit:comment:example_c013",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c071",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c072",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c073",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c074",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c075",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c076",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c077",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c078",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c079",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c080",
+        "to": "reddit:comment:example_c079",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c081",
+        "to": "reddit:comment:example_c076",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c082",
+        "to": "reddit:comment:example_c071",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c083",
+        "to": "reddit:comment:example_c063",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c084",
+        "to": "reddit:comment:example_c061",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c085",
+        "to": "reddit:comment:example_c040",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c086",
+        "to": "reddit:comment:example_c018",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c087",
+        "to": "reddit:comment:example_c085",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c088",
+        "to": "reddit:comment:example_c015",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c089",
+        "to": "reddit:comment:example_c088",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c090",
+        "to": "reddit:comment:example_c082",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c091",
+        "to": "reddit:comment:example_c004",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c092",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c093",
+        "to": "reddit:comment:example_c056",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c094",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c095",
+        "to": "reddit:comment:example_c094",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c096",
+        "to": "reddit:comment:example_c085",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c097",
+        "to": "reddit:comment:example_c095",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c098",
+        "to": "reddit:discussion:zq4rbu",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c099",
+        "to": "reddit:comment:example_c098",
+        "type": "REPLIES_TO"
+      },
+      {
+        "from": "reddit:comment:example_c100",
+        "to": "reddit:comment:example_c099",
+        "type": "REPLIES_TO"
+      }
+    ],
+    "graphRevision": 1,
+    "investigationId": "inv_example_knife",
+    "nodes": [
+      {
+        "type": "author",
+        "id": "reddit:author:example_23",
+        "platform": "reddit",
+        "nativeId": "example_23",
+        "handle": "commenter23",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_61",
+        "platform": "reddit",
+        "nativeId": "example_61",
+        "handle": "commenter61",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_28",
+        "platform": "reddit",
+        "nativeId": "example_28",
+        "handle": "commenter28",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_19",
+        "platform": "reddit",
+        "nativeId": "example_19",
+        "handle": "commenter19",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_10",
+        "platform": "reddit",
+        "nativeId": "example_10",
+        "handle": "commenter10",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_12",
+        "platform": "reddit",
+        "nativeId": "example_12",
+        "handle": "commenter12",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_21",
+        "platform": "reddit",
+        "nativeId": "example_21",
+        "handle": "commenter21",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_47",
+        "platform": "reddit",
+        "nativeId": "example_47",
+        "handle": "commenter47",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_20",
+        "platform": "reddit",
+        "nativeId": "example_20",
+        "handle": "commenter20",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_58",
+        "platform": "reddit",
+        "nativeId": "example_58",
+        "handle": "commenter58",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_14",
+        "platform": "reddit",
+        "nativeId": "example_14",
+        "handle": "commenter14",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_59",
+        "platform": "reddit",
+        "nativeId": "example_59",
+        "handle": "commenter59",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_34",
+        "platform": "reddit",
+        "nativeId": "example_34",
+        "handle": "commenter34",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_35",
+        "platform": "reddit",
+        "nativeId": "example_35",
+        "handle": "commenter35",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_24",
+        "platform": "reddit",
+        "nativeId": "example_24",
+        "handle": "commenter24",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_33",
+        "platform": "reddit",
+        "nativeId": "example_33",
+        "handle": "commenter33",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_53",
+        "platform": "reddit",
+        "nativeId": "example_53",
+        "handle": "commenter53",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_57",
+        "platform": "reddit",
+        "nativeId": "example_57",
+        "handle": "commenter57",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_15",
+        "platform": "reddit",
+        "nativeId": "example_15",
+        "handle": "commenter15",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_45",
+        "platform": "reddit",
+        "nativeId": "example_45",
+        "handle": "commenter45",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_51",
+        "platform": "reddit",
+        "nativeId": "example_51",
+        "handle": "commenter51",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_18",
+        "platform": "reddit",
+        "nativeId": "example_18",
+        "handle": "commenter18",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_43",
+        "platform": "reddit",
+        "nativeId": "example_43",
+        "handle": "commenter43",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_39",
+        "platform": "reddit",
+        "nativeId": "example_39",
+        "handle": "commenter39",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_36",
+        "platform": "reddit",
+        "nativeId": "example_36",
+        "handle": "commenter36",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_56",
+        "platform": "reddit",
+        "nativeId": "example_56",
+        "handle": "commenter56",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_2",
+        "platform": "reddit",
+        "nativeId": "example_2",
+        "handle": "commenter2",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_44",
+        "platform": "reddit",
+        "nativeId": "example_44",
+        "handle": "commenter44",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_1",
+        "platform": "reddit",
+        "nativeId": "example_1",
+        "handle": "commenter1",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_25",
+        "platform": "reddit",
+        "nativeId": "example_25",
+        "handle": "commenter25",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_7",
+        "platform": "reddit",
+        "nativeId": "example_7",
+        "handle": "commenter7",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_48",
+        "platform": "reddit",
+        "nativeId": "example_48",
+        "handle": "commenter48",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_16",
+        "platform": "reddit",
+        "nativeId": "example_16",
+        "handle": "commenter16",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_40",
+        "platform": "reddit",
+        "nativeId": "example_40",
+        "handle": "commenter40",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_6",
+        "platform": "reddit",
+        "nativeId": "example_6",
+        "handle": "commenter6",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_13",
+        "platform": "reddit",
+        "nativeId": "example_13",
+        "handle": "commenter13",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_38",
+        "platform": "reddit",
+        "nativeId": "example_38",
+        "handle": "commenter38",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_8",
+        "platform": "reddit",
+        "nativeId": "example_8",
+        "handle": "commenter8",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_5",
+        "platform": "reddit",
+        "nativeId": "example_5",
+        "handle": "commenter5",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_27",
+        "platform": "reddit",
+        "nativeId": "example_27",
+        "handle": "commenter27",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_60",
+        "platform": "reddit",
+        "nativeId": "example_60",
+        "handle": "commenter60",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_42",
+        "platform": "reddit",
+        "nativeId": "example_42",
+        "handle": "commenter42",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_50",
+        "platform": "reddit",
+        "nativeId": "example_50",
+        "handle": "commenter50",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_26",
+        "platform": "reddit",
+        "nativeId": "example_26",
+        "handle": "commenter26",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_4",
+        "platform": "reddit",
+        "nativeId": "example_4",
+        "handle": "commenter4",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_52",
+        "platform": "reddit",
+        "nativeId": "example_52",
+        "handle": "commenter52",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_37",
+        "platform": "reddit",
+        "nativeId": "example_37",
+        "handle": "commenter37",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_32",
+        "platform": "reddit",
+        "nativeId": "example_32",
+        "handle": "commenter32",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_17",
+        "platform": "reddit",
+        "nativeId": "example_17",
+        "handle": "commenter17",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_55",
+        "platform": "reddit",
+        "nativeId": "example_55",
+        "handle": "commenter55",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_22",
+        "platform": "reddit",
+        "nativeId": "example_22",
+        "handle": "commenter22",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_31",
+        "platform": "reddit",
+        "nativeId": "example_31",
+        "handle": "commenter31",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_30",
+        "platform": "reddit",
+        "nativeId": "example_30",
+        "handle": "commenter30",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_46",
+        "platform": "reddit",
+        "nativeId": "example_46",
+        "handle": "commenter46",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_41",
+        "platform": "reddit",
+        "nativeId": "example_41",
+        "handle": "commenter41",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_49",
+        "platform": "reddit",
+        "nativeId": "example_49",
+        "handle": "commenter49",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_op",
+        "platform": "reddit",
+        "nativeId": "example_op",
+        "handle": "original_poster",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_54",
+        "platform": "reddit",
+        "nativeId": "example_54",
+        "handle": "commenter54",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_11",
+        "platform": "reddit",
+        "nativeId": "example_11",
+        "handle": "commenter11",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_9",
+        "platform": "reddit",
+        "nativeId": "example_9",
+        "handle": "commenter9",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_3",
+        "platform": "reddit",
+        "nativeId": "example_3",
+        "handle": "commenter3",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "type": "author",
+        "id": "reddit:author:example_29",
+        "platform": "reddit",
+        "nativeId": "example_29",
+        "handle": "commenter29",
+        "displayName": null,
+        "identityQuality": "handle"
+      },
+      {
+        "authorId": "reddit:author:example_1",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-19T22:34:52.004Z",
+        "id": "reddit:comment:example_c001",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 2,
+          "score": 8
+        },
+        "nativeId": "example_c001",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-19T22:34:52.004000+0000",
+        "text": "Former kitchen manager here.  I found the Henkel food services knives to be the best value.    I've been out of restaurant work for 20 years but used the ones I purchased from our vendor for 3 before leaving.  The balance is excellent, they hold an edge for a very long time, and they cost about $30 US at the time.  My only complaint is that after all these years the blade shape has changed a bit (flatter) from use and sharpening; I'm thinking of having them reshaped but know that would shorten them a bit and I really like the length.  Maybe it's time to just buy a new one.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_2",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-19T22:41:39.074Z",
+        "id": "reddit:comment:example_c002",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 4
+        },
+        "nativeId": "example_c002",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-19T22:41:39.074000+0000",
+        "text": "I will recommend Wustoff (since you asked for European) but no knife is BIFL unless you or whoever you gift it to maintain the knife aka sharpen time to time. Victrinox is good but it will loose sharpness very quickly (it’s mostly molybdenum). Korin in NYC makes Japanese knives with European handles and ergonomics. They also have in-house sharpening service. If you ever into Japanese knives (like me) that’s another rabbit hole lol… check Japanese Knives Imports. A dull knife is more dangerous than a sharp one!",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_3",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-19T22:47:36.936Z",
+        "id": "reddit:comment:example_c003",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 13,
+          "score": 123
+        },
+        "nativeId": "example_c003",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-19T22:47:36.936000+0000",
+        "text": "Wusthof classic",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_4",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-19T22:59:37.754Z",
+        "id": "reddit:comment:example_c004",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 15,
+          "score": 31
+        },
+        "nativeId": "example_c004",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-19T22:59:37.754000+0000",
+        "text": "I just bought a JA Henckel Zwilling Pro 8\" chefs knife as a gift. I have one very similar and like it a lot. It was $150 on sale.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_5",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-19T23:01:46.344Z",
+        "id": "reddit:comment:example_c005",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 1,
+          "score": 3
+        },
+        "nativeId": "example_c005",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-19T23:01:46.344000+0000",
+        "text": "This may be useful information. https://youtu.be/wd9uoHsWuOE\n\nMaybe add a knife sharpener.  https://youtu.be/_1Yrwx9uRnA",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_6",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-19T23:07:47.144Z",
+        "id": "reddit:comment:example_c006",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 7,
+          "score": 15
+        },
+        "nativeId": "example_c006",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-19T23:07:47.144000+0000",
+        "text": "I love my Lamson knives. Made in USA. Fantastic classic chefs knife:\n\nhttps://lamsonproducts.com/collections/chefs-knives/products/8-chef-knife?variant=39680090931294",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_7",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-19T23:08:43.869Z",
+        "id": "reddit:comment:example_c007",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 1,
+          "score": 1
+        },
+        "nativeId": "example_c007",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-19T23:08:43.869000+0000",
+        "text": "I have a Wustoff 6\" chef knife and a Shun 8\". Both are great but the Shun seems to hold its edge better",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_8",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-19T23:12:16.687Z",
+        "id": "reddit:comment:example_c008",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 5,
+          "score": 11
+        },
+        "nativeId": "example_c008",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-19T23:12:16.687000+0000",
+        "text": "Serious eats has a pretty good article on this. I ended up with the Mercer 8 inch knife. I’ve had it for 4.5 years and it’s required minimal sharpening: https://www.seriouseats.com/the-best-chefs-knives",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": null,
+        "contentStatus": "deleted",
+        "createdAt": "2022-12-19T23:30:28.236Z",
+        "id": "reddit:comment:example_c009",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 1,
+          "score": 0
+        },
+        "nativeId": "example_c009",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-19T23:30:28.236000+0000",
+        "text": "",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_9",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-19T23:37:28.731Z",
+        "id": "reddit:comment:example_c010",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 2
+        },
+        "nativeId": "example_c010",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-19T23:37:28.731000+0000",
+        "text": "Wusthof Classic Chef knife 8 inch many people like their Ikon line too",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_op",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-19T23:37:50.504Z",
+        "id": "reddit:comment:example_c011",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 2,
+          "score": 0
+        },
+        "nativeId": "example_c011",
+        "nativeParentId": "example_c006",
+        "parentId": "reddit:comment:example_c006",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-19T23:37:50.504000+0000",
+        "text": "I love the look of them.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_op",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-19T23:40:30.150Z",
+        "id": "reddit:comment:example_c012",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c012",
+        "nativeParentId": "example_c007",
+        "parentId": "reddit:comment:example_c007",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-19T23:40:30.150000+0000",
+        "text": "Thanks! Love the comparison, since I'm looking at both.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_op",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-19T23:41:15.043Z",
+        "id": "reddit:comment:example_c013",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 4,
+          "score": 1
+        },
+        "nativeId": "example_c013",
+        "nativeParentId": "example_c008",
+        "parentId": "reddit:comment:example_c008",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-19T23:41:15.043000+0000",
+        "text": "I was wondering about those. Mercers never seem to top anyone's lists, but they're reliably on them.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_op",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-19T23:44:23.244Z",
+        "id": "reddit:comment:example_c014",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 4
+        },
+        "nativeId": "example_c014",
+        "nativeParentId": "example_c009",
+        "parentId": "reddit:comment:example_c009",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-19T23:44:23.244000+0000",
+        "text": "Individual knives are well within budget. Thank you!",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": null,
+        "contentStatus": "visible",
+        "createdAt": "2022-12-19T23:47:47.131Z",
+        "id": "reddit:comment:example_c015",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 2,
+          "score": 4
+        },
+        "nativeId": "example_c015",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-19T23:47:47.131000+0000",
+        "text": "[Misono UX-10 240mm chef's/gyuto](https://japanesechefsknife.com/collections/gyuto/products/misono-ux10-series-gyutogyuto180mm-to-gyuto300mm-5-sizes?variant=29222090243). I can't think of a better do-it-all chef's knife, with an extra 30mm of blade length for slicing meaty meats.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": null,
+        "contentStatus": "visible",
+        "createdAt": "2022-12-19T23:56:36.070Z",
+        "id": "reddit:comment:example_c016",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c016",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-19T23:56:36.070000+0000",
+        "text": "Rada knives rock",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_10",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-19T23:57:16.619Z",
+        "id": "reddit:comment:example_c017",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 8
+        },
+        "nativeId": "example_c017",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-19T23:57:16.619000+0000",
+        "text": "Victorinox fibrox knives are cheap and good",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": null,
+        "contentStatus": "removed",
+        "createdAt": "2022-12-20T00:07:38.602Z",
+        "id": "reddit:comment:example_c018",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 1,
+          "score": 1
+        },
+        "nativeId": "example_c018",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T00:07:38.602000+0000",
+        "text": "",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_11",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T00:16:15.134Z",
+        "id": "reddit:comment:example_c019",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 2,
+          "score": 15
+        },
+        "nativeId": "example_c019",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T00:16:15.134000+0000",
+        "text": "Tojiro dp is a great one for around $100!",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_12",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T00:22:42.267Z",
+        "id": "reddit:comment:example_c020",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 11,
+          "score": 36
+        },
+        "nativeId": "example_c020",
+        "nativeParentId": "example_c004",
+        "parentId": "reddit:comment:example_c004",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T00:22:42.267000+0000",
+        "text": "[Commercial kitchen version](https://chefequipment.com/products/zwilling-twin-master-chef-knife-yellow).  It's yellow for high visibility and that handle won't slip when wet.\n\n$55.  I've had it for about 10 years now.  Sharpen myself with a whetstone, because worst case Ontario I'm only out $50.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_13",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T00:26:23.117Z",
+        "id": "reddit:comment:example_c021",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c021",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T00:26:23.117000+0000",
+        "text": "https://www.dick-messer.de/Dick-Kochmesser-Premier-Plus",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_14",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T00:32:07.648Z",
+        "id": "reddit:comment:example_c022",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 2
+        },
+        "nativeId": "example_c022",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T00:32:07.648000+0000",
+        "text": "I have had my Lamson Sharp 10” chef for 17 years of daily use. Zero complaints and absolutely on par in quality with the better German blades. I just bought an 8” chef from them a year ago. The same great quality with perhaps a bit better finishing.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_1",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T00:40:00.928Z",
+        "id": "reddit:comment:example_c023",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c023",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T00:40:00.928000+0000",
+        "text": "Ok,  I had to do some searching but found what I think the exact knife is:\n\nZWILLING TWIN MASTER\n9.5-INCH, CHEF'S KNIFE - BLACK HANDLE\nZWILLING\n\nAlso bought a bread knife with it.  Its also one of my favorites.  I bought them in 1995.\n\nGoogle that and you should find a number of matches. Not sure about the bread knife.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_15",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T00:41:36.580Z",
+        "id": "reddit:comment:example_c024",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c024",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T00:41:36.580000+0000",
+        "text": "Victorinox great at a smaller budget, Wusthof classic if you've got a few more quid to spend (can't remember what size mine is - I think 20cm maybe 25), there are better more expensive choices out there but those are both quality and while last a lifetime",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_16",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T00:42:28.808Z",
+        "id": "reddit:comment:example_c025",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 3
+        },
+        "nativeId": "example_c025",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T00:42:28.808000+0000",
+        "text": "Zwilling Pro 8\" Chef's knife",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_17",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T00:47:35.949Z",
+        "id": "reddit:comment:example_c026",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 1,
+          "score": 4
+        },
+        "nativeId": "example_c026",
+        "nativeParentId": "example_c006",
+        "parentId": "reddit:comment:example_c006",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T00:47:35.949000+0000",
+        "text": "We bought one a few years ago; it stays sharper than our Global, and is much heftier. Our Global is very lightweight, not sure if that's true of all of them.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_18",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T01:05:55.628Z",
+        "id": "reddit:comment:example_c027",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 2
+        },
+        "nativeId": "example_c027",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T01:05:55.628000+0000",
+        "text": "Meaty meat? Get yourself a nice Santoku knife. We use a Shun Classic and it’s amazing and they RE sharpen for free. We use ours all the time and after a year of routine use (4-5 times a week) it’s still razor sharp.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_19",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T01:13:30.273Z",
+        "id": "reddit:comment:example_c028",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 3
+        },
+        "nativeId": "example_c028",
+        "nativeParentId": "example_c006",
+        "parentId": "reddit:comment:example_c006",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T01:13:30.273000+0000",
+        "text": "Finally seeing this comment. The cleaver is a favorite of mine too.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_20",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T01:23:10.431Z",
+        "id": "reddit:comment:example_c029",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 3
+        },
+        "nativeId": "example_c029",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T01:23:10.431000+0000",
+        "text": "I love my Zwilling Henkel Santoku knife, it came as part of a knife block set, but I find I use the Santoku most regularly. It's 7-8\"?",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_21",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T01:32:38.980Z",
+        "id": "reddit:comment:example_c030",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 2
+        },
+        "nativeId": "example_c030",
+        "nativeParentId": "example_c005",
+        "parentId": "reddit:comment:example_c005",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T01:32:38.980000+0000",
+        "text": "You absolutely need and must look for precision guides with your roll sharp otherwise if the knife goes off kilter you can remove too much from one side (much the same as wheeled grinders)",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_8",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T01:35:17.133Z",
+        "id": "reddit:comment:example_c031",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c031",
+        "nativeParentId": "example_c013",
+        "parentId": "reddit:comment:example_c013",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T01:35:17.133000+0000",
+        "text": "It’s been pretty solid. I was looking for a knife that a) wasn’t dangerously sharp and that i’d feel comfortable having others use, b) performs well and c) wouldn’t be a major loss if my partner accidentally put in the dishwasher",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_22",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T01:35:47.379Z",
+        "id": "reddit:comment:example_c032",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 2
+        },
+        "nativeId": "example_c032",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T01:35:47.379000+0000",
+        "text": "The reality is that any good knife maker will make a BIFL knife, assuming whoever sharpens it knows what they’re doing.\n\nI’d recommend that you check out the Tojiro DP gyuto. It’s a full 8” and can handle the majority of kitchen tasks, although I wouldn’t want to use it to dice garlic, for example. \n\nIt’s a solid, well-build knife in the gyuto style (so it’s a western chef knife style). It is stainless steel so maintenance is much easier. The blade is thin so it will cut very well. It’s also relatively hard so it will maintain its sharpness for awhile.\n\nIf you compare that to German chef knives, they are typically thicker and softer but not always. \n\nI would strongly recommend you not go to r/chefknives because you’ll spend way too much. But stainless steel, western blade profile/handle, and a thin edge geometry make it one of the best knives you can get for $100",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_21",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T01:41:46.619Z",
+        "id": "reddit:comment:example_c033",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 4
+        },
+        "nativeId": "example_c033",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T01:41:46.619000+0000",
+        "text": "Instead of brand you should know what to look for\n\nYou want the tang or the metal part to either be part of the handle or forged into it like a global. You want a couple of rivets minimum if it's not forged handle/blade.\n\nNext you need to know what you plan on cutting with it whether it includes bones or other dense materials or just soft vegetables, meats and fish. \n\nJapanese knives have a slighter angle and less material over all (for the standard chef's knife) (there are cleavers as well that can be used for everything). That and the bevel for Japanese is usually about 18°\n\nEuropean knives are different, they're heavier, have a larger bevel and can handle heftier cuts without sharpening. They however won't glide through vegetables as well or be as precise.\n\nEvery brand will have its entry level cheaper versions and ones that are designer and others that are great for both the professional and the home cook.\n\nNotable brands are:\n\nEuropean:\n\n* Victoriaknox\n* Wustoff\n* Henkel\n\nJapanese\n\n* Mac\n* Kikuichis\n* Global\n* Kershaw-shun",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_6",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T01:43:57.992Z",
+        "id": "reddit:comment:example_c034",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 2
+        },
+        "nativeId": "example_c034",
+        "nativeParentId": "example_c011",
+        "parentId": "reddit:comment:example_c011",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T01:43:57.992000+0000",
+        "text": "Mine are a decade old. They could use a sharpen at this point but I can still slice tomatoes with ease. I’m very happy with the purchase 10 years in and confident they’ll never need to be replaced. I plan on sending them back to lamson soon for a free professional sharpening.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_6",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T01:45:39.990Z",
+        "id": "reddit:comment:example_c035",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 4
+        },
+        "nativeId": "example_c035",
+        "nativeParentId": "example_c026",
+        "parentId": "reddit:comment:example_c026",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T01:45:39.990000+0000",
+        "text": "I have a 7 or so piece set and their scissors. Can’t speak highly enough about them. It’s everything I want in a kitchen knife. Weight / shape / balance / sharpness. Made in USA. They check all the boxes for me.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_23",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T01:55:59.361Z",
+        "id": "reddit:comment:example_c036",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c036",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T01:55:59.361000+0000",
+        "text": "Depends on what you're cutting. If versatility is what you need, buy German made. If you're slicing meats or fish, buy Japanese. They have a specific knife for each food. They treat knives like tools so there is a tool for every application. I've been collecting Matsumoto knives every time we visit Tokyo. I am still using my Western style carbon steel knife purchased 18 years ago. Requires sharpening once a year.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_24",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T02:06:53.844Z",
+        "id": "reddit:comment:example_c037",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 3
+        },
+        "nativeId": "example_c037",
+        "nativeParentId": "example_c004",
+        "parentId": "reddit:comment:example_c004",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T02:06:53.844000+0000",
+        "text": "Can't go far wrong with one of these if it's a wieldy hunk of German steel you're after. I've got one of these along with a cheap sharp & lightweight Santoku. Between them they pretty much cover all of my chopping needs.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_25",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T02:33:51.970Z",
+        "id": "reddit:comment:example_c038",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c038",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T02:33:51.970000+0000",
+        "text": "Global, reasonably priced and good hand feel.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": null,
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T02:40:54.572Z",
+        "id": "reddit:comment:example_c039",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 19
+        },
+        "nativeId": "example_c039",
+        "nativeParentId": "example_c020",
+        "parentId": "reddit:comment:example_c020",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T02:40:54.572000+0000",
+        "text": "Worst case Ontario? Didn't know!",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": null,
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T02:42:12.708Z",
+        "id": "reddit:comment:example_c040",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 3,
+          "score": 3
+        },
+        "nativeId": "example_c040",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T02:42:12.708000+0000",
+        "text": "Surprised I didn't see Shun in here. Still one of my favorite kitchen purchases of the last 10 years. Also given it as a gift to several people who seem to appreciate it after many years. Have had mine professionally sharpened maybe 3 times. Kept it out of the dishwasher. It's fantastic. I bought it because my knife sharpening guy recommended it, and he looks at a ton of knives.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_26",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T02:53:49.180Z",
+        "id": "reddit:comment:example_c041",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c041",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T02:53:49.180000+0000",
+        "text": "Just to go a bit out of the norm (since all of the other suggestions are absolutely fantastic and you can't go wrong with them!) But since this is a gift, you can see if there's a local bladesmith to your giftee. Chances are it will look nicer than common knives, and I see many local smiths offering lifetime sharpening / warranties.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_27",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T02:57:09.289Z",
+        "id": "reddit:comment:example_c042",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 4
+        },
+        "nativeId": "example_c042",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T02:57:09.289000+0000",
+        "text": "Bang for the buck option (not sure your budget): Victorinox Fibrox 8\"\n\nMore upscale option: Wusthof Classic Ikon 8\"",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_28",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T02:58:13.828Z",
+        "id": "reddit:comment:example_c043",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 2
+        },
+        "nativeId": "example_c043",
+        "nativeParentId": "example_c013",
+        "parentId": "reddit:comment:example_c013",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T02:58:13.828000+0000",
+        "text": "Came here to say the same thing. Bought the Mercer Renaissance a couple years ago and love it. Gave one out as a gift, and have also bought a few of the other knives in this line. Comfortable, nice balance, and holds an edge for a long time.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": null,
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T03:03:42.157Z",
+        "id": "reddit:comment:example_c044",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 3
+        },
+        "nativeId": "example_c044",
+        "nativeParentId": "example_c004",
+        "parentId": "reddit:comment:example_c004",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T03:03:42.157000+0000",
+        "text": "I was very disappointed with mine. I found it absurdly difficult to hold an edge. Maybe I just suck at sharpening but I don’t have problems with my other knives.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_29",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T03:18:15.556Z",
+        "id": "reddit:comment:example_c045",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 2
+        },
+        "nativeId": "example_c045",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T03:18:15.556000+0000",
+        "text": "I love my new misen.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_30",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T03:23:52.492Z",
+        "id": "reddit:comment:example_c046",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c046",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T03:23:52.492000+0000",
+        "text": "I sharpen my Cutco butchers knife every other year and use the absolute hell out of it on a weekly basis.\n\nPlus I love the ergonomic grip, and if it ever becomes unsharpenable, I can send it back and get a free replacement for the cost of shipping.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_31",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T03:25:18.382Z",
+        "id": "reddit:comment:example_c047",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 2
+        },
+        "nativeId": "example_c047",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T03:25:18.382000+0000",
+        "text": "If you’re debating between Wüsthot or Henckels, skip both and get Messermeister. \n\nArguably the best “western” chef knives available.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_31",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T03:27:56.167Z",
+        "id": "reddit:comment:example_c048",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c048",
+        "nativeParentId": "example_c006",
+        "parentId": "reddit:comment:example_c006",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T03:27:56.167000+0000",
+        "text": "Those are some solid looking knives. Good price, too.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_32",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T03:36:03.082Z",
+        "id": "reddit:comment:example_c049",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 5
+        },
+        "nativeId": "example_c049",
+        "nativeParentId": "example_c011",
+        "parentId": "reddit:comment:example_c011",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T03:36:03.082000+0000",
+        "text": "This is weird but it is super cool to hear you say this, my grandfather used to work at Lamson as a knife shaper. We have a set of them he brought home one knife at a time forever ago, I do think they look cool.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_33",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T03:39:29.471Z",
+        "id": "reddit:comment:example_c050",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 1,
+          "score": 11
+        },
+        "nativeId": "example_c050",
+        "nativeParentId": "example_c020",
+        "parentId": "reddit:comment:example_c020",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T03:39:29.471000+0000",
+        "text": "username checks out.\n\nIs it good at cutting tops off of pop bottles if you need a cup?",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_12",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T03:40:44.803Z",
+        "id": "reddit:comment:example_c051",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 7
+        },
+        "nativeId": "example_c051",
+        "nativeParentId": "example_c050",
+        "parentId": "reddit:comment:example_c050",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T03:40:44.803000+0000",
+        "text": "2 smokes...",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_34",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T03:41:22.265Z",
+        "id": "reddit:comment:example_c052",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 7,
+          "score": 6
+        },
+        "nativeId": "example_c052",
+        "nativeParentId": "example_c020",
+        "parentId": "reddit:comment:example_c020",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T03:41:22.265000+0000",
+        "text": "That’s a new saying, worst case Ontario.  Lmao",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_33",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T03:41:39.887Z",
+        "id": "reddit:comment:example_c053",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c053",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T03:41:39.887000+0000",
+        "text": "I like Global knives, Japanese company but they make western styles. The one piece constriction means the handle wont crack over time.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_12",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T03:43:34.904Z",
+        "id": "reddit:comment:example_c054",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 6,
+          "score": 12
+        },
+        "nativeId": "example_c054",
+        "nativeParentId": "example_c052",
+        "parentId": "reddit:comment:example_c052",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T03:43:34.904000+0000",
+        "text": "It's all water under the fridge",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_35",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T03:50:52.842Z",
+        "id": "reddit:comment:example_c055",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c055",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T03:50:52.842000+0000",
+        "text": "I bought a few MAC knives about 10 years ago. They look and feel brand new today. They hold an edge really well, so I really only sharpen them once a year (or if I’m being honest, every few years). Other than that a periodic hone with a honing rod keeps them pretty sharp. Highly recommend!",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_36",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T04:06:57.293Z",
+        "id": "reddit:comment:example_c056",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 1,
+          "score": 2
+        },
+        "nativeId": "example_c056",
+        "nativeParentId": "example_c054",
+        "parentId": "reddit:comment:example_c054",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T04:06:57.293000+0000",
+        "text": "OP is streets ahead",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_37",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T04:10:12.529Z",
+        "id": "reddit:comment:example_c057",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 3,
+          "score": 6
+        },
+        "nativeId": "example_c057",
+        "nativeParentId": "example_c054",
+        "parentId": "reddit:comment:example_c054",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T04:10:12.529000+0000",
+        "text": "Supply and command",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_12",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T04:22:16.227Z",
+        "id": "reddit:comment:example_c058",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 2,
+          "score": 5
+        },
+        "nativeId": "example_c058",
+        "nativeParentId": "example_c057",
+        "parentId": "reddit:comment:example_c057",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T04:22:16.227000+0000",
+        "text": "Ah toad ah so",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_37",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T04:23:50.650Z",
+        "id": "reddit:comment:example_c059",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 1,
+          "score": 5
+        },
+        "nativeId": "example_c059",
+        "nativeParentId": "example_c058",
+        "parentId": "reddit:comment:example_c058",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T04:23:50.650000+0000",
+        "text": "I fucking atoadaso",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_12",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T04:24:52.624Z",
+        "id": "reddit:comment:example_c060",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 2
+        },
+        "nativeId": "example_c060",
+        "nativeParentId": "example_c059",
+        "parentId": "reddit:comment:example_c059",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T04:24:52.624000+0000",
+        "text": "Lol. I forgot how they spelled that one.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_38",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T04:33:19.606Z",
+        "id": "reddit:comment:example_c061",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 1,
+          "score": 1
+        },
+        "nativeId": "example_c061",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T04:33:19.606000+0000",
+        "text": "Global",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_39",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T04:46:26.062Z",
+        "id": "reddit:comment:example_c062",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c062",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T04:46:26.062000+0000",
+        "text": "What's your budget? Hop onto carbonknifeco / chefknifestogo / bernal cutlery (three shops in the USA I have used and trust) and start looking, any knife you buy from one of those places will be BIFL with proper care. I personally like supporting independent or smaller artisan blacksmiths, but there's some great stuff from big names as well. \n\nIf you have the budget and want a known quantity, look at the bob Kramer (super well known American blacksmith) zwilling line. Basically his designs produced to his specs by zwilling in Japan. Great western style knife with Japanese steel.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": null,
+        "contentStatus": "deleted",
+        "createdAt": "2022-12-20T05:46:02.709Z",
+        "id": "reddit:comment:example_c063",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 1,
+          "score": 0
+        },
+        "nativeId": "example_c063",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T05:46:02.709000+0000",
+        "text": "",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_40",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T05:59:20.621Z",
+        "id": "reddit:comment:example_c064",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 2
+        },
+        "nativeId": "example_c064",
+        "nativeParentId": "example_c013",
+        "parentId": "reddit:comment:example_c013",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T05:59:20.621000+0000",
+        "text": "Had a Henkels classic 8 inch knife I got used over 10 yrs ago. A few months ago I took it out of the block and somehow bobbled it. Fell tip down on counter and the scales popped off in addition to damaging the tip. In a pinch I got the 8” Mercer with white handle.  $10. I’m surprised how much I like it. I like it way more than my victorinox I had because this things got heft.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_41",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T07:21:32.423Z",
+        "id": "reddit:comment:example_c065",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c065",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T07:21:32.423000+0000",
+        "text": "Cck vegetable cleaver in carbon steel.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_42",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T08:09:30.737Z",
+        "id": "reddit:comment:example_c066",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 2
+        },
+        "nativeId": "example_c066",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T08:09:30.737000+0000",
+        "text": "Victorinox fibrox 10” chefs knife",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_43",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T10:13:53.600Z",
+        "id": "reddit:comment:example_c067",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 2,
+          "score": 3
+        },
+        "nativeId": "example_c067",
+        "nativeParentId": "example_c003",
+        "parentId": "reddit:comment:example_c003",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T10:13:53.600000+0000",
+        "text": "Very happy with my wüsthof too! Also, OP, get yourself a knife sharpening stick or stone and learn how to maintain your knifes. you can \"practice\" on your cheaper knifes too",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_44",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T10:32:45.568Z",
+        "id": "reddit:comment:example_c068",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 6
+        },
+        "nativeId": "example_c068",
+        "nativeParentId": "example_c003",
+        "parentId": "reddit:comment:example_c003",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T10:32:45.568000+0000",
+        "text": "I'll also recommend Wusthof, although I prefer the Ikon to the Classic, mostly due to the handle.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_45",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T11:19:05.320Z",
+        "id": "reddit:comment:example_c069",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 1,
+          "score": 2
+        },
+        "nativeId": "example_c069",
+        "nativeParentId": "example_c067",
+        "parentId": "reddit:comment:example_c067",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T11:19:05.320000+0000",
+        "text": "Project Farm did a review of various knife sharpeners, and recommends the Lansky style system.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_46",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T11:33:21.738Z",
+        "id": "reddit:comment:example_c070",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c070",
+        "nativeParentId": "example_c013",
+        "parentId": "reddit:comment:example_c013",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T11:33:21.738000+0000",
+        "text": "The [Mercer Genesis](https://www.mercerculinary.com/product-category/cutlery/genesis-cutlery/) handles are my favorite of any knife I've ever used!  They just never move in your grip unless you intend it. Effortless control. \n\nI just with they had a narrow blade paring option as theirs is a bit wide and I use the [Henkel](https://www.cutleryandmore.com/henckels-four-star/paring-knife-p1192?gclid=Cj0KCQiA14WdBhD8ARIsANao07hOGICr611f5tLe_Xk13WFL88tagsHM7CFzKjWN7txRODQht7DEqvwaAlafEALw_wcB) for more fine work.  In retrospect, I'd just get a [Mercer Mellenia](https://www.amazon.com/Mercer-Culinary-M23900P-Millennia-3-Inch/dp/B00DT1XQ6M/) for detail work",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_47",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T13:06:05.728Z",
+        "id": "reddit:comment:example_c071",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 2,
+          "score": 2
+        },
+        "nativeId": "example_c071",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T13:06:05.728000+0000",
+        "text": "You're swimming in good choices.  But piece of advice, gift it with a sharpener!  That's the difference between an okay knife and a great knife.\n\nhttps://www.amazon.com/ChefsChoice-Sharpener-Serrated-Straight-Abrasives/dp/B001KZH3ZE/\n\nI use and recommend this one; I got it at TJ Maxx a decade ago and it's held up and performed nicely.  \n\nYou can't go wrong with a Wusthoff Classic, but my mother's surprise favorite is the now-discontinued Schmitt Bros. \"The One\", which is shaped like some kind of ungodly kitchen machete, has enough tip weight to chop with, and has __glorious__ ergonomics.  If you find one for sale and don't gift it, let me know so I can buy a spare...",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": null,
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T15:04:11.806Z",
+        "id": "reddit:comment:example_c072",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c072",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T15:04:11.806000+0000",
+        "text": "https://www.zwilling.com/us/zwilling/cutlery/pro-holm-oak/",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_48",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T15:47:26.040Z",
+        "id": "reddit:comment:example_c073",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c073",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T15:47:26.040000+0000",
+        "text": "Victorninox",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_49",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T16:10:27.956Z",
+        "id": "reddit:comment:example_c074",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c074",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T16:10:27.956000+0000",
+        "text": "Kikuichi carbon with western handle...a  little more upkeep because the blade is reactive but it will stay sharp a long time, you just need to wipe it off periodically, yes it will react with acidic foods but the edge retention is worth the hassle.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_50",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T17:31:45.239Z",
+        "id": "reddit:comment:example_c075",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 0
+        },
+        "nativeId": "example_c075",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T17:31:45.239000+0000",
+        "text": "Cutco knives, guaranteed for life and can be passed down to the next generation. We have the full set and my partner loves everyone of them.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_51",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T17:38:59.905Z",
+        "id": "reddit:comment:example_c076",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 1,
+          "score": 2
+        },
+        "nativeId": "example_c076",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T17:38:59.905000+0000",
+        "text": "Lots of reasonable recommendations have been made, but one thing I'd like to point out is that something can be excellently constructed and a good performer, but if you want to replace it in time for something prettier then I'd struggle to call it BIFL. The Victorinox Fibrox and Zwilling Twin Master are both excellent blades capable of decades worth of home use, but for some people they simply aren't what they want their main kitchen tool to look like.\n\nFor a gift, I'd also caution against extra hard steels on some Japanese blades like the VG-10 of the Tojiro DP or the more exotic Shuns and Miyabis. Hard steels are great for those who are prepared for them, but they also need to be treated differently as their hardness equates to brittleness and leaves them susceptible to large chips in cases where softer steels would suffer a rolled edge. I think HRC 56-58 is a good sweet spot.\n\nGiven that my previous recommendation of the Fujiwara FKM has seemingly been suffering from consistency issues, perhaps my recommendation would be the AUS-8 steel [Gesshin Stainless yo-gyuto](https://www.japaneseknifeimports.com/collections/stainless-yo-series/products/gesshin-240mm-stainless-gyuto) if it ever comes back in stock.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_52",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T19:15:34.714Z",
+        "id": "reddit:comment:example_c077",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c077",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T19:15:34.714000+0000",
+        "text": "Wusthof is king. Just had my parents buy me a set for Christmas because they have had theirs 30+ years.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_53",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T19:38:32.648Z",
+        "id": "reddit:comment:example_c078",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c078",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T19:38:32.648000+0000",
+        "text": "Whatever you get, don't get one with a bolster than runs into the heel of the knife... because it will make sharpening the knife increasingly difficult over the life of the knife. And if it's really going to be \"for life\", don't sharpen with a pull-through sharpener, learn how to sharpen on a stone or crock stick sharpener.\n\nVictorinox Fibrox Pro Chef's Knife is OK, but I'll also suggest a variety of Portuguese-designed (made?) ICEL chef's knives:\n\nhttps://www.icel.pt/en/products/kitchen/pratica/chefs-knife-narrow-blade-1925",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_54",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-20T20:36:34.446Z",
+        "id": "reddit:comment:example_c079",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 1,
+          "score": 1
+        },
+        "nativeId": "example_c079",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-20T20:36:34.446000+0000",
+        "text": "I'm a professional chef, and this is my favorite of the ~30 chef knives I've used. I have \"better\" carbon steel knives, but this is the trusty, durable go-to. It's sold out and has been for a while, but there are similar knives (240mm, ginsan/ginsanko/silver 3 stainless steel, the handle type doesn't matter).\n\nhttps://https://www.japaneseknifeimports.com/products/en-240mm-ginsanko-wa-gyuto?_pos=6&_sid=aa332541b&_ss=r/products/en-240mm-ginsanko-wa-gyuto?_pos=6&_sid=aa332541b&_ss=r",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_op",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-21T00:02:56.256Z",
+        "id": "reddit:comment:example_c080",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c080",
+        "nativeParentId": "example_c079",
+        "parentId": "reddit:comment:example_c079",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-21T00:02:56.256000+0000",
+        "text": "Ack. Sold out!",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_op",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-21T00:12:19.271Z",
+        "id": "reddit:comment:example_c081",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c081",
+        "nativeParentId": "example_c076",
+        "parentId": "reddit:comment:example_c076",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-21T00:12:19.271000+0000",
+        "text": "Excellent advice. Thank you. I do feel like my friend would \"oh...thanks?\" me for the Victorinox because the handle is obviously synthetic. Also, while they like to cook, they're not especially skilled or careful. A resilient blade will be better for them.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_op",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-21T00:16:04.244Z",
+        "id": "reddit:comment:example_c082",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 1,
+          "score": 2
+        },
+        "nativeId": "example_c082",
+        "nativeParentId": "example_c071",
+        "parentId": "reddit:comment:example_c071",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-21T00:16:04.244000+0000",
+        "text": "That Schmitt bros knife...amazing. What a beast.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_op",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-21T00:17:02.148Z",
+        "id": "reddit:comment:example_c083",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 2
+        },
+        "nativeId": "example_c083",
+        "nativeParentId": "example_c063",
+        "parentId": "reddit:comment:example_c063",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-21T00:17:02.148000+0000",
+        "text": "I like the way you think.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_op",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-21T00:18:35.017Z",
+        "id": "reddit:comment:example_c084",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c084",
+        "nativeParentId": "example_c061",
+        "parentId": "reddit:comment:example_c061",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-21T00:18:35.017000+0000",
+        "text": "Yeah...I see they're universally recommended. I just think they're kinda ugly. This knife won't live in a professional kitchen. My friend's aesthetic is pretty homey.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_op",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-21T00:19:59.460Z",
+        "id": "reddit:comment:example_c085",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 2,
+          "score": 2
+        },
+        "nativeId": "example_c085",
+        "nativeParentId": "example_c040",
+        "parentId": "reddit:comment:example_c040",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-21T00:19:59.460000+0000",
+        "text": "Yeah, I'm also surprised Shun hasn't come up more. I've been looking at them for myself. Makes me wonder now if they're overrated, although your experience is reassuring.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_op",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-21T00:26:35.210Z",
+        "id": "reddit:comment:example_c086",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c086",
+        "nativeParentId": "example_c018",
+        "parentId": "reddit:comment:example_c018",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-21T00:26:35.210000+0000",
+        "text": "How much would I need to worry about the blue steel rusting?",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": null,
+        "contentStatus": "visible",
+        "createdAt": "2022-12-21T02:12:56.992Z",
+        "id": "reddit:comment:example_c087",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c087",
+        "nativeParentId": "example_c085",
+        "parentId": "reddit:comment:example_c085",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-21T02:12:56.992000+0000",
+        "text": "Might not be as popular due to the price. I can't say I miss the hundred bucks given how excellent the knife continues to be.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_55",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-21T02:20:14.075Z",
+        "id": "reddit:comment:example_c088",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 1,
+          "score": 2
+        },
+        "nativeId": "example_c088",
+        "nativeParentId": "example_c015",
+        "parentId": "reddit:comment:example_c015",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-21T02:20:14.075000+0000",
+        "text": "This is my most recent purchase for using in a pro kitchen. Really nice knife. A bit overpriced. Still recommend tojiro over this for durability and price.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": null,
+        "contentStatus": "visible",
+        "createdAt": "2022-12-21T02:21:57.410Z",
+        "id": "reddit:comment:example_c089",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c089",
+        "nativeParentId": "example_c088",
+        "parentId": "reddit:comment:example_c088",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-21T02:21:57.410000+0000",
+        "text": "UX-10 is definitely a bit premium, but for a 1-knife collection i thought it would be appropriate to spend a little more!\n\ni do like my Toji DP 210 Gyu. Unexpectedly good finish for such an affordable knife.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_47",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-21T06:04:55.633Z",
+        "id": "reddit:comment:example_c090",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c090",
+        "nativeParentId": "example_c082",
+        "parentId": "reddit:comment:example_c082",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-21T06:04:55.633000+0000",
+        "text": "Indeed.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_56",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-21T18:01:29.099Z",
+        "id": "reddit:comment:example_c091",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c091",
+        "nativeParentId": "example_c004",
+        "parentId": "reddit:comment:example_c004",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-21T18:01:29.099000+0000",
+        "text": "I can second the JA Henckel Zwilling quality. I have 3 of their knives that I use daily and adore.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_57",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-24T05:32:24.553Z",
+        "id": "reddit:comment:example_c092",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 2
+        },
+        "nativeId": "example_c092",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-24T05:32:24.553000+0000",
+        "text": "For gifts, I agree that Western is the way to go. I would recommend considering the Wusthof Classic, Mercer's forged lines, and Victorinox, depending on what you wanted to spend.\n\nMercer is quite a lot of knife for the money. The Genesis is good for bigger hands.\n\nIf you are looking to add a utility knife or two, the Spyderco Utility models with FRN handles are also great.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_58",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-24T21:53:24.683Z",
+        "id": "reddit:comment:example_c093",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c093",
+        "nativeParentId": "example_c056",
+        "parentId": "reddit:comment:example_c056",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-24T21:53:24.683000+0000",
+        "text": "gotta bear down!",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_59",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-25T19:51:32.361Z",
+        "id": "reddit:comment:example_c094",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 2,
+          "score": 2
+        },
+        "nativeId": "example_c094",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-25T19:51:32.361000+0000",
+        "text": "I have whustof classics, shuns and cutco. Which are all good, (shun I feel is too delicate) but my favourite is this oyo brand from Norway. It seems to hold the edge the best on sharpening, can just abuse it and it just stands up to everything.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_op",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-26T09:56:05.085Z",
+        "id": "reddit:comment:example_c095",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 1,
+          "score": 1
+        },
+        "nativeId": "example_c095",
+        "nativeParentId": "example_c094",
+        "parentId": "reddit:comment:example_c094",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-26T09:56:05.085000+0000",
+        "text": "https://oeyo.no/c/kjokken \n\nAdding URL for reference, since it was a bit tricky to find.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_60",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-26T21:57:39.646Z",
+        "id": "reddit:comment:example_c096",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 2
+        },
+        "nativeId": "example_c096",
+        "nativeParentId": "example_c085",
+        "parentId": "reddit:comment:example_c085",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-26T21:57:39.646000+0000",
+        "text": "Pro Chef here. I have bought two Shuns, and one of them (the far more expensive) broke within 2 years of not-so regular use. The handle started spinning in circles. I can't say I really see too many people in kitchens around me using Shun stuff. They do feel nice in the hand though.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_59",
+        "contentStatus": "visible",
+        "createdAt": "2022-12-27T04:35:51.165Z",
+        "id": "reddit:comment:example_c097",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 1
+        },
+        "nativeId": "example_c097",
+        "nativeParentId": "example_c095",
+        "parentId": "reddit:comment:example_c095",
+        "platform": "reddit",
+        "sourceTimestamp": "2022-12-27T04:35:51.165000+0000",
+        "text": "Thanks I had problems finding the link",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_61",
+        "contentStatus": "visible",
+        "createdAt": "2024-12-01T20:55:55.232Z",
+        "id": "reddit:comment:example_c098",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 2,
+          "score": 2
+        },
+        "nativeId": "example_c098",
+        "nativeParentId": null,
+        "parentId": "reddit:discussion:zq4rbu",
+        "platform": "reddit",
+        "sourceTimestamp": "2024-12-01T20:55:55.232000+0000",
+        "text": "Off topic, I love your user name. I hope you had a Thanksgiving dinner that couldn’t be beat.\n\nWhat brand did you end up getting and how has it worn over this past year? I’m looking for myself and came across this thread.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_op",
+        "contentStatus": "visible",
+        "createdAt": "2024-12-02T01:57:31.113Z",
+        "id": "reddit:comment:example_c099",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 1,
+          "score": 2
+        },
+        "nativeId": "example_c099",
+        "nativeParentId": "example_c098",
+        "parentId": "reddit:comment:example_c098",
+        "platform": "reddit",
+        "sourceTimestamp": "2024-12-02T01:57:31.113000+0000",
+        "text": "Thanks for following up!\n\nI got my giant friend a Victorinox 10\" butcher with Granton edge, a knife that begs the world *wielded*. It's his go-to knife for dead burnt bodies now (ha!). I also got him a sharpening stone, but he's Texan so I expect he's using an electric sharpener.\n\nFor myself, I got a Lamson Nakiri with walnut handle. Bit of a dark horse, but  the most comfortable chopper I've ever owned -- warm and heavy. If my older Wusthoffs ever die, I hope to replace them with Lamsons.",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_61",
+        "contentStatus": "visible",
+        "createdAt": "2024-12-02T02:24:15.378Z",
+        "id": "reddit:comment:example_c100",
+        "idQuality": "synthetic",
+        "metrics": {
+          "replyCount": 0,
+          "score": 2
+        },
+        "nativeId": "example_c100",
+        "nativeParentId": "example_c099",
+        "parentId": "reddit:comment:example_c099",
+        "platform": "reddit",
+        "sourceTimestamp": "2024-12-02T02:24:15.378000+0000",
+        "text": "Thanks so much for the follow up! I’ve got some googling to do, and a few hints to drop to the missus…\n\nAnd here’s hoping we never end up on the Group W bench! Happy holidays!\n\nEdit: that Victrinox is a damned machete! You were not exaggerating!",
+        "timestampPrecision": "exact",
+        "type": "comment",
+        "url": null
+      },
+      {
+        "authorId": "reddit:author:example_op",
+        "contentScope": "post_text",
+        "createdAt": "2022-12-19T21:53:10.000Z",
+        "id": "reddit:discussion:zq4rbu",
+        "kind": "post",
+        "metrics": {
+          "replyCount": 163,
+          "score": 164,
+          "upvoteRatio": 0.95
+        },
+        "nativeId": "zq4rbu",
+        "platform": "reddit",
+        "text": "Looking to buy a BIFL all-rounder chef's knife that's comfortable for large, meaty hands and adequate for large meaty meat. Knife will be a gift, so test driving isn't really an option. I'm leaning towards western style (vs. Japanese). Recommendations?",
+        "timestampPrecision": "exact",
+        "title": "Recommendation for BIFL chef's knife?",
+        "type": "discussion",
+        "url": "https://www.reddit.com/r/BuyItForLife/comments/zq4rbu/"
+      }
+    ],
+    "platform": "reddit",
+    "rootId": "reddit:discussion:zq4rbu",
+    "schemaVersion": "1.0.0",
+    "graphFingerprint": "9ffe20a2cf5f96fb4c3571e70cead8708238dc89319e3622ac079f0329be337b"
+  },
+  "enrichments": [
+    {
+      "completedAt": "2026-10-24T20:29:46.406Z",
+      "createdAt": "2026-10-24T20:29:26.588Z",
+      "enrichmentId": "enr_example_knife",
+      "investigationId": "inv_example_knife",
+      "results": [
+        {
+          "anchorCommentId": "reddit:comment:example_c022",
+          "authorId": "reddit:author:example_14",
+          "comments": [],
+          "coverage": {
+            "actorRunIds": [],
+            "candidateFetchedCount": 0,
+            "collectedAt": "2026-10-24T20:15:34.015Z",
+            "limitations": [
+              "Best-effort authored candidates, capped at 150; not a lifetime-history census.",
+              "Provider returned no rows identifying this requested author; availability and lifetime history are unknown.",
+              "No usable collected candidates; this does not establish empty lifetime history."
+            ],
+            "newestFetchedAt": null,
+            "oldestFetchedAt": null,
+            "providerTruncated": true,
+            "reachedAnchorWindow": null,
+            "requestedCount": 10,
+            "returnedCount": 0,
+            "sourceSnapshotRef": null
+          },
+          "error": {
+            "code": "PROVIDER_SIZE_LIMIT",
+            "message": "Raw dataset exceeds configured snapshot budget",
+            "retryable": false
+          },
+          "status": "failed",
+          "strategy": "none"
+        },
+        {
+          "authorId": "reddit:author:example_40",
+          "anchorCommentId": "reddit:comment:example_c064",
+          "status": "unavailable",
+          "strategy": "none",
+          "comments": [],
+          "coverage": {
+            "requestedCount": 10,
+            "returnedCount": 0,
+            "candidateFetchedCount": 0,
+            "providerTruncated": null,
+            "reachedAnchorWindow": null,
+            "oldestFetchedAt": null,
+            "newestFetchedAt": null,
+            "collectedAt": null,
+            "sourceSnapshotRef": null,
+            "actorRunIds": [],
+            "limitations": [
+              "History was not collected for this user."
+            ]
+          }
+        },
+        {
+          "authorId": "reddit:author:example_57",
+          "anchorCommentId": "reddit:comment:example_c092",
+          "status": "unavailable",
+          "strategy": "none",
+          "comments": [],
+          "coverage": {
+            "requestedCount": 10,
+            "returnedCount": 0,
+            "candidateFetchedCount": 0,
+            "providerTruncated": null,
+            "reachedAnchorWindow": null,
+            "oldestFetchedAt": null,
+            "newestFetchedAt": null,
+            "collectedAt": null,
+            "sourceSnapshotRef": null,
+            "actorRunIds": [],
+            "limitations": [
+              "History was not collected for this user."
+            ]
+          }
+        },
+        {
+          "authorId": "reddit:author:example_51",
+          "anchorCommentId": "reddit:comment:example_c076",
+          "status": "unavailable",
+          "strategy": "none",
+          "comments": [],
+          "coverage": {
+            "requestedCount": 10,
+            "returnedCount": 0,
+            "candidateFetchedCount": 0,
+            "providerTruncated": null,
+            "reachedAnchorWindow": null,
+            "oldestFetchedAt": null,
+            "newestFetchedAt": null,
+            "collectedAt": null,
+            "sourceSnapshotRef": null,
+            "actorRunIds": [],
+            "limitations": [
+              "History was not collected for this user."
+            ]
+          }
+        },
+        {
+          "anchorCommentId": "reddit:comment:example_c026",
+          "authorId": "reddit:author:example_17",
+          "comments": [],
+          "coverage": {
+            "actorRunIds": [],
+            "candidateFetchedCount": 0,
+            "collectedAt": "2026-10-24T20:15:34.015Z",
+            "limitations": [
+              "Best-effort authored candidates, capped at 150; not a lifetime-history census.",
+              "Provider returned no rows identifying this requested author; availability and lifetime history are unknown.",
+              "No usable collected candidates; this does not establish empty lifetime history."
+            ],
+            "newestFetchedAt": null,
+            "oldestFetchedAt": null,
+            "providerTruncated": true,
+            "reachedAnchorWindow": null,
+            "requestedCount": 10,
+            "returnedCount": 0,
+            "sourceSnapshotRef": null
+          },
+          "error": {
+            "code": "PROVIDER_SIZE_LIMIT",
+            "message": "Raw dataset exceeds configured snapshot budget",
+            "retryable": false
+          },
+          "status": "failed",
+          "strategy": "none"
+        },
+        {
+          "authorId": "reddit:author:example_45",
+          "anchorCommentId": "reddit:comment:example_c069",
+          "status": "unavailable",
+          "strategy": "none",
+          "comments": [],
+          "coverage": {
+            "requestedCount": 10,
+            "returnedCount": 0,
+            "candidateFetchedCount": 0,
+            "providerTruncated": null,
+            "reachedAnchorWindow": null,
+            "oldestFetchedAt": null,
+            "newestFetchedAt": null,
+            "collectedAt": null,
+            "sourceSnapshotRef": null,
+            "actorRunIds": [],
+            "limitations": [
+              "History was not collected for this user."
+            ]
+          }
+        },
+        {
+          "authorId": "reddit:author:example_60",
+          "anchorCommentId": "reddit:comment:example_c096",
+          "status": "unavailable",
+          "strategy": "none",
+          "comments": [],
+          "coverage": {
+            "requestedCount": 10,
+            "returnedCount": 0,
+            "candidateFetchedCount": 0,
+            "providerTruncated": null,
+            "reachedAnchorWindow": null,
+            "oldestFetchedAt": null,
+            "newestFetchedAt": null,
+            "collectedAt": null,
+            "sourceSnapshotRef": null,
+            "actorRunIds": [],
+            "limitations": [
+              "History was not collected for this user."
+            ]
+          }
+        },
+        {
+          "authorId": "reddit:author:example_37",
+          "anchorCommentId": "reddit:comment:example_c057",
+          "status": "unavailable",
+          "strategy": "none",
+          "comments": [],
+          "coverage": {
+            "requestedCount": 10,
+            "returnedCount": 0,
+            "candidateFetchedCount": 0,
+            "providerTruncated": null,
+            "reachedAnchorWindow": null,
+            "oldestFetchedAt": null,
+            "newestFetchedAt": null,
+            "collectedAt": null,
+            "sourceSnapshotRef": null,
+            "actorRunIds": [],
+            "limitations": [
+              "History was not collected for this user."
+            ]
+          }
+        },
+        {
+          "authorId": "reddit:author:example_36",
+          "anchorCommentId": "reddit:comment:example_c056",
+          "status": "unavailable",
+          "strategy": "none",
+          "comments": [],
+          "coverage": {
+            "requestedCount": 10,
+            "returnedCount": 0,
+            "candidateFetchedCount": 0,
+            "providerTruncated": null,
+            "reachedAnchorWindow": null,
+            "oldestFetchedAt": null,
+            "newestFetchedAt": null,
+            "collectedAt": null,
+            "sourceSnapshotRef": null,
+            "actorRunIds": [],
+            "limitations": [
+              "History was not collected for this user."
+            ]
+          }
+        },
+        {
+          "anchorCommentId": "reddit:comment:example_c036",
+          "authorId": "reddit:author:example_23",
+          "comments": [],
+          "coverage": {
+            "actorRunIds": [],
+            "candidateFetchedCount": 0,
+            "collectedAt": "2026-10-24T20:29:46.008Z",
+            "limitations": [
+              "Best-effort authored candidates, capped at 150; not a lifetime-history census.",
+              "Provider returned no rows identifying this requested author; availability and lifetime history are unknown.",
+              "No usable collected candidates; this does not establish empty lifetime history."
+            ],
+            "newestFetchedAt": null,
+            "oldestFetchedAt": null,
+            "providerTruncated": true,
+            "reachedAnchorWindow": null,
+            "requestedCount": 10,
+            "returnedCount": 0,
+            "sourceSnapshotRef": null
+          },
+          "error": {
+            "code": "PROVIDER_SIZE_LIMIT",
+            "message": "Raw dataset exceeds configured snapshot budget",
+            "retryable": false
+          },
+          "status": "failed",
+          "strategy": "none"
+        },
+        {
+          "authorId": "reddit:author:example_5",
+          "anchorCommentId": "reddit:comment:example_c005",
+          "status": "unavailable",
+          "strategy": "none",
+          "comments": [],
+          "coverage": {
+            "requestedCount": 10,
+            "returnedCount": 0,
+            "candidateFetchedCount": 0,
+            "providerTruncated": null,
+            "reachedAnchorWindow": null,
+            "oldestFetchedAt": null,
+            "newestFetchedAt": null,
+            "collectedAt": null,
+            "sourceSnapshotRef": null,
+            "actorRunIds": [],
+            "limitations": [
+              "History was not collected for this user."
+            ]
+          }
+        },
+        {
+          "authorId": "reddit:author:example_61",
+          "anchorCommentId": "reddit:comment:example_c098",
+          "status": "unavailable",
+          "strategy": "none",
+          "comments": [],
+          "coverage": {
+            "requestedCount": 10,
+            "returnedCount": 0,
+            "candidateFetchedCount": 0,
+            "providerTruncated": null,
+            "reachedAnchorWindow": null,
+            "oldestFetchedAt": null,
+            "newestFetchedAt": null,
+            "collectedAt": null,
+            "sourceSnapshotRef": null,
+            "actorRunIds": [],
+            "limitations": [
+              "History was not collected for this user."
+            ]
+          }
+        },
+        {
+          "anchorCommentId": "reddit:comment:example_c011",
+          "authorId": "reddit:author:example_op",
+          "comments": [],
+          "coverage": {
+            "actorRunIds": [],
+            "candidateFetchedCount": 0,
+            "collectedAt": "2026-10-24T20:15:34.015Z",
+            "limitations": [
+              "Best-effort authored candidates, capped at 150; not a lifetime-history census.",
+              "Provider returned no rows identifying this requested author; availability and lifetime history are unknown.",
+              "No usable collected candidates; this does not establish empty lifetime history."
+            ],
+            "newestFetchedAt": null,
+            "oldestFetchedAt": null,
+            "providerTruncated": true,
+            "reachedAnchorWindow": null,
+            "requestedCount": 10,
+            "returnedCount": 0,
+            "sourceSnapshotRef": null
+          },
+          "error": {
+            "code": "PROVIDER_SIZE_LIMIT",
+            "message": "Raw dataset exceeds configured snapshot budget",
+            "retryable": false
+          },
+          "status": "failed",
+          "strategy": "none"
+        }
+      ],
+      "schemaVersion": "1.0.0",
+      "startedAt": "2026-10-24T20:29:26.699Z",
+      "status": "completed"
+    }
+  ],
+  "analysis": {
+    "schemaVersion": "1.0.0",
+    "analysisId": "anl_example_knife",
+    "investigationId": "inv_example_knife",
+    "storedAt": "2026-10-24T20:40:05Z",
+    "result": {
+      "schemaVersion": "1.0.0",
+      "graphRevision": 1,
+      "graphFingerprint": "9ffe20a2cf5f96fb4c3571e70cead8708238dc89319e3622ac079f0329be337b",
+      "inferenceVersion": "dit-inference/0.2.0; rubric/0.3; prompts-2026-10-24c; recorded:claude-opus-5-5+creao-app-trigger",
+      "inferredAt": "2026-10-24T20:40:00Z",
+      "subject": {
+        "label": "Wüsthof Classic chef's knife",
+        "kind": "product",
+        "confidence": 0.6,
+        "evidenceRefs": [
+          "reddit:comment:example_c003",
+          "reddit:comment:example_c010",
+          "reddit:comment:example_c024",
+          "reddit:comment:example_c067",
+          "reddit:comment:example_c071",
+          "reddit:comment:example_c092"
+        ]
+      },
+      "sentiment": {
+        "population": "retrieved_comments",
+        "method": "census_of_retrieved",
+        "analyzedCommentCount": 100,
+        "counts": {
+          "supportive": 63,
+          "critical": 3,
+          "neutral": 27,
+          "mixed": 4,
+          "unclear": 3
+        },
+        "weighted": false,
+        "limitations": [
+          "Counts describe analyzed comments, not unique people.",
+          "The retrieved comments may not be every comment in the discussion."
+        ]
+      },
+      "overallCoordinationRisk": {
+        "score": 11,
+        "confidence": 0.45,
+        "explanation": "Comment-section astroturfing index: 11/100 (Minimal). Rubric strength 0: the top 3 recommendation(s) scored 0 (u/commenter2), 0 (u/commenter3), 0 (u/commenter9) on the rubric. Coordination 0: no cluster of recommendations shared coordination signals. History contrast not measured: it needs at least 2 sampled users with history in each group (supportive 0, unsupportive 0). One-sided support 80: 90% of comments taking a side were supportive. Weights: rubric 40%, coordination 25%, history contrast 25%, one-sided support 10%, spread over the parts that could be measured. Histories came from a random sample of 6 of 51 supportive and 6 of 10 unsupportive users.",
+        "evidenceRefs": [
+          "reddit:comment:example_c002",
+          "reddit:comment:example_c003",
+          "reddit:comment:example_c010"
+        ]
+      },
+      "axes": [
+        {
+          "axis": "promotional_intent",
+          "score": 6,
+          "confidence": 0.3,
+          "assessedCommentCount": 8,
+          "explanation": "Promotional intent: highest for the recommendation by u/commenter3. X5: Extremely generic comment with no specific or costly-to-fake detail provided. Index = share of this axis's rubric points that fired.",
+          "evidenceRefs": [
+            "reddit:comment:example_c003"
+          ]
+        },
+        {
+          "axis": "semantic_coordination",
+          "score": 0,
+          "confidence": 0.3,
+          "assessedCommentCount": 8,
+          "explanation": "Similar wording across accounts: assessed 8 recommendation(s); no rubric signals on this axis fired.",
+          "evidenceRefs": []
+        },
+        {
+          "axis": "temporal_coordination",
+          "score": 0,
+          "confidence": 0.3,
+          "assessedCommentCount": 8,
+          "explanation": "Timing: assessed 8 recommendation(s); no rubric signals on this axis fired.",
+          "evidenceRefs": []
+        },
+        {
+          "axis": "account_anomalies",
+          "score": 0,
+          "confidence": 0.3,
+          "assessedCommentCount": 8,
+          "explanation": "Account patterns: assessed 8 recommendation(s); no rubric signals on this axis fired.",
+          "evidenceRefs": []
+        },
+        {
+          "axis": "engagement_anomalies",
+          "score": 10,
+          "confidence": 0.3,
+          "assessedCommentCount": 8,
+          "explanation": "Interaction patterns: highest for the recommendation by u/commenter3. T4: Short, low-effort recommendation ('Wusthof classic') with disproportionately high visibility (score 123). Index = share of this axis's rubric points that fired.",
+          "evidenceRefs": [
+            "reddit:comment:example_c003"
+          ]
+        },
+        {
+          "axis": "disclosure_concerns",
+          "score": null,
+          "confidence": null,
+          "assessedCommentCount": 8,
+          "explanation": "Not scored: the rubric cannot measure undisclosed sponsorship directly. No recommendation disclosed a commercial tie.",
+          "evidenceRefs": []
+        }
+      ],
+      "commentAssessments": [
+        {
+          "commentId": "reddit:comment:example_c001",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Recommends Henckels food service knives as best value.",
+          "evidenceRefs": [
+            "reddit:comment:example_c001"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c002",
+          "stance": "supportive",
+          "promotionalIntentScore": 0,
+          "rationale": "Balanced recommendation with specific drawbacks and maintenance guidance. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E6 -5: Directly answers the root question about European/BIFL chef's knife recommendations. E3 -10: Provides balanced analysis with drawbacks (Victorinox loses sharpness), maintenance requirements, and alternative options. Unknown for lack of data: B1, B2, B3, B4, B5, B6, B7, B8, B9, C2, C3, C5, C6, E2, E7.",
+          "evidenceRefs": [
+            "reddit:comment:example_c002"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c003",
+          "stance": "supportive",
+          "promotionalIntentScore": 6,
+          "rationale": "Minimal two-word recommendation with high engagement, but offset by brand's established reputation. Rubric 0/100 (Minimal; low evidence confidence). Signals: T4 +5: Short, low-effort recommendation ('Wusthof classic') with disproportionately high visibility (score 123). X5 +4: Extremely generic comment with no specific or costly-to-fake detail provided. Exculpatory: E6 -5: Directly answers the root question about European/BIFL chef's knife recommendations. E5 -10: Wüsthof is a well-known brand recommended across multiple discussions over a long period by many unrelated accounts. Unknown for lack of data: B1, B2, B3, B4, B5, B6, B7, B8, B9, C2, C3, C5, C6, E2, E7.",
+          "evidenceRefs": [
+            "reddit:comment:example_c003"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c004",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Likes the Zwilling Pro.",
+          "evidenceRefs": [
+            "reddit:comment:example_c004"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c005",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Shares informational videos.",
+          "evidenceRefs": [
+            "reddit:comment:example_c005"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c006",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Recommends Lamson knives.",
+          "evidenceRefs": [
+            "reddit:comment:example_c006"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c007",
+          "stance": "mixed",
+          "promotionalIntentScore": null,
+          "rationale": "Comparison favors Shun over Wüsthof for edge retention.",
+          "evidenceRefs": [
+            "reddit:comment:example_c007"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c008",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Positive long-term Mercer experience.",
+          "evidenceRefs": [
+            "reddit:comment:example_c008"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c009",
+          "stance": "unclear",
+          "promotionalIntentScore": null,
+          "rationale": "Deleted.",
+          "evidenceRefs": [
+            "reddit:comment:example_c009"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c010",
+          "stance": "supportive",
+          "promotionalIntentScore": 0,
+          "rationale": "Direct answer to recommendation request with product specification. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E6 -5: Directly answers the root question about European/BIFL chef's knife recommendations. E5 -10: Wüsthof is a well-known brand recommended across multiple discussions over a long period by many unrelated accounts. Unknown for lack of data: B1, B2, B3, B4, B5, B6, B7, B8, B9, C2, C3, C5, C6, E2, E7.",
+          "evidenceRefs": [
+            "reddit:comment:example_c010"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c011",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "OP likes the look.",
+          "evidenceRefs": [
+            "reddit:comment:example_c011"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c012",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Thanks for comparison.",
+          "evidenceRefs": [
+            "reddit:comment:example_c012"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c013",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "OP observation about Mercer.",
+          "evidenceRefs": [
+            "reddit:comment:example_c013"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c014",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Thanks to deleted comment.",
+          "evidenceRefs": [
+            "reddit:comment:example_c014"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c015",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Recommends Misono UX-10.",
+          "evidenceRefs": [
+            "reddit:comment:example_c015"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c016",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Praises Rada.",
+          "evidenceRefs": [
+            "reddit:comment:example_c016"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c017",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Recommends Fibrox.",
+          "evidenceRefs": [
+            "reddit:comment:example_c017"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c018",
+          "stance": "unclear",
+          "promotionalIntentScore": null,
+          "rationale": "Removed.",
+          "evidenceRefs": [
+            "reddit:comment:example_c018"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c019",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Recommends Tojiro DP.",
+          "evidenceRefs": [
+            "reddit:comment:example_c019"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c020",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Recommends commercial Twin Master.",
+          "evidenceRefs": [
+            "reddit:comment:example_c020"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c021",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Link-only endorsement.",
+          "evidenceRefs": [
+            "reddit:comment:example_c021"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c022",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Long-term praise of Lamson.",
+          "evidenceRefs": [
+            "reddit:comment:example_c022"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c023",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Identifies and endorses Twin Master.",
+          "evidenceRefs": [
+            "reddit:comment:example_c023"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c024",
+          "stance": "supportive",
+          "promotionalIntentScore": 0,
+          "rationale": "Product recommendation with comparative context (Victorinox as budget option). Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E6 -5: Directly answers the root question about European/BIFL chef's knife recommendations. E5 -10: Wüsthof is a well-known brand recommended across multiple discussions over a long period by many unrelated accounts. Unknown for lack of data: B1, B2, B3, B4, B5, B6, B7, B8, B9, C2, C3, C5, C6, E2, E7.",
+          "evidenceRefs": [
+            "reddit:comment:example_c024"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c025",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Names Zwilling Pro.",
+          "evidenceRefs": [
+            "reddit:comment:example_c025"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c026",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Favors Lamson over Global.",
+          "evidenceRefs": [
+            "reddit:comment:example_c026"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c027",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Recommends Shun Classic Santoku.",
+          "evidenceRefs": [
+            "reddit:comment:example_c027"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c028",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Agrees on Lamson.",
+          "evidenceRefs": [
+            "reddit:comment:example_c028"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c029",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Loves their Zwilling Santoku.",
+          "evidenceRefs": [
+            "reddit:comment:example_c029"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c030",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Sharpening advice.",
+          "evidenceRefs": [
+            "reddit:comment:example_c030"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c031",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Says Mercer has been solid.",
+          "evidenceRefs": [
+            "reddit:comment:example_c031"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c032",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Recommends Tojiro DP.",
+          "evidenceRefs": [
+            "reddit:comment:example_c032"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c033",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "General advice listing brands.",
+          "evidenceRefs": [
+            "reddit:comment:example_c033"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c034",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Happy with Lamson after a decade.",
+          "evidenceRefs": [
+            "reddit:comment:example_c034"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c035",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Strong praise of Lamson.",
+          "evidenceRefs": [
+            "reddit:comment:example_c035"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c036",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "General guidance.",
+          "evidenceRefs": [
+            "reddit:comment:example_c036"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c037",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Endorses parent's Zwilling Pro.",
+          "evidenceRefs": [
+            "reddit:comment:example_c037"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c038",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Recommends Global.",
+          "evidenceRefs": [
+            "reddit:comment:example_c038"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c039",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Joke about phrase.",
+          "evidenceRefs": [
+            "reddit:comment:example_c039"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c040",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Praises Shun.",
+          "evidenceRefs": [
+            "reddit:comment:example_c040"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c041",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Suggests a local bladesmith.",
+          "evidenceRefs": [
+            "reddit:comment:example_c041"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c042",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Recommends Fibrox and Classic Ikon.",
+          "evidenceRefs": [
+            "reddit:comment:example_c042"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c043",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Loves Mercer Renaissance.",
+          "evidenceRefs": [
+            "reddit:comment:example_c043"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c044",
+          "stance": "critical",
+          "promotionalIntentScore": null,
+          "rationale": "Disappointed with edge retention.",
+          "evidenceRefs": [
+            "reddit:comment:example_c044"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c045",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Loves Misen.",
+          "evidenceRefs": [
+            "reddit:comment:example_c045"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c046",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Praises Cutco.",
+          "evidenceRefs": [
+            "reddit:comment:example_c046"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c047",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Favors Messermeister over Wüsthof.",
+          "evidenceRefs": [
+            "reddit:comment:example_c047"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c048",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Positive on Lamson.",
+          "evidenceRefs": [
+            "reddit:comment:example_c048"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c049",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Personal connection, likes look.",
+          "evidenceRefs": [
+            "reddit:comment:example_c049"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c050",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Joke.",
+          "evidenceRefs": [
+            "reddit:comment:example_c050"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c051",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Joke.",
+          "evidenceRefs": [
+            "reddit:comment:example_c051"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c052",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Joke.",
+          "evidenceRefs": [
+            "reddit:comment:example_c052"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c053",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Likes Global.",
+          "evidenceRefs": [
+            "reddit:comment:example_c053"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c054",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Joke.",
+          "evidenceRefs": [
+            "reddit:comment:example_c054"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c055",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Recommends MAC.",
+          "evidenceRefs": [
+            "reddit:comment:example_c055"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c056",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Joke.",
+          "evidenceRefs": [
+            "reddit:comment:example_c056"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c057",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Joke.",
+          "evidenceRefs": [
+            "reddit:comment:example_c057"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c058",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Joke.",
+          "evidenceRefs": [
+            "reddit:comment:example_c058"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c059",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Joke.",
+          "evidenceRefs": [
+            "reddit:comment:example_c059"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c060",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Joke.",
+          "evidenceRefs": [
+            "reddit:comment:example_c060"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c061",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Names Global.",
+          "evidenceRefs": [
+            "reddit:comment:example_c061"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c062",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Recommends Kramer line and shops.",
+          "evidenceRefs": [
+            "reddit:comment:example_c062"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c063",
+          "stance": "unclear",
+          "promotionalIntentScore": null,
+          "rationale": "Deleted.",
+          "evidenceRefs": [
+            "reddit:comment:example_c063"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c064",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Likes Mercer more than Victorinox.",
+          "evidenceRefs": [
+            "reddit:comment:example_c064"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c065",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Names CCK cleaver.",
+          "evidenceRefs": [
+            "reddit:comment:example_c065"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c066",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Names Fibrox 10\".",
+          "evidenceRefs": [
+            "reddit:comment:example_c066"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c067",
+          "stance": "supportive",
+          "promotionalIntentScore": 0,
+          "rationale": "Reply affirming satisfaction with subject product and recommending sharpening maintenance. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E6 -5: Directly answers the root question about European/BIFL chef's knife recommendations. E5 -10: Wüsthof is a well-known brand recommended across multiple discussions over a long period by many unrelated accounts. Unknown for lack of data: B1, B2, B3, B4, B5, B6, B7, B8, B9, C2, C3, C5, C6, E2, E7.",
+          "evidenceRefs": [
+            "reddit:comment:example_c067"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c068",
+          "stance": "mixed",
+          "promotionalIntentScore": null,
+          "rationale": "Prefers Ikon to Classic.",
+          "evidenceRefs": [
+            "reddit:comment:example_c068"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c069",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Cites review favoring Lansky.",
+          "evidenceRefs": [
+            "reddit:comment:example_c069"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c070",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Praises Genesis handles.",
+          "evidenceRefs": [
+            "reddit:comment:example_c070"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c071",
+          "stance": "supportive",
+          "promotionalIntentScore": 0,
+          "rationale": "Product recommendation with gift and maintenance advice. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E6 -5: Directly answers the root question about European/BIFL chef's knife recommendations. E5 -10: Wüsthof is a well-known brand recommended across multiple discussions over a long period by many unrelated accounts. Unknown for lack of data: B1, B2, B3, B4, B5, B6, B7, B8, B9, C2, C3, C5, C6, E2, E7.",
+          "evidenceRefs": [
+            "reddit:comment:example_c071"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c072",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Link-only endorsement.",
+          "evidenceRefs": [
+            "reddit:comment:example_c072"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c073",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Names Victorinox.",
+          "evidenceRefs": [
+            "reddit:comment:example_c073"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c074",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Recommends Kikuichi.",
+          "evidenceRefs": [
+            "reddit:comment:example_c074"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c075",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Praises Cutco.",
+          "evidenceRefs": [
+            "reddit:comment:example_c075"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c076",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Recommends Gesshin.",
+          "evidenceRefs": [
+            "reddit:comment:example_c076"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c077",
+          "stance": "supportive",
+          "promotionalIntentScore": 0,
+          "rationale": "Personal ownership recommendation with generational durability claim. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E6 -5: Directly answers the root question about European/BIFL chef's knife recommendations. E5 -10: Wüsthof is a well-known brand recommended across multiple discussions over a long period by many unrelated accounts. Unknown for lack of data: B1, B2, B3, B4, B5, B6, B7, B8, B9, C2, C3, C5, C6, E2, E7.",
+          "evidenceRefs": [
+            "reddit:comment:example_c077"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c078",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Suggests ICEL.",
+          "evidenceRefs": [
+            "reddit:comment:example_c078"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c079",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Favorite knife.",
+          "evidenceRefs": [
+            "reddit:comment:example_c079"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c080",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Notes sold out.",
+          "evidenceRefs": [
+            "reddit:comment:example_c080"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c081",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Thanks, notes Victorinox look.",
+          "evidenceRefs": [
+            "reddit:comment:example_c081"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c082",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Admires Schmitt knife.",
+          "evidenceRefs": [
+            "reddit:comment:example_c082"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c083",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Reply to deleted.",
+          "evidenceRefs": [
+            "reddit:comment:example_c083"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c084",
+          "stance": "critical",
+          "promotionalIntentScore": null,
+          "rationale": "Finds Global ugly.",
+          "evidenceRefs": [
+            "reddit:comment:example_c084"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c085",
+          "stance": "mixed",
+          "promotionalIntentScore": null,
+          "rationale": "Interested but wonders if overrated.",
+          "evidenceRefs": [
+            "reddit:comment:example_c085"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c086",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Question about rust.",
+          "evidenceRefs": [
+            "reddit:comment:example_c086"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c087",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Says Shun worth price.",
+          "evidenceRefs": [
+            "reddit:comment:example_c087"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c088",
+          "stance": "mixed",
+          "promotionalIntentScore": null,
+          "rationale": "Nice but overpriced; prefers Tojiro.",
+          "evidenceRefs": [
+            "reddit:comment:example_c088"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c089",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Defends UX-10, likes Tojiro.",
+          "evidenceRefs": [
+            "reddit:comment:example_c089"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c090",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Agrees.",
+          "evidenceRefs": [
+            "reddit:comment:example_c090"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c091",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Seconds Zwilling quality.",
+          "evidenceRefs": [
+            "reddit:comment:example_c091"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c092",
+          "stance": "supportive",
+          "promotionalIntentScore": 0,
+          "rationale": "Recommendation with acknowledgment of alternative options and context for gift-giving. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E6 -5: Directly answers the root question about European/BIFL chef's knife recommendations. E5 -10: Wüsthof is a well-known brand recommended across multiple discussions over a long period by many unrelated accounts. Unknown for lack of data: B1, B2, B3, B4, B5, B6, B7, B8, B9, C2, C3, C5, C6, E2, E7.",
+          "evidenceRefs": [
+            "reddit:comment:example_c092"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c093",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Joke.",
+          "evidenceRefs": [
+            "reddit:comment:example_c093"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c094",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "Favors Øyo over others.",
+          "evidenceRefs": [
+            "reddit:comment:example_c094"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c095",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Adds link.",
+          "evidenceRefs": [
+            "reddit:comment:example_c095"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c096",
+          "stance": "critical",
+          "promotionalIntentScore": null,
+          "rationale": "Shun broke.",
+          "evidenceRefs": [
+            "reddit:comment:example_c096"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c097",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Thanks.",
+          "evidenceRefs": [
+            "reddit:comment:example_c097"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c098",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Follow-up question.",
+          "evidenceRefs": [
+            "reddit:comment:example_c098"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c099",
+          "stance": "supportive",
+          "promotionalIntentScore": null,
+          "rationale": "OP praises Lamson purchase.",
+          "evidenceRefs": [
+            "reddit:comment:example_c099"
+          ]
+        },
+        {
+          "commentId": "reddit:comment:example_c100",
+          "stance": "neutral",
+          "promotionalIntentScore": null,
+          "rationale": "Thanks and remark.",
+          "evidenceRefs": [
+            "reddit:comment:example_c100"
+          ]
+        }
+      ],
+      "clusters": [],
+      "inferredEdges": [],
+      "usedEnrichmentIds": [
+        "enr_example_knife"
+      ],
+      "limitations": [
+        "Account histories were requested for a seeded random sample of users, not everyone: 6 of 51 supportive and 6 of 10 unsupportive users, plus the post author. Rules that need an unsampled user's history are unknown.",
+        "0 of 13 sampled users returned a full history (4 failed, 9 unavailable).",
+        "Platform reports 163 comments; 100 were retained. Reported counts may include unavailable content.",
+        "Usernames and comment IDs are replaced; comment text is unchanged."
+      ]
+    }
+  }
+}

@@ -73,6 +73,8 @@ export interface PacketComment {
   contentStatus: CommentNode['contentStatus'];
   metrics: CommentNode['metrics'];
   text: string;
+  /** For replies: the comment being answered, so stance can be read in context. */
+  replyTo?: { authorHandle: string | null; excerpt: string };
 }
 
 function packetComments(index: GraphIndex, maxChars: number, maxComments: number, only?: ReadonlySet<string>): PacketComment[] {
@@ -87,6 +89,9 @@ function packetComments(index: GraphIndex, maxChars: number, maxComments: number
     contentStatus: c.contentStatus,
     metrics: c.metrics,
     text: clip(c.text, maxChars),
+    ...(c.parentId && c.parentId !== index.root.id && index.comment(c.parentId)
+      ? { replyTo: { authorHandle: index.handle(index.comment(c.parentId)!.authorId), excerpt: clip(index.comment(c.parentId)!.text, Math.min(240, maxChars)) } }
+      : {}),
   }));
 }
 
@@ -180,10 +185,11 @@ function pick<T>(items: T[], n: number, random: () => number): T[] {
 
 /**
  * Randomly picks which users' comment histories to request, instead of
- * requesting everyone's. Users are split into two groups by triage stance:
- * supportive (any supportive comment, or a recommendation of the subject) and
- * unsupportive (critical or mixed; neutral users fill the group if there are
- * too few). Up to `perGroup` users are drawn from each group with a seeded
+ * requesting everyone's. Users are split into two groups from triage:
+ * supportive (any supportive comment, or any product recommendation, which
+ * covers "what should I buy?" threads where the subject is a category) and
+ * unsupportive (critical or mixed; users who recommend nothing fill the group
+ * if there are too few). Up to `perGroup` users are drawn from each group with a seeded
  * shuffle, so the same graph always gives the same sample. The unsupportive
  * group is a baseline for the supportive group's histories. Each user's anchor
  * is their first comment matching the group.
@@ -199,11 +205,11 @@ export function sampleHistoryAuthors(graph: GraphEnvelope, triage: TriageOutput,
   for (const c of index.comments) {
     const t = byId.get(c.id);
     if (!t || !c.authorId || c.contentStatus !== 'visible' || c.authorId === index.root.authorId) continue;
-    if (t.stance === 'supportive' || t.recommendsSubject) {
+    if (t.stance === 'supportive' || t.recommendsSubject || t.recommendsProduct) {
       if (!supportiveAnchor.has(c.authorId)) supportiveAnchor.set(c.authorId, c.id);
     } else if (t.stance === 'critical' || t.stance === 'mixed') {
       if (!unsupportiveAnchor.has(c.authorId)) unsupportiveAnchor.set(c.authorId, c.id);
-    } else if (t.stance === 'neutral' && !neutralAnchor.has(c.authorId)) neutralAnchor.set(c.authorId, c.id);
+    } else if (!neutralAnchor.has(c.authorId)) neutralAnchor.set(c.authorId, c.id);
   }
   // Someone with any supportive comment counts as supportive only.
   for (const a of supportiveAnchor.keys()) {
@@ -253,7 +259,7 @@ export interface ScoringPacket {
   platform: Platform;
   subject: TriageOutput['subject'];
   root: ReturnType<typeof rootSummary>;
-  comments: (PacketComment & { stance: string; recommendsProduct: string | null; recommendsSubject: boolean })[];
+  comments: (PacketComment & { stance: string; aboutProduct: string | null; recommendsProduct: string | null; recommendsSubject: boolean })[];
   targets: string[];
   /** Retrieved comments left out of this packet (not recommendations or their context). */
   omittedCommentCount: number;
@@ -361,6 +367,7 @@ export function buildScoringPacket(graph: GraphEnvelope, triage: TriageOutput, j
     comments: packetComments(index, chars, count, context).map(c => ({
       ...c,
       stance: triageById.get(c.id)?.stance ?? 'unclear',
+      aboutProduct: triageById.get(c.id)?.aboutProduct ?? null,
       recommendsProduct: triageById.get(c.id)?.recommendsProduct ?? null,
       recommendsSubject: triageById.get(c.id)?.recommendsSubject ?? false,
     })),

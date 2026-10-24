@@ -5,12 +5,11 @@ import { buildReport, buildThreadPreview, type Report, type ThreadPreview } from
 import { ApiError, createInvestigation, forgetIdempotencyKeyFor, getAnalysis, getEnrichment, getGraph, getInvestigation, idempotencyKeyFor } from '../api/client';
 import type { EnrichmentJob, InvestigationResource } from '../api/contract';
 import { AnalysisErrorState } from '../components/AnalysisPresentation';
-import { AnalysisReport, SyntheticBanner } from '../components/AnalysisReport';
+import { AnalysisReport } from '../components/AnalysisReport';
 import { ThreadPreviewCard } from '../components/ThreadPreviewCard';
 import { AnalysisProgress, type ProgressPhase } from '../components/AnalysisProgress';
 import { ServiceUnavailable, UnsupportedLinkState } from '../components/AnalysisStates';
 import { PostSummaryCard } from '../components/SiteLayout';
-import { syntheticDemo } from '../demo';
 import { parsePostUrl } from '../url';
 
 const POLL_MS = 2500;
@@ -115,13 +114,13 @@ function LiveAnalysis({ url }: { url: string }) {
     return () => { cancelled.current = true; };
   }, [run, attempt]);
 
-  if (view.kind === 'unavailable') return <><PostSummaryCard url={url}/><ServiceUnavailable/><p className="example-link">Want to see what a finished report looks like? <Link className="text-link" to="/example">View the synthetic example</Link></p></>;
+  if (view.kind === 'unavailable') return <><PostSummaryCard url={url}/><ServiceUnavailable/><p className="example-link">Want to see what a finished report looks like? <Link className="text-link" to="/example">View the example</Link></p></>;
   if (view.kind === 'loading') return <><AnalysisProgress key={attempt} phase={view.phase} status={view.status} collectedCount={view.preview?.collectedCount}/>{view.preview ? <ThreadPreviewCard preview={view.preview}/> : <PostSummaryCard url={url}/>}</>;
   if (view.kind === 'error') {
     return <><PostSummaryCard url={url}/><AnalysisErrorState title={view.title} message={view.message} onRetry={view.retry ? () => { if (view.freshRequest) forgetIdempotencyKeyFor(url); setAttempt(a => a + 1); } : undefined}/>
-      {view.showExample && <p className="example-link">Want to see what a finished report looks like? <Link className="text-link" to="/example">View the synthetic example</Link></p>}</>;
+      {view.showExample && <p className="example-link">Want to see what a finished report looks like? <Link className="text-link" to="/example">View the example</Link></p>}</>;
   }
-  return <>{view.report.synthetic && <SyntheticBanner notice={syntheticDemo.notice}/>}<AnalysisReport report={view.report}/></>;
+  return <AnalysisReport report={view.report}/>;
 }
 
 export function AnalysisPage({ url }: { url: string }) {

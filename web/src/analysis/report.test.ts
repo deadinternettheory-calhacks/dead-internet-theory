@@ -1,18 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { syntheticDemo } from '../demo';
+import { exampleData } from '../demo';
+import { testDemo } from '../test/fixtures';
 import { buildReport, buildThreadPreview, verdictFor } from './report';
 
 describe('analysis report', () => {
-  const report = buildReport(syntheticDemo.analysis, syntheticDemo.graph, syntheticDemo.enrichments);
+  const report = buildReport(testDemo.analysis, testDemo.graph, testDemo.enrichments);
 
-  it('flags the synthetic fixture so the UI labels it', () => {
-    expect(report.synthetic).toBe(true);
-    expect(syntheticDemo.notice).toMatch(/Synthetic example/);
-  });
 
   it('leads with a cautious verdict and at most three findings', () => {
     expect(report.verdict.tone).toBe('high');
-    expect(report.verdict.description).toMatch(/not proof/);
     expect(report.findings.length).toBeLessThanOrEqual(3);
     expect(report.findings[0].evidence.length).toBeGreaterThan(0);
   });
@@ -23,7 +19,7 @@ describe('analysis report', () => {
   });
 
   it('lists recommendations first and keeps every analyzed comment', () => {
-    expect(report.comments).toHaveLength(syntheticDemo.analysis.result.commentAssessments.length);
+    expect(report.comments).toHaveLength(testDemo.analysis.result.commentAssessments.length);
     expect(report.comments[0].isRecommendation).toBe(true);
   });
 
@@ -40,12 +36,12 @@ describe('analysis report', () => {
     expect(report.discussion).toHaveLength(8);
     expect(report.histories).toHaveLength(6);
     expect(report.histories.find(h => h.status === 'partial')?.comments).toHaveLength(6);
-    expect(report.index?.explanation).toBe(syntheticDemo.analysis.result.overallCoordinationRisk.explanation);
+    expect(report.index?.explanation).toBe(testDemo.analysis.result.overallCoordinationRisk.explanation);
   });
 
   it('preserves unavailable histories without inventing comments', () => {
-    const job = syntheticDemo.enrichments[0];
-    const reportWithGap = buildReport(syntheticDemo.analysis, syntheticDemo.graph, [{ ...job, results: [{ ...job.results![0], status: 'unavailable', comments: [] }] }]);
+    const job = testDemo.enrichments[0];
+    const reportWithGap = buildReport(testDemo.analysis, testDemo.graph, [{ ...job, results: [{ ...job.results![0], status: 'unavailable', comments: [] }] }]);
     expect(reportWithGap.histories[0].status).toBe('unavailable');
     expect(reportWithGap.histories[0].comments).toEqual([]);
   });
@@ -57,11 +53,26 @@ describe('analysis report', () => {
   });
 
   it('previews the collected thread before the analysis finishes', () => {
-    const preview = buildThreadPreview(syntheticDemo.graph, 3);
+    const preview = buildThreadPreview(testDemo.graph, 3);
     expect(preview.post.text).toBe(report.post.text);
     expect(preview.comments).toHaveLength(3);
-    expect(preview.moreCount).toBe(syntheticDemo.graph.coverage.retrievedCommentCount - 3);
+    expect(preview.moreCount).toBe(testDemo.graph.coverage.retrievedCommentCount - 3);
     expect(preview.comments[0].author).toMatch(/^u\//);
     expect(preview.collectedCount).toBe(8);
+  });
+});
+
+describe('real example', () => {
+  const report = buildReport(exampleData.analysis, exampleData.graph, exampleData.enrichments);
+  it('treats the example as a real thread that links to its source', () => {
+    expect(report.synthetic).toBe(false);
+    expect(report.post.url).toMatch(/^https:\/\/www\.reddit\.com\/r\/BuyItForLife\/comments\/zq4rbu\//);
+    expect(report.discussion.every(c => c.url === null && (c.author === null || /^u\/(commenter\d+|original_poster)$/.test(c.author)))).toBe(true);
+  });
+
+  it('names one specific product and scores the genuine thread low', () => {
+    expect(report.subject).toMatch(/Wüsthof/);
+    expect(report.verdict.tone).toBe('low');
+    expect(report.index!.score).toBeLessThan(35);
   });
 });

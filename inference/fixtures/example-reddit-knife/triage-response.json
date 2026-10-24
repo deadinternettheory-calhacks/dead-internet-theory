@@ -1,0 +1,817 @@
+{
+  "subject": {
+    "label": "Wüsthof Classic chef's knife",
+    "kind": "product",
+    "confidence": 0.6,
+    "evidenceRefs": [
+      "reddit:comment:example_c003",
+      "reddit:comment:example_c010",
+      "reddit:comment:example_c024",
+      "reddit:comment:example_c067",
+      "reddit:comment:example_c071",
+      "reddit:comment:example_c092"
+    ]
+  },
+  "comments": [
+    {
+      "commentId": "reddit:comment:example_c001",
+      "stance": "supportive",
+      "aboutProduct": "Henckels food service chef's knife",
+      "recommendsProduct": "Henckels food service chef's knife",
+      "recommendsSubject": false,
+      "rationale": "Recommends Henckels food service knives as best value."
+    },
+    {
+      "commentId": "reddit:comment:example_c002",
+      "stance": "supportive",
+      "aboutProduct": "Wüsthof",
+      "recommendsProduct": "Wüsthof",
+      "recommendsSubject": true,
+      "rationale": "Recommends Wüsthof for European style."
+    },
+    {
+      "commentId": "reddit:comment:example_c003",
+      "stance": "supportive",
+      "aboutProduct": "Wüsthof Classic",
+      "recommendsProduct": "Wüsthof Classic",
+      "recommendsSubject": true,
+      "rationale": "Directly recommends Wüsthof Classic."
+    },
+    {
+      "commentId": "reddit:comment:example_c004",
+      "stance": "supportive",
+      "aboutProduct": "Zwilling Pro 8\" chef's knife",
+      "recommendsProduct": "Zwilling Pro 8\" chef's knife",
+      "recommendsSubject": false,
+      "rationale": "Likes the Zwilling Pro."
+    },
+    {
+      "commentId": "reddit:comment:example_c005",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Shares informational videos."
+    },
+    {
+      "commentId": "reddit:comment:example_c006",
+      "stance": "supportive",
+      "aboutProduct": "Lamson 8\" chef knife",
+      "recommendsProduct": "Lamson 8\" chef knife",
+      "recommendsSubject": false,
+      "rationale": "Recommends Lamson knives."
+    },
+    {
+      "commentId": "reddit:comment:example_c007",
+      "stance": "mixed",
+      "aboutProduct": "Shun 8\" chef knife",
+      "recommendsProduct": "Shun 8\" chef knife",
+      "recommendsSubject": false,
+      "rationale": "Comparison favors Shun over Wüsthof for edge retention."
+    },
+    {
+      "commentId": "reddit:comment:example_c008",
+      "stance": "supportive",
+      "aboutProduct": "Mercer 8\" chef knife",
+      "recommendsProduct": "Mercer 8\" chef knife",
+      "recommendsSubject": false,
+      "rationale": "Positive long-term Mercer experience."
+    },
+    {
+      "commentId": "reddit:comment:example_c009",
+      "stance": "unclear",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Deleted."
+    },
+    {
+      "commentId": "reddit:comment:example_c010",
+      "stance": "supportive",
+      "aboutProduct": "Wüsthof Classic 8\" chef knife",
+      "recommendsProduct": "Wüsthof Classic 8\" chef knife",
+      "recommendsSubject": true,
+      "rationale": "Recommends Wüsthof Classic 8 inch."
+    },
+    {
+      "commentId": "reddit:comment:example_c011",
+      "stance": "supportive",
+      "aboutProduct": "Lamson 8\" chef knife",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "OP likes the look."
+    },
+    {
+      "commentId": "reddit:comment:example_c012",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Thanks for comparison."
+    },
+    {
+      "commentId": "reddit:comment:example_c013",
+      "stance": "neutral",
+      "aboutProduct": "Mercer 8\" chef knife",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "OP observation about Mercer."
+    },
+    {
+      "commentId": "reddit:comment:example_c014",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Thanks to deleted comment."
+    },
+    {
+      "commentId": "reddit:comment:example_c015",
+      "stance": "supportive",
+      "aboutProduct": "Misono UX-10 240mm gyuto",
+      "recommendsProduct": "Misono UX-10 240mm gyuto",
+      "recommendsSubject": false,
+      "rationale": "Recommends Misono UX-10."
+    },
+    {
+      "commentId": "reddit:comment:example_c016",
+      "stance": "supportive",
+      "aboutProduct": "Rada knives",
+      "recommendsProduct": "Rada knives",
+      "recommendsSubject": false,
+      "rationale": "Praises Rada."
+    },
+    {
+      "commentId": "reddit:comment:example_c017",
+      "stance": "supportive",
+      "aboutProduct": "Victorinox Fibrox",
+      "recommendsProduct": "Victorinox Fibrox",
+      "recommendsSubject": false,
+      "rationale": "Recommends Fibrox."
+    },
+    {
+      "commentId": "reddit:comment:example_c018",
+      "stance": "unclear",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Removed."
+    },
+    {
+      "commentId": "reddit:comment:example_c019",
+      "stance": "supportive",
+      "aboutProduct": "Tojiro DP",
+      "recommendsProduct": "Tojiro DP",
+      "recommendsSubject": false,
+      "rationale": "Recommends Tojiro DP."
+    },
+    {
+      "commentId": "reddit:comment:example_c020",
+      "stance": "supportive",
+      "aboutProduct": "Zwilling Twin Master chef knife",
+      "recommendsProduct": "Zwilling Twin Master chef knife",
+      "recommendsSubject": false,
+      "rationale": "Recommends commercial Twin Master."
+    },
+    {
+      "commentId": "reddit:comment:example_c021",
+      "stance": "supportive",
+      "aboutProduct": "Dick Premier Plus chef knife",
+      "recommendsProduct": "Dick Premier Plus chef knife",
+      "recommendsSubject": false,
+      "rationale": "Link-only endorsement."
+    },
+    {
+      "commentId": "reddit:comment:example_c022",
+      "stance": "supportive",
+      "aboutProduct": "Lamson Sharp chef knife",
+      "recommendsProduct": "Lamson Sharp chef knife",
+      "recommendsSubject": false,
+      "rationale": "Long-term praise of Lamson."
+    },
+    {
+      "commentId": "reddit:comment:example_c023",
+      "stance": "supportive",
+      "aboutProduct": "Zwilling Twin Master 9.5\" chef's knife",
+      "recommendsProduct": "Zwilling Twin Master 9.5\" chef's knife",
+      "recommendsSubject": false,
+      "rationale": "Identifies and endorses Twin Master."
+    },
+    {
+      "commentId": "reddit:comment:example_c024",
+      "stance": "supportive",
+      "aboutProduct": "Wüsthof Classic",
+      "recommendsProduct": "Wüsthof Classic",
+      "recommendsSubject": true,
+      "rationale": "Recommends Victorinox or Wüsthof Classic."
+    },
+    {
+      "commentId": "reddit:comment:example_c025",
+      "stance": "supportive",
+      "aboutProduct": "Zwilling Pro 8\" chef's knife",
+      "recommendsProduct": "Zwilling Pro 8\" chef's knife",
+      "recommendsSubject": false,
+      "rationale": "Names Zwilling Pro."
+    },
+    {
+      "commentId": "reddit:comment:example_c026",
+      "stance": "supportive",
+      "aboutProduct": "Lamson 8\" chef knife",
+      "recommendsProduct": "Lamson 8\" chef knife",
+      "recommendsSubject": false,
+      "rationale": "Favors Lamson over Global."
+    },
+    {
+      "commentId": "reddit:comment:example_c027",
+      "stance": "supportive",
+      "aboutProduct": "Shun Classic Santoku",
+      "recommendsProduct": "Shun Classic Santoku",
+      "recommendsSubject": false,
+      "rationale": "Recommends Shun Classic Santoku."
+    },
+    {
+      "commentId": "reddit:comment:example_c028",
+      "stance": "supportive",
+      "aboutProduct": "Lamson",
+      "recommendsProduct": "Lamson",
+      "recommendsSubject": false,
+      "rationale": "Agrees on Lamson."
+    },
+    {
+      "commentId": "reddit:comment:example_c029",
+      "stance": "supportive",
+      "aboutProduct": "Zwilling Henckels Santoku",
+      "recommendsProduct": "Zwilling Henckels Santoku",
+      "recommendsSubject": false,
+      "rationale": "Loves their Zwilling Santoku."
+    },
+    {
+      "commentId": "reddit:comment:example_c030",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Sharpening advice."
+    },
+    {
+      "commentId": "reddit:comment:example_c031",
+      "stance": "supportive",
+      "aboutProduct": "Mercer 8\" chef knife",
+      "recommendsProduct": "Mercer 8\" chef knife",
+      "recommendsSubject": false,
+      "rationale": "Says Mercer has been solid."
+    },
+    {
+      "commentId": "reddit:comment:example_c032",
+      "stance": "supportive",
+      "aboutProduct": "Tojiro DP gyuto",
+      "recommendsProduct": "Tojiro DP gyuto",
+      "recommendsSubject": false,
+      "rationale": "Recommends Tojiro DP."
+    },
+    {
+      "commentId": "reddit:comment:example_c033",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "General advice listing brands."
+    },
+    {
+      "commentId": "reddit:comment:example_c034",
+      "stance": "supportive",
+      "aboutProduct": "Lamson",
+      "recommendsProduct": "Lamson",
+      "recommendsSubject": false,
+      "rationale": "Happy with Lamson after a decade."
+    },
+    {
+      "commentId": "reddit:comment:example_c035",
+      "stance": "supportive",
+      "aboutProduct": "Lamson",
+      "recommendsProduct": "Lamson",
+      "recommendsSubject": false,
+      "rationale": "Strong praise of Lamson."
+    },
+    {
+      "commentId": "reddit:comment:example_c036",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "General guidance."
+    },
+    {
+      "commentId": "reddit:comment:example_c037",
+      "stance": "supportive",
+      "aboutProduct": "Zwilling Pro 8\" chef's knife",
+      "recommendsProduct": "Zwilling Pro 8\" chef's knife",
+      "recommendsSubject": false,
+      "rationale": "Endorses parent's Zwilling Pro."
+    },
+    {
+      "commentId": "reddit:comment:example_c038",
+      "stance": "supportive",
+      "aboutProduct": "Global",
+      "recommendsProduct": "Global",
+      "recommendsSubject": false,
+      "rationale": "Recommends Global."
+    },
+    {
+      "commentId": "reddit:comment:example_c039",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Joke about phrase."
+    },
+    {
+      "commentId": "reddit:comment:example_c040",
+      "stance": "supportive",
+      "aboutProduct": "Shun",
+      "recommendsProduct": "Shun",
+      "recommendsSubject": false,
+      "rationale": "Praises Shun."
+    },
+    {
+      "commentId": "reddit:comment:example_c041",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Suggests a local bladesmith."
+    },
+    {
+      "commentId": "reddit:comment:example_c042",
+      "stance": "supportive",
+      "aboutProduct": "Wüsthof Classic Ikon 8\"",
+      "recommendsProduct": "Wüsthof Classic Ikon 8\"",
+      "recommendsSubject": false,
+      "rationale": "Recommends Fibrox and Classic Ikon."
+    },
+    {
+      "commentId": "reddit:comment:example_c043",
+      "stance": "supportive",
+      "aboutProduct": "Mercer Renaissance",
+      "recommendsProduct": "Mercer Renaissance",
+      "recommendsSubject": false,
+      "rationale": "Loves Mercer Renaissance."
+    },
+    {
+      "commentId": "reddit:comment:example_c044",
+      "stance": "critical",
+      "aboutProduct": "Zwilling Pro 8\" chef's knife",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Disappointed with edge retention."
+    },
+    {
+      "commentId": "reddit:comment:example_c045",
+      "stance": "supportive",
+      "aboutProduct": "Misen",
+      "recommendsProduct": "Misen",
+      "recommendsSubject": false,
+      "rationale": "Loves Misen."
+    },
+    {
+      "commentId": "reddit:comment:example_c046",
+      "stance": "supportive",
+      "aboutProduct": "Cutco butcher knife",
+      "recommendsProduct": "Cutco butcher knife",
+      "recommendsSubject": false,
+      "rationale": "Praises Cutco."
+    },
+    {
+      "commentId": "reddit:comment:example_c047",
+      "stance": "supportive",
+      "aboutProduct": "Messermeister",
+      "recommendsProduct": "Messermeister",
+      "recommendsSubject": false,
+      "rationale": "Favors Messermeister over Wüsthof."
+    },
+    {
+      "commentId": "reddit:comment:example_c048",
+      "stance": "supportive",
+      "aboutProduct": "Lamson",
+      "recommendsProduct": "Lamson",
+      "recommendsSubject": false,
+      "rationale": "Positive on Lamson."
+    },
+    {
+      "commentId": "reddit:comment:example_c049",
+      "stance": "supportive",
+      "aboutProduct": "Lamson",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Personal connection, likes look."
+    },
+    {
+      "commentId": "reddit:comment:example_c050",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Joke."
+    },
+    {
+      "commentId": "reddit:comment:example_c051",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Joke."
+    },
+    {
+      "commentId": "reddit:comment:example_c052",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Joke."
+    },
+    {
+      "commentId": "reddit:comment:example_c053",
+      "stance": "supportive",
+      "aboutProduct": "Global",
+      "recommendsProduct": "Global",
+      "recommendsSubject": false,
+      "rationale": "Likes Global."
+    },
+    {
+      "commentId": "reddit:comment:example_c054",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Joke."
+    },
+    {
+      "commentId": "reddit:comment:example_c055",
+      "stance": "supportive",
+      "aboutProduct": "MAC knives",
+      "recommendsProduct": "MAC knives",
+      "recommendsSubject": false,
+      "rationale": "Recommends MAC."
+    },
+    {
+      "commentId": "reddit:comment:example_c056",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Joke."
+    },
+    {
+      "commentId": "reddit:comment:example_c057",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Joke."
+    },
+    {
+      "commentId": "reddit:comment:example_c058",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Joke."
+    },
+    {
+      "commentId": "reddit:comment:example_c059",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Joke."
+    },
+    {
+      "commentId": "reddit:comment:example_c060",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Joke."
+    },
+    {
+      "commentId": "reddit:comment:example_c061",
+      "stance": "supportive",
+      "aboutProduct": "Global",
+      "recommendsProduct": "Global",
+      "recommendsSubject": false,
+      "rationale": "Names Global."
+    },
+    {
+      "commentId": "reddit:comment:example_c062",
+      "stance": "supportive",
+      "aboutProduct": "Zwilling Bob Kramer line",
+      "recommendsProduct": "Zwilling Bob Kramer line",
+      "recommendsSubject": false,
+      "rationale": "Recommends Kramer line and shops."
+    },
+    {
+      "commentId": "reddit:comment:example_c063",
+      "stance": "unclear",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Deleted."
+    },
+    {
+      "commentId": "reddit:comment:example_c064",
+      "stance": "supportive",
+      "aboutProduct": "Mercer 8\" chef knife",
+      "recommendsProduct": "Mercer 8\" chef knife",
+      "recommendsSubject": false,
+      "rationale": "Likes Mercer more than Victorinox."
+    },
+    {
+      "commentId": "reddit:comment:example_c065",
+      "stance": "supportive",
+      "aboutProduct": "CCK carbon steel vegetable cleaver",
+      "recommendsProduct": "CCK carbon steel vegetable cleaver",
+      "recommendsSubject": false,
+      "rationale": "Names CCK cleaver."
+    },
+    {
+      "commentId": "reddit:comment:example_c066",
+      "stance": "supportive",
+      "aboutProduct": "Victorinox Fibrox 10\" chef's knife",
+      "recommendsProduct": "Victorinox Fibrox 10\" chef's knife",
+      "recommendsSubject": false,
+      "rationale": "Names Fibrox 10\"."
+    },
+    {
+      "commentId": "reddit:comment:example_c067",
+      "stance": "supportive",
+      "aboutProduct": "Wüsthof Classic",
+      "recommendsProduct": "Wüsthof Classic",
+      "recommendsSubject": true,
+      "rationale": "Seconds Wüsthof."
+    },
+    {
+      "commentId": "reddit:comment:example_c068",
+      "stance": "mixed",
+      "aboutProduct": "Wüsthof Ikon",
+      "recommendsProduct": "Wüsthof Ikon",
+      "recommendsSubject": false,
+      "rationale": "Prefers Ikon to Classic."
+    },
+    {
+      "commentId": "reddit:comment:example_c069",
+      "stance": "supportive",
+      "aboutProduct": "Lansky sharpening system",
+      "recommendsProduct": "Lansky sharpening system",
+      "recommendsSubject": false,
+      "rationale": "Cites review favoring Lansky."
+    },
+    {
+      "commentId": "reddit:comment:example_c070",
+      "stance": "supportive",
+      "aboutProduct": "Mercer Genesis",
+      "recommendsProduct": "Mercer Genesis",
+      "recommendsSubject": false,
+      "rationale": "Praises Genesis handles."
+    },
+    {
+      "commentId": "reddit:comment:example_c071",
+      "stance": "supportive",
+      "aboutProduct": "Wüsthof Classic",
+      "recommendsProduct": "Wüsthof Classic",
+      "recommendsSubject": true,
+      "rationale": "Says can't go wrong with Wüsthof Classic; also sharpener."
+    },
+    {
+      "commentId": "reddit:comment:example_c072",
+      "stance": "supportive",
+      "aboutProduct": "Zwilling Pro Holm Oak",
+      "recommendsProduct": "Zwilling Pro Holm Oak",
+      "recommendsSubject": false,
+      "rationale": "Link-only endorsement."
+    },
+    {
+      "commentId": "reddit:comment:example_c073",
+      "stance": "supportive",
+      "aboutProduct": "Victorinox",
+      "recommendsProduct": "Victorinox",
+      "recommendsSubject": false,
+      "rationale": "Names Victorinox."
+    },
+    {
+      "commentId": "reddit:comment:example_c074",
+      "stance": "supportive",
+      "aboutProduct": "Kikuichi carbon western handle",
+      "recommendsProduct": "Kikuichi carbon western handle",
+      "recommendsSubject": false,
+      "rationale": "Recommends Kikuichi."
+    },
+    {
+      "commentId": "reddit:comment:example_c075",
+      "stance": "supportive",
+      "aboutProduct": "Cutco",
+      "recommendsProduct": "Cutco",
+      "recommendsSubject": false,
+      "rationale": "Praises Cutco."
+    },
+    {
+      "commentId": "reddit:comment:example_c076",
+      "stance": "supportive",
+      "aboutProduct": "Gesshin Stainless 240mm yo-gyuto",
+      "recommendsProduct": "Gesshin Stainless 240mm yo-gyuto",
+      "recommendsSubject": false,
+      "rationale": "Recommends Gesshin."
+    },
+    {
+      "commentId": "reddit:comment:example_c077",
+      "stance": "supportive",
+      "aboutProduct": "Wüsthof",
+      "recommendsProduct": "Wüsthof",
+      "recommendsSubject": true,
+      "rationale": "Says Wüsthof is king."
+    },
+    {
+      "commentId": "reddit:comment:example_c078",
+      "stance": "supportive",
+      "aboutProduct": "ICEL chef's knife",
+      "recommendsProduct": "ICEL chef's knife",
+      "recommendsSubject": false,
+      "rationale": "Suggests ICEL."
+    },
+    {
+      "commentId": "reddit:comment:example_c079",
+      "stance": "supportive",
+      "aboutProduct": "JKI EN 240mm ginsanko wa-gyuto",
+      "recommendsProduct": "JKI EN 240mm ginsanko wa-gyuto",
+      "recommendsSubject": false,
+      "rationale": "Favorite knife."
+    },
+    {
+      "commentId": "reddit:comment:example_c080",
+      "stance": "neutral",
+      "aboutProduct": "JKI EN 240mm ginsanko wa-gyuto",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Notes sold out."
+    },
+    {
+      "commentId": "reddit:comment:example_c081",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Thanks, notes Victorinox look."
+    },
+    {
+      "commentId": "reddit:comment:example_c082",
+      "stance": "supportive",
+      "aboutProduct": "Schmitt Bros. The One",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Admires Schmitt knife."
+    },
+    {
+      "commentId": "reddit:comment:example_c083",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Reply to deleted."
+    },
+    {
+      "commentId": "reddit:comment:example_c084",
+      "stance": "critical",
+      "aboutProduct": "Global",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Finds Global ugly."
+    },
+    {
+      "commentId": "reddit:comment:example_c085",
+      "stance": "mixed",
+      "aboutProduct": "Shun",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Interested but wonders if overrated."
+    },
+    {
+      "commentId": "reddit:comment:example_c086",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Question about rust."
+    },
+    {
+      "commentId": "reddit:comment:example_c087",
+      "stance": "supportive",
+      "aboutProduct": "Shun",
+      "recommendsProduct": "Shun",
+      "recommendsSubject": false,
+      "rationale": "Says Shun worth price."
+    },
+    {
+      "commentId": "reddit:comment:example_c088",
+      "stance": "mixed",
+      "aboutProduct": "Misono UX-10",
+      "recommendsProduct": "Tojiro",
+      "recommendsSubject": false,
+      "rationale": "Nice but overpriced; prefers Tojiro."
+    },
+    {
+      "commentId": "reddit:comment:example_c089",
+      "stance": "supportive",
+      "aboutProduct": "Tojiro DP 210 gyuto",
+      "recommendsProduct": "Tojiro DP 210 gyuto",
+      "recommendsSubject": false,
+      "rationale": "Defends UX-10, likes Tojiro."
+    },
+    {
+      "commentId": "reddit:comment:example_c090",
+      "stance": "supportive",
+      "aboutProduct": "Schmitt Bros. The One",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Agrees."
+    },
+    {
+      "commentId": "reddit:comment:example_c091",
+      "stance": "supportive",
+      "aboutProduct": "Zwilling Pro 8\" chef's knife",
+      "recommendsProduct": "Zwilling Henckels",
+      "recommendsSubject": false,
+      "rationale": "Seconds Zwilling quality."
+    },
+    {
+      "commentId": "reddit:comment:example_c092",
+      "stance": "supportive",
+      "aboutProduct": "Wüsthof Classic",
+      "recommendsProduct": "Wüsthof Classic",
+      "recommendsSubject": true,
+      "rationale": "Recommends Wüsthof Classic, Mercer, Victorinox."
+    },
+    {
+      "commentId": "reddit:comment:example_c093",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Joke."
+    },
+    {
+      "commentId": "reddit:comment:example_c094",
+      "stance": "supportive",
+      "aboutProduct": "Øyo knives",
+      "recommendsProduct": "Øyo knives",
+      "recommendsSubject": false,
+      "rationale": "Favors Øyo over others."
+    },
+    {
+      "commentId": "reddit:comment:example_c095",
+      "stance": "neutral",
+      "aboutProduct": "Øyo knives",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Adds link."
+    },
+    {
+      "commentId": "reddit:comment:example_c096",
+      "stance": "critical",
+      "aboutProduct": "Shun",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Shun broke."
+    },
+    {
+      "commentId": "reddit:comment:example_c097",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Thanks."
+    },
+    {
+      "commentId": "reddit:comment:example_c098",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Follow-up question."
+    },
+    {
+      "commentId": "reddit:comment:example_c099",
+      "stance": "supportive",
+      "aboutProduct": "Lamson Nakiri",
+      "recommendsProduct": "Lamson Nakiri",
+      "recommendsSubject": false,
+      "rationale": "OP praises Lamson purchase."
+    },
+    {
+      "commentId": "reddit:comment:example_c100",
+      "stance": "neutral",
+      "aboutProduct": "Victorinox 10\" butcher knife",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Thanks and remark."
+    }
+  ]
+}

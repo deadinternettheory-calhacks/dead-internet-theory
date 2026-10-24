@@ -55,10 +55,11 @@ describe('random history sample', () => {
     expect(first.supportive.sampled).not.toEqual(Array.from({ length: 6 }, (_, i) => `reddit:author:t2_big_supportive_${i}`));
   });
 
-  it('fills the unsupportive side with neutral users when few are critical, and anchors each user on their own comment', () => {
+  it('counts any product recommender as supportive, fills the other side with users who recommend nothing, and anchors each user on their own comment', () => {
     const sample = sampleHistoryAuthors(graph, triage);
-    expect(new Set(sample.supportive.sampled)).toEqual(new Set([id('a'), id('b'), id('c')]));
-    expect(new Set(sample.unsupportive.sampled)).toEqual(new Set([id('e'), id('d'), id('f')]));
+    // d recommends a competing machine, so is a recommender too.
+    expect(new Set(sample.supportive.sampled)).toEqual(new Set([id('a'), id('b'), id('c'), id('d')]));
+    expect(new Set(sample.unsupportive.sampled)).toEqual(new Set([id('e'), id('f')]));
     const nodes = new Map(graph.nodes.map(n => [n.id, n]));
     for (const p of sample.pairs) expect((nodes.get(p.anchorCommentId) as { authorId: string }).authorId).toBe(p.authorId);
   });
@@ -91,9 +92,8 @@ describe('comment-section index', () => {
     expect(risk.score).toBeGreaterThanOrEqual(55);
     expect(risk.score).toBeLessThanOrEqual(100);
     expect(risk.explanation).toMatch(/Comment-section astroturfing index/);
-    expect(risk.explanation).toMatch(/History contrast \d+: sampled supportive users mention BrewMaster Mini in \d+%/);
-    expect(risk.explanation).toMatch(/random sample of 3 of 3 supportive and 3 of 3 unsupportive users/);
-    expect(risk.explanation).toMatch(/not a probability/);
+    expect(risk.explanation).toMatch(/History contrast \d+: sampled supportive users mention the recommended products in \d+%/);
+    expect(risk.explanation).toMatch(/random sample of 4 of 4 supportive and 2 of 2 unsupportive users/);
   });
 
   it('scores lower without the supportive users’ brand-heavy histories', () => {

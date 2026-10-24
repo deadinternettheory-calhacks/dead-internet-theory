@@ -2,7 +2,7 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it } from 'vitest';
-import { exampleReport } from '../../demo/report';
+import { testReport as exampleReport } from '../../test/fixtures';
 import type { Report } from '../../analysis/report';
 import { EvidenceExplorer } from './EvidenceExplorer';
 
