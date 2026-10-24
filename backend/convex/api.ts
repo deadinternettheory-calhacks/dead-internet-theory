@@ -13,7 +13,8 @@ export async function queue(ctx:Ctx,kind:string,target:string,payload:unknown={}
 }
 export const execute=mutation({args:{method:v.string(),path:v.string(),body:v.any(),key:v.union(v.string(),v.null()),principal:v.any(),requestId:v.string()},handler:async(ctx,a)=>{
   try{return await dispatch(ctx,a);}catch(e){
-    const f=e instanceof ApiFault?e:new ApiFault(500,'INTERNAL_ERROR','Request could not be processed');
+    if(!(e instanceof ApiFault))throw e;
+    const f=e;
     return {status:f.status,body:validate('ApiError',{error:{code:f.code,message:f.message,retryable:f.retryable,requestId:a.requestId}})};
   }
 }});
@@ -80,7 +81,7 @@ async function dispatch(ctx:Ctx,a:{method:string;path:string;body:unknown;key:st
   if(post){
     const bucket=stable([p.sub,Math.floor(now/3600000)]);const count=(await get(ctx,'controls',bucket))??0;
     if(count>=limits().rate)throw new ApiFault(429,'RATE_LIMITED','Hourly submission limit reached',true);
-    if(result.status===202){const jobs=await ctx.db.query('jobs').collect();if(jobs.filter(j=>['queued','running'].includes(j.data.status)).length>=limits().queued)throw new ApiFault(429,'RATE_LIMITED','Job capacity reached',true);}
+    if(result.status===202){const jobs=await ctx.db.query('jobs').withIndex('status_due',q=>q.eq('status','queued')).take(limits().queued);if(jobs.length>=limits().queued)throw new ApiFault(429,'RATE_LIMITED','Job capacity reached',true);}
     // All validation is complete before committing transactional writes.
     await commit!();
     await put(ctx,'controls',bucket,count+1);
