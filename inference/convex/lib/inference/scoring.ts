@@ -161,9 +161,14 @@ export interface AccountScore {
   score: number | null;
   historyCount: number;
   signals: ScoredSignal[];
+  /** Evidence of an ordinary human user (E2, E4, E7). When present, no automation signals are reported. */
+  humanSignals: ScoredSignal[];
   unknown: string[];
   discarded: string[];
 }
+
+/** Account-level rules showing an ordinary human user. */
+const HUMAN_RULES = new Set(['E2', 'E4', 'E7']);
 
 /** Facts measured without the model, used as a floor under its proposals. */
 export interface AccountFacts {
@@ -177,11 +182,15 @@ export interface AccountFacts {
   accountAgeDays: number | null;
   /** Any comment ID of this author, for evidence on profile-based signals. */
   anchorCommentId: string;
+  /** Distinct communities (subreddits) across the history. */
+  communityCount: number;
+  /** History comment IDs, for evidence on measured human signals. */
+  historyIds: string[];
 }
 
 export function scoreAccount(proposal: ProposedAccount | undefined, facts: AccountFacts, knownIds: ReadonlySet<string>): AccountScore {
   const discarded: string[] = [];
-  if (facts.historyCount === 0) return { authorId: facts.authorId, score: null, historyCount: 0, signals: [], unknown: [], discarded };
+  if (facts.historyCount === 0) return { authorId: facts.authorId, score: null, historyCount: 0, signals: [], humanSignals: [], unknown: [], discarded };
   const bRules = RULES.filter(r => r.family === 'B' && r.platforms.includes(facts.platform));
   const availability: EvidenceAvailability = {
     platform: facts.platform,
@@ -198,6 +207,20 @@ export function scoreAccount(proposal: ProposedAccount | undefined, facts: Accou
     return false;
   });
   const signals = acceptSignals(proposed, false, availability, knownIds, discarded);
+  // Signs of an ordinary human user override automation signals entirely.
+  const humanProposed = (proposal?.exculpatory ?? []).filter(s => {
+    if (HUMAN_RULES.has(s.id)) return true;
+    discarded.push(`${s.id}: not an account-level human signal`);
+    return false;
+  });
+  const humanSignals = acceptSignals(humanProposed, true, availability, knownIds, discarded);
+  const established = facts.accountAgeDays !== null && facts.accountAgeDays > 365 && facts.communityCount >= 3 && facts.productMentionIds.length <= 1 && !facts.historyPartial;
+  if (established && !humanSignals.some(s => s.id === 'E2')) {
+    humanSignals.push({ id: 'E2', family: 'E', points: -15, evidence: `Account over a year old (${facts.accountAgeDays} days), active in ${facts.communityCount} communities, rarely mentions the recommended products.`, evidenceRefs: facts.historyIds.filter(id => knownIds.has(id)).slice(0, 3) });
+  }
+  if (humanSignals.length) {
+    return { authorId: facts.authorId, score: 0, historyCount: facts.historyCount, signals: [], humanSignals, unknown: [], discarded };
+  }
   const has = (id: string) => signals.some(s => s.id === id);
   // Deterministic floor: brand concentration (3+ of 10 recent comments) and a new account.
   if (!has('B1') && facts.productMentionIds.length >= 3) {
@@ -208,8 +231,11 @@ export function scoreAccount(proposal: ProposedAccount | undefined, facts: Accou
   }
   const fired = new Set(signals.map(s => s.id));
   // Without a model review, only the measured rules (B1, and B4 when the age is known) were checked.
-  const unchecked = proposal ? proposal.unknown : bRules.map(r => r.id).filter(id => id !== 'B1' && !(id === 'B4' && facts.accountAgeDays !== null));
-  const unknown = Array.from(new Set(unchecked.filter(id => RULES_BY_ID.get(id)?.family === 'B' && !fired.has(id))));
+  // B1 (brand focus) is always measured, and B4 when the profile gives the age, so the model can
+  // never mark them unknown: an account with history always gets a score.
+  const measured = new Set(['B1', ...(facts.accountAgeDays !== null ? ['B4'] : [])]);
+  const unchecked = proposal ? proposal.unknown : bRules.map(r => r.id);
+  const unknown = Array.from(new Set(unchecked.filter(id => RULES_BY_ID.get(id)?.family === 'B' && !fired.has(id) && !measured.has(id))));
   const evaluable = bRules.filter(r => !unknown.includes(r.id) || fired.has(r.id));
   const max = evaluable.reduce((t, r) => t + Math.max(...r.points), 0);
   const points = signals.reduce((t, s) => t + s.points, 0);
@@ -218,6 +244,7 @@ export function scoreAccount(proposal: ProposedAccount | undefined, facts: Accou
     score: max ? Math.min(100, Math.round((100 * points) / max)) : null,
     historyCount: facts.historyCount,
     signals,
+    humanSignals: [],
     unknown,
     discarded,
   };

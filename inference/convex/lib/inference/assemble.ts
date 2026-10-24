@@ -15,7 +15,7 @@ import type {
 } from '../contract';
 import { SCHEMA_VERSION } from '../contract';
 import { unique, utcNow } from '../util';
-import { daysBetween, mentions, round2, wordJaccard } from './features';
+import { communityFromUrl, daysBetween, mentions, round2, wordJaccard } from './features';
 import type { ScoringOutput, TriageOutput } from './outputs';
 import { GraphIndex, historyResults, sampleHistoryAuthors } from './packet';
 import { sectionIndex } from './section';
@@ -230,12 +230,15 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
       productMentionIds: r.comments.filter(c => mentionTerms.some(t => mentions(c.text, t)) && known.has(c.id)).map(c => c.id),
       accountAgeDays: daysBetween(profile?.accountCreatedAt, index.comment(pair.anchorCommentId)?.createdAt ?? null),
       anchorCommentId: target.commentId,
+      communityCount: new Set(r.comments.map(c => communityFromUrl(c.url)).filter(Boolean)).size,
+      historyIds: r.comments.map(c => c.id),
     }, known);
     target.accountSignals = {
       authorId: account.authorId,
       score: account.score,
       historyCount: account.historyCount,
       signals: account.signals.map(x => ({ ruleId: x.id, points: x.points, evidence: x.evidence, evidenceRefs: x.evidenceRefs })),
+      ...(account.humanSignals.length ? { humanSignals: account.humanSignals.map(x => ({ ruleId: x.id, evidence: x.evidence, evidenceRefs: x.evidenceRefs })) } : {}),
       unknown: account.unknown,
     };
   }

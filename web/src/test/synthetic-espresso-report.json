@@ -1295,7 +1295,7 @@
       "schemaVersion": "1.0.0",
       "graphRevision": 1,
       "graphFingerprint": "77f2bd8c21bcc034068d8d089c74f2e916881b7f6769f93bacf8307073be55a2",
-      "inferenceVersion": "dit-inference/0.2.0; rubric/0.3; prompts-2026-10-24d; creao-mock",
+      "inferenceVersion": "dit-inference/0.2.0; rubric/0.3; prompts-2026-10-24e; creao-mock",
       "inferredAt": "2026-10-24T06:03:00Z",
       "subject": {
         "label": "BrewMaster Mini",
@@ -1594,15 +1594,18 @@
             "score": 0,
             "historyCount": 10,
             "signals": [],
-            "unknown": [
-              "B2",
-              "B3",
-              "B5",
-              "B6",
-              "B7",
-              "B8",
-              "B9"
-            ]
+            "humanSignals": [
+              {
+                "ruleId": "E2",
+                "evidence": "Account over a year old (3330 days), active in 4 communities, rarely mentions the recommended products.",
+                "evidenceRefs": [
+                  "reddit:comment:t1_syn_e01",
+                  "reddit:comment:t1_syn_e02",
+                  "reddit:comment:t1_syn_e03"
+                ]
+              }
+            ],
+            "unknown": []
           }
         },
         {
@@ -1642,15 +1645,18 @@
             "score": 0,
             "historyCount": 10,
             "signals": [],
-            "unknown": [
-              "B2",
-              "B3",
-              "B5",
-              "B6",
-              "B7",
-              "B8",
-              "B9"
-            ]
+            "humanSignals": [
+              {
+                "ruleId": "E2",
+                "evidence": "Account over a year old (2439 days), active in 4 communities, rarely mentions the recommended products.",
+                "evidenceRefs": [
+                  "reddit:comment:t1_syn_f01",
+                  "reddit:comment:t1_syn_f02",
+                  "reddit:comment:t1_syn_f03"
+                ]
+              }
+            ],
+            "unknown": []
           }
         }
       ],

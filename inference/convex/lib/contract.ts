@@ -233,6 +233,8 @@ export interface AccountSignals {
   score: number | null;
   historyCount: number;
   signals: { ruleId: string; points: number; evidence: string; evidenceRefs: string[] }[];
+  /** Evidence of an ordinary human user; when present, signals is empty and score is 0. */
+  humanSignals?: { ruleId: string; evidence: string; evidenceRefs: string[] }[];
   unknown: string[];
 }
 
