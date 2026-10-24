@@ -207,8 +207,14 @@ export class Apify {
     return response.body;
   }
   async start(actor: string, input: unknown) {
+    const build =
+      actor === actors.reddit
+        ? "0.0.127"
+        : actor === actors.redditHistory
+          ? "0.0.78"
+          : null;
     const response = await this.api(
-      `acts/${encodeURIComponent(actor.replace("/", "~"))}/runs?waitForFinish=0&timeout=${limits().runSeconds}&memory=256&maxTotalChargeUsd=${limits().cents / 100}`,
+      `acts/${encodeURIComponent(actor.replace("/", "~"))}/runs?waitForFinish=0&timeout=${limits().runSeconds}&memory=256&maxTotalChargeUsd=${limits().cents / 100}${build ? `&build=${build}` : ""}`,
       "POST",
       input,
     );

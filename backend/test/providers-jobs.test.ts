@@ -64,6 +64,7 @@ it("starts Apify asynchronously with spend/time caps, polls persisted run IDs an
   expect(await api.items("data", 100, 50)).toEqual([{ id: "1" }]);
   expect(mock.mock.calls[0][0]).toContain("waitForFinish=0");
   expect(mock.mock.calls[0][0]).toContain("maxTotalChargeUsd=0.25");
+  expect(mock.mock.calls[0][0]).toContain("build=0.0.127");
   expect(mock.mock.calls[2][0]).toContain("offset=100&limit=50");
   expect(
     mock.mock.calls.every(([url]) => !url.includes("server-only-test-token")),
@@ -89,10 +90,13 @@ it("fails closed without approved authorization, retention and runtime evidence"
   vi.stubEnv("APIFY_TOKEN", "SYNTHETIC-MOCK-CREDENTIAL");
   vi.stubEnv("PROVIDER_AUTHORIZATION_APPROVED", "true");
   vi.stubEnv("RETENTION_POLICY_REF", "review-required");
-  expect(() => liveGate("reddit")).toThrow("runtime evidence");
-  expect(Object.values(verification).every((v) => !v.runtimeVerified)).toBe(
-    true,
-  );
+  expect(() => liveGate("x")).toThrow("runtime evidence");
+  expect(verification.reddit.runtimeVerified).toBe(true);
+  expect(
+    [verification.x, verification.youtube, verification.tiktok].every(
+      (v) => !v.runtimeVerified,
+    ),
+  ).toBe(true);
 });
 it("batches Reddit repeated author lookup plans, separates X root and authored searches and never fetches video histories", () => {
   const authors = [
