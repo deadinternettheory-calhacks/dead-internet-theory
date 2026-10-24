@@ -8,7 +8,9 @@
     "test": "npm run generate && vitest run",
     "dev": "npm run generate && convex dev",
     "deploy": "npm run generate && convex deploy",
-    "smoke": "tsx scripts/provider-smoke.ts"
+    "smoke": "tsx scripts/provider-smoke.ts",
+    "format": "prettier --write convex src/*.ts scripts test *.json *.ts *.md",
+    "format:check": "prettier --check convex src/*.ts scripts test *.json *.ts *.md"
   },
   "dependencies": {
     "ajv": "^8.17.1",
@@ -21,6 +23,7 @@
     "@types/node": "^22.0.0",
     "convex-test": "^0.0.41",
     "json-schema-to-typescript": "^15.0.4",
+    "prettier": "^3.9.10",
     "tsx": "^4.20.0",
     "typescript": "~5.8.3",
     "vitest": "^5.0.5"
