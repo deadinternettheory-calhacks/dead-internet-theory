@@ -13,7 +13,11 @@ frontend calls.
 - On 2026-10-24 it ran end to end against a local backend in fixture mode, both
   with recorded replies and with the live CREAO agent. Each CREAO run took about
   40–80 s.
-- Not deployed to the cloud or connected to the hosted development backend.
+- Deployed at `https://grandiose-barracuda-22.convex.site`, connected to the
+  hosted ingestion backend and website. CREAO remains responsible for AI
+  inference; this Convex service coordinates events, stages and validated writes.
+  Hosted synthetic checks and one permitted real Reddit post completed; see the
+  [verification record](../backend/verification/2026-10-24-hosted-live.md).
 - Scores come from an uncalibrated rubric with a provisional axis mapping.
 
 ## Commands

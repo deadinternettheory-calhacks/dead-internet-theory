@@ -1,6 +1,6 @@
 # Dead Internet Theory - Master Specification
 
-Status: Product scope and frontend UX are specified. The v1.0.0 contract bundle is adopted for repository implementation. A Convex ingestion backend (`backend/`, see its README) and an independent inference service using CREAO with Claude (`inference/`, [delta](deltas/2026-10-24T06-33-15Z-convex-creao-inference.md)) are implemented and have run together locally on synthetic fixtures, including with the live CREAO agent; live providers, credential issuance, and inference deployment remain unverified. This specification preserves that distinction.
+Status: The v1.0.0 backend, website proxy and CREAO inference integration are implemented. Hosted synthetic checks and one permitted real Reddit discussion completed through ingestion, CREAO and stored analysis. Reddit is enabled with bounded collection and 24-hour application retention; other providers, broader coverage, model calibration and upstream retention controls remain unverified. See [the hosted record](backend/verification/2026-10-24-hosted-live.md).
 
 The initial master specification filled TBD placeholders that did not establish requirements. The later v1.0.0 contract adoption supersedes draft 0.1 through the approved [contract delta](deltas/2026-10-24T05-47-50Z-astroturfing-contracts-v1.md); preserve that history and follow [CONTRIBUTING.md](CONTRIBUTING.md) and [deltas/README.md](deltas/README.md) for future changes.
 
@@ -10,11 +10,11 @@ Dead Internet Theory is a public-facing research utility for people who want to 
 
 A user submits a supported public post URL using the homepage or URL-prefix shortcut. The intended system retrieves permitted discussion data, measures observable behaviors, compares relevant evidence, and returns a cautious plain-language report with sources, uncertainty, and limitations. The product reports signals; it does not establish intent or prove that an account is a bot, a company paid for activity, or a discussion was manipulated.
 
-**Primary domain:** `deadinternettheory.us` is intended; production ownership and deployment are unverified.
+**Primary domain:** `deadinternettheory.us` serves the deployed website and redirects to `www.deadinternettheory.us`.
 
 **Repository:** Git remote `origin` points to [deadinternettheory-calhacks/dead-internet-theory](https://github.com/deadinternettheory-calhacks/dead-internet-theory). This verifies the local remote configuration, not that a hosted deployment is connected.
 
-**Current verified state:** a React/TypeScript SPA in `web/` validates a limited set of Reddit and X/Twitter hostnames, supports homepage and URL-prefix navigation, and shows an honest unavailable state. V1.0.0 wire contracts, synthetic protocol fixtures, candidate provider-adapter notes, and a validator are present. `backend/` contains the Convex ingestion backend: the authenticated v1 API, durable ingestion/enrichment jobs, graph persistence and `investigation.ready` delivery, with provider adapters disabled pending authorized verification (see [backend/README.md](backend/README.md)). `inference/` contains a separate Convex service that receives those events, calls a CREAO agent running a Claude model for triage and rubric scoring, re-scores deterministically, and submits analyses through the v1 API ([inference/README.md](inference/README.md)). The two have run end to end on local Convex deployments in fixture mode, with recorded CREAO replies and with the live CREAO agent. No live provider, search index or production deployment is verified. The SPA calls the v1 API through its own same-origin proxy (`web/server/proxy.ts`, a Vercel Function) that attaches frontend JWTs. It renders analyses once the deployment has backend credentials, and shows a labeled synthetic example at `/example`. See [Section 10](#10-frontend-and-ux-requirements) and [Section 12](#12-testing-and-validation).
+**Current verified state:** `web/` calls the authenticated v1 API through its same-origin Vercel proxy. The existing Convex ingestion deployment in `backend/` collects bounded Reddit discussion data through pinned Apify Actors, stores immutable graphs and delivers ready events. The separate Convex coordinator in `inference/` calls CREAO for triage and rubric scoring, computes scores deterministically, validates evidence and submits the analysis. Hosted synthetic checks and one permitted real post completed; the real graph contains 100 comments with explicitly partial coverage. A separate scoped history test returned a ten-item recent fallback sample for one author and an empty result for another. The hosted real-post analysis did not request histories. Application records expire after 24 hours; the owner disabled the daily Apify reservation cap while retaining $1 per run. Only Reddit is enabled. CREAO's served model is not reported by the API; Claude remains the required agent configuration. These checks do not establish calibrated scores, exhaustive access or other platform readiness. See [backend/README.md](backend/README.md), [inference/README.md](inference/README.md) and the [verification record](backend/verification/2026-10-24-hosted-live.md).
 
 ## 2. Goals, scope, and non-goals
 
@@ -31,7 +31,7 @@ A user submits a supported public post URL using the homepage or URL-prefix shor
 
 The intended first end-to-end investigation supports URL validation, platform identification, accessible post/thread retrieval, bounded public-comment collection, account sampling, limited public-history retrieval, deterministic behavioral/content analysis, evidence generation, optional retrieval of related permitted records, optional AI-assisted explanation with validation, and completed/partial/insufficient/unsupported/inaccessible/failure states.
 
-Reddit is the intended first provider, but it is not connected. No platform may be described as working until its integration passes provider-specific and end-to-end checks. If real source access is unavailable for a judging demo, use a labeled synthetic corpus and identify it as synthetic in the app and judging materials.
+Reddit is the first enabled provider, with scoped Actor checks and one hosted real-post flow verified. No platform may be described as working until its integration passes provider-specific and end-to-end checks. If real source access is unavailable for a judging demo, use a labeled synthetic corpus and identify it as synthetic in the app and judging materials.
 
 ### 2.3 Non-goals
 
@@ -77,12 +77,12 @@ Reddit is the intended first provider, but it is not connected. No platform may 
 sequenceDiagram
     actor User
     participant Web as React SPA (implemented)
-    participant App as Investigation API / Convex (implemented; local only)
+    participant App as Investigation API / Convex (implemented; hosted)
     participant Ingest as Apify Actor and authorized connector (selected, pending; synthetic stand-in)
     participant Analyze as Inference worker in Convex: deterministic scoring (implemented)
     participant Search as Elasticsearch retrieval (planned)
-    participant Agent as CREAO agent running Claude (selected; live runs verified locally)
-    participant Store as Convex database (implemented; retention policy pending)
+    participant Agent as CREAO agent with Claude required (hosted calls verified)
+    participant Store as Convex database (implemented; 24-hour application retention)
     User->>Web: Submit supported post URL
     Web->>Web: Parse and validate protocol/host
     Web->>App: POST /v1/investigations + Idempotency-Key
@@ -110,7 +110,7 @@ sequenceDiagram
     Web-->>User: Evidence-led report or honest partial/error state
 ```
 
-The SPA, the Convex ingestion backend (v1 routes, jobs, `investigation.ready` delivery over HTTPS) and the separate inference service (event receiver, CREAO triage, enrichment request, CREAO rubric scoring, deterministic re-scoring, validated submission) exist and have run together locally in fixture mode with recorded CREAO replies. Apify ingestion, live history collection, Elasticsearch, live CREAO runs, frontend authentication, and deployment remain unimplemented or unverified. V1 routes and event models are defined in Section 6.
+The SPA, the Convex ingestion backend (v1 routes, jobs, `investigation.ready` delivery over HTTPS) and the separate inference service (event receiver, CREAO triage, enrichment request, CREAO rubric scoring, deterministic re-scoring, validated submission) exist and have run together locally in fixture mode with recorded CREAO replies. Hosted Reddit ingestion, CREAO calls, frontend proxy authentication and analysis persistence are verified for the scoped checks. Broader live history coverage, other platforms and Elasticsearch remain unverified or unimplemented. V1 routes and event models are defined in Section 6.
 
 ### 3.3 Outcomes
 
@@ -166,19 +166,19 @@ Naming a technology does not make it an integration.
 ```mermaid
 flowchart LR
     Person[Visitor] --> Web[React SPA on Vercel<br/>Implemented: UI and URL routes]
-    Web -->|adopted v1 REST contract| Convex[Convex application backend<br/>Implemented; local only]
-    Convex -->|bounded job input| Apify[Apify Actor<br/>Selected / pending]
+    Web -->|adopted v1 REST contract| Convex[Convex application backend<br/>Implemented; hosted]
+    Convex -->|bounded job input| Apify[Apify Actor<br/>Reddit verified, others gated]
     Apify -->|authorized source data| Platform[Reddit first; other providers after access review]
     Apify -->|normalized records| Convex
     Convex --> Python[Inference worker: deterministic measurements and rubric re-scoring in TypeScript<br/>Implemented]
     Python --> Packet[Evidence packet and sampling manifest]
     Packet -. optional related evidence .-> Elastic[Elasticsearch retrieval<br/>Planned]
-    Packet -->|bounded triage and scoring runs| CREAO[CREAO agent running Claude<br/>Selected; live runs verified locally]
+    Packet -->|bounded triage and scoring runs| CREAO[CREAO agent with Claude selected<br/>Hosted calls verified]
     Elastic --> Validate[Backend validation and result assembly<br/>Implemented]
     CREAO --> Validate
     Packet --> Validate
     Validate --> Convex
-    Convex -->|future validated results| Web
+    Convex -->|validated results| Web
 ```
 
 No provider secret may be embedded in a Vite `VITE_*` variable. Provider calls/secrets belong in a controlled server-side environment. The repo defines no application environment variable names. Integration owners must document exact names and purposes when implementing; never publish secret values here.
@@ -189,11 +189,11 @@ No provider secret may be embedded in a Vite `VITE_*` variable. Provider calls/s
 | --- | --- | --- |
 | React 19, TypeScript 5.8, Vite 6, Tailwind CSS 4, React Router 7, Lucide React; shadcn-style source control | **Implemented and verified** in `web/`. Own presentation, URL validation/routing, keyboard interactions, and rendering supplied props. | Small static SPA fits the current UI. It cannot hold secrets or calculate authoritative results. A server-rendered/full-stack framework is not selected. Installed versions are in `web/package.json`. |
 | Vercel | **Selected / partly configured.** `web/vercel.json` rewrites all paths to the SPA entry. | Static hosting fits the client application; configuration alone does not prove a Vercel project, domain, or live deployment. `web/README.md` documents `web/` as the intended project root. Project setup, DNS, deployment, and rollback remain to verify. |
-| Convex | **Implemented; deployment unverified.** Two deployments: the ingestion backend in `backend/` (v1 API, durable jobs, event delivery; see [backend/README.md](backend/README.md)) and the inference service in `inference/` (event inbox and a scheduler-driven worker; see [inference/README.md](inference/README.md)). | TypeScript backend and reactive queries may simplify job-state delivery to this SPA. Queries/mutations/actions have distinct transaction/external-I/O behavior; long provider work should be asynchronous. Custom API + queue/database gives more control/portability but adds infrastructure. Supabase/Postgres may suit SQL-first needs or existing expertise. Validate limits, costs, retention, security, and deployment fit. [Convex overview](https://docs.convex.dev/understanding/overview), [queries](https://docs.convex.dev/functions/query-functions). |
-| Apify | **Selected managed-ingestion direction; pending access review and implementation.** Prefer a project-owned Actor that validates input, uses permitted connectors, enforces limits, handles pagination/retries, normalizes records, and records omissions. The merged provider-adapter document also lists third-party Actor candidates for discussion/history collection; choosing between those candidates and a custom Actor, and validating terms and actual behavior, remains open. | A custom Actor gives project control over collection and output. A third-party Actor may accelerate experiments but introduces variable quality, cost, maintenance, output, and retention. Publishing an Actor is a separate decision. Best Actor sponsor opportunity is only a potential benefit. Apify does not authorize bypassing source restrictions. [Actor input/output](https://docs.apify.com/actors/running/input-and-output), [running Actors](https://docs.apify.com/actors/running). |
+| Convex | **Implemented; hosted scoped flow verified.** Two deployments: the ingestion backend in `backend/` (v1 API, durable jobs, event delivery; see [backend/README.md](backend/README.md)) and the inference service in `inference/` (event inbox and a scheduler-driven worker; see [inference/README.md](inference/README.md)). | TypeScript backend and reactive queries may simplify job-state delivery to this SPA. Queries/mutations/actions have distinct transaction/external-I/O behavior; long provider work should be asynchronous. Custom API + queue/database gives more control/portability but adds infrastructure. Supabase/Postgres may suit SQL-first needs or existing expertise. Validate limits, costs, retention, security, and deployment fit. [Convex overview](https://docs.convex.dev/understanding/overview), [queries](https://docs.convex.dev/functions/query-functions). |
+| Apify | **Reddit third-party adapters implemented and scoped runtime checks passed; other platforms remain gated.** Prefer a project-owned Actor that validates input, uses permitted connectors, enforces limits, handles pagination/retries, normalizes records, and records omissions. The merged provider-adapter document also lists third-party Actor candidates for discussion/history collection; choosing between those candidates and a custom Actor, and validating terms and actual behavior, remains open. | A custom Actor gives project control over collection and output. A third-party Actor may accelerate experiments but introduces variable quality, cost, maintenance, output, and retention. Publishing an Actor is a separate decision. Best Actor sponsor opportunity is only a potential benefit. Apify does not authorize bypassing source restrictions. [Actor input/output](https://docs.apify.com/actors/running/input-and-output), [running Actors](https://docs.apify.com/actors/running). |
 | Python; NumPy, scikit-learn, NetworkX | **Superseded for the inference worker** by TypeScript inside Convex (ADR-008). Remain candidates for later research analysis; implementation absent. Candidate roles: numeric summaries; evaluated similarity/clustering; account/thread/claim graphs. | Deterministic features should be testable before model interpretation. Libraries are not currently dependencies and do not validate a signal. Methods, versions, thresholds, performance, and false positives remain research decisions. |
 | Elasticsearch / Agent Builder | **Planned.** Index permitted normalized records/evidence; retrieve related claims with filters and lexical/semantic/hybrid search if corpus is useful. Agent Builder may expose retrieval tools. | Adds cross-thread candidates beyond in-memory one-thread comparison. Quality depends on permitted corpus, normalization, cost, and evaluation. A match is a lead, not proof. Defer until a data basis and relevance evaluation exist. Check license/features and sponsor rules. [Agent Builder agents](https://www.elastic.co/docs/solutions/search/agent-builder/agent-builder-agents), [tools](https://www.elastic.co/docs/explore-analyze/ai-features/agent-builder/tools). |
-| CREAO | **Selected (ADR-008) as the agent platform for inference; live runs verified locally against synthetic fixtures.** CREAO hosts the agent and runs it on Claude (below). One CREAO agent runs twice per analysis: triage (subject, stance, recommendations) and rubric scoring (which rules fire, with cited IDs). Supports app-scoped `capi_` keys and `cr_sk_` developer keys; agent setup is in [inference/creao-agent.md](inference/creao-agent.md). | The agent gets no tools and is told evidence is untrusted data. Its replies are parsed, schema-checked and re-scored deterministically; it cannot set numbers or add evidence. Data handling, retention and cost terms of CREAO and its underlying model still need review. [API Trigger docs](https://docs.creao.ai/pro/api-trigger). |
+| CREAO | **Selected (ADR-008) as the agent platform for inference; hosted synthetic and one real-post flow verified.** CREAO hosts the agent and runs it on Claude (below). One CREAO agent runs twice per analysis: triage (subject, stance, recommendations) and rubric scoring (which rules fire, with cited IDs). Supports app-scoped `capi_` keys and `cr_sk_` developer keys; agent setup is in [inference/creao-agent.md](inference/creao-agent.md). | The agent gets no tools and is told evidence is untrusted data. Its replies are parsed, schema-checked and re-scored deterministically; it cannot set numbers or add evidence. Data handling, retention and cost terms of CREAO and its underlying model still need review. [API Trigger docs](https://docs.creao.ai/pro/api-trigger). |
 | Anthropic Claude | **Selected (ADR-008) as the inference model, run through CREAO.** The CREAO agent's model must be a Claude model: set it in the agent's settings on agent.creao.ai for app-scoped keys, or with `CREAO_MODEL` (for example `anthropic/claude-sonnet-5-5`, CREAO's developer-API default) for `cr_sk_` keys. The inference service does not call the Anthropic API directly, and no Anthropic key is configured. CREAO's run API did not report which model served the verified runs, so confirm the agent's model setting. | Claude classifies comments and proposes rubric signals; it cannot create evidence, verify sources, or set scores. The worker re-validates every reply and computes all scores deterministically. Review CREAO's and Anthropic's data handling, retention and cost for inference traffic. |
 
 ### 5.4 Integration boundaries
@@ -291,7 +291,7 @@ Homepage submission routes to `/analysis?url=...` with the URL encoded as a quer
 
 `web/src/` contains shared header/footer/wordmark, URL input, shortcut and platform notices, Home/About/Analysis pages, unavailable/unsupported states, and typed presentation components for verdict, score, findings, evidence, empty/error states. Their props are local view types, not backend schemas. Until the proxy has backend credentials, the analysis route renders the submitted URL and an honest “service not connected” state. When the proxy has backend credentials (`BACKEND_BASE_URL`, `BACKEND_JWT_SECRET`), the route creates a v1 investigation, shows progress text that tracks the real `ingestionStatus`/`analysisStatus`, and renders the stored analysis via `src/analysis/report.ts` (post, cautious verdict, up to three findings with quoted evidence, detailed signals, coverage and limitations), or a specific failure state. The coordination index appears only inside the detailed analysis, labeled uncalibrated. `/example` renders the generated synthetic report with a banner; synthetic reports never link to their made-up source URLs.
 
-`web/README.md` records commands and API configuration. No live provider, deployed API, real analysis result, or production host is verified. The contract platform enum lists Reddit, X, YouTube, and TikTok; that is interface scope, not proof of integration.
+`web/README.md` records commands and API configuration. The hosted site and API completed a permitted Reddit analysis through CREAO; the synthetic example remains labeled and does not submit its fabricated URL to the live scraper. The contract platform enum lists Reddit, X, YouTube, and TikTok; that is interface scope, not proof of integration.
 
 ## 11. Security, privacy, and platform access
 
@@ -309,7 +309,7 @@ Treat retrieved source content as untrusted. Use strict tool allowlists and sepa
 
 ### 11.4 Privacy and retention
 
-No user accounts, retention policy, privacy notice, or deletion mechanism is implemented. Before collecting histories, choose minimization rules, retention duration, deletion workflow, access controls, log redaction, and source-correction/removal process. Store only data needed for the research purpose. Do not claim consent, anonymity, or deletion behavior before it exists and is tested.
+The owner selected 24-hour application retention on 2026-10-24. Investigations and associated reports/evidence receive fixed deadlines; expired records become unreadable and minute sweeps delete them. Owned Apify runs/default storages enter a durable deletion queue; failures retry rather than being declared deleted. Cached pools expire at their cache TTL. Idempotency receipts retain their contractual lifetime using request hashes and metadata without source payloads. The website displays report expiry. CREAO processing copies and Convex backups remain subject to provider controls; see [RETENTION.md](backend/RETENTION.md). No user accounts or new public deletion API are introduced; privileged operators handle earlier corrections/removals. Before collecting histories, choose minimization rules, retention duration, deletion workflow, access controls, log redaction, and source-correction/removal process. Store only data needed for the research purpose. Do not claim consent, anonymity, or deletion behavior before it exists and is tested.
 
 ## 12. Testing and validation
 
@@ -332,6 +332,8 @@ On 2026-10-24, after the inference slice ([delta](deltas/2026-10-24T06-33-15Z-co
 - `scripts/validate_contracts.py` passed, and the generated synthetic analysis validated against the canonical schema with Python `jsonschema`.
 
 URL tests cover Reddit acceptance, unsupported host, invalid URL, unsafe protocol, query preservation, double-encoded rejection, raw nested prefix, encoded full URL, encoded fragment, malformed prefix, and Vercel rewrite configuration. They do not browser-test a deployed direct refresh. Backend tests do not exercise live providers or a live CREAO run. The browser checks above were run manually, not as committed tests, and 768px was not checked. No benchmark, model evaluation, real labeled dataset, or field study has run.
+
+Hosted rollout on 2026-10-24: 139 backend tests, 49 inference tests, 36 frontend tests, relevant type/lint/format/build checks and canonical contract validation passed. The [hosted verification record](backend/verification/2026-10-24-hosted-live.md) records synthetic and real-data paths, partial coverage, explicit history limits and retention boundaries. This is operational verification, not model calibration or a field study.
 
 ### 12.2 Required validation
 
@@ -413,13 +415,13 @@ These entries capture project direction and the adopted v1 interface delta; they
 | ADR | Date | Status | Decision and consequence |
 | --- | --- | --- | --- |
 | ADR-001 | 2026-10-24 UTC | Adopted for repository implementation; owner acceptance pending | Adopt the v1.0.0 OpenAPI 3.1 / JSON Schema Draft 2020-12 bundle. Canonical models are in models.schema.json; routes are in openapi.yaml. Producers/consumers align to v1 IDs, async job/status semantics, immutable graph revisions, evidence references, and versioning. See the [approved delta](deltas/2026-10-24T05-47-50Z-astroturfing-contracts-v1.md). |
-| ADR-002 | 2026-10-23 | Selected; implemented in web/ | React, TypeScript, Vite, Tailwind, React Router, Lucide React, Vercel SPA. Keep secrets and authoritative analysis out of browser. Versions are in web/package.json; deployment is unverified. |
-| ADR-003 | 2026-10-23; updated 2026-10-24 | Implemented locally; deployment pending | Convex is the application/job backend. `backend/` serves the v1 API and durable jobs; the inference service is a separate Convex deployment (ADR-008). Validate cloud deployment, data retention, security, rate limits and cost. Record a new decision before replacement. |
-| ADR-004 | 2026-10-23 | Selected direction; pending access/implementation | Apify is intended managed ingestion. A project-owned Actor remains preferred, while provider-adapters.md lists third-party Actor candidates. Select and verify an adapter; availability is not authorization or successful collection. |
+| ADR-002 | 2026-10-23 | Selected; implemented in web/ | React, TypeScript, Vite, Tailwind, React Router, Lucide React, Vercel SPA. Keep secrets and authoritative analysis out of browser. Versions are in web/package.json; the hosted site is verified for the scoped flows. |
+| ADR-003 | 2026-10-23; updated 2026-10-24 | Hosted scoped flow verified | Convex is the application/job backend. `backend/` serves the v1 API and durable jobs; the inference service is a separate Convex deployment (ADR-008). Validate cloud deployment, data retention, security, rate limits and cost. Record a new decision before replacement. |
+| ADR-004 | 2026-10-23 | Selected direction; scoped Reddit adapter verified | Apify is intended managed ingestion. A project-owned Actor remains preferred, while provider-adapters.md lists third-party Actor candidates. Select and verify an adapter; availability is not authorization or successful collection. |
 | ADR-005 | 2026-10-23 | Planned, not accepted for P0 | Consider Elastic/Agent Builder after a permitted corpus and demonstrated retrieval value. A match is not proof. |
 | ADR-006 | 2026-10-23 | Superseded by ADR-008 | Evaluate CREAO/Claude for controlled evidence reasoning; do not add until integration behavior and incremental value are verified. |
 | ADR-007 | 2026-10-23 | Superseded for the inference worker by ADR-008 | Use Python for deterministic analysis. NumPy, scikit-learn, NetworkX are candidates only, not current dependencies. |
-| ADR-008 | 2026-10-24 UTC | Selected by the inference owner; implemented and run locally with live CREAO; not deployed | Inference is CREAO with Claude: an independent Convex service (TypeScript) consumes backend events and makes two bounded runs of a CREAO agent whose model is Claude (triage, rubric scoring) with no tools, deterministic measurements, rubric re-scoring with caps, a provisional rubric-to-axis mapping, and contract validation before submission. See the [delta](deltas/2026-10-24T06-33-15Z-convex-creao-inference.md) and [inference/README.md](inference/README.md). |
+| ADR-008 | 2026-10-24 UTC | Selected by the inference owner; implemented and verified on hosted scoped flows with live CREAO | Inference is CREAO with Claude: an independent Convex service (TypeScript) consumes backend events and makes two bounded runs of a CREAO agent whose model is Claude (triage, rubric scoring) with no tools, deterministic measurements, rubric re-scoring with caps, a provisional rubric-to-axis mapping, and contract validation before submission. See the [delta](deltas/2026-10-24T06-33-15Z-convex-creao-inference.md) and [inference/README.md](inference/README.md). |
 
 
 ### 13.5 Specification change history

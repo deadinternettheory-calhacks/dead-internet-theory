@@ -61,9 +61,8 @@ setup; no production deployment was changed.
 Authenticated cloud checks passed for all eight REST operations, create/analysis
 replays, owner isolation, synthetic graph provenance, two history results and
 analysis persistence. The canonical ready event was observed in its durable
-outbox. No external inference receiver is configured; outbound delivery to a real
-worker has not been tested on this cloud deployment. The full independent mock
-consumer/event-delivery flow remains verified locally.
+outbox. At that initial stage no external inference receiver was configured.
+The subsequent live deployment is recorded below.
 
 All four external credentials passed read-only authentication checks. Apify user
 access and Anthropic model listing returned 200. The CREAO key is recognized by
@@ -88,11 +87,14 @@ npx convex env list --names-only --env-file .env.server.local
 npx convex env set --env-file .env.server.local --from-file <runtime-only-file>
 ```
 
-Live collection stays disabled: `PROVIDER_MODE=fixture`,
-`PROVIDER_AUTHORIZATION_APPROVED=false`, and all adapter runtime-verification flags
-remain false. Broader provider authorization/retention review, hosted live-history
-verification and connecting the separate inference deployment remain open. The
-production checklist below still applies before changing that state.
+The owner subsequently requested live operation and chose 24-hour retention.
+The existing backend is now in live mode with Reddit reviewed/enabled, and is
+connected to the CREAO coordinator at `grandiose-barracuda-22`. The real-post
+pipeline completed on the hosted website. Launch settings are 100 comments,
+$1 per Actor run and no daily reservation cap (0), as requested by the owner.
+See the [hosted verification record](verification/2026-10-24-hosted-live.md)
+and [retention policy](RETENTION.md). X, YouTube and TikTok remain unverified and
+disabled; broader provider coverage and hosted live history cases remain open.
 
 ## Server configuration
 
@@ -165,7 +167,9 @@ YouTube dates are estimated unless explicitly attested exact; video roots are te
 metadata only. No account creation or karma value is fabricated; absent profile
 metadata remains absent.
 
-All four `verification` entries in `src/provider-policy.ts` have `runtimeVerified:false` and no evidence. The adapter gate and capabilities read this single policy source.
+The Reddit `verification` entry in `src/provider-policy.ts` references the
+reviewed discussion/history evidence; the other three entries remain false.
+The adapter gate and capabilities read this single policy source.
 Capabilities report the required contract support classes alongside the actual reviewed verification state and a computed `liveEnabled` flag. Initially both are false. Enabling live collection requires the reviewed flag/evidence, live mode, authorization, retention reference and a nonempty server credential. These
 classes describe operation intent, not live availability. Even setting an Apify
 token and authorization flags cannot enable an unverified adapter.
@@ -179,8 +183,8 @@ verification, with each remote resource subsequently returning 404. The
 [non-content verification record](verification/2026-10-24-reddit-discussion.md)
 documents counts, omissions and the remaining checks. No real content was written
 to Convex, inference or Git. This scoped discussion check does not verify author
-histories, multi-page collection or the hosted live workflow; all policy flags
-remain false.
+histories, multi-page collection or the hosted live workflow. All policy flags
+were still false at that point; the later hosted launch is documented separately.
 
 The owner then authorized a two-author history follow-up with the same deletion
 policy. The history Actor build `0.0.78` returned 150 candidates for one author;
@@ -192,8 +196,8 @@ The follow-up, including recollecting a small discussion seed, cost a reported
 $0.3245. All three runs, their default storages and local source content were
 deleted, with authenticated 404 checks for remote resources. See the
 [history verification record](verification/2026-10-24-reddit-history.md).
-No real content reached Convex or inference, and hosted live operation remains
-unverified. Optional Reddit account dates/karma were not fetched or invented.
+During that standalone smoke, no real content reached Convex or inference.
+Optional Reddit account dates/karma were not fetched or invented.
 
 Other candidate field mappings remain documentation/synthetic checks only and
 may require correction against authorized provider output.
@@ -250,10 +254,10 @@ Before production deployment or live collection, approve: provider access/terms 
 public-client issuer/BFF and key rotation; actual retention duration, deletion,
 correction and takedown procedure (including snapshots, jobs, cache, idempotency
 and Convex backups); per-deployment budget/capacity; HTTPS inference inbox and
-restart/deduplication behavior; operational ownership and alerting. The current
-code enforces expiry for reuse but does not physically delete expired records.
-No approved retention duration or public deletion endpoint is invented here.
-Keep production on synthetic data until those prerequisites are resolved.
+restart/deduplication behavior; operational ownership and alerting. The owner's
+24-hour application policy is implemented with indexed deletion sweeps and
+durable Apify cleanup retries; upstream-provider retention boundaries are in
+[RETENTION.md](RETENTION.md). No public deletion endpoint is added to v1.
 
 Configure a Convex project, set reviewed server env, then `npm run deploy`.
 Deploying externally and merging the PR require the owner's authorization.

@@ -59,9 +59,12 @@ jobs and renders the report. Ingestion failures, analysis failures and
 unsupported links each get their own message; no result is shown for a failed
 analysis. The v1 API has no inference-failure route, so if inference fails after
 accepting an event, the page stops waiting after 8 minutes. While the backend
-runs in fixture mode, only its synthetic test threads (for example
-`https://www.reddit.com/r/example/comments/demo/`) can be collected. `/example`
-links to that thread.
+runs in fixture mode, only its documented synthetic test threads can be collected.
+The hosted site now enables reviewed Reddit collection and CREAO analysis.
+Reports expire 24 hours after creation. A cached failure from the earlier fixture
+deployment is replaced once, so refreshing can start a real investigation;
+ambiguous live requests retain their idempotency key to avoid duplicate starts.
+`/example` remains a labeled local example and links back to the real URL form.
 
 ## Synthetic example
 
