@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, type RefObject } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { CanvasTexture, ExtrudeGeometry, MathUtils, type Group, type Mesh, SRGBColorSpace } from 'three';
+import { CanvasTexture, ExtrudeGeometry, MathUtils, type Group, SRGBColorSpace } from 'three';
 import { createHeadstoneShape, createWireframe, GLOBE_RADIUS, GRAVES } from './globe-model';
 import { advanceGlobe, type GlobeMotion } from './globe-motion';
 
@@ -30,7 +30,6 @@ function inscription(color: string) {
 function Model({ animate, pointer, motion, onReady }: Omit<SceneProps, 'onFailure'>) {
   const globe = useRef<Group>(null);
   const tilt = useRef<Group>(null);
-  const satellite = useRef<Mesh>(null);
   const elapsed = useRef(0);
   const firstFrame = useRef(true);
   const resources = useMemo(() => ({
@@ -52,7 +51,7 @@ function Model({ animate, pointer, motion, onReady }: Omit<SceneProps, 'onFailur
 
   useFrame((state, delta) => {
     if (firstFrame.current) { firstFrame.current = false; onReady(state.invalidate); }
-    if (!globe.current || !tilt.current || !satellite.current) return;
+    if (!globe.current || !tilt.current) return;
     // Clamp the first frame after a background tab so resuming never jumps ahead.
     const dt = Math.min(delta, 0.05);
     if (animate) advanceGlobe(motion.current, dt);
@@ -63,7 +62,6 @@ function Model({ animate, pointer, motion, onReady }: Omit<SceneProps, 'onFailur
     tilt.current.rotation.x = MathUtils.damp(tilt.current.rotation.x, 0.14 + pointer.current.y * 0.14, 3, dt);
     tilt.current.rotation.z = MathUtils.damp(tilt.current.rotation.z, -0.18 - pointer.current.x * 0.14, 3, dt);
     tilt.current.position.y = Math.sin(t * 0.8) * 0.055;
-    satellite.current.position.set(Math.cos(t * 0.36) * 1.76, Math.sin(t * 0.36) * 0.42, Math.sin(t * 0.36) * 1.76);
   });
 
   return <group ref={tilt} rotation={[0.14, 0, -0.18]}>
@@ -93,10 +91,6 @@ function Model({ animate, pointer, motion, onReady }: Omit<SceneProps, 'onFailur
         </mesh>
       </group>)}
     </group>
-    <mesh ref={satellite} position={[1.76, 0, 0]}>
-      <sphereGeometry args={[0.035, 12, 12]}/>
-      <meshBasicMaterial color="#284D43"/>
-    </mesh>
   </group>;
 }
 
