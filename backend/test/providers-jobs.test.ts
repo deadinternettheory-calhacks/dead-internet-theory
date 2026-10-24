@@ -66,7 +66,7 @@ it("starts Apify asynchronously with spend/time caps, polls persisted run IDs an
   expect(await api.items("data", 100, 50)).toEqual([{ id: "1" }]);
   expect(mock.mock.calls[0][0]).toContain("waitForFinish=0");
   expect(mock.mock.calls[0][0]).toContain("maxTotalChargeUsd=0.25");
-  expect(mock.mock.calls[0][0]).toContain("build=0.0.127");
+  expect(mock.mock.calls[0][0]).toContain("build=0.0.129");
   expect(mock.mock.calls[2][0]).toContain("offset=100&limit=50");
   expect(
     mock.mock.calls.every(([url]) => !url.includes("server-only-test-token")),

@@ -250,6 +250,12 @@ investigation; no v1 recollect/restart route exists. Terminal job errors retain
 the graph if one was completed. Independent inference may still submit a valid
 final analysis after a delivery failure.
 
+For HTTP 403/404, inspect the pinned public Actor build as well as credentials.
+On 2026-10-24, the discussion build `0.0.127` was removed and its starts returned
+403; authorized verification selected replacement `0.0.129`. See the
+[recovery record](verification/2026-10-24-reddit-build-recovery.md). Verify a
+replacement against the adapter and canonical graph before updating the pin.
+
 Before production deployment or live collection, approve: provider access/terms and runtime evidence;
 public-client issuer/BFF and key rotation; actual retention duration, deletion,
 correction and takedown procedure (including snapshots, jobs, cache, idempotency

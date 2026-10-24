@@ -6,7 +6,7 @@ export const verification: Record<
   reddit: {
     runtimeVerified: true,
     evidence:
-      "backend/verification/2026-10-24-reddit-history.md; backend/verification/2026-10-24-reddit-discussion.md",
+      "backend/verification/2026-10-24-reddit-history.md; backend/verification/2026-10-24-reddit-discussion.md; backend/verification/2026-10-24-reddit-build-recovery.md",
   },
   x: { runtimeVerified: false, evidence: null },
   youtube: { runtimeVerified: false, evidence: null },

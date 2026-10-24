@@ -246,7 +246,7 @@ export class Apify {
   async start(actor: string, input: unknown) {
     const build =
       actor === actors.reddit
-        ? "0.0.127"
+        ? "0.0.129"
         : actor === actors.redditHistory
           ? "0.0.78"
           : null;
