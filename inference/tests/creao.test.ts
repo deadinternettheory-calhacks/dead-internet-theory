@@ -80,3 +80,33 @@ describe('CREAO reply candidates', () => {
     expect(run.outputs[1]).toContain('```json');
   });
 });
+
+describe('CREAO JSON artifacts', () => {
+  it('downloads JSON artifacts without sending the key to the storage redirect', async () => {
+    const calls: { url: string; init: RequestInit }[] = [];
+    const impl = (async (url: string, init: RequestInit) => {
+      calls.push({ url, init });
+      if (url.endsWith('/runs/run-4')) {
+        return new Response(JSON.stringify({ id: 'run-4', status: 'completed', result: {
+          text: '{"stage":"scoring"}', chatText: 'Full cited JSON: `files/coordination_analysis.json`',
+          artifacts: [
+            { id: 'workspaces/u/t/files/coordination_analysis.json', title: 'coordination_analysis.json', type: 'application/json', url: 'https://agent.creao.ai/api/v1/runs/run-4/artifacts/download?artifactId=x' },
+            { id: 'workspaces/u/t/files/report.pdf', title: 'Report', type: 'application/pdf', url: 'https://agent.creao.ai/api/v1/runs/run-4/artifacts/download?artifactId=y' },
+          ],
+        } }), { status: 200 });
+      }
+      if (url.includes('artifactId=x')) return new Response(null, { status: 302, headers: { Location: 'https://storage.example/signed?sig=1' } });
+      if (url.startsWith('https://storage.example/')) return new Response('{"assessments":[],"clusters":[],"overallSummary":"ok"}', { status: 200 });
+      throw new Error(`unexpected ${url}`);
+    }) as unknown as typeof fetch;
+    const client = createCreaoClient({ apiKey: 'capi_secret', appId: 'a', fetchImpl: impl });
+    const run = await client.getRun('run-4');
+    expect(run.outputs).toHaveLength(3);
+    expect(run.outputs[2]).toContain('"overallSummary":"ok"');
+    const download = calls.find(c => c.url.includes('artifactId=x'))!;
+    expect((download.init.headers as Record<string, string>).Authorization).toBe('Bearer capi_secret');
+    const storage = calls.find(c => c.url.startsWith('https://storage.example/'))!;
+    expect(JSON.stringify(storage.init.headers ?? {})).not.toContain('capi_secret');
+    expect(calls.some(c => c.url.includes('artifactId=y'))).toBe(false);
+  });
+});

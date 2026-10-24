@@ -56,12 +56,15 @@ using recorded responses.
 
 ## What the backend does with the reply
 
-CREAO returns two texts per run: `result.text` (the agent's final result) and
-`result.chatText` (its full reply). With the agent created from this prompt,
-the first live run put a short summary in `text` and the requested JSON in
-`chatText`. The client therefore tries `text` first, then `chatText`, and uses
-the first one that parses and validates. If you edit the agent, ask CREAO to
-make the final result exactly the JSON object from the instructions.
+CREAO returns `result.text` (the agent's final result), `result.chatText` (its
+full reply) and `result.artifacts` (files it wrote). In live runs with the agent
+created from this prompt, `text` held a short summary in the agent's own format.
+The requested JSON came in `chatText` (triage) or in a file such as
+`files/coordination_analysis.json` (scoring). The client therefore tries
+`text`, then `chatText`, then up to three small JSON artifacts, and uses the
+first one that parses and validates. Artifact downloads send the key only to
+CREAO, never to the storage redirect. If you edit the agent, ask CREAO to make
+the final result exactly the JSON object from the instructions.
 
 The reply is parsed as JSON and schema-checked
 ([`outputs.ts`](convex/lib/inference/outputs.ts)). Rubric points, caps, tiers

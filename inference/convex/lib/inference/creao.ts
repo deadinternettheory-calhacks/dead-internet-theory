@@ -4,8 +4,9 @@
 // - CREAO CLI / Developer API: `cr_sk_` key, POST https://developer.creao.ai/v1/runs with
 //   {"agent_id", "input"}, then GET /v1/runs/{run_id}.
 // Both are async: start a run, poll until completed/failed/cancelled, then read
-// result.text and the full reply in result.chatText (or chat_text). Agents can put
-// a short summary in text and the requested JSON in chatText, so both are kept.
+// result.text, the full reply in result.chatText (or chat_text), and any JSON
+// file artifacts. Agents may put a short summary in text and the requested JSON
+// in the chat reply or a file, so all are kept as candidates.
 // Keys are server-side secrets and must never reach the browser or the repository.
 
 export type CreaoStage = 'triage' | 'scoring';
@@ -20,7 +21,7 @@ export interface CreaoInputs {
 export interface CreaoRunState {
   runId: string;
   status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled';
-  /** Candidate reply texts, most specific first: result.text, then the full chat reply. Empty until completed. */
+  /** Candidate reply texts in order: result.text, the full chat reply, then JSON artifacts. */
   outputs: string[];
   errorCode: string | null;
 }
@@ -51,6 +52,7 @@ export interface CreaoConfig {
 }
 
 const MAX_INPUT_BYTES = 256 * 1024;
+const MAX_ARTIFACT_CHARS = 1_000_000;
 const TERMINAL = new Set(['completed', 'failed', 'cancelled']);
 
 export function createCreaoClient(config: CreaoConfig): CreaoClient {
@@ -119,11 +121,51 @@ class HttpCreaoClient implements CreaoClient {
     return runId;
   }
 
+  /**
+   * Agents may write the requested JSON to a file instead of replying with it.
+   * Downloads up to three small JSON artifacts. CREAO's stable artifact URL needs
+   * the key and redirects to temporary storage; the key is never sent to the
+   * redirect target.
+   */
+  private async jsonArtifacts(artifacts: unknown): Promise<string[]> {
+    if (!Array.isArray(artifacts)) return [];
+    const texts: string[] = [];
+    const candidates = artifacts
+      .filter((a): a is { id?: string; title?: string; type?: string; url?: string } => !!a && typeof a === 'object')
+      .filter(a => typeof a.url === 'string' && (a.type === 'application/json' || /\.json$/i.test(a.id ?? '') || /\.json$/i.test(a.title ?? '')))
+      .slice(0, 3);
+    for (const artifact of candidates) {
+      try {
+        const url = new URL(artifact.url!);
+        if (url.protocol !== 'https:') continue;
+        const creaoHost = url.hostname === 'agent.creao.ai' || url.hostname === 'developer.creao.ai';
+        let response = await this.fetchImpl(url.href, {
+          method: 'GET',
+          redirect: 'manual',
+          headers: creaoHost ? { Authorization: `Bearer ${this.config.apiKey.trim()}` } : {},
+          signal: AbortSignal.timeout(20_000),
+        });
+        if (response.status >= 300 && response.status < 400) {
+          const location = response.headers.get('Location');
+          if (!location || !location.startsWith('https://')) continue;
+          response = await this.fetchImpl(location, { method: 'GET', redirect: 'error', signal: AbortSignal.timeout(20_000) });
+        }
+        if (!response.ok) continue;
+        const text = await response.text();
+        if (text.length <= MAX_ARTIFACT_CHARS) texts.push(text);
+      } catch {
+        // An unreadable artifact is skipped; other reply texts may still be valid.
+      }
+    }
+    return texts;
+  }
+
   async getRun(runId: string): Promise<CreaoRunState> {
     const run = await this.request(this.runsUrl(runId), { method: 'GET' });
     const status = String(run.status ?? 'pending') as CreaoRunState['status'];
-    const result = (run.result ?? {}) as { text?: unknown; chatText?: unknown; chat_text?: unknown };
+    const result = (run.result ?? {}) as { text?: unknown; chatText?: unknown; chat_text?: unknown; artifacts?: unknown };
     const outputs = [result.text, result.chatText, result.chat_text].filter((t): t is string => typeof t === 'string' && t.trim().length > 0);
+    if (status === 'completed') outputs.push(...(await this.jsonArtifacts(result.artifacts)));
     const error = run.error as { code?: string } | undefined;
     return {
       runId,
