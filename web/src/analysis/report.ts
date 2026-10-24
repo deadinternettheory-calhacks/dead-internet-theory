@@ -36,6 +36,8 @@ export interface AccountRow {
   score: number | null;
   historyCount: number;
   signals: { ruleId: string; evidence: string }[];
+  /** Evidence of an ordinary human user (E2, E4, E7); no automation signals are shown then. */
+  humanSignals: { ruleId: string; evidence: string }[];
 }
 
 export interface Report {
@@ -158,8 +160,9 @@ export function buildReport(analysis: AnalysisResource, graph: GraphEnvelope, en
   const score = a.overallCoordinationRisk.score;
   const accounts: AccountRow[] = a.commentAssessments
     .flatMap(c => (c.accountSignals ? [c.accountSignals] : []))
-    .map(x => ({ authorId: x.authorId, author: handleFor(graph, x.authorId), score: x.score, historyCount: x.historyCount, signals: x.signals.map(s => ({ ruleId: s.ruleId, evidence: s.evidence })) }))
-    .sort((x, y) => (y.score ?? -1) - (x.score ?? -1));
+    .map(x => ({ authorId: x.authorId, author: handleFor(graph, x.authorId), score: x.score, historyCount: x.historyCount, signals: x.signals.map(s => ({ ruleId: s.ruleId, evidence: s.evidence })), humanSignals: (x.humanSignals ?? []).map(s => ({ ruleId: s.ruleId, evidence: s.evidence })) }))
+    // Highest scores first; accounts that look like ordinary users last.
+    .sort((x, y) => Number(x.humanSignals.length > 0) - Number(y.humanSignals.length > 0) || (y.score ?? -1) - (x.score ?? -1));
   const accountByAuthor = new Map(accounts.map(x => [x.authorId, x]));
   return {
     synthetic: isSyntheticGraph(graph),

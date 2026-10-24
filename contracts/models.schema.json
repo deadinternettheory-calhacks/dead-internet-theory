@@ -1384,6 +1384,38 @@
               "items": {
                 "type": "string"
               }
+            },
+            "humanSignals": {
+              "type": "array",
+              "description": "Optional. Evidence the author is an ordinary human user (rubric E2 established account, E4 recognized community member, E7 criticized the brand elsewhere). When present, signals is empty and score is 0.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ruleId": {
+                    "type": "string",
+                    "enum": [
+                      "E2",
+                      "E4",
+                      "E7"
+                    ]
+                  },
+                  "evidence": {
+                    "type": "string"
+                  },
+                  "evidenceRefs": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/NodeId"
+                    }
+                  }
+                },
+                "required": [
+                  "ruleId",
+                  "evidence",
+                  "evidenceRefs"
+                ],
+                "additionalProperties": false
+              }
             }
           },
           "required": [

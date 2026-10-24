@@ -43,3 +43,12 @@ Contract validator; inference lint, 65 tests (account re-scoring, measured
 floor, unknown handling, submission validity) and `demo:check`; generated
 analyses validated against the canonical schema; web lint, 81 tests, build and
 a visual check of the account section on the test thread.
+
+## Amendment (2026-10-24 23:30 UTC)
+
+At the owner's request, accounts whose history shows an ordinary human user
+(E2, E4, E7, with evidence; E2 also measured: over a year old, 3+ communities,
+at most one product mention, full history) report no automation signals and a
+score of 0. The optional `accountSignals.humanSignals` array carries that
+evidence; the website shows it as "Established account" (and the like) and
+lists those accounts last.

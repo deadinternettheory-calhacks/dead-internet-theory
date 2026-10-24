@@ -146,7 +146,10 @@ for application, Apify and upstream-provider retention boundaries.
    a new account (under 30 days) when measured, and scores the share of
    evaluable B points that fired (unchecked rules are unknown). The result is
    attached to the user's anchor comment as `accountSignals`. It is not a bot
-   probability.
+   probability. If the history shows an ordinary human user (E2 established
+   account, E4 recognized member, E7 criticized the brand elsewhere; E2 is also
+   measured from age, communities and brand mentions), no automation signals
+   are reported and the score is 0 (`humanSignals`).
 9. **Submit.** `assemble.ts` builds the `AnalysisSubmission` and replaces
    accusatory model text. The worker checks it against the schema and every
    evidence reference, then POSTs it with a stable idempotency key.

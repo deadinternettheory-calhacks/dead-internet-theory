@@ -40,5 +40,8 @@ export const ACCOUNT_RULES: Record<string, { label: string; sources: Source[] }>
   B9: { label: 'Hidden history', sources: [] },
 };
 
+/** Account-level evidence of an ordinary human user. */
+export const HUMAN_RULES: Record<string, string> = { E2: 'Established account', E4: 'Recognized community member', E7: 'Criticized the brand elsewhere' };
+
 /** Behind the section score's history comparison (brand focus in posting history). */
 export const HISTORY_CONTRAST_SOURCES: Source[] = [S.schneider2026, S.pilaud2025];

@@ -49,6 +49,8 @@ export interface ProposedCluster {
 export interface ProposedAccount {
   authorId: string;
   signals: ProposedSignal[];
+  /** Evidence of an ordinary human user: E2, E4 or E7. */
+  exculpatory?: ProposedSignal[];
   unknown: string[];
 }
 
@@ -142,7 +144,7 @@ export const SCORING_OUTPUT_SCHEMA = {
       items: {
         type: 'object',
         required: ['authorId', 'signals', 'unknown'],
-        properties: { authorId: { type: 'string' }, signals: { type: 'array', items: signal }, unknown: stringArray },
+        properties: { authorId: { type: 'string' }, signals: { type: 'array', items: signal }, exculpatory: { type: 'array', items: signal }, unknown: stringArray },
       },
     },
     overallSummary: { type: 'string' },

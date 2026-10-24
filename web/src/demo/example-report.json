@@ -3895,7 +3895,7 @@
       "schemaVersion": "1.0.0",
       "graphRevision": 1,
       "graphFingerprint": "9ffe20a2cf5f96fb4c3571e70cead8708238dc89319e3622ac079f0329be337b",
-      "inferenceVersion": "dit-inference/0.2.0; rubric/0.3; prompts-2026-10-24d; recorded:claude-opus-5-5+creao-app-trigger",
+      "inferenceVersion": "dit-inference/0.2.0; rubric/0.3; prompts-2026-10-24e; recorded:claude-opus-5-5+creao-app-trigger",
       "inferredAt": "2026-10-24T20:40:00Z",
       "subject": {
         "label": "Wüsthof Classic chef's knife",

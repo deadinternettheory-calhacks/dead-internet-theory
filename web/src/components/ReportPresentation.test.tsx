@@ -77,3 +77,14 @@ it('lists each sampled account with its automation-signal score, never a bot lab
   expect(container.querySelector('.report-accounts')?.textContent).not.toMatch(/\bbots?\b/i);
   expect(container.querySelector('.report-accounts .signal-sources a')?.getAttribute('href')).toBe('https://arxiv.org/abs/2602.02838');
 });
+it('shows ordinary-user evidence instead of automation signs, and lists those accounts last', async () => {
+  await render(<AnalysisReport report={exampleReport}/>);
+  const rows = [...container.querySelectorAll('.report-accounts li')];
+  const human = rows.filter(r => r.querySelector('.is-human'));
+  expect(human.length).toBeGreaterThan(0);
+  for (const r of human) {
+    expect(r.textContent).toContain('Established account');
+    expect(r.querySelectorAll('.account-signals > span:not(.is-human)')).toHaveLength(0);
+  }
+  expect(rows.slice(-human.length)).toEqual(human);
+});

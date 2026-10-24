@@ -114,7 +114,7 @@ describe('comment-section index', () => {
 });
 
 describe('account automation signals', () => {
-  const facts = { authorId: 'a', platform: 'reddit' as const, historyCount: 10, historyPartial: false, productMentionIds: [] as string[], accountAgeDays: null, anchorCommentId: 'reddit:comment:t1_syn01' };
+  const facts = { authorId: 'a', platform: 'reddit' as const, historyCount: 10, historyPartial: false, productMentionIds: [] as string[], accountAgeDays: null as number | null, anchorCommentId: 'reddit:comment:t1_syn01', communityCount: 1, historyIds: ['reddit:comment:t1_syn_a01', 'reddit:comment:t1_syn_a02', 'reddit:comment:t1_syn_a03'] };
   const known = new Set(['reddit:comment:t1_syn01', 'reddit:comment:t1_syn_a01', 'reddit:comment:t1_syn_a02', 'reddit:comment:t1_syn_a03']);
 
   it('re-scores the model’s account rules, keeping only family B with real evidence', async () => {
@@ -139,6 +139,37 @@ describe('account automation signals', () => {
     const s = scoreAccount(undefined, { ...facts, productMentionIds: ['reddit:comment:t1_syn_a01', 'reddit:comment:t1_syn_a02', 'reddit:comment:t1_syn_a03'], accountAgeDays: 12 }, known);
     expect(s.signals.map(x => [x.id, x.points])).toEqual([['B1', 20], ['B4', 8]]);
     expect(s.score).toBe(Math.round((100 * 28) / 32));
+  });
+
+  it('reports no automation signs for an account that shows it is an ordinary human user', async () => {
+    const { scoreAccount } = await import('../convex/lib/inference/scoring');
+    const proposal = {
+      authorId: 'a',
+      signals: [{ id: 'B8', evidence: 'polished prose', evidenceRefs: ['reddit:comment:t1_syn_a01'] }],
+      exculpatory: [{ id: 'E7', evidence: 'criticized the brand in another thread', evidenceRefs: ['reddit:comment:t1_syn_a02'] }],
+      unknown: [],
+    };
+    const s = scoreAccount(proposal, facts, known);
+    expect(s.score).toBe(0);
+    expect(s.signals).toEqual([]);
+    expect(s.humanSignals.map(x => x.id)).toEqual(['E7']);
+  });
+
+  it('recognizes an established account from measured facts alone', async () => {
+    const { scoreAccount } = await import('../convex/lib/inference/scoring');
+    const s = scoreAccount(undefined, { ...facts, accountAgeDays: 2000, communityCount: 5, productMentionIds: ['reddit:comment:t1_syn_a01'] }, known);
+    expect(s.score).toBe(0);
+    expect(s.humanSignals.map(x => x.id)).toEqual(['E2']);
+    // Too new, or brand-heavy, is not established.
+    expect(scoreAccount(undefined, { ...facts, accountAgeDays: 200, communityCount: 5 }, known).humanSignals).toEqual([]);
+    expect(scoreAccount(undefined, { ...facts, accountAgeDays: 2000, communityCount: 5, productMentionIds: facts.historyIds }, known).humanSignals).toEqual([]);
+  });
+
+  it('ignores human-signal proposals that are not account-level or lack evidence', async () => {
+    const { scoreAccount } = await import('../convex/lib/inference/scoring');
+    const s = scoreAccount({ authorId: 'a', signals: [], exculpatory: [{ id: 'E3', evidence: 'balanced', evidenceRefs: ['reddit:comment:t1_syn_a01'] }, { id: 'E2', evidence: 'old', evidenceRefs: ['reddit:comment:nope'] }], unknown: [] }, facts, known);
+    expect(s.humanSignals).toEqual([]);
+    expect(s.discarded.join(' ')).toMatch(/E3: not an account-level human signal/);
   });
 
   it('has no score without history', async () => {

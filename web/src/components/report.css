@@ -137,3 +137,4 @@
 .account-signals > span.is-none { background: transparent; color: var(--muted); padding: 2px 0; }
 .history-account-score { font-weight: 600; }
 @media (max-width: 767px) { .report-accounts li { grid-template-columns: 1fr auto; } .account-signals { grid-column: 1 / -1; } }
+.account-signals > span.is-human { background: #e4efe8; color: #2f5a44; }
