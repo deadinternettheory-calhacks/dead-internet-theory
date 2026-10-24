@@ -3,9 +3,9 @@ import { flushSync } from 'react-dom';
 import { Link, useNavigate } from 'react-router-dom';
 
 /** A progressive globe transition for the app's declarative router. */
-export function TransitionLink({ to, className, children }: { to: string; className?: string; children: ReactNode }) {
+export function TransitionLink({ to, className, children, ariaLabel }: { to: string; className?: string; children: ReactNode; ariaLabel?: string }) {
   const navigate = useNavigate();
-  return <Link to={to} className={className} onClick={event => {
+  return <Link to={to} className={className} aria-label={ariaLabel} onClick={event => {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     if (!document.startViewTransition || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
     event.preventDefault();

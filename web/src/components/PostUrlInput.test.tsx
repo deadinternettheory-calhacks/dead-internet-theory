@@ -34,6 +34,7 @@ describe('homepage URL input errors', () => {
 
   it('shows the empty-link alert only after an empty submission', () => {
     const page = renderInput();
+    expect(page.querySelector('input')?.getAttribute('placeholder')).toBe('Paste a post or video link…');
     expect(page.querySelector('[role="alert"]')).toBeNull();
 
     act(() => page.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));

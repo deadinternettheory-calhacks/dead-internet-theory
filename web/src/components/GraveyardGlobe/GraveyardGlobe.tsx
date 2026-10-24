@@ -1,5 +1,4 @@
 import { Component, lazy, Suspense, useCallback, useEffect, useId, useRef, useState, type ReactNode } from 'react';
-import { Pause, Play } from 'lucide-react';
 import { GlobePoster } from './GlobePoster';
 import { useGlobeDrag } from './useGlobeDrag';
 import './graveyard-globe.css';
@@ -72,14 +71,5 @@ export function GraveyardGlobe({ compact = false }: { compact?: boolean }) {
       </div>
     </div>
     <span className="sr-only" id={helpId}>Drag to spin. On touch screens, swipe sideways to spin or vertically to scroll. Use arrow keys to turn the globe and Home to reset its orientation.</span>
-    <figcaption className="globe-caption">
-      <span>{ready && !failed ? 'Drag to spin' : 'Dead internet. Still spinning.'}</span>
-      {!failed && <button type="button" className="globe-motion-control"
-        aria-label={motionEnabled ? 'Pause globe animation' : 'Play globe animation'}
-        onClick={() => setMotionEnabled(value => !value)}>
-        {motionEnabled ? <Pause size={12} aria-hidden="true"/> : <Play size={12} aria-hidden="true"/>}
-        <span>{motionEnabled ? 'Pause' : 'Play'}</span>
-      </button>}
-    </figcaption>
   </figure>;
 }
