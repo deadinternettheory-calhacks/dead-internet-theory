@@ -110,7 +110,7 @@ sequenceDiagram
     Web-->>User: Evidence-led report or honest partial/error state
 ```
 
-The SPA, the Convex ingestion backend (v1 routes, jobs, `investigation.ready` delivery over HTTPS) and the separate inference service (event receiver, CREAO triage, enrichment request, CREAO rubric scoring, deterministic re-scoring, validated submission) exist and have run together locally in fixture mode with recorded CREAO replies. Hosted Reddit ingestion, CREAO calls, frontend proxy authentication and analysis persistence are verified for the scoped checks. Broader live history coverage, other platforms and Elasticsearch remain unverified or unimplemented. V1 routes and event models are defined in Section 6.
+The SPA, the Convex ingestion backend (v1 routes, jobs, `investigation.ready` delivery over HTTPS) and the separate inference service (event receiver, CREAO triage, enrichment request, CREAO rubric scoring, deterministic re-scoring, validated submission) exist and have run together locally in fixture mode with recorded CREAO replies. Hosted Reddit, X, TikTok and YouTube ingestion, CREAO calls, frontend proxy authentication and analysis persistence are verified for scoped checks. X remains limited by the current Apify Free-plan quotas. Broader live history coverage and Elasticsearch remain unverified or unimplemented; see the [four-platform hosted record](backend/verification/2026-10-24-four-platform-hosted.md). V1 routes and event models are defined in Section 6.
 
 ### 3.3 Outcomes
 
@@ -367,6 +367,8 @@ On 2026-10-24, after the speed changes ([speed delta](deltas/2026-10-24T17-05-00
 URL tests cover Reddit acceptance, unsupported host, invalid URL, unsafe protocol, query preservation, double-encoded rejection, raw nested prefix, encoded full URL, encoded fragment, malformed prefix, and Vercel rewrite configuration. They do not browser-test a deployed direct refresh. Backend tests do not exercise live providers or a live CREAO run. The browser checks above were run manually, not as committed tests, and 768px was not checked. No benchmark, model evaluation, real labeled dataset, or field study has run.
 
 Hosted rollout on 2026-10-24: 139 backend tests, 49 inference tests, 36 frontend tests, relevant type/lint/format/build checks and canonical contract validation passed. The [hosted verification record](backend/verification/2026-10-24-hosted-live.md) records synthetic and real-data paths, partial coverage, explicit history limits and retention boundaries. This is operational verification, not model calibration or a field study.
+
+Four-platform rollout on 2026-10-24: 152 backend, 130 website and 65 inference tests passed, together with relevant type/lint/format/build checks and canonical contract validation. Permitted X, TikTok and YouTube links completed through the production website proxy, Apify, CREAO and persisted-analysis validation in 222–321 seconds. The [four-platform hosted record](backend/verification/2026-10-24-four-platform-hosted.md) records scoped counts, partial histories, X demo limits and retention. Production mobile checks and local 320px/1440px checks found no horizontal overflow. These are operational checks, not calibration or detection-accuracy measurements.
 
 ### 12.2 Required validation
 
