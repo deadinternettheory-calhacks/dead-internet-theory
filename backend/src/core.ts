@@ -1,3 +1,4 @@
+import { availability } from "./provider-policy";
 import * as validators from "./generated/validators.js";
 import type { DiscussionInvestigationAPIV100CanonicalModels as Models } from "./generated/models";
 export type Model<N extends keyof Models> = NonNullable<Models[N]>;
@@ -21,10 +22,20 @@ export function validate<N extends keyof Models>(
   if (!check(value))
     throw new ApiFault(
       status,
-      status === 422 ? "INVALID_ANALYSIS" : "INVALID_REQUEST",
+      status >= 500
+        ? "INTERNAL_ERROR"
+        : status === 422
+          ? "INVALID_ANALYSIS"
+          : "INVALID_REQUEST",
       `Invalid ${name}`,
     );
   return value as Model<N>;
+}
+export function validateOutput<N extends keyof Models>(
+  name: N,
+  value: unknown,
+): Model<N> {
+  return validate(name, value, 500);
 }
 export const iso = (ms = Date.now()) => new Date(ms).toISOString();
 export function stable(value: unknown): string {
@@ -97,12 +108,15 @@ export function capabilities() {
         : "unsupported",
       profileEnrichment:
         platform === "reddit" ? "reddit_only_optional" : "not_supported",
-      actorRuntimeVerified: false,
-      liveEnabled: false,
-      mode: process.env.PROVIDER_MODE ?? "fixture",
-      limitations: [
-        "Candidate mappings are unverified. Synthetic fixtures only; live adapters fail closed pending review.",
-      ],
+      ...availability(platform),
+      mode: providerMode(),
+      limitations: availability(platform).liveEnabled
+        ? [
+            "Authorized, reviewed provider configuration; individual collection remains best effort.",
+          ]
+        : [
+            "Live collection is disabled until provider mode, authorization, retention, server credentials and reviewed runtime evidence are all configured.",
+          ],
     })),
   });
 }

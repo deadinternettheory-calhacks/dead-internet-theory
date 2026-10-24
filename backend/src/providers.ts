@@ -19,15 +19,8 @@ import type { CandidateSet } from "./history";
 import { outbound } from "./outbound";
 import { sameNative } from "./identity";
 import { source } from "./url";
-export const verification: Record<
-  Platform,
-  { runtimeVerified: boolean; evidence: string | null }
-> = {
-  reddit: { runtimeVerified: false, evidence: null },
-  x: { runtimeVerified: false, evidence: null },
-  youtube: { runtimeVerified: false, evidence: null },
-  tiktok: { runtimeVerified: false, evidence: null },
-};
+import { verification } from "./provider-policy";
+export { verification } from "./provider-policy";
 export const actors = {
   reddit: "clearpath/reddit-post-comments-bulk-scraper",
   redditHistory: "clearpath/reddit-user-content-scraper",
@@ -40,7 +33,7 @@ export function liveGate(platform: Platform) {
   if (
     process.env.PROVIDER_MODE !== "live" ||
     process.env.PROVIDER_AUTHORIZATION_APPROVED !== "true" ||
-    !process.env.RETENTION_POLICY_REF
+    !process.env.RETENTION_POLICY_REF?.trim()
   )
     throw new ApiFault(
       500,
@@ -49,12 +42,18 @@ export function liveGate(platform: Platform) {
     );
   if (
     !verification[platform].runtimeVerified ||
-    !verification[platform].evidence
+    !verification[platform].evidence?.trim()
   )
     throw new ApiFault(
       500,
       "PROVIDER_NOT_VERIFIED",
       "Candidate adapter has no reviewed authorized runtime evidence",
+    );
+  if (!process.env.APIFY_TOKEN?.trim())
+    throw new ApiFault(
+      500,
+      "PROVIDER_NOT_CONFIGURED",
+      "Apify server credential is not configured",
     );
 }
 interface Task {

@@ -677,3 +677,54 @@ it("clears an earlier event-delivery error when final analysis is later accepted
   expect(resource.analysisStatus).toBe("completed");
   expect(resource.error).toBeUndefined();
 });
+it("rejects unsupported analysis subpaths before idempotency replay", async () => {
+  const id = await ready();
+  const base = `/v1/investigations/${id}`;
+  const graph = (await call("GET", base + "/graph")).value;
+  const submission = {
+    ...analysisFixture,
+    graphFingerprint: graph.graphFingerprint,
+    usedEnrichmentIds: [],
+    clusters: [],
+  };
+  expect(
+    (await call("POST", base + "/analysis", submission, inference)).status,
+  ).toBe(201);
+  expect(
+    (await call("POST", base + "/analysis/extra", submission, inference))
+      .status,
+  ).toBe(400);
+});
+it("reports invalid persisted response data as an internal error", async () => {
+  const id = await ready();
+  await t.run(async (ctx) => {
+    const row = await ctx.db
+      .query("investigations")
+      .withIndex("key", (q) => q.eq("key", id))
+      .unique();
+    await ctx.db.patch(row!._id, {
+      data: {
+        ...row!.data,
+        resource: { ...row!.data.resource, ingestionStatus: "invalid" },
+      },
+    });
+  });
+  const result = await call("GET", `/v1/investigations/${id}`);
+  expect(result.status).toBe(500);
+  expect(result.value.error.code).toBe("INTERNAL_ERROR");
+});
+it("rejects lookalike JSON media types", async () => {
+  const r = await t.fetch("/v1/investigations", {
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${frontend}`,
+      "content-type": "application/jsonp",
+      "idempotency-key": "json-media-type",
+    },
+    body: JSON.stringify({
+      sourceUrl: "https://www.reddit.com/r/example/comments/demo/",
+    }),
+  });
+  expect(r.status).toBe(400);
+  validate("ApiError", await r.json());
+});

@@ -28,8 +28,9 @@ export async function authenticate(header: string | null): Promise<Principal> {
       },
     );
     if (
+      typeof payload.sub !== "string" ||
       !payload.sub ||
-      !["frontend", "inference"].includes(String(payload.role))
+      (payload.role !== "frontend" && payload.role !== "inference")
     )
       throw Error();
     const scopes = payload.investigations;

@@ -86,6 +86,7 @@ it("classifies retryable provider failures and inaccessible datasets", async () 
 it("fails closed without approved authorization, retention and runtime evidence", async () => {
   expect(() => liveGate("reddit")).toThrow();
   vi.stubEnv("PROVIDER_MODE", "live");
+  vi.stubEnv("APIFY_TOKEN", "SYNTHETIC-MOCK-CREDENTIAL");
   vi.stubEnv("PROVIDER_AUTHORIZATION_APPROVED", "true");
   vi.stubEnv("RETENTION_POLICY_REF", "review-required");
   expect(() => liveGate("reddit")).toThrow("runtime evidence");
@@ -244,6 +245,7 @@ it("reserves run budgets atomically and refuses ambiguous duplicate starts", asy
 });
 it("resumes provider run/pagination state without repeating a billable start and preserves partial output", async () => {
   vi.stubEnv("PROVIDER_MODE", "live");
+  vi.stubEnv("APIFY_TOKEN", "SYNTHETIC-MOCK-CREDENTIAL");
   vi.stubEnv("PROVIDER_AUTHORIZATION_APPROVED", "true");
   vi.stubEnv("RETENTION_POLICY_REF", "synthetic-test-only");
   const old = { ...verification.reddit };
@@ -483,6 +485,7 @@ it("does not release ambiguous provider capacity just because a worker lease exp
 });
 it("reuses a confirmed run after loss of the action's payload write", async () => {
   vi.stubEnv("PROVIDER_MODE", "live");
+  vi.stubEnv("APIFY_TOKEN", "SYNTHETIC-MOCK-CREDENTIAL");
   vi.stubEnv("PROVIDER_AUTHORIZATION_APPROVED", "true");
   vi.stubEnv("RETENTION_POLICY_REF", "SYNTHETIC-TEST");
   const old = verification.reddit;
@@ -512,6 +515,7 @@ it("reuses a confirmed run after loss of the action's payload write", async () =
 });
 it("bounds each X author's dataset independently from the total batch size", async () => {
   vi.stubEnv("PROVIDER_MODE", "live");
+  vi.stubEnv("APIFY_TOKEN", "SYNTHETIC-MOCK-CREDENTIAL");
   vi.stubEnv("PROVIDER_AUTHORIZATION_APPROVED", "true");
   vi.stubEnv("RETENTION_POLICY_REF", "SYNTHETIC-TEST");
   const old = verification.x;

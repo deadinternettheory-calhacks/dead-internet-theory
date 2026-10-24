@@ -121,9 +121,8 @@ YouTube dates are estimated unless explicitly attested exact; video roots are te
 metadata only. No account creation or karma value is fabricated; absent profile
 metadata remains absent.
 
-All four `verification` entries have `runtimeVerified:false` and no evidence.
-Capabilities report the required contract support classes alongside
-`actorRuntimeVerified:false`, `liveEnabled:false` and explicit limitations. These
+All four `verification` entries in `src/provider-policy.ts` have `runtimeVerified:false` and no evidence. The adapter gate and capabilities read this single policy source.
+Capabilities report the required contract support classes alongside the actual reviewed verification state and a computed `liveEnabled` flag. Initially both are false. Enabling live collection requires the reviewed flag/evidence, live mode, authorization, retention reference and a nonempty server credential. These
 classes describe operation intent, not live availability. Even setting an Apify
 token and authorization flags cannot enable an unverified adapter.
 
@@ -161,7 +160,7 @@ reply paging, null/deleted authors, timestamps and approximation, returned metri
 Reddit profile metadata and authored-versus-received replies. Record permitted
 source, run/build IDs, output evidence, costs, timestamp findings, limitations and
 reviewer in a private verification record. Then change the implementation's
-verification entry/mappings/capability state in a reviewed commit with tests.
+verification entry and mappings in a reviewed commit with tests.
 Do not edit frozen contracts to match a provider's output. No smoke test was run
 as part of this change.
 
