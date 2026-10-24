@@ -1,0 +1,70 @@
+{
+  "subject": {
+    "label": "BrewMaster Mini",
+    "kind": "product",
+    "confidence": 0.93,
+    "evidenceRefs": [
+      "reddit:comment:t1_syn01",
+      "reddit:comment:t1_syn02",
+      "reddit:comment:t1_syn03"
+    ]
+  },
+  "comments": [
+    {
+      "commentId": "reddit:comment:t1_syn01",
+      "stance": "supportive",
+      "recommendsProduct": "BrewMaster Mini",
+      "recommendsSubject": true,
+      "rationale": "Recommends the BrewMaster Mini with a feature list."
+    },
+    {
+      "commentId": "reddit:comment:t1_syn02",
+      "stance": "supportive",
+      "recommendsProduct": "BrewMaster Mini",
+      "recommendsSubject": true,
+      "rationale": "Seconds the BrewMaster Mini with the same features."
+    },
+    {
+      "commentId": "reddit:comment:t1_syn03",
+      "stance": "supportive",
+      "recommendsProduct": "BrewMaster Mini",
+      "recommendsSubject": true,
+      "rationale": "Recommends the BrewMaster Mini with the same features."
+    },
+    {
+      "commentId": "reddit:comment:t1_syn04",
+      "stance": "neutral",
+      "recommendsProduct": "Gaggia Classic",
+      "recommendsSubject": false,
+      "rationale": "Recommends a different machine and a grinder, with drawbacks."
+    },
+    {
+      "commentId": "reddit:comment:t1_syn05",
+      "stance": "critical",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Reports a leak and unresponsive support."
+    },
+    {
+      "commentId": "reddit:comment:t1_syn06",
+      "stance": "supportive",
+      "recommendsProduct": "BrewMaster Mini",
+      "recommendsSubject": true,
+      "rationale": "Defends the product against the critical reply."
+    },
+    {
+      "commentId": "reddit:comment:t1_syn07",
+      "stance": "supportive",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Dismisses the reported problem as user error."
+    },
+    {
+      "commentId": "reddit:comment:t1_syn08",
+      "stance": "neutral",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Asks about the grinder; no product stance."
+    }
+  ]
+}

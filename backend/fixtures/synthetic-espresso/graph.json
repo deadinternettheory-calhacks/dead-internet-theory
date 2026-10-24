@@ -1,0 +1,347 @@
+{
+  "schemaVersion": "1.0.0",
+  "investigationId": "inv_synthetic_espresso",
+  "graphRevision": 1,
+  "graphFingerprint": "77f2bd8c21bcc034068d8d089c74f2e916881b7f6769f93bacf8307073be55a2",
+  "platform": "reddit",
+  "rootId": "reddit:discussion:t3_syn_espresso",
+  "nodes": [
+    {
+      "id": "reddit:discussion:t3_syn_espresso",
+      "type": "discussion",
+      "nativeId": "t3_syn_espresso",
+      "platform": "reddit",
+      "kind": "post",
+      "url": "https://www.reddit.com/r/example/comments/syn_espresso/best_budget_espresso_machine/",
+      "title": "[Synthetic example] Best budget espresso machine under $300?",
+      "text": "Looking for my first espresso machine. Budget is about $300. What would you recommend?",
+      "contentScope": "post_text",
+      "authorId": "reddit:author:t2_syn_op",
+      "createdAt": "2026-10-23T18:00:00Z",
+      "timestampPrecision": "exact",
+      "metrics": {
+        "score": 27,
+        "replyCount": 8
+      }
+    },
+    {
+      "id": "reddit:author:t2_syn_op",
+      "type": "author",
+      "nativeId": "t2_syn_op",
+      "platform": "reddit",
+      "handle": "newbrewer_2026",
+      "displayName": "newbrewer_2026",
+      "identityQuality": "provider_id"
+    },
+    {
+      "id": "reddit:author:t2_syn_a",
+      "type": "author",
+      "nativeId": "t2_syn_a",
+      "platform": "reddit",
+      "handle": "brewfan_22",
+      "displayName": "brewfan_22",
+      "identityQuality": "provider_id"
+    },
+    {
+      "id": "reddit:author:t2_syn_b",
+      "type": "author",
+      "nativeId": "t2_syn_b",
+      "platform": "reddit",
+      "handle": "crema_queen",
+      "displayName": "crema_queen",
+      "identityQuality": "provider_id"
+    },
+    {
+      "id": "reddit:author:t2_syn_c",
+      "type": "author",
+      "nativeId": "t2_syn_c",
+      "platform": "reddit",
+      "handle": "daily_grind_dan",
+      "displayName": "daily_grind_dan",
+      "identityQuality": "provider_id"
+    },
+    {
+      "id": "reddit:author:t2_syn_d",
+      "type": "author",
+      "nativeId": "t2_syn_d",
+      "platform": "reddit",
+      "handle": "latte_lab",
+      "displayName": "latte_lab",
+      "identityQuality": "provider_id"
+    },
+    {
+      "id": "reddit:author:t2_syn_e",
+      "type": "author",
+      "nativeId": "t2_syn_e",
+      "platform": "reddit",
+      "handle": "beanthere",
+      "displayName": "beanthere",
+      "identityQuality": "provider_id"
+    },
+    {
+      "id": "reddit:author:t2_syn_f",
+      "type": "author",
+      "nativeId": "t2_syn_f",
+      "platform": "reddit",
+      "handle": "slow_pour",
+      "displayName": "slow_pour",
+      "identityQuality": "provider_id"
+    },
+    {
+      "id": "reddit:comment:t1_syn01",
+      "type": "comment",
+      "nativeId": "t1_syn01",
+      "idQuality": "provider_id",
+      "platform": "reddit",
+      "authorId": "reddit:author:t2_syn_a",
+      "parentId": "reddit:discussion:t3_syn_espresso",
+      "nativeParentId": "t3_syn_espresso",
+      "text": "Honestly the BrewMaster Mini is the best budget machine I've found. 15-bar pump, steam wand, heats up in 30 seconds. Can't recommend it enough.",
+      "createdAt": "2026-10-23T18:06:00Z",
+      "timestampPrecision": "exact",
+      "sourceTimestamp": "2026-10-23T18:06:00Z",
+      "url": "https://www.reddit.com/r/example/comments/syn_espresso/best_budget_espresso_machine/comment/syn01/",
+      "metrics": {
+        "score": 41
+      },
+      "contentStatus": "visible"
+    },
+    {
+      "id": "reddit:comment:t1_syn02",
+      "type": "comment",
+      "nativeId": "t1_syn02",
+      "idQuality": "provider_id",
+      "platform": "reddit",
+      "authorId": "reddit:author:t2_syn_b",
+      "parentId": "reddit:discussion:t3_syn_espresso",
+      "nativeParentId": "t3_syn_espresso",
+      "text": "+1 for the BrewMaster Mini. 15-bar pump, steam wand, heats up in 30 seconds. Best budget machine out there, can't recommend it enough.",
+      "createdAt": "2026-10-23T18:12:00Z",
+      "timestampPrecision": "exact",
+      "sourceTimestamp": "2026-10-23T18:12:00Z",
+      "url": "https://www.reddit.com/r/example/comments/syn_espresso/best_budget_espresso_machine/comment/syn02/",
+      "metrics": {
+        "score": 23
+      },
+      "contentStatus": "visible"
+    },
+    {
+      "id": "reddit:comment:t1_syn03",
+      "type": "comment",
+      "nativeId": "t1_syn03",
+      "idQuality": "provider_id",
+      "platform": "reddit",
+      "authorId": "reddit:author:t2_syn_c",
+      "parentId": "reddit:discussion:t3_syn_espresso",
+      "nativeParentId": "t3_syn_espresso",
+      "text": "BrewMaster Mini all the way. 15-bar pump + steam wand + 30 second heat up. Best budget machine for the price.",
+      "createdAt": "2026-10-23T18:19:00Z",
+      "timestampPrecision": "exact",
+      "sourceTimestamp": "2026-10-23T18:19:00Z",
+      "url": "https://www.reddit.com/r/example/comments/syn_espresso/best_budget_espresso_machine/comment/syn03/",
+      "metrics": {
+        "score": 19
+      },
+      "contentStatus": "visible"
+    },
+    {
+      "id": "reddit:comment:t1_syn04",
+      "type": "comment",
+      "nativeId": "t1_syn04",
+      "idQuality": "provider_id",
+      "platform": "reddit",
+      "authorId": "reddit:author:t2_syn_d",
+      "parentId": "reddit:discussion:t3_syn_espresso",
+      "nativeParentId": "t3_syn_espresso",
+      "text": "I've had a Gaggia Classic for four years. The steam wand is weak and I had to replace a gasket in year two, but it's been reliable. Honestly, spend part of the budget on a grinder first.",
+      "createdAt": "2026-10-23T19:41:00Z",
+      "timestampPrecision": "exact",
+      "sourceTimestamp": "2026-10-23T19:41:00Z",
+      "url": "https://www.reddit.com/r/example/comments/syn_espresso/best_budget_espresso_machine/comment/syn04/",
+      "metrics": {
+        "score": 35
+      },
+      "contentStatus": "visible"
+    },
+    {
+      "id": "reddit:comment:t1_syn05",
+      "type": "comment",
+      "nativeId": "t1_syn05",
+      "idQuality": "provider_id",
+      "platform": "reddit",
+      "authorId": "reddit:author:t2_syn_e",
+      "parentId": "reddit:comment:t1_syn01",
+      "nativeParentId": "t1_syn01",
+      "text": "Mine (BrewMaster Mini) started leaking after two months and support never replied.",
+      "createdAt": "2026-10-23T20:30:00Z",
+      "timestampPrecision": "exact",
+      "sourceTimestamp": "2026-10-23T20:30:00Z",
+      "url": "https://www.reddit.com/r/example/comments/syn_espresso/best_budget_espresso_machine/comment/syn05/",
+      "metrics": {
+        "score": 12
+      },
+      "contentStatus": "visible"
+    },
+    {
+      "id": "reddit:comment:t1_syn06",
+      "type": "comment",
+      "nativeId": "t1_syn06",
+      "idQuality": "provider_id",
+      "platform": "reddit",
+      "authorId": "reddit:author:t2_syn_b",
+      "parentId": "reddit:comment:t1_syn05",
+      "nativeParentId": "t1_syn05",
+      "text": "Sounds like a one-off. Mine's been perfect, the BrewMaster Mini is amazing value.",
+      "createdAt": "2026-10-23T20:34:00Z",
+      "timestampPrecision": "exact",
+      "sourceTimestamp": "2026-10-23T20:34:00Z",
+      "url": "https://www.reddit.com/r/example/comments/syn_espresso/best_budget_espresso_machine/comment/syn06/",
+      "metrics": {
+        "score": 6
+      },
+      "contentStatus": "visible"
+    },
+    {
+      "id": "reddit:comment:t1_syn07",
+      "type": "comment",
+      "nativeId": "t1_syn07",
+      "idQuality": "provider_id",
+      "platform": "reddit",
+      "authorId": "reddit:author:t2_syn_c",
+      "parentId": "reddit:comment:t1_syn05",
+      "nativeParentId": "t1_syn05",
+      "text": "Never had any issues with mine, probably user error.",
+      "createdAt": "2026-10-23T20:37:00Z",
+      "timestampPrecision": "exact",
+      "sourceTimestamp": "2026-10-23T20:37:00Z",
+      "url": "https://www.reddit.com/r/example/comments/syn_espresso/best_budget_espresso_machine/comment/syn07/",
+      "metrics": {
+        "score": 5
+      },
+      "contentStatus": "visible"
+    },
+    {
+      "id": "reddit:comment:t1_syn08",
+      "type": "comment",
+      "nativeId": "t1_syn08",
+      "idQuality": "provider_id",
+      "platform": "reddit",
+      "authorId": "reddit:author:t2_syn_f",
+      "parentId": "reddit:discussion:t3_syn_espresso",
+      "nativeParentId": "t3_syn_espresso",
+      "text": "Do you already have a grinder? At this budget it matters more than the machine.",
+      "createdAt": "2026-10-23T22:10:00Z",
+      "timestampPrecision": "exact",
+      "sourceTimestamp": "2026-10-23T22:10:00Z",
+      "url": "https://www.reddit.com/r/example/comments/syn_espresso/best_budget_espresso_machine/comment/syn08/",
+      "metrics": {
+        "score": 8
+      },
+      "contentStatus": "visible"
+    }
+  ],
+  "edges": [
+    {
+      "from": "reddit:author:t2_syn_a",
+      "to": "reddit:comment:t1_syn01",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "reddit:comment:t1_syn01",
+      "to": "reddit:discussion:t3_syn_espresso",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "reddit:author:t2_syn_b",
+      "to": "reddit:comment:t1_syn02",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "reddit:comment:t1_syn02",
+      "to": "reddit:discussion:t3_syn_espresso",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "reddit:author:t2_syn_c",
+      "to": "reddit:comment:t1_syn03",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "reddit:comment:t1_syn03",
+      "to": "reddit:discussion:t3_syn_espresso",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "reddit:author:t2_syn_d",
+      "to": "reddit:comment:t1_syn04",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "reddit:comment:t1_syn04",
+      "to": "reddit:discussion:t3_syn_espresso",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "reddit:author:t2_syn_e",
+      "to": "reddit:comment:t1_syn05",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "reddit:comment:t1_syn05",
+      "to": "reddit:comment:t1_syn01",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "reddit:author:t2_syn_b",
+      "to": "reddit:comment:t1_syn06",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "reddit:comment:t1_syn06",
+      "to": "reddit:comment:t1_syn05",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "reddit:author:t2_syn_c",
+      "to": "reddit:comment:t1_syn07",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "reddit:comment:t1_syn07",
+      "to": "reddit:comment:t1_syn05",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "reddit:author:t2_syn_f",
+      "to": "reddit:comment:t1_syn08",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "reddit:comment:t1_syn08",
+      "to": "reddit:discussion:t3_syn_espresso",
+      "type": "REPLIES_TO"
+    }
+  ],
+  "coverage": {
+    "retrievedCommentCount": 8,
+    "reportedCommentCount": 8,
+    "truncated": false,
+    "completeness": "unknown",
+    "sortOrder": "new",
+    "collectedAt": "2026-10-24T05:58:00Z",
+    "sourceSnapshotRef": "synthetic_snapshot_espresso",
+    "actorRuns": [
+      {
+        "actorId": "clearpath/reddit-post-comments-bulk-scraper",
+        "runId": "synthetic_run_espresso",
+        "datasetId": "synthetic_dataset_espresso",
+        "status": "SUCCEEDED",
+        "startedAt": "2026-10-24T05:55:00Z",
+        "completedAt": "2026-10-24T05:57:30Z"
+      }
+    ],
+    "limitations": [
+      "Synthetic fixture: every account, comment and number is fabricated. No scraper ran."
+    ]
+  }
+}

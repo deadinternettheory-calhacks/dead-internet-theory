@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0.0",
+  "investigationId": "inv_synthetic_espresso",
+  "sourceUrl": "https://www.reddit.com/r/example/comments/syn_espresso/best_budget_espresso_machine/",
+  "platform": "reddit",
+  "ingestionStatus": "completed",
+  "analysisStatus": "completed",
+  "graphRevision": 1,
+  "graphFingerprint": "77f2bd8c21bcc034068d8d089c74f2e916881b7f6769f93bacf8307073be55a2",
+  "createdAt": "2026-10-24T05:54:00Z",
+  "updatedAt": "2026-10-24T06:03:05Z"
+}

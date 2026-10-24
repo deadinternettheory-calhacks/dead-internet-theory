@@ -1,0 +1,328 @@
+{
+  "assessments": [
+    {
+      "commentId": "reddit:comment:t1_syn01",
+      "label": "scored",
+      "product": "BrewMaster Mini",
+      "signals": [
+        {
+          "id": "C1",
+          "points": 25,
+          "evidence": "Near-identical wording across three accounts: the same three features (15-bar pump, steam wand, 30-second heat-up) and \"best budget machine\".",
+          "evidenceRefs": [
+            "reddit:comment:t1_syn01",
+            "reddit:comment:t1_syn02",
+            "reddit:comment:t1_syn03"
+          ]
+        },
+        {
+          "id": "C2",
+          "points": 20,
+          "evidence": "Two co-recommenders defended the product together against the critical reply, and crema_queen backed this author in another thread.",
+          "evidenceRefs": [
+            "reddit:comment:t1_syn06",
+            "reddit:comment:t1_syn07",
+            "reddit:comment:t1_syn_b02",
+            "reddit:comment:t1_syn_a03"
+          ]
+        },
+        {
+          "id": "C4",
+          "points": 10,
+          "evidence": "All three recommendations arrived 6 to 19 minutes after the post; the next comment came 82 minutes later.",
+          "evidenceRefs": [
+            "reddit:comment:t1_syn01",
+            "reddit:comment:t1_syn02",
+            "reddit:comment:t1_syn03"
+          ]
+        },
+        {
+          "id": "B1",
+          "points": 20,
+          "evidence": "The brand appears in 5 of the author's last 10 comments across r/Coffee, r/BuyItForLife, r/Frugal and r/Cooking.",
+          "evidenceRefs": [
+            "reddit:comment:t1_syn_a01",
+            "reddit:comment:t1_syn_a02",
+            "reddit:comment:t1_syn_a03",
+            "reddit:comment:t1_syn_a04",
+            "reddit:comment:t1_syn_a05"
+          ]
+        },
+        {
+          "id": "X2",
+          "points": 6,
+          "evidence": "Lists the product with a spec-sheet feature list.",
+          "evidenceRefs": [
+            "reddit:comment:t1_syn01"
+          ]
+        }
+      ],
+      "exculpatory": [
+        {
+          "id": "E6",
+          "points": -5,
+          "evidence": "The post asked for budget espresso machine recommendations.",
+          "evidenceRefs": [
+            "reddit:discussion:t3_syn_espresso",
+            "reddit:comment:t1_syn01"
+          ]
+        }
+      ],
+      "unknown": [
+        "C5",
+        "T2"
+      ],
+      "summary": "A feature-list recommendation that closely matches two others posted minutes apart, from an account that mentions the brand often across unrelated communities."
+    },
+    {
+      "commentId": "reddit:comment:t1_syn02",
+      "label": "scored",
+      "product": "BrewMaster Mini",
+      "signals": [
+        {
+          "id": "C1",
+          "points": 25,
+          "evidence": "Near-identical wording across three accounts: the same three features (15-bar pump, steam wand, 30-second heat-up) and \"best budget machine\".",
+          "evidenceRefs": [
+            "reddit:comment:t1_syn01",
+            "reddit:comment:t1_syn02",
+            "reddit:comment:t1_syn03"
+          ]
+        },
+        {
+          "id": "C2",
+          "points": 20,
+          "evidence": "This account backed brewfan_22's BrewMaster recommendation in another thread and defended the product here.",
+          "evidenceRefs": [
+            "reddit:comment:t1_syn_b02",
+            "reddit:comment:t1_syn_a03",
+            "reddit:comment:t1_syn06"
+          ]
+        },
+        {
+          "id": "C4",
+          "points": 10,
+          "evidence": "All three recommendations arrived 6 to 19 minutes after the post; the next comment came 82 minutes later.",
+          "evidenceRefs": [
+            "reddit:comment:t1_syn01",
+            "reddit:comment:t1_syn02",
+            "reddit:comment:t1_syn03"
+          ]
+        },
+        {
+          "id": "B1",
+          "points": 20,
+          "evidence": "The brand appears in 4 of the author's last 10 comments.",
+          "evidenceRefs": [
+            "reddit:comment:t1_syn_b01",
+            "reddit:comment:t1_syn_b02",
+            "reddit:comment:t1_syn_b03",
+            "reddit:comment:t1_syn_b04"
+          ]
+        },
+        {
+          "id": "X2",
+          "points": 6,
+          "evidence": "Lists the product with a spec-sheet feature list.",
+          "evidenceRefs": [
+            "reddit:comment:t1_syn02"
+          ]
+        }
+      ],
+      "exculpatory": [
+        {
+          "id": "E6",
+          "points": -5,
+          "evidence": "The post asked for budget espresso machine recommendations.",
+          "evidenceRefs": [
+            "reddit:discussion:t3_syn_espresso",
+            "reddit:comment:t1_syn02"
+          ]
+        }
+      ],
+      "unknown": [
+        "C5",
+        "T2"
+      ],
+      "summary": "Repeats the first recommendation almost word for word six minutes later."
+    },
+    {
+      "commentId": "reddit:comment:t1_syn03",
+      "label": "scored",
+      "product": "BrewMaster Mini",
+      "signals": [
+        {
+          "id": "C1",
+          "points": 25,
+          "evidence": "Near-identical wording across three accounts: the same three features (15-bar pump, steam wand, 30-second heat-up) and \"best budget machine\".",
+          "evidenceRefs": [
+            "reddit:comment:t1_syn01",
+            "reddit:comment:t1_syn02",
+            "reddit:comment:t1_syn03"
+          ]
+        },
+        {
+          "id": "C2",
+          "points": 20,
+          "evidence": "This account and crema_queen both answered the critical reply within seven minutes.",
+          "evidenceRefs": [
+            "reddit:comment:t1_syn06",
+            "reddit:comment:t1_syn07"
+          ]
+        },
+        {
+          "id": "C4",
+          "points": 10,
+          "evidence": "All three recommendations arrived 6 to 19 minutes after the post; the next comment came 82 minutes later.",
+          "evidenceRefs": [
+            "reddit:comment:t1_syn01",
+            "reddit:comment:t1_syn02",
+            "reddit:comment:t1_syn03"
+          ]
+        },
+        {
+          "id": "B1",
+          "points": 20,
+          "evidence": "The brand appears in 3 of the 6 comments retrieved for this author, including the same feature list.",
+          "evidenceRefs": [
+            "reddit:comment:t1_syn_c01",
+            "reddit:comment:t1_syn_c02",
+            "reddit:comment:t1_syn_c03"
+          ]
+        },
+        {
+          "id": "X2",
+          "points": 6,
+          "evidence": "Lists the product with a spec-sheet feature list.",
+          "evidenceRefs": [
+            "reddit:comment:t1_syn03"
+          ]
+        }
+      ],
+      "exculpatory": [
+        {
+          "id": "E6",
+          "points": -5,
+          "evidence": "The post asked for budget espresso machine recommendations.",
+          "evidenceRefs": [
+            "reddit:discussion:t3_syn_espresso",
+            "reddit:comment:t1_syn03"
+          ]
+        }
+      ],
+      "unknown": [
+        "C5",
+        "T2",
+        "B6"
+      ],
+      "summary": "A third near-identical recommendation; only six history comments were available for this account."
+    },
+    {
+      "commentId": "reddit:comment:t1_syn04",
+      "label": "scored",
+      "product": "Gaggia Classic",
+      "signals": [],
+      "exculpatory": [
+        {
+          "id": "E2",
+          "points": -15,
+          "evidence": "Account is over seven years old with broad activity in r/espresso, r/woodworking and r/cycling; the brand appears once in 10 comments.",
+          "evidenceRefs": [
+            "reddit:comment:t1_syn_d03",
+            "reddit:comment:t1_syn_d04",
+            "reddit:comment:t1_syn_d05",
+            "reddit:comment:t1_syn_d07"
+          ]
+        },
+        {
+          "id": "E3",
+          "points": -10,
+          "evidence": "Names drawbacks (weak steam wand, replaced gasket) and gives long-term detail.",
+          "evidenceRefs": [
+            "reddit:comment:t1_syn04"
+          ]
+        },
+        {
+          "id": "E6",
+          "points": -5,
+          "evidence": "The post asked for budget espresso machine recommendations.",
+          "evidenceRefs": [
+            "reddit:discussion:t3_syn_espresso",
+            "reddit:comment:t1_syn04"
+          ]
+        }
+      ],
+      "unknown": [
+        "C5",
+        "T2"
+      ],
+      "summary": "A specific, balanced recommendation from an established account."
+    },
+    {
+      "commentId": "reddit:comment:t1_syn06",
+      "label": "scored",
+      "product": "BrewMaster Mini",
+      "signals": [
+        {
+          "id": "C2",
+          "points": 20,
+          "evidence": "Defends the product within four minutes of the critical reply, alongside daily_grind_dan.",
+          "evidenceRefs": [
+            "reddit:comment:t1_syn05",
+            "reddit:comment:t1_syn06",
+            "reddit:comment:t1_syn07"
+          ]
+        },
+        {
+          "id": "B1",
+          "points": 20,
+          "evidence": "The brand appears in 4 of the author's last 10 comments.",
+          "evidenceRefs": [
+            "reddit:comment:t1_syn_b01",
+            "reddit:comment:t1_syn_b02",
+            "reddit:comment:t1_syn_b03",
+            "reddit:comment:t1_syn_b04"
+          ]
+        },
+        {
+          "id": "X5",
+          "points": 4,
+          "evidence": "Dismisses the report without any specific detail of its own use.",
+          "evidenceRefs": [
+            "reddit:comment:t1_syn06"
+          ]
+        }
+      ],
+      "exculpatory": [],
+      "unknown": [
+        "C5",
+        "T2"
+      ],
+      "summary": "A quick defense of the product with no specific detail."
+    }
+  ],
+  "clusters": [
+    {
+      "commentIds": [
+        "reddit:comment:t1_syn01",
+        "reddit:comment:t1_syn02",
+        "reddit:comment:t1_syn03",
+        "reddit:comment:t1_syn06"
+      ],
+      "signalIds": [
+        "C1",
+        "C2",
+        "C4"
+      ],
+      "explanation": "Three near-identical recommendations within 13 minutes, and two of the same accounts defending the product together.",
+      "evidenceRefs": [
+        "reddit:comment:t1_syn01",
+        "reddit:comment:t1_syn02",
+        "reddit:comment:t1_syn03",
+        "reddit:comment:t1_syn06",
+        "reddit:comment:t1_syn07"
+      ]
+    }
+  ],
+  "overallSummary": "Three accounts recommended the BrewMaster Mini with near-identical feature lists within 13 minutes, two of them defended it together against a critical reply, and all three mention the brand often in their recent histories. The pattern is consistent with coordinated promotion. The original poster's history was not available."
+}
