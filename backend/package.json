@@ -1,0 +1,28 @@
+{
+  "name": "@dit/backend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node scripts/generate.mjs",
+    "typecheck": "npm run generate && tsc --noEmit",
+    "test": "npm run generate && vitest run",
+    "dev": "npm run generate && convex dev",
+    "deploy": "npm run generate && convex deploy",
+    "smoke": "tsx scripts/provider-smoke.ts"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "convex": "^1.31.0",
+    "ipaddr.js": "^2.2.0",
+    "jose": "^6.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "convex-test": "^0.0.41",
+    "json-schema-to-typescript": "^15.0.4",
+    "tsx": "^4.20.0",
+    "typescript": "~5.8.3",
+    "vitest": "^5.0.5"
+  }
+}
