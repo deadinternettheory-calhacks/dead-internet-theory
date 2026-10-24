@@ -119,7 +119,7 @@ Copy `.env.example` to a private file, fill server-only values, and use
 | `APIFY_TIMEOUT_SECONDS`           | 180 per run; 30–600 supported                                               |
 | `HISTORY_CACHE_SECONDS`           | 3600, maximum 86400; expiry checked before reuse                            |
 | `APIFY_RUN_BUDGET_CENTS`          | 25 maximum charged USD cents per Actor run                                  |
-| `APIFY_DAILY_BUDGET_CENTS`        | 500 maximum reserved USD cents per UTC day                                  |
+| `APIFY_DAILY_BUDGET_CENTS`        | 500 maximum reserved USD cents per UTC day; 0 disables the daily cap        |
 | `LOCAL_SYNTHETIC_EVENT_DELIVERY`  | `false`; exact local-only test exception above                              |
 
 Convex CLI sets `CONVEX_DEPLOYMENT`, `CONVEX_URL`, `CONVEX_SITE_URL` in its ignored

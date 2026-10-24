@@ -95,7 +95,7 @@ export const limits = () => ({
   runSeconds: integer("APIFY_TIMEOUT_SECONDS", 180, 30, 600),
   cacheMs: integer("HISTORY_CACHE_SECONDS", 3600, 1, 86400) * 1000,
   cents: integer("APIFY_RUN_BUDGET_CENTS", 25, 1, 1000),
-  dailyCents: integer("APIFY_DAILY_BUDGET_CENTS", 500, 1, 100000),
+  dailyCents: integer("APIFY_DAILY_BUDGET_CENTS", 500, 0, 100000),
 });
 export function capabilities() {
   return validate("CapabilityResponse", {

@@ -247,6 +247,39 @@ it("reserves run budgets atomically and refuses ambiguous duplicate starts", asy
     await t.mutation(anyApi.jobs.reserve, { ...args, operation: "run:1" }),
   ).toEqual({ status: "denied", reason: "budget" });
 });
+it("can disable the daily reservation cap while preserving the per-run charge cap", async () => {
+  vi.useFakeTimers();
+  vi.stubEnv("APIFY_DAILY_BUDGET_CENTS", "0");
+  vi.stubEnv("APIFY_RUN_BUDGET_CENTS", "100");
+  const t = convexTest(schema, modules);
+  const day = `budget:${new Date().toISOString().slice(0, 10)}`;
+  await t.run(async (ctx) => {
+    await ctx.db.insert("controls", { key: day, data: 999999 });
+    await ctx.db.insert("jobs", {
+      key: "uncapped",
+      status: "running",
+      due: Date.now(),
+      data: { status: "running", token: "token", lease: Date.now() + 60000 },
+    });
+  });
+  for (const operation of ["run:0", "run:1"])
+    expect(
+      await t.mutation(anyApi.jobs.reserve, {
+        key: "uncapped",
+        token: "token",
+        operation,
+      }),
+    ).toEqual({ status: "reserved" });
+  const request = vi.fn().mockResolvedValue({
+    status: 201,
+    body: { data: { id: "synthetic-run" } },
+  });
+  await new Apify("synthetic-token", request).start(
+    "clearpath/reddit-post-comments-bulk-scraper",
+    {},
+  );
+  expect(request.mock.calls[0][0]).toContain("maxTotalChargeUsd=1");
+});
 it("resumes provider run/pagination state without repeating a billable start and preserves partial output", async () => {
   vi.stubEnv("PROVIDER_MODE", "live");
   vi.stubEnv("APIFY_TOKEN", "SYNTHETIC-MOCK-CREDENTIAL");

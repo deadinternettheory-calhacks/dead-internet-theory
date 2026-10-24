@@ -266,7 +266,7 @@ export const reserve = mutation({
     if (active.length >= limits().providerActive) return { status: "busy" };
     const day = `budget:${iso().slice(0, 10)}`;
     const used = (await get(ctx, "controls", day)) ?? 0;
-    if (used + limits().cents > limits().dailyCents)
+    if (limits().dailyCents > 0 && used + limits().cents > limits().dailyCents)
       return { status: "denied", reason: "budget" };
     await put(ctx, "controls", day, used + limits().cents);
     await put(ctx, "providerSlots", reservation, {
