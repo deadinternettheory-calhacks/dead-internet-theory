@@ -106,30 +106,32 @@ for application, Apify and upstream-provider retention boundaries.
    without starting another analysis.
 2. **Graph.** The worker reads the graph and requires the event's revision and
    fingerprint.
-3. **Early histories.** Before triage, the worker guesses likely recommenders
-   from the thread alone (tracking links, wording shared with another author,
-   a brand-like term several authors use, top-level position; questions are
-   skipped). It requests up to 10 of their histories so the backend collects
-   them while triage runs.
-4. **Triage.** A bounded packet of the post and every retrieved comment
+3. **Triage.** A bounded packet of the post and every retrieved comment
    (under 180 KB) goes to Claude directly when `ANTHROPIC_API_KEY` is set
    (structured outputs, so the reply is always valid JSON), otherwise to a
    CREAO run. It returns the subject, each comment's stance, and any product
    the comment recommends.
-5. **Follow-up histories.** The worker requests histories only for
-   recommenders the early request missed, one anchor per author, up to 25
-   pairs in total, Reddit and X only. It continues without them after
-   5 minutes or a failed job.
-6. **Scoring (CREAO run).** The agent gets the recommendations and their
+4. **Sampled histories.** Instead of requesting every user's history, the
+   worker randomly picks up to 6 supportive users (any supportive comment or
+   a recommendation of the subject) and up to 6 unsupportive users (critical
+   or mixed; neutral users fill the group when too few are critical), plus
+   the post author if they commented. The shuffle is seeded by investigation
+   and graph revision, so a retry picks the same users. It is one request,
+   Reddit and X only, anchored on each user's own comment. The worker
+   continues without histories after 5 minutes or a failed job. The
+   unsupportive group is the baseline for the comparison in step 7.
+5. **Scoring (CREAO run).** The agent gets the recommendations and their
    context (parents, replies, the recommenders' other comments and the 15
    most-engaged comments) rather than every comment, plus deterministic
    measurements (timing, burst size, word overlap, tracking links, brand
    mentions in histories, account age) and the rubric rules. It returns which
    rules fire for each recommendation, with cited IDs.
-7. **Re-scoring.** `scoring.ts` drops rules the platform or evidence cannot
+6. **Re-scoring.** `scoring.ts` drops rules the platform or evidence cannot
    support, or whose cited IDs do not exist. It then applies the rubric's
    points, caps K1–K6, tiers and confidence itself; the model never sets a
    number.
+7. **Section score.** `section.ts` computes one 0–100 astroturfing index for
+   the whole comment section (`overallCoordinationRisk`); see the table below.
 8. **Submit.** `assemble.ts` builds the `AnalysisSubmission` and replaces
    accusatory model text. The worker checks it against the schema and every
    evidence reference, then POSTs it with a stable idempotency key.
@@ -155,8 +157,12 @@ unvalidated and should be reviewed with the detection-research owner.
 
 | Contract field | Computed as |
 | --- | --- |
-| `overallCoordinationRisk.score` | Highest rubric score among the discussion's product recommendations; `null` when none were found. |
-| `…confidence` | Rubric confidence of that comment: Low 0.3, Medium 0.55, High 0.8. |
+| `overallCoordinationRisk.score` | Comment-section astroturfing index, 0–100: a weighted mean of the parts below that could be measured, with weights renormalized over them. `null` only when fewer than 3 comments were analyzed. |
+| …rubric strength (40%) | Mean of the top three recommendation rubric scores ÷ 100; 0 when nothing recommends a product. |
+| …coordination (25%) | Strongest cluster's `coordinationScore` ÷ 100; 0 when no cluster formed. |
+| …history contrast (25%) | Sampled supportive users against sampled unsupportive users: the gap in the share of recent comments that mention the subject (a 30-point gap counts fully), and the gap in the share of accounts under 90 days old (a 50-point gap counts fully), averaged. Needs at least 2 sampled users with history on each side. |
+| …one-sided support (10%) | Supportive share of comments taking a side, mapped from 50% → 0 to 100% → 1; needs at least 5 such comments. |
+| `…confidence` | 0.3, +0.25 if history contrast was measured, +0.15 with at least two scored recommendations (or none to score), +0.1 with complete coverage; at most 0.8. |
 | Axis score | For each recommendation, the points of fired rules mapped to the axis ÷ the axis's maximum points on that platform × 100. The axis takes the highest value. `null` if no rule on the axis could be evaluated. |
 | `semantic_coordination` | C1, C6, B2 |
 | `temporal_coordination` | C4, B6 |

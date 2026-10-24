@@ -88,3 +88,5 @@
 @keyframes explanation-bob{0%,100%{translate:0 0}50%{translate:0 5px}}
 @media(max-height:600px){.explanation-cue{display:none}}
 .thread-preview{padding:4px 22px 14px;margin-bottom:14px}.thread-preview .detail-heading{margin-top:16px}.comment-row.is-reply{padding-left:18px}
+.risk-note{font-size:13px;color:var(--muted);margin:10px 0 0}
+.risk-score{margin-bottom:28px}

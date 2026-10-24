@@ -35,7 +35,7 @@ export interface Report {
   post: { title: string | null; text: string; url: string; platform: string; author: string | null; createdAt: string | null };
   subject: string;
   verdict: { label: string; description: string; tone: Tone };
-  index: { score: number; confidence: number | null } | null;
+  index: { score: number; confidence: number | null; explanation: string } | null;
   findings: Finding[];
   axes: { axis: AxisName; title: string; score: number | null; explanation: string }[];
   comments: CommentRow[];
@@ -145,7 +145,7 @@ export function buildReport(analysis: AnalysisResource, graph: GraphEnvelope, en
     post: { title: root.title ?? null, text: root.text, url: root.url, platform: root.platform, author: handleFor(graph, root.authorId), createdAt: root.createdAt },
     subject: a.subject.label,
     verdict: verdictFor(score, a.subject.kind === 'unknown' ? '' : a.subject.label),
-    index: score === null ? null : { score, confidence: a.overallCoordinationRisk.confidence },
+    index: score === null ? null : { score, confidence: a.overallCoordinationRisk.confidence, explanation: a.overallCoordinationRisk.explanation },
     findings,
     axes: a.axes.map(x => ({ axis: x.axis, title: AXIS_TITLE[x.axis], score: x.score, explanation: x.explanation })),
     comments: rows.sort((x, y) => Number(y.isRecommendation) - Number(x.isRecommendation)),

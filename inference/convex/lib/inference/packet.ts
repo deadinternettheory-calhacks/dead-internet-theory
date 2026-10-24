@@ -144,28 +144,93 @@ export function buildTriagePacket(graph: GraphEnvelope): { packet: TriagePacket;
   return { packet, analyzedCommentIds: packet.comments.map(c => c.id) };
 }
 
+/** Users sampled per group (supportive, unsupportive) for history requests. */
+export const HISTORY_SAMPLE_PER_GROUP = 6;
+
+export interface HistorySample {
+  pairs: AuthorAnchor[];
+  supportive: { population: number; sampled: string[] };
+  unsupportive: { population: number; sampled: string[] };
+  /** The post author, added because seeding rules (T2, C5) need their history. */
+  rootAuthorIncluded: boolean;
+}
+
+/** FNV-1a hash and mulberry32 PRNG: a reproducible random sequence from a seed string. */
+function seededRandom(seed: string): () => number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < seed.length; i++) h = Math.imul(h ^ seed.charCodeAt(i), 0x01000193);
+  let a = h >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function pick<T>(items: T[], n: number, random: () => number): T[] {
+  const copy = items.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, n);
+}
+
 /**
- * Rubric step 4: request histories for the subject's recommenders (the
- * co-recommenders), plus any other product recommenders, one anchor per author.
- * The root author is included only if they commented, because the contract
- * requires an anchor comment written by that author.
+ * Randomly picks which users' comment histories to request, instead of
+ * requesting everyone's. Users are split into two groups by triage stance:
+ * supportive (any supportive comment, or a recommendation of the subject) and
+ * unsupportive (critical or mixed; neutral users fill the group if there are
+ * too few). Up to `perGroup` users are drawn from each group with a seeded
+ * shuffle, so the same graph always gives the same sample. The unsupportive
+ * group is a baseline for the supportive group's histories. Each user's anchor
+ * is their first comment matching the group.
  */
-export function selectEnrichmentPairs(graph: GraphEnvelope, triage: TriageOutput): AuthorAnchor[] {
-  if (!HISTORY_PLATFORMS.includes(graph.platform)) return [];
+export function sampleHistoryAuthors(graph: GraphEnvelope, triage: TriageOutput, perGroup = HISTORY_SAMPLE_PER_GROUP): HistorySample {
+  const empty: HistorySample = { pairs: [], supportive: { population: 0, sampled: [] }, unsupportive: { population: 0, sampled: [] }, rootAuthorIncluded: false };
+  if (!HISTORY_PLATFORMS.includes(graph.platform)) return empty;
   const index = new GraphIndex(graph);
   const byId = new Map(triage.comments.map(c => [c.commentId, c]));
-  const picked = new Map<string, string>();
-  const consider = (predicate: (commentId: string) => boolean) => {
-    for (const c of index.comments) {
-      if (picked.size >= MAX_ENRICHMENT_PAIRS) return;
-      if (!c.authorId || picked.has(c.authorId) || c.contentStatus !== 'visible') continue;
-      if (predicate(c.id)) picked.set(c.authorId, c.id);
-    }
+  const supportiveAnchor = new Map<string, string>();
+  const unsupportiveAnchor = new Map<string, string>();
+  const neutralAnchor = new Map<string, string>();
+  for (const c of index.comments) {
+    const t = byId.get(c.id);
+    if (!t || !c.authorId || c.contentStatus !== 'visible' || c.authorId === index.root.authorId) continue;
+    if (t.stance === 'supportive' || t.recommendsSubject) {
+      if (!supportiveAnchor.has(c.authorId)) supportiveAnchor.set(c.authorId, c.id);
+    } else if (t.stance === 'critical' || t.stance === 'mixed') {
+      if (!unsupportiveAnchor.has(c.authorId)) unsupportiveAnchor.set(c.authorId, c.id);
+    } else if (t.stance === 'neutral' && !neutralAnchor.has(c.authorId)) neutralAnchor.set(c.authorId, c.id);
+  }
+  // Someone with any supportive comment counts as supportive only.
+  for (const a of supportiveAnchor.keys()) {
+    unsupportiveAnchor.delete(a);
+    neutralAnchor.delete(a);
+  }
+  for (const a of unsupportiveAnchor.keys()) neutralAnchor.delete(a);
+
+  const random = seededRandom(`${graph.investigationId}:${graph.graphRevision}`);
+  const sorted = (m: Map<string, string>) => Array.from(m.keys()).sort();
+  const supportive = pick(sorted(supportiveAnchor), perGroup, random);
+  let unsupportive = pick(sorted(unsupportiveAnchor), perGroup, random);
+  const fill = pick(sorted(neutralAnchor), Math.max(0, perGroup - unsupportive.length), random);
+  unsupportive = [...unsupportive, ...fill];
+
+  const pairs: AuthorAnchor[] = [
+    ...supportive.map(authorId => ({ authorId, anchorCommentId: supportiveAnchor.get(authorId)! })),
+    ...unsupportive.map(authorId => ({ authorId, anchorCommentId: unsupportiveAnchor.get(authorId) ?? neutralAnchor.get(authorId)! })),
+  ];
+  const rootComment = index.root.authorId ? index.comments.find(c => c.authorId === index.root.authorId && c.contentStatus === 'visible') : undefined;
+  if (rootComment && pairs.length < MAX_ENRICHMENT_PAIRS) pairs.push({ authorId: rootComment.authorId!, anchorCommentId: rootComment.id });
+  return {
+    pairs: pairs.slice(0, MAX_ENRICHMENT_PAIRS),
+    supportive: { population: supportiveAnchor.size, sampled: supportive },
+    unsupportive: { population: unsupportiveAnchor.size + (fill.length ? neutralAnchor.size : 0), sampled: unsupportive },
+    rootAuthorIncluded: !!rootComment,
   };
-  consider(id => byId.get(id)?.recommendsSubject === true);
-  consider(id => !!byId.get(id)?.recommendsProduct);
-  if (index.root.authorId) consider(id => index.comment(id)?.authorId === index.root.authorId);
-  return Array.from(picked, ([authorId, anchorCommentId]) => ({ authorId, anchorCommentId }));
 }
 
 export interface AuthorEvidence {
@@ -210,48 +275,6 @@ export function historyResults(jobs: EnrichmentJob[]): HistoryResult[] {
     for (const r of job.results ?? []) if (!byAuthor.has(r.authorId)) byAuthor.set(r.authorId, r);
   }
   return Array.from(byAuthor.values());
-}
-
-export const MAX_SPECULATIVE_PAIRS = 10;
-const QUESTION = /\?\s*$/;
-
-/**
- * Picks likely recommenders without a model so their histories can be requested
- * while triage runs. Signals: tracking links or codes, near-duplicate wording
- * shared with another author, a capitalized term (likely a product name) used by
- * several authors, and top-level answers. Questions are skipped. Triage later
- * adds any recommender this misses with a second request.
- */
-export function speculativeEnrichmentPairs(graph: GraphEnvelope, max = MAX_SPECULATIVE_PAIRS): AuthorAnchor[] {
-  if (!HISTORY_PLATFORMS.includes(graph.platform)) return [];
-  const index = new GraphIndex(graph);
-  const comments = index.comments.filter(c => c.authorId && c.contentStatus === 'visible' && c.text.trim() && !QUESTION.test(c.text));
-  const terms = (text: string) =>
-    new Set(Array.from(text.matchAll(/(?<![.!?]\s)(?<!^)\b([A-Z][a-zA-Z0-9]+(?:\s+[A-Z0-9][a-zA-Z0-9]*)*)\b/g), m => m[1].toLowerCase()));
-  const termAuthors = new Map<string, Set<string>>();
-  for (const c of comments) for (const t of terms(c.text)) {
-    if (!termAuthors.has(t)) termAuthors.set(t, new Set());
-    termAuthors.get(t)!.add(c.authorId!);
-  }
-  const scored = comments.map(c => {
-    let score = 0;
-    const links = linkFacts(c.text);
-    if (links.trackingParams.length || links.shortened || links.discountCode || links.linkInBio) score += 3;
-    if (comments.some(o => o.authorId !== c.authorId && wordJaccard(o.text, c.text) >= 0.3)) score += 3;
-    if (Array.from(terms(c.text)).some(t => (termAuthors.get(t)?.size ?? 0) >= 2)) score += 2;
-    if (c.parentId === graph.rootId) score += 1;
-    return { c, score };
-  });
-  const best = new Map<string, { anchor: string; score: number; at: string }>();
-  for (const { c, score } of scored) {
-    if (score < 2) continue;
-    const prev = best.get(c.authorId!);
-    if (!prev || score > prev.score) best.set(c.authorId!, { anchor: c.id, score, at: c.createdAt ?? '' });
-  }
-  return Array.from(best, ([authorId, v]) => ({ authorId, anchorCommentId: v.anchor, score: v.score, at: v.at }))
-    .sort((a, b) => b.score - a.score || a.at.localeCompare(b.at))
-    .slice(0, max)
-    .map(({ authorId, anchorCommentId }) => ({ authorId, anchorCommentId }));
 }
 
 /** Comments the scoring stage needs: recommendations, their parents, replies to them, and the most-engaged others. */

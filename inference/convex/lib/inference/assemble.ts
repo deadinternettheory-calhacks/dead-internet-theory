@@ -16,13 +16,14 @@ import { SCHEMA_VERSION } from '../contract';
 import { unique, utcNow } from '../util';
 import { round2, wordJaccard } from './features';
 import type { ScoringOutput, TriageOutput } from './outputs';
-import { GraphIndex, historyResults } from './packet';
+import { GraphIndex, historyResults, sampleHistoryAuthors } from './packet';
+import { sectionIndex } from './section';
 import { PROMPT_VERSION } from './prompts';
 import { CONFIDENCE_VALUE, RUBRIC_VERSION, RULES, RULES_BY_ID } from './rubric';
 import { scoreComment, type CommentScore, type EvidenceAvailability } from './scoring';
 import { knownEvidenceIds } from './evidence';
 
-export const INFERENCE_VERSION = `dit-inference/0.1.0; rubric/${RUBRIC_VERSION}; ${PROMPT_VERSION}`;
+export const INFERENCE_VERSION = `dit-inference/0.2.0; rubric/${RUBRIC_VERSION}; ${PROMPT_VERSION}`;
 
 const AXES: AxisName[] = [
   'promotional_intent',
@@ -119,25 +120,6 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
   if (discarded) limitations.push(`${discarded} model-proposed rubric signal(s) were discarded because the platform, available evidence or cited IDs did not support them.`);
   const scored = scores.filter(s => s.score !== null);
   const scoreById = new Map(scores.map(s => [s.commentId, s]));
-
-  // --- Overall index -----------------------------------------------------------------------
-  const top = scored.slice().sort((a, b) => (b.score! - a.score!) || a.commentId.localeCompare(b.commentId))[0];
-  const overallFallback = top ? `The strongest pattern is around the recommendation by ${handle(top.commentId)}.` : '';
-  const overallCoordinationRisk = top
-    ? {
-        score: top.score,
-        confidence: CONFIDENCE_VALUE[top.confidence],
-        explanation: `${safeText(input.scoring?.overallSummary ?? '', overallFallback)} The highest-scoring recommendation, by ${handle(top.commentId)}, scored ${top.score}/100 on the uncalibrated astroturfing rubric (${top.tier}; ${top.confidence.toLowerCase()} evidence confidence). This is a lead for review, not proof of coordination.`,
-        evidenceRefs: unique([top.commentId, ...top.signals.flatMap(s => s.evidenceRefs)]),
-      }
-    : {
-        score: null,
-        confidence: null,
-        explanation: input.scoring
-          ? 'No product recommendations were found in the analyzed comments, so the astroturfing rubric did not apply.'
-          : 'Rubric scoring did not run, so no coordination index is available.',
-        evidenceRefs: [],
-      };
 
   // --- Axes ----------------------------------------------------------------------------------
   const axes: AxisAssessment[] = AXES.map(axis => {
@@ -285,13 +267,35 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
     }
   }
 
+  // --- Overall comment-section index -------------------------------------------------------------
+  const sample = sampleHistoryAuthors(graph, triage);
+  const { score: overallCoordinationRisk } = sectionIndex({
+    index,
+    subjectLabel: triage.subject.label,
+    scored,
+    noRecommendations: targets.size === 0,
+    clusters,
+    results,
+    sample,
+    counts,
+    analyzedCount: analyzed.length,
+    fullCoverage: census && graph.coverage.completeness === 'complete',
+    known,
+    handle,
+  });
+
   // --- Limitations --------------------------------------------------------------------------------
   limitations.unshift(
     `Scores come from an uncalibrated, hand-weighted rubric (version ${RUBRIC_VERSION}) and a provisional rubric-to-axis mapping. They are heuristic indices, not probabilities, and not a finding of astroturfing.`,
   );
   if (input.enrichmentNote) limitations.push(input.enrichmentNote);
-  // Report history gaps only for authors that matter to the result (speculative requests may cover others).
-  const relevantAuthors = new Set([index.root.authorId, ...Array.from(targets, id => index.comment(id)?.authorId)].filter(Boolean));
+  if (sample.pairs.length) {
+    limitations.push(
+      `Account histories were requested for a seeded random sample of users, not everyone: ${sample.supportive.sampled.length} of ${sample.supportive.population} supportive and ${sample.unsupportive.sampled.length} of ${sample.unsupportive.population} unsupportive users${sample.rootAuthorIncluded ? ', plus the post author' : ''}. Rules that need an unsampled user's history are unknown, and a small sample can miss patterns.`,
+    );
+  }
+  // Report history gaps for the sampled users.
+  const relevantAuthors = new Set(sample.pairs.map(p => p.authorId));
   for (const r of results) {
     if (!relevantAuthors.has(r.authorId)) continue;
     if (r.status !== 'complete') limitations.push(`History for ${who(r.authorId)} was ${r.status} (${r.comments.length} of 10 items); missing history is not evidence either way.`);

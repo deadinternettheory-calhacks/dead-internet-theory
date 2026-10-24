@@ -5,7 +5,7 @@ import { assembleAnalysis, type AssembleResult } from './assemble';
 import { checkSubmission } from './evidence';
 import type { CreaoClient, CreaoInputs } from './creao';
 import { ModelOutputError, parseScoring, parseTriage, type ScoringOutput, type TriageOutput } from './outputs';
-import { buildScoringPacket, buildTriagePacket, selectEnrichmentPairs, speculativeEnrichmentPairs } from './packet';
+import { buildScoringPacket, buildTriagePacket, sampleHistoryAuthors } from './packet';
 import { claudeTriage, DEFAULT_CLAUDE_MODEL, type ClaudeConfig } from './claude';
 import { scoringInstructions, triageInstructions } from './prompts';
 
@@ -20,19 +20,9 @@ function request(authors: AuthorAnchor[]): EnrichmentRequest | null {
   return authors.length ? { authors, limit: 10, windowDays: HISTORY_WINDOW_DAYS, fallback: 'most_recent' } : null;
 }
 
-/** Histories requested before triage, from deterministic signals only. */
-export function speculativeRequestFor(graph: GraphEnvelope): EnrichmentRequest | null {
-  return request(speculativeEnrichmentPairs(graph));
-}
-
-/** Histories triage says are needed, minus authors already requested. */
-export function followupRequestFor(graph: GraphEnvelope, triage: TriageOutput, alreadyRequested: ReadonlySet<string> = new Set()): EnrichmentRequest | null {
-  return request(selectEnrichmentPairs(graph, triage).filter(p => !alreadyRequested.has(p.authorId)));
-}
-
-/** All histories triage says are needed (no speculative request). */
+/** One history request for a random sample of supportive and unsupportive users (see sampleHistoryAuthors). */
 export function enrichmentRequestFor(graph: GraphEnvelope, triage: TriageOutput): EnrichmentRequest | null {
-  return followupRequestFor(graph, triage);
+  return request(sampleHistoryAuthors(graph, triage).pairs);
 }
 
 export function scoringInputs(graph: GraphEnvelope, triage: TriageOutput, jobs: EnrichmentJob[]): CreaoInputs {
@@ -84,20 +74,16 @@ async function runStage<T>(run: () => Promise<string[]>, parse: (outputs: string
   }
 }
 
-/** Runs triage (with speculative histories in parallel), follow-up histories, scoring and assembly in one process. */
+/** Runs triage, the sampled history request, scoring and assembly in one process. */
 export async function runSequential(graph: GraphEnvelope, deps: SequentialDeps): Promise<AssembleResult & { triage: TriageOutput; scoring: ScoringOutput | null; enrichments: EnrichmentJob[] }> {
   const { inputs, analyzedCommentIds } = triageInputs(graph);
   const canEnrich = !!(deps.requestEnrichment && deps.getEnrichment);
-  const speculative = canEnrich ? speculativeRequestFor(graph) : null;
   const runTriage = () => (deps.claude ? claudeTriage(deps.claude, inputs) : runToText(deps.creao, inputs, deps));
-  const [triage, firstJob] = await Promise.all([
-    runStage(runTriage, parseTriage),
-    speculative ? deps.requestEnrichment!(speculative) : Promise.resolve(null),
-  ]);
+  const triage = await runStage(runTriage, parseTriage);
 
-  const jobs: EnrichmentJob[] = firstJob ? [firstJob] : [];
-  const followup = canEnrich ? followupRequestFor(graph, triage, new Set(speculative?.authors.map(a => a.authorId))) : null;
-  if (followup) jobs.push(await deps.requestEnrichment!(followup));
+  const jobs: EnrichmentJob[] = [];
+  const sampled = canEnrich ? enrichmentRequestFor(graph, triage) : null;
+  if (sampled) jobs.push(await deps.requestEnrichment!(sampled));
   const sleep = deps.sleep ?? (ms => new Promise(r => setTimeout(r, ms)));
   for (let i = 0; i < jobs.length; i++) {
     for (let poll = 0; poll < 120 && (jobs[i].status === 'queued' || jobs[i].status === 'running'); poll++) {

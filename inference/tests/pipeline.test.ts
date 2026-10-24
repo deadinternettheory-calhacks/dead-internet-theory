@@ -6,7 +6,7 @@ import { assembleAnalysis, safeText } from '../convex/lib/inference/assemble';
 import { MockCreaoClient } from '../convex/lib/inference/creao';
 import { checkSubmission } from '../convex/lib/inference/evidence';
 import { extractJsonObject, parseScoring, parseTriage, type TriageOutput } from '../convex/lib/inference/outputs';
-import { buildScoringPacket, buildTriagePacket, selectEnrichmentPairs } from '../convex/lib/inference/packet';
+import { buildScoringPacket, buildTriagePacket } from '../convex/lib/inference/packet';
 import { runSequential } from '../convex/lib/inference/pipeline';
 import { validateModel } from '../convex/lib/schema';
 import { buildDemo } from '../scripts/generate-demo';
@@ -48,17 +48,6 @@ describe('packets and selection', () => {
     expect(packet.root.title).toContain('[Synthetic example]');
   });
 
-  it('selects recommenders, one anchor per author, written by that author', () => {
-    const pairs = selectEnrichmentPairs(graph, triage);
-    expect(pairs.map(p => p.authorId)).toEqual(['reddit:author:t2_syn_a', 'reddit:author:t2_syn_b', 'reddit:author:t2_syn_c', 'reddit:author:t2_syn_d']);
-    const nodes = new Map(graph.nodes.map(n => [n.id, n]));
-    for (const p of pairs) expect((nodes.get(p.anchorCommentId) as { authorId: string }).authorId).toBe(p.authorId);
-  });
-
-  it('requests no histories on YouTube or TikTok', () => {
-    expect(selectEnrichmentPairs({ ...graph, platform: 'youtube' }, triage)).toEqual([]);
-  });
-
   it('computes measurements for the scoring packet', () => {
     const packet = buildScoringPacket(graph, triage, [enrichment]);
     expect(packet.measurements.largestRecommendationBurst30m.commentIds).toHaveLength(3);
@@ -72,7 +61,7 @@ describe('assembled analysis', () => {
     const demo = await buildDemo();
     expect(validateModel('AnalysisResource', demo.analysis).valid).toBe(true);
     expect(checkSubmission(demo.analysis.result, graph, demo.enrichments)).toBeNull();
-    expect(demo.analysis.result.overallCoordinationRisk.score).toBe(76);
+    expect(demo.analysis.result.overallCoordinationRisk.score).toBe(63);
   });
 
   it('keeps generated example files in sync (npm run demo)', async () => {
@@ -92,12 +81,12 @@ describe('assembled analysis', () => {
     expect(checkSubmission({ ...demo.analysis.result, graphRevision: 2 }, graph, [enrichment])?.code).toBe('STALE_GRAPH_REVISION');
   });
 
-  it('returns a null index when nothing recommends a product', () => {
+  it('returns a low section index when nothing recommends a product', () => {
     const quiet: TriageOutput = { ...triage, comments: triage.comments.map(c => ({ ...c, recommendsProduct: null, recommendsSubject: false })) };
     const { analyzedCommentIds } = buildTriagePacket(graph);
     const { submission } = assembleAnalysis({ graph, triage: quiet, analyzedCommentIds, enrichments: [], scoring: { assessments: [], clusters: [], overallSummary: '' } });
-    expect(submission.overallCoordinationRisk.score).toBeNull();
-    expect(submission.overallCoordinationRisk.confidence).toBeNull();
+    expect(submission.overallCoordinationRisk.score).toBeLessThan(15);
+    expect(submission.overallCoordinationRisk.explanation).toMatch(/No comment recommended a product/);
     expect(checkSubmission(submission, graph, [])).toBeNull();
   });
 
@@ -119,7 +108,7 @@ describe('assembled analysis', () => {
     };
     const result = await runSequential(graph, { creao, requestEnrichment: async () => enrichment, getEnrichment: async () => enrichment, sleep: async () => {} });
     expect(started).toEqual(['triage', 'triage', 'scoring', 'scoring', 'scoring']);
-    expect(result.submission.overallCoordinationRisk.score).toBe(76);
+    expect(result.submission.overallCoordinationRisk.score).toBe(63);
   });
 
   it('fails instead of submitting when CREAO output is unusable', async () => {

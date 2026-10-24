@@ -2,19 +2,18 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type Anthropic from '@anthropic-ai/sdk';
 import { describe, expect, it } from 'vitest';
-import type { EnrichmentJob, EnrichmentRequest, GraphEnvelope } from '../convex/lib/contract';
+import type { EnrichmentJob, GraphEnvelope } from '../convex/lib/contract';
 import { claudeTriage, ClaudeError, CLAUDE_TRIAGE_SCHEMA } from '../convex/lib/inference/claude';
 import { createCreaoClient, MockCreaoClient } from '../convex/lib/inference/creao';
 import type { TriageOutput } from '../convex/lib/inference/outputs';
-import { buildScoringPacket, speculativeEnrichmentPairs } from '../convex/lib/inference/packet';
-import { followupRequestFor, runSequential, speculativeRequestFor, triageInputs } from '../convex/lib/inference/pipeline';
+import { buildScoringPacket } from '../convex/lib/inference/packet';
+import { runSequential, triageInputs } from '../convex/lib/inference/pipeline';
 
 const dir = resolve(__dirname, '../fixtures/synthetic-espresso');
 const read = (name: string) => readFileSync(resolve(dir, name), 'utf8');
 const graph = JSON.parse(read('graph.json')) as GraphEnvelope;
 const enrichment = JSON.parse(read('enrichment-completed.json')) as EnrichmentJob;
 const triage = JSON.parse(read('creao-triage-response.json')) as TriageOutput;
-const id = (n: string) => `reddit:author:t2_syn_${n}`;
 
 function fakeAnthropic(reply: { stop_reason: string; text?: string; stop_details?: unknown }) {
   const calls: Record<string, unknown>[] = [];
@@ -30,55 +29,6 @@ function fakeAnthropic(reply: { stop_reason: string; text?: string; stop_details
   } as unknown as Anthropic;
   return { client, calls };
 }
-
-describe('speculative histories', () => {
-  it('picks likely recommenders from the thread alone', () => {
-    const pairs = speculativeEnrichmentPairs(graph);
-    expect(pairs.map(p => p.authorId)).toEqual([id('a'), id('b'), id('c'), id('e')]);
-    const nodes = new Map(graph.nodes.map(n => [n.id, n]));
-    for (const p of pairs) expect((nodes.get(p.anchorCommentId) as { authorId: string }).authorId).toBe(p.authorId);
-  });
-
-  it('asks triage only for authors not already requested', () => {
-    const requested = new Set(speculativeRequestFor(graph)!.authors.map(a => a.authorId));
-    expect(followupRequestFor(graph, triage, requested)!.authors).toEqual([{ authorId: id('d'), anchorCommentId: 'reddit:comment:t1_syn04' }]);
-    expect(followupRequestFor(graph, triage, new Set([id('a'), id('b'), id('c'), id('d')]))).toBeNull();
-  });
-
-  it('requests nothing on platforms without histories', () => {
-    expect(speculativeEnrichmentPairs({ ...graph, platform: 'tiktok' })).toEqual([]);
-  });
-
-  it('runs triage and the speculative request in parallel, then a follow-up', async () => {
-    const order: string[] = [];
-    let release!: () => void;
-    const triageGate = new Promise<void>(r => (release = r));
-    const creao = {
-      label: 'gated',
-      startRun: async (i: { stage: string }) => { order.push(`start:${i.stage}`); return i.stage; },
-      getRun: async (runId: string) => {
-        if (runId === 'triage') await triageGate;
-        return { runId, status: 'completed' as const, outputs: [read(runId === 'triage' ? 'creao-triage-response.json' : 'creao-scoring-response.json')], errorCode: null };
-      },
-    };
-    const requests: EnrichmentRequest[] = [];
-    const result = await runSequential(graph, {
-      creao,
-      requestEnrichment: async r => {
-        requests.push(r);
-        order.push(`enrich:${r.authors.length}`);
-        if (requests.length === 1) release(); // triage can only finish after the speculative request went out
-        return { ...enrichment, enrichmentId: `enr_${requests.length}`, results: (enrichment.results ?? []).filter(x => r.authors.some(a => a.authorId === x.authorId)) };
-      },
-      getEnrichment: async () => enrichment,
-      sleep: async () => {},
-    });
-    expect(order.slice(0, 2).sort()).toEqual(['enrich:4', 'start:triage']);
-    expect(requests.map(r => r.authors.length)).toEqual([4, 1]);
-    expect(result.submission.usedEnrichmentIds).toEqual(['enr_1', 'enr_2']);
-    expect(result.submission.overallCoordinationRisk.score).toBe(76);
-  });
-});
 
 describe('smaller scoring packet', () => {
   it('sends recommendations and their context, not every comment', () => {

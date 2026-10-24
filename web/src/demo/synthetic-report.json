@@ -531,6 +531,116 @@
           }
         },
         {
+          "authorId": "reddit:author:t2_syn_c",
+          "anchorCommentId": "reddit:comment:t1_syn03",
+          "status": "partial",
+          "strategy": "recent_fallback",
+          "comments": [
+            {
+              "id": "reddit:comment:t1_syn_c01",
+              "nativeId": "t1_syn_c01",
+              "authorId": "reddit:author:t2_syn_c",
+              "text": "BrewMaster Mini, you won't regret it.",
+              "createdAt": "2026-10-22T07:48:00Z",
+              "timestampPrecision": "exact",
+              "url": "https://www.reddit.com/r/Coffee/comments/syn_h31/thread/comment/syn_c01/",
+              "sourceDiscussionNativeId": "t3_syn_h31",
+              "metrics": {
+                "score": 3
+              }
+            },
+            {
+              "id": "reddit:comment:t1_syn_c02",
+              "nativeId": "t1_syn_c02",
+              "authorId": "reddit:author:t2_syn_c",
+              "text": "BrewMaster Mini: 15 bar pump + steam wand + 30 second heat up.",
+              "createdAt": "2026-10-19T09:10:00Z",
+              "timestampPrecision": "exact",
+              "url": "https://www.reddit.com/r/espresso/comments/syn_h32/thread/comment/syn_c02/",
+              "sourceDiscussionNativeId": "t3_syn_h32",
+              "metrics": {
+                "score": 3
+              }
+            },
+            {
+              "id": "reddit:comment:t1_syn_c03",
+              "nativeId": "t1_syn_c03",
+              "authorId": "reddit:author:t2_syn_c",
+              "text": "Skip the expensive machines, a BrewMaster Mini does the job.",
+              "createdAt": "2026-10-15T12:26:00Z",
+              "timestampPrecision": "exact",
+              "url": "https://www.reddit.com/r/Frugal/comments/syn_h33/thread/comment/syn_c03/",
+              "sourceDiscussionNativeId": "t3_syn_h33",
+              "metrics": {
+                "score": 3
+              }
+            },
+            {
+              "id": "reddit:comment:t1_syn_c04",
+              "nativeId": "t1_syn_c04",
+              "authorId": "reddit:author:t2_syn_c",
+              "text": "Lol same.",
+              "createdAt": "2026-09-02T19:40:00Z",
+              "timestampPrecision": "exact",
+              "url": "https://www.reddit.com/r/AskReddit/comments/syn_h34/thread/comment/syn_c04/",
+              "sourceDiscussionNativeId": "t3_syn_h34",
+              "metrics": {
+                "score": 3
+              }
+            },
+            {
+              "id": "reddit:comment:t1_syn_c05",
+              "nativeId": "t1_syn_c05",
+              "authorId": "reddit:author:t2_syn_c",
+              "text": "This game eats my whole weekend every time.",
+              "createdAt": "2026-08-28T22:15:00Z",
+              "timestampPrecision": "exact",
+              "url": "https://www.reddit.com/r/gaming/comments/syn_h35/thread/comment/syn_c05/",
+              "sourceDiscussionNativeId": "t3_syn_h35",
+              "metrics": {
+                "score": 3
+              }
+            },
+            {
+              "id": "reddit:comment:t1_syn_c06",
+              "nativeId": "t1_syn_c06",
+              "authorId": "reddit:author:t2_syn_c",
+              "text": "Nice.",
+              "createdAt": "2026-08-20T13:02:00Z",
+              "timestampPrecision": "exact",
+              "url": "https://www.reddit.com/r/pics/comments/syn_h36/thread/comment/syn_c06/",
+              "sourceDiscussionNativeId": "t3_syn_h36",
+              "metrics": {
+                "score": 3
+              }
+            }
+          ],
+          "profile": {
+            "accountCreatedAt": "2026-07-20T00:00:00Z",
+            "postKarma": 12,
+            "commentKarma": 150,
+            "fetchedAt": "2026-10-24T06:01:00Z"
+          },
+          "coverage": {
+            "requestedCount": 10,
+            "returnedCount": 6,
+            "candidateFetchedCount": 6,
+            "providerTruncated": null,
+            "reachedAnchorWindow": false,
+            "oldestFetchedAt": "2026-08-20T13:02:00Z",
+            "newestFetchedAt": "2026-10-22T07:48:00Z",
+            "collectedAt": "2026-10-24T06:01:00Z",
+            "sourceSnapshotRef": "synthetic_snapshot_history_c",
+            "actorRunIds": [
+              "synthetic_run_history_c"
+            ],
+            "limitations": [
+              "Synthetic fixture history; no provider was called.",
+              "Only 6 public comments were retrievable, so the 10 most recent were used instead of the anchor window."
+            ]
+          }
+        },
+        {
           "authorId": "reddit:author:t2_syn_b",
           "anchorCommentId": "reddit:comment:t1_syn02",
           "status": "complete",
@@ -692,148 +802,327 @@
           }
         },
         {
-          "authorId": "reddit:author:t2_syn_c",
-          "anchorCommentId": "reddit:comment:t1_syn03",
-          "status": "partial",
-          "strategy": "recent_fallback",
+          "authorId": "reddit:author:t2_syn_e",
+          "anchorCommentId": "reddit:comment:t1_syn05",
+          "status": "complete",
+          "strategy": "temporal_nearest",
           "comments": [
             {
-              "id": "reddit:comment:t1_syn_c01",
-              "nativeId": "t1_syn_c01",
-              "authorId": "reddit:author:t2_syn_c",
-              "text": "BrewMaster Mini, you won't regret it.",
-              "createdAt": "2026-10-22T07:48:00Z",
+              "id": "reddit:comment:t1_syn_e01",
+              "nativeId": "t1_syn_e01",
+              "authorId": "reddit:author:t2_syn_e",
+              "text": "Descaling every month made a bigger difference than any upgrade I bought.",
+              "createdAt": "2026-10-22T08:30:00Z",
               "timestampPrecision": "exact",
-              "url": "https://www.reddit.com/r/Coffee/comments/syn_h31/thread/comment/syn_c01/",
-              "sourceDiscussionNativeId": "t3_syn_h31",
+              "url": "https://www.reddit.com/r/espresso/comments/syn_h41/thread/comment/syn_e01/",
+              "sourceDiscussionNativeId": "t3_syn_h41",
               "metrics": {
-                "score": 3
+                "score": 14
               }
             },
             {
-              "id": "reddit:comment:t1_syn_c02",
-              "nativeId": "t1_syn_c02",
-              "authorId": "reddit:author:t2_syn_c",
-              "text": "BrewMaster Mini: 15 bar pump + steam wand + 30 second heat up.",
-              "createdAt": "2026-10-19T09:10:00Z",
+              "id": "reddit:comment:t1_syn_e02",
+              "nativeId": "t1_syn_e02",
+              "authorId": "reddit:author:t2_syn_e",
+              "text": "Thrift stores near campuses are great for cast iron in spring.",
+              "createdAt": "2026-10-21T19:12:00Z",
               "timestampPrecision": "exact",
-              "url": "https://www.reddit.com/r/espresso/comments/syn_h32/thread/comment/syn_c02/",
-              "sourceDiscussionNativeId": "t3_syn_h32",
+              "url": "https://www.reddit.com/r/Coffee/comments/syn_h42/thread/comment/syn_e02/",
+              "sourceDiscussionNativeId": "t3_syn_h42",
               "metrics": {
-                "score": 3
+                "score": 9
               }
             },
             {
-              "id": "reddit:comment:t1_syn_c03",
-              "nativeId": "t1_syn_c03",
-              "authorId": "reddit:author:t2_syn_c",
-              "text": "Skip the expensive machines, a BrewMaster Mini does the job.",
-              "createdAt": "2026-10-15T12:26:00Z",
+              "id": "reddit:comment:t1_syn_e03",
+              "nativeId": "t1_syn_e03",
+              "authorId": "reddit:author:t2_syn_e",
+              "text": "I returned two budget grinders before buying a used burr grinder.",
+              "createdAt": "2026-10-20T12:47:00Z",
               "timestampPrecision": "exact",
-              "url": "https://www.reddit.com/r/Frugal/comments/syn_h33/thread/comment/syn_c03/",
-              "sourceDiscussionNativeId": "t3_syn_h33",
+              "url": "https://www.reddit.com/r/woodworking/comments/syn_h43/thread/comment/syn_e03/",
+              "sourceDiscussionNativeId": "t3_syn_h43",
               "metrics": {
-                "score": 3
+                "score": 22
               }
             },
             {
-              "id": "reddit:comment:t1_syn_c04",
-              "nativeId": "t1_syn_c04",
-              "authorId": "reddit:author:t2_syn_c",
-              "text": "Lol same.",
-              "createdAt": "2026-09-02T19:40:00Z",
+              "id": "reddit:comment:t1_syn_e04",
+              "nativeId": "t1_syn_e04",
+              "authorId": "reddit:author:t2_syn_e",
+              "text": "Check the gasket first; a worn one causes most of those leaks.",
+              "createdAt": "2026-10-19T07:05:00Z",
               "timestampPrecision": "exact",
-              "url": "https://www.reddit.com/r/AskReddit/comments/syn_h34/thread/comment/syn_c04/",
-              "sourceDiscussionNativeId": "t3_syn_h34",
+              "url": "https://www.reddit.com/r/espresso/comments/syn_h44/thread/comment/syn_e04/",
+              "sourceDiscussionNativeId": "t3_syn_h44",
               "metrics": {
-                "score": 3
+                "score": 11
               }
             },
             {
-              "id": "reddit:comment:t1_syn_c05",
-              "nativeId": "t1_syn_c05",
-              "authorId": "reddit:author:t2_syn_c",
-              "text": "This game eats my whole weekend every time.",
-              "createdAt": "2026-08-28T22:15:00Z",
+              "id": "reddit:comment:t1_syn_e05",
+              "nativeId": "t1_syn_e05",
+              "authorId": "reddit:author:t2_syn_e",
+              "text": "Spent the weekend restoring an old bike, new cables and pads.",
+              "createdAt": "2026-10-18T16:33:00Z",
               "timestampPrecision": "exact",
-              "url": "https://www.reddit.com/r/gaming/comments/syn_h35/thread/comment/syn_c05/",
-              "sourceDiscussionNativeId": "t3_syn_h35",
+              "url": "https://www.reddit.com/r/cycling/comments/syn_h45/thread/comment/syn_e05/",
+              "sourceDiscussionNativeId": "t3_syn_h45",
               "metrics": {
-                "score": 3
+                "score": 6
               }
             },
             {
-              "id": "reddit:comment:t1_syn_c06",
-              "nativeId": "t1_syn_c06",
-              "authorId": "reddit:author:t2_syn_c",
-              "text": "Nice.",
-              "createdAt": "2026-08-20T13:02:00Z",
+              "id": "reddit:comment:t1_syn_e06",
+              "nativeId": "t1_syn_e06",
+              "authorId": "reddit:author:t2_syn_e",
+              "text": "Warranty claims went smoothly once I had the receipt photo.",
+              "createdAt": "2026-10-17T09:58:00Z",
               "timestampPrecision": "exact",
-              "url": "https://www.reddit.com/r/pics/comments/syn_h36/thread/comment/syn_c06/",
-              "sourceDiscussionNativeId": "t3_syn_h36",
+              "url": "https://www.reddit.com/r/espresso/comments/syn_h46/thread/comment/syn_e06/",
+              "sourceDiscussionNativeId": "t3_syn_h46",
               "metrics": {
-                "score": 3
+                "score": 8
+              }
+            },
+            {
+              "id": "reddit:comment:t1_syn_e07",
+              "nativeId": "t1_syn_e07",
+              "authorId": "reddit:author:t2_syn_e",
+              "text": "Tamping harder will not fix channeling; distribute the grounds evenly.",
+              "createdAt": "2026-10-15T18:21:00Z",
+              "timestampPrecision": "exact",
+              "url": "https://www.reddit.com/r/woodworking/comments/syn_h47/thread/comment/syn_e07/",
+              "sourceDiscussionNativeId": "t3_syn_h47",
+              "metrics": {
+                "score": 15
+              }
+            },
+            {
+              "id": "reddit:comment:t1_syn_e08",
+              "nativeId": "t1_syn_e08",
+              "authorId": "reddit:author:t2_syn_e",
+              "text": "My kettle lasted twelve years, still going.",
+              "createdAt": "2026-10-14T08:14:00Z",
+              "timestampPrecision": "exact",
+              "url": "https://www.reddit.com/r/Coffee/comments/syn_h48/thread/comment/syn_e08/",
+              "sourceDiscussionNativeId": "t3_syn_h48",
+              "metrics": {
+                "score": 19
+              }
+            },
+            {
+              "id": "reddit:comment:t1_syn_e09",
+              "nativeId": "t1_syn_e09",
+              "authorId": "reddit:author:t2_syn_e",
+              "text": "Library has a free tool lending section, saved me buying a drill.",
+              "createdAt": "2026-10-12T15:40:00Z",
+              "timestampPrecision": "exact",
+              "url": "https://www.reddit.com/r/cycling/comments/syn_h49/thread/comment/syn_e09/",
+              "sourceDiscussionNativeId": "t3_syn_h49",
+              "metrics": {
+                "score": 7
+              }
+            },
+            {
+              "id": "reddit:comment:t1_syn_e10",
+              "nativeId": "t1_syn_e10",
+              "authorId": "reddit:author:t2_syn_e",
+              "text": "Reviews that only list features and no downsides make me suspicious.",
+              "createdAt": "2026-10-11T10:09:00Z",
+              "timestampPrecision": "exact",
+              "url": "https://www.reddit.com/r/espresso/comments/syn_h50/thread/comment/syn_e10/",
+              "sourceDiscussionNativeId": "t3_syn_h50",
+              "metrics": {
+                "score": 12
               }
             }
           ],
           "profile": {
-            "accountCreatedAt": "2026-07-20T00:00:00Z",
-            "postKarma": 12,
-            "commentKarma": 150,
+            "accountCreatedAt": "2017-09-10T00:00:00Z",
+            "postKarma": 3400,
+            "commentKarma": 12800,
             "fetchedAt": "2026-10-24T06:01:00Z"
           },
           "coverage": {
             "requestedCount": 10,
-            "returnedCount": 6,
-            "candidateFetchedCount": 6,
+            "returnedCount": 10,
+            "candidateFetchedCount": 48,
             "providerTruncated": null,
-            "reachedAnchorWindow": false,
-            "oldestFetchedAt": "2026-08-20T13:02:00Z",
-            "newestFetchedAt": "2026-10-22T07:48:00Z",
+            "reachedAnchorWindow": true,
+            "oldestFetchedAt": "2026-10-11T10:09:00Z",
+            "newestFetchedAt": "2026-10-22T08:30:00Z",
             "collectedAt": "2026-10-24T06:01:00Z",
-            "sourceSnapshotRef": "synthetic_snapshot_history_c",
+            "sourceSnapshotRef": "synthetic_snapshot_history_d",
             "actorRunIds": [
-              "synthetic_run_history_c"
+              "synthetic_run_history_d"
             ],
             "limitations": [
-              "Synthetic fixture history; no provider was called.",
-              "Only 6 public comments were retrievable, so the 10 most recent were used instead of the anchor window."
+              "Synthetic fixture history; no provider was called."
             ]
           }
         },
         {
-          "authorId": "reddit:author:t2_syn_e",
-          "anchorCommentId": "reddit:comment:t1_syn05",
-          "status": "unavailable",
-          "strategy": "none",
-          "comments": [],
+          "authorId": "reddit:author:t2_syn_f",
+          "anchorCommentId": "reddit:comment:t1_syn08",
+          "status": "complete",
+          "strategy": "temporal_nearest",
+          "comments": [
+            {
+              "id": "reddit:comment:t1_syn_f01",
+              "nativeId": "t1_syn_f01",
+              "authorId": "reddit:author:t2_syn_f",
+              "text": "Pour-over is cheaper to start with if you are unsure about espresso.",
+              "createdAt": "2026-10-22T08:30:00Z",
+              "timestampPrecision": "exact",
+              "url": "https://www.reddit.com/r/espresso/comments/syn_h41/thread/comment/syn_f01/",
+              "sourceDiscussionNativeId": "t3_syn_h41",
+              "metrics": {
+                "score": 14
+              }
+            },
+            {
+              "id": "reddit:comment:t1_syn_f02",
+              "nativeId": "t1_syn_f02",
+              "authorId": "reddit:author:t2_syn_f",
+              "text": "Tried three bean subscriptions, the local roaster was best value.",
+              "createdAt": "2026-10-21T19:12:00Z",
+              "timestampPrecision": "exact",
+              "url": "https://www.reddit.com/r/Coffee/comments/syn_h42/thread/comment/syn_f02/",
+              "sourceDiscussionNativeId": "t3_syn_h42",
+              "metrics": {
+                "score": 9
+              }
+            },
+            {
+              "id": "reddit:comment:t1_syn_f03",
+              "nativeId": "t1_syn_f03",
+              "authorId": "reddit:author:t2_syn_f",
+              "text": "Milk frothing takes practice; cold pitcher, cold milk.",
+              "createdAt": "2026-10-20T12:47:00Z",
+              "timestampPrecision": "exact",
+              "url": "https://www.reddit.com/r/woodworking/comments/syn_h43/thread/comment/syn_f03/",
+              "sourceDiscussionNativeId": "t3_syn_h43",
+              "metrics": {
+                "score": 22
+              }
+            },
+            {
+              "id": "reddit:comment:t1_syn_f04",
+              "nativeId": "t1_syn_f04",
+              "authorId": "reddit:author:t2_syn_f",
+              "text": "Bought a refurbished machine last year, no issues so far.",
+              "createdAt": "2026-10-19T07:05:00Z",
+              "timestampPrecision": "exact",
+              "url": "https://www.reddit.com/r/espresso/comments/syn_h44/thread/comment/syn_f04/",
+              "sourceDiscussionNativeId": "t3_syn_h44",
+              "metrics": {
+                "score": 11
+              }
+            },
+            {
+              "id": "reddit:comment:t1_syn_f05",
+              "nativeId": "t1_syn_f05",
+              "authorId": "reddit:author:t2_syn_f",
+              "text": "The manual says to backflush weekly, most people skip it.",
+              "createdAt": "2026-10-18T16:33:00Z",
+              "timestampPrecision": "exact",
+              "url": "https://www.reddit.com/r/cycling/comments/syn_h45/thread/comment/syn_f05/",
+              "sourceDiscussionNativeId": "t3_syn_h45",
+              "metrics": {
+                "score": 6
+              }
+            },
+            {
+              "id": "reddit:comment:t1_syn_f06",
+              "nativeId": "t1_syn_f06",
+              "authorId": "reddit:author:t2_syn_f",
+              "text": "Hiking boots resoled for the second time, worth it.",
+              "createdAt": "2026-10-17T09:58:00Z",
+              "timestampPrecision": "exact",
+              "url": "https://www.reddit.com/r/espresso/comments/syn_h46/thread/comment/syn_f06/",
+              "sourceDiscussionNativeId": "t3_syn_h46",
+              "metrics": {
+                "score": 8
+              }
+            },
+            {
+              "id": "reddit:comment:t1_syn_f07",
+              "nativeId": "t1_syn_f07",
+              "authorId": "reddit:author:t2_syn_f",
+              "text": "Water hardness matters more than people think for scale.",
+              "createdAt": "2026-10-15T18:21:00Z",
+              "timestampPrecision": "exact",
+              "url": "https://www.reddit.com/r/woodworking/comments/syn_h47/thread/comment/syn_f07/",
+              "sourceDiscussionNativeId": "t3_syn_h47",
+              "metrics": {
+                "score": 15
+              }
+            },
+            {
+              "id": "reddit:comment:t1_syn_f08",
+              "nativeId": "t1_syn_f08",
+              "authorId": "reddit:author:t2_syn_f",
+              "text": "Our office machine broke twice in a year, mostly from misuse.",
+              "createdAt": "2026-10-14T08:14:00Z",
+              "timestampPrecision": "exact",
+              "url": "https://www.reddit.com/r/Coffee/comments/syn_h48/thread/comment/syn_f08/",
+              "sourceDiscussionNativeId": "t3_syn_h48",
+              "metrics": {
+                "score": 19
+              }
+            },
+            {
+              "id": "reddit:comment:t1_syn_f09",
+              "nativeId": "t1_syn_f09",
+              "authorId": "reddit:author:t2_syn_f",
+              "text": "Moka pots are underrated for strong coffee at home.",
+              "createdAt": "2026-10-12T15:40:00Z",
+              "timestampPrecision": "exact",
+              "url": "https://www.reddit.com/r/cycling/comments/syn_h49/thread/comment/syn_f09/",
+              "sourceDiscussionNativeId": "t3_syn_h49",
+              "metrics": {
+                "score": 7
+              }
+            },
+            {
+              "id": "reddit:comment:t1_syn_f10",
+              "nativeId": "t1_syn_f10",
+              "authorId": "reddit:author:t2_syn_f",
+              "text": "Check the used market before buying new, prices drop fast.",
+              "createdAt": "2026-10-11T10:09:00Z",
+              "timestampPrecision": "exact",
+              "url": "https://www.reddit.com/r/espresso/comments/syn_h50/thread/comment/syn_f10/",
+              "sourceDiscussionNativeId": "t3_syn_h50",
+              "metrics": {
+                "score": 12
+              }
+            }
+          ],
+          "profile": {
+            "accountCreatedAt": "2020-02-18T00:00:00Z",
+            "postKarma": 3400,
+            "commentKarma": 12800,
+            "fetchedAt": "2026-10-24T06:01:00Z"
+          },
           "coverage": {
             "requestedCount": 10,
-            "returnedCount": 0,
-            "candidateFetchedCount": 0,
+            "returnedCount": 10,
+            "candidateFetchedCount": 48,
             "providerTruncated": null,
-            "reachedAnchorWindow": null,
-            "oldestFetchedAt": null,
-            "newestFetchedAt": null,
-            "collectedAt": null,
-            "sourceSnapshotRef": null,
-            "actorRunIds": [],
+            "reachedAnchorWindow": true,
+            "oldestFetchedAt": "2026-10-11T10:09:00Z",
+            "newestFetchedAt": "2026-10-22T08:30:00Z",
+            "collectedAt": "2026-10-24T06:01:00Z",
+            "sourceSnapshotRef": "synthetic_snapshot_history_d",
+            "actorRunIds": [
+              "synthetic_run_history_d"
+            ],
             "limitations": [
-              "Synthetic fixture has no history for this author."
+              "Synthetic fixture history; no provider was called."
             ]
           }
-        }
-      ]
-    },
-    {
-      "schemaVersion": "1.0.0",
-      "enrichmentId": "enr_synthetic_espresso_2",
-      "investigationId": "inv_synthetic_espresso",
-      "status": "completed",
-      "createdAt": "2026-10-24T06:00:00Z",
-      "startedAt": "2026-10-24T06:00:01Z",
-      "completedAt": "2026-10-24T06:01:30Z",
-      "results": [
+        },
         {
           "authorId": "reddit:author:t2_syn_d",
           "anchorCommentId": "reddit:comment:t1_syn04",
@@ -1007,7 +1296,7 @@
       "schemaVersion": "1.0.0",
       "graphRevision": 1,
       "graphFingerprint": "77f2bd8c21bcc034068d8d089c74f2e916881b7f6769f93bacf8307073be55a2",
-      "inferenceVersion": "dit-inference/0.1.0; rubric/0.3; prompts-2026-10-24b; creao-mock",
+      "inferenceVersion": "dit-inference/0.2.0; rubric/0.3; prompts-2026-10-24b; creao-mock",
       "inferredAt": "2026-10-24T06:03:00Z",
       "subject": {
         "label": "BrewMaster Mini",
@@ -1037,21 +1326,24 @@
         ]
       },
       "overallCoordinationRisk": {
-        "score": 76,
-        "confidence": 0.55,
-        "explanation": "Three accounts recommended the BrewMaster Mini with near-identical feature lists within 13 minutes, two of them defended it together against a critical reply, and all three mention the brand often in their recent histories. The pattern is consistent with coordinated promotion. The original poster's history was not available. The highest-scoring recommendation, by u/brewfan_22, scored 76/100 on the uncalibrated astroturfing rubric (Very high; medium evidence confidence). This is a lead for review, not proof of coordination.",
+        "score": 63,
+        "confidence": 0.7,
+        "explanation": "Comment-section astroturfing index: 63/100 (High). Rubric strength 76: the top 3 recommendation(s) scored 76 (u/brewfan_22), 76 (u/crema_queen), 76 (u/daily_grind_dan) on the rubric. Coordination 55: 4 recommendations form the strongest cluster. History contrast 50: sampled supportive users mention BrewMaster Mini in 47% of their recent comments, unsupportive users in 0%; 0% of supportive and 0% of unsupportive sampled accounts were under 90 days old. One-sided support 67: 83% of comments taking a side were supportive. Weights: rubric 40%, coordination 25%, history contrast 25%, one-sided support 10%, spread over the parts that could be measured. Histories came from a random sample of 3 of 3 supportive and 3 of 3 unsupportive users. This is an uncalibrated, hand-weighted index for prioritizing review, not a probability or a finding that the discussion was astroturfed.",
         "evidenceRefs": [
           "reddit:comment:t1_syn01",
           "reddit:comment:t1_syn02",
           "reddit:comment:t1_syn03",
           "reddit:comment:t1_syn06",
-          "reddit:comment:t1_syn07",
-          "reddit:comment:t1_syn_b02",
-          "reddit:comment:t1_syn_a03",
           "reddit:comment:t1_syn_a01",
           "reddit:comment:t1_syn_a02",
+          "reddit:comment:t1_syn_a03",
           "reddit:comment:t1_syn_a04",
-          "reddit:comment:t1_syn_a05"
+          "reddit:comment:t1_syn_a05",
+          "reddit:comment:t1_syn_c01",
+          "reddit:comment:t1_syn_c02",
+          "reddit:comment:t1_syn_c03",
+          "reddit:comment:t1_syn_b01",
+          "reddit:comment:t1_syn_b02"
         ]
       },
       "axes": [
@@ -1359,11 +1651,11 @@
         }
       ],
       "usedEnrichmentIds": [
-        "enr_synthetic_espresso",
-        "enr_synthetic_espresso_2"
+        "enr_synthetic_espresso"
       ],
       "limitations": [
         "Scores come from an uncalibrated, hand-weighted rubric (version 0.3) and a provisional rubric-to-axis mapping. They are heuristic indices, not probabilities, and not a finding of astroturfing.",
+        "Account histories were requested for a seeded random sample of users, not everyone: 3 of 3 supportive and 3 of 3 unsupportive users. Rules that need an unsampled user's history are unknown, and a small sample can miss patterns.",
         "History for u/daily_grind_dan was partial (6 of 10 items); missing history is not evidence either way.",
         "The root author’s history was not available, so seeding checks that need it (T2, C5) are unknown.",
         "Synthetic fixture: every account, comment and number is fabricated. No scraper ran."
