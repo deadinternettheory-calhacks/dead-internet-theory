@@ -281,7 +281,7 @@ Homepage: shared header; centered headline/subtitle; labeled URL field; **Analyz
 
 ### 10.2 URL behavior and deployment routing
 
-`web/src/url.ts` recognizes exact hosts `reddit.com`, `www.reddit.com`, `old.reddit.com`, `redd.it`, `x.com`, `www.x.com`, `twitter.com`, and `www.twitter.com`. It permits HTTP/HTTPS, rejects credentials, explicit ports, unsupported hosts, and bad URLs. This client allowlist is not backend authorization or SSRF protection. Platform labels in the current UI say checking is not available.
+`web/src/url.ts` recognizes exact hosts `reddit.com`, `www.reddit.com`, `old.reddit.com`, `redd.it`, `x.com`, `www.x.com`, `twitter.com`, `www.twitter.com`, `youtube.com`, `www.youtube.com`, `m.youtube.com`, `youtu.be`, `tiktok.com`, and `www.tiktok.com`. Mobile YouTube hosts normalize to `www.youtube.com`. It permits HTTP/HTTPS, rejects credentials, explicit ports, unsupported hosts, and bad URLs. This client allowlist is not backend authorization or SSRF protection. The form lists all four platforms and reads live availability from `/v1/capabilities`; recognizing a link does not bypass backend provider verification. TikTok collection requires a full video URL rather than a redirecting short link.
 
 Homepage submission routes to `/analysis?url=...` with the URL encoded as a query value. Prefix parsing reads pathname and search, accepts nested raw external URLs, and accepts a fully percent-encoded source URL. Unencoded fragments are not sent by the browser; an encoded full source URL can preserve one. Source links open new tabs with safe `rel` attributes. The SPA does not fetch arbitrary external URLs.
 

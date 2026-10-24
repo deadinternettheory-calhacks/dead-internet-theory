@@ -81,3 +81,9 @@
   .home-main > .how-it-works { width: calc(100% - 40px); padding-top: 46px; }
 }
 @media (max-height: 740px) and (min-width: 768px) { .home-hero .globe-stage { height: 190px; } .home-main .home-hero h1 { font-size: 40px; } }
+.platform-availability { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 16px; padding: 0; margin: 0; list-style: none; color: var(--muted); }
+.platform-availability > li { display: flex; align-items: center; gap: 6px; font-size: 11px; line-height: 1.4; }
+.platform-availability > li > span { display: flex; flex-direction: column; }
+.platform-availability small { color: var(--muted); font-size: 10px; margin-top: 2px; }
+.platform-availability .is-live > svg { color: var(--brand); }
+@media (max-width: 767px) { .home-hero-secondary { flex-direction: column; gap: 8px; } .platform-availability { gap: 10px 18px; } }

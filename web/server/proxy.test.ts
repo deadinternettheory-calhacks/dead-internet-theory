@@ -84,8 +84,21 @@ describe('API proxy', () => {
 
   it('replaces a malformed session cookie', async () => {
     const { fetch } = upstream();
-    const res = await handleProxy(new Request('https://site.test/api/v1/capabilities', { headers: { Cookie: 'dit_sid=bad;value' } }), env, { fetch });
+    const res = await handleProxy(new Request('https://site.test/api/v1/investigations/inv_1', { headers: { Cookie: 'dit_sid=bad;value' } }), env, { fetch });
     expect(res.headers.get('Set-Cookie')).toMatch(/^dit_sid=/);
+  });
+
+  it('does not let a capability read overwrite the cookie of a concurrent create', async () => {
+    const { calls, fetch } = upstream();
+    const [capability, create] = await Promise.all([
+      handleProxy(new Request('https://site.test/api/v1/capabilities'), env, { fetch }),
+      handleProxy(new Request('https://site.test/api/v1/investigations', { method: 'POST', body: '{}' }), env, { fetch }),
+    ]);
+    expect(capability.status).toBe(200);
+    expect(capability.headers.get('Set-Cookie')).toBeNull();
+    const sid = create.headers.get('Set-Cookie')!.split(';')[0].split('=')[1];
+    const sent = calls.find(call => call.url.endsWith('/investigations'))!;
+    expect((await subjectOf(sent.init)).sub).toBe(`web:${sid}`);
   });
 
   it('never proxies inference routes or unknown paths', async () => {

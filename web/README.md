@@ -40,6 +40,9 @@ What the proxy does:
   It mints a five-minute `frontend` JWT with subject `web:<session>` for each
   request, so the backend's owner check lets visitors read only investigations
   they created.
+- Reads platform availability without setting or replacing the session cookie,
+  so a homepage capability request cannot race an investigation create and change
+  its owner.
 - Rejects cross-origin creates and bodies over 8 KB, and passes backend errors
   and `Retry-After` through. Submission rate limits are the backend's
   (`POSTS_PER_HOUR`); the proxy adds none.
@@ -52,6 +55,12 @@ BACKEND_BASE_URL=http://127.0.0.1:3211 BACKEND_JWT_SECRET=<secret> npm run dev
 ```
 
 `VITE_API_BASE_URL` can override the default `/api` base; it is a public URL.
+
+The form accepts X/Twitter, Reddit, TikTok and YouTube links, including `youtu.be`,
+YouTube Shorts and mobile YouTube URLs. TikTok needs a full `@user/video/id` URL.
+Platform labels use the backend's `/v1/capabilities` response, with distinct live,
+setup and unknown states. URL recognition does not claim a provider is live or
+bypass its server-side gate. The browser does not fetch the submitted source URL.
 
 Submitting a link creates an investigation, polls its real `ingestionStatus` and
 `analysisStatus`, then fetches the stored analysis, graph and used enrichment

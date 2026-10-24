@@ -127,7 +127,8 @@ export async function handleProxy(request: Request, env: ProxyEnv, deps: ProxyDe
   const responseHeaders = new Headers({ 'Content-Type': upstream.headers.get('Content-Type') ?? 'application/json', 'Cache-Control': 'no-store' });
   const retryAfter = upstream.headers.get('Retry-After');
   if (retryAfter) responseHeaders.set('Retry-After', retryAfter);
-  if (isNewSession) {
+  // A homepage capability read must not race a create and overwrite its owner cookie.
+  if (isNewSession && path !== 'v1/capabilities') {
     const secure = url.protocol === 'https:' ? '; Secure' : '';
     responseHeaders.append('Set-Cookie', `${COOKIE}=${session}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000${secure}`);
   }
