@@ -1,12 +1,23 @@
 "use node";
 import { internalActionGeneric as action, anyApi } from "convex/server";
 import { v } from "convex/values";
-import { ApiFault, limits, stable, type Model } from "../src/core";
+import {
+  ApiFault,
+  limits,
+  stable,
+  type Model,
+  type ProviderMode,
+} from "../src/core";
 import { normalize } from "../src/graph";
 import { fixtureDiscussion, fixtureHistory, emptySet } from "../src/fixture";
 import { sample, type CandidateSet } from "../src/history";
 import { deliver } from "../src/outbound";
 import { advance, historySets, type PlanState } from "../src/providers";
+interface HistoryContext {
+  mode: ProviderMode;
+  missing: string[];
+  sets: Record<string, CandidateSet>;
+}
 export const tick = action({
   args: { key: v.string() },
   handler: async (ctx, { key }) => {
@@ -31,7 +42,7 @@ export const tick = action({
         const snapshot = `snapshot:${key}`;
         let data;
         let raw;
-        if ((process.env.PROVIDER_MODE ?? "fixture") === "fixture") {
+        if (work.providerMode === "fixture") {
           data = fixtureDiscussion(inv.platform, inv.sourceUrl, snapshot);
           raw = { synthetic: true, data };
         } else {
@@ -74,96 +85,112 @@ export const tick = action({
         const graph = work.graph as Model<"GraphEnvelope">;
         const req = work.enrichment.request as Model<"EnrichmentRequest">;
         const authors = [...new Set(req.authors.map((p) => p.authorId))];
-        const mode = process.env.PROVIDER_MODE ?? "fixture";
+        const context = job.payload.historyContext as
+          HistoryContext | undefined;
+        const mode = context?.mode ?? (work.providerMode as ProviderMode);
         const cacheKey = (author: string) =>
           stable([mode, graph.platform, author, "authored-150-v1"]);
-        const cached = (await ctx.runMutation(anyApi.jobs.cached, {
-          keys: authors.map(cacheKey),
-        })) as Record<string, CandidateSet>;
-        const sets = new Map<string, CandidateSet>();
-        const caches: unknown[] = [];
-        const missing = authors.filter((a) => !cached[cacheKey(a)]);
+        const sets = new Map<string, CandidateSet>(
+          Object.entries(context?.sets ?? {}),
+        );
+        const caches: { key: string; set: CandidateSet }[] = [];
+        const snapshots = new Map<string, unknown>();
         if (["youtube", "tiktok"].includes(graph.platform)) {
           for (const author of authors)
             sets.set(author, emptySet("unsupported"));
-        } else if (mode === "fixture") {
-          for (const author of authors) {
-            const set =
-              cached[cacheKey(author)] ??
-              fixtureHistory(author, `snapshot:${key}:${author}`);
-            sets.set(author, set);
-            if (!cached[cacheKey(author)])
-              caches.push({
-                key: cacheKey(author),
-                set,
-                raw: { synthetic: true, comments: set.comments },
-              });
-          }
-        } else {
+        } else if (!context) {
+          // Freeze candidate cache hits and the author plan before any external
+          // work. Later cache fills/expiry cannot change a running job's scope.
+          const cached = (await ctx.runMutation(anyApi.jobs.cached, {
+            keys: authors.map(cacheKey),
+          })) as Record<string, CandidateSet>;
+          const initialSets: Record<string, CandidateSet> = {};
           for (const author of authors)
             if (cached[cacheKey(author)])
-              sets.set(author, cached[cacheKey(author)]);
-          if (missing.length) {
-            try {
-              const result = await advance({
-                platform: graph.platform,
-                kind: "history",
-                authors: missing.map(
-                  (id) =>
-                    graph.nodes.find((n) => n.id === id) as Model<"AuthorNode">,
-                ),
-                state: job.payload as PlanState,
-                observe,
-                reserve: (operation) =>
-                  ctx.runMutation(anyApi.jobs.reserve, {
-                    key,
-                    token: job.token,
-                    operation,
-                  }),
+              initialSets[author] = cached[cacheKey(author)];
+          const historyContext: HistoryContext = {
+            mode,
+            sets: initialSets,
+            missing: authors.filter((a) => !initialSets[a]),
+          };
+          await ctx.runMutation(anyApi.jobs.settle, {
+            key,
+            token: job.token,
+            outcome: { state: { ...job.payload, historyContext }, wait: 0 },
+          });
+          return;
+        } else if (mode === "fixture") {
+          for (const author of context.missing) {
+            const set = fixtureHistory(author, `snapshot:${key}:${author}`);
+            sets.set(author, set);
+            caches.push({ key: cacheKey(author), set });
+            if (set.coverage.sourceSnapshotRef)
+              snapshots.set(set.coverage.sourceSnapshotRef, {
+                synthetic: true,
+                comments: set.comments,
               });
-              if (!result.done) {
-                await ctx.runMutation(anyApi.jobs.settle, {
+          }
+        } else if (context.missing.length) {
+          const missing = context.missing;
+          try {
+            const result = await advance({
+              platform: graph.platform,
+              kind: "history",
+              authors: missing.map(
+                (id) =>
+                  graph.nodes.find((n) => n.id === id) as Model<"AuthorNode">,
+              ),
+              state: job.payload as PlanState,
+              observe,
+              reserve: (operation) =>
+                ctx.runMutation(anyApi.jobs.reserve, {
                   key,
                   token: job.token,
-                  outcome: { state: result.state, wait: 2000 },
-                });
-                return;
-              }
-              for (const [author, set] of historySets(
-                graph.platform,
-                missing,
-                result.raw,
-                `snapshot:${key}`,
-              )) {
-                sets.set(author, set);
-                caches.push({ key: cacheKey(author), set, raw: result.raw });
-              }
-            } catch (e) {
-              const f =
-                e instanceof ApiFault
-                  ? e
-                  : new ApiFault(
-                      500,
-                      "PROVIDER_FAILED",
-                      "History provider retrieval failed",
-                      true,
-                    );
-              if (f.retryable && job.attempt + 1 < limits().attempts) throw f;
-              for (const author of missing)
-                sets.set(
-                  author,
-                  emptySet(
-                    f.code === "PROVIDER_UNAVAILABLE"
-                      ? "unavailable"
-                      : "failed",
-                    {
-                      code: f.code,
-                      message: f.message,
-                      retryable: f.retryable,
-                    },
-                  ),
-                );
+                  operation,
+                }),
+            });
+            if (!result.done) {
+              await ctx.runMutation(anyApi.jobs.settle, {
+                key,
+                token: job.token,
+                outcome: {
+                  state: { ...result.state, historyContext: context },
+                  wait: 2000,
+                },
+              });
+              return;
             }
+            const snapshot = `snapshot:${key}`;
+            snapshots.set(snapshot, result.raw);
+            for (const [author, set] of historySets(
+              graph.platform,
+              missing,
+              result.raw,
+              snapshot,
+            )) {
+              sets.set(author, set);
+              if (set.status !== "failed")
+                caches.push({ key: cacheKey(author), set });
+            }
+          } catch (e) {
+            const f =
+              e instanceof ApiFault
+                ? e
+                : new ApiFault(
+                    500,
+                    "PROVIDER_FAILED",
+                    "History provider retrieval failed",
+                    true,
+                  );
+            if (f.retryable && job.attempt + 1 < limits().attempts) throw f;
+            for (const author of missing)
+              sets.set(
+                author,
+                emptySet(
+                  f.code === "PROVIDER_UNAVAILABLE" ? "unavailable" : "failed",
+                  { code: f.code, message: f.message, retryable: f.retryable },
+                ),
+              );
           }
         }
         const root = graph.nodes.find(
@@ -180,7 +207,11 @@ export const tick = action({
             req.windowDays,
           ),
         );
-        outcome = { results, caches };
+        outcome = {
+          results,
+          caches,
+          snapshots: [...snapshots].map(([key, raw]) => ({ key, raw })),
+        };
       }
       await ctx.runMutation(anyApi.jobs.settle, {
         key,

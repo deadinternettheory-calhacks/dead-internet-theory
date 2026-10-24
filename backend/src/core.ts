@@ -49,6 +49,17 @@ export async function sha(value: unknown) {
     b.toString(16).padStart(2, "0"),
   ).join("");
 }
+export type ProviderMode = "fixture" | "live";
+export function providerMode(): ProviderMode {
+  const mode = process.env.PROVIDER_MODE ?? "fixture";
+  if (mode !== "fixture" && mode !== "live")
+    throw new ApiFault(
+      500,
+      "INTERNAL_ERROR",
+      "Invalid provider mode configuration",
+    );
+  return mode;
+}
 export const platforms: Platform[] = ["reddit", "x", "youtube", "tiktok"];
 export function integer(
   name: string,

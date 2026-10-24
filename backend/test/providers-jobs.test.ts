@@ -488,13 +488,11 @@ it("reuses a confirmed run after loss of the action's payload write", async () =
   const old = verification.reddit;
   verification.reddit = { runtimeVerified: true, evidence: "SYNTHETIC MOCK" };
   const start = vi.spyOn(Apify.prototype, "start");
-  const poll = vi
-    .spyOn(Apify.prototype, "poll")
-    .mockResolvedValue({
-      id: "confirmed",
-      status: "RUNNING",
-      defaultDatasetId: "dataset",
-    });
+  const poll = vi.spyOn(Apify.prototype, "poll").mockResolvedValue({
+    id: "confirmed",
+    status: "RUNNING",
+    defaultDatasetId: "dataset",
+  });
   try {
     const result = await advance({
       platform: "reddit",
@@ -565,4 +563,60 @@ it("bounds each X author's dataset independently from the total batch size", asy
     verification.x = old;
     vi.restoreAllMocks();
   }
+});
+it("stores one protected snapshot for a batched history response shared by multiple authors", async () => {
+  vi.useFakeTimers();
+  const t = convexTest(schema, modules);
+  const now = iso();
+  await t.run(async (ctx) => {
+    await ctx.db.insert("enrichments", {
+      key: "enrichment",
+      data: {
+        request: {},
+        resource: {
+          schemaVersion: "1.0.0",
+          enrichmentId: "enrichment",
+          investigationId: "investigation",
+          status: "running",
+          createdAt: now,
+          startedAt: now,
+          completedAt: null,
+        },
+      },
+    });
+    await ctx.db.insert("jobs", {
+      key: "job",
+      status: "running",
+      due: Date.now(),
+      data: {
+        kind: "enrich",
+        due: Date.now(),
+        target: "enrichment",
+        status: "running",
+        token: "token",
+        lease: Date.now() + 60000,
+      },
+    });
+  });
+  const { emptySet } = await import("../src/fixture");
+  const set = emptySet();
+  set.coverage.sourceSnapshotRef = "shared-snapshot";
+  await t.mutation(anyApi.jobs.settle, {
+    key: "job",
+    token: "token",
+    outcome: {
+      results: [],
+      caches: [
+        { key: "a", set },
+        { key: "b", set },
+      ],
+      snapshots: [
+        { key: "shared-snapshot", raw: { synthetic: true, rows: ["a", "b"] } },
+      ],
+    },
+  });
+  expect(
+    await t.run((ctx) => ctx.db.query("snapshots").collect()),
+  ).toHaveLength(1);
+  expect(await t.run((ctx) => ctx.db.query("cache").collect())).toHaveLength(2);
 });

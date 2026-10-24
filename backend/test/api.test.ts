@@ -529,3 +529,151 @@ it("bounds retry exhaustion and leaves ingestion independently completed after e
     200,
   );
 });
+it("pins fixture investigation and history execution even when the deployment mode changes", async () => {
+  const created = await create();
+  const id = created.value.investigationId;
+  vi.stubEnv("PROVIDER_MODE", "live");
+  await drain();
+  expect(
+    (await call("GET", `/v1/investigations/${id}`)).value.ingestionStatus,
+  ).toBe("completed");
+  const request = {
+    authors: [
+      {
+        authorId: "reddit:author:t2_alex",
+        anchorCommentId: "reddit:comment:t1_a",
+      },
+    ],
+    limit: 10,
+    windowDays: 14,
+    fallback: "most_recent",
+  };
+  const e = await call(
+    "POST",
+    `/v1/investigations/${id}/enrichments`,
+    request,
+    inference,
+  );
+  await drain();
+  const result = (
+    await call(
+      "GET",
+      `/v1/investigations/${id}/enrichments/${e.value.enrichmentId}`,
+    )
+  ).value;
+  expect(result.status).toBe("completed");
+  expect(result.results[0].status).toBe("partial");
+  expect(result.results[0].coverage.limitations.join(" ")).toContain(
+    "SYNTHETIC",
+  );
+});
+it("freezes enrichment cache misses before an unrelated job fills the cache", async () => {
+  const id = await ready();
+  const pair = {
+    authorId: "reddit:author:t2_alex",
+    anchorCommentId: "reddit:comment:t1_a",
+  };
+  const e = await call(
+    "POST",
+    `/v1/investigations/${id}/enrichments`,
+    { authors: [pair], limit: 10, windowDays: 14, fallback: "most_recent" },
+    inference,
+  );
+  const job = (await t.run((ctx) => ctx.db.query("jobs").collect())).find(
+    (j) => j.data.target === e.value.enrichmentId,
+  )!;
+  await t.action(anyApi.worker.tick, { key: job.key });
+  const frozen = await t.run((ctx) =>
+    ctx.db
+      .query("jobs")
+      .withIndex("key", (q) => q.eq("key", job.key))
+      .unique(),
+  );
+  expect(frozen!.data.payload.historyContext.missing).toEqual([pair.authorId]);
+  const { stable } = await import("../src/core");
+  const { emptySet } = await import("../src/fixture");
+  await t.run((ctx) =>
+    ctx.db.insert("cache", {
+      key: stable(["fixture", "reddit", pair.authorId, "authored-150-v1"]),
+      data: { set: emptySet("unavailable"), expires: Date.now() + 3600000 },
+    }),
+  );
+  await drain();
+  const result = (
+    await call(
+      "GET",
+      `/v1/investigations/${id}/enrichments/${e.value.enrichmentId}`,
+    )
+  ).value;
+  expect(result.results[0].status).toBe("partial");
+  expect(result.results[0].comments).toHaveLength(1);
+});
+it("keeps the original cache hit for a running enrichment after its cache entry expires", async () => {
+  const id = await ready();
+  const pair = {
+    authorId: "reddit:author:t2_alex",
+    anchorCommentId: "reddit:comment:t1_a",
+  };
+  const { stable } = await import("../src/core");
+  const { fixtureHistory } = await import("../src/fixture");
+  await t.run((ctx) =>
+    ctx.db.insert("cache", {
+      key: stable(["fixture", "reddit", pair.authorId, "authored-150-v1"]),
+      data: {
+        set: fixtureHistory(pair.authorId, "original-candidate-snapshot"),
+        expires: Date.now() + 1,
+      },
+    }),
+  );
+  const e = await call(
+    "POST",
+    `/v1/investigations/${id}/enrichments`,
+    { authors: [pair], limit: 10, windowDays: 14, fallback: "most_recent" },
+    inference,
+  );
+  const job = (await t.run((ctx) => ctx.db.query("jobs").collect())).find(
+    (j) => j.data.target === e.value.enrichmentId,
+  )!;
+  await t.action(anyApi.worker.tick, { key: job.key });
+  vi.setSystemTime(Date.now() + 2);
+  await drain();
+  const result = (
+    await call(
+      "GET",
+      `/v1/investigations/${id}/enrichments/${e.value.enrichmentId}`,
+    )
+  ).value;
+  expect(result.results[0].coverage.sourceSnapshotRef).toBe(
+    "original-candidate-snapshot",
+  );
+});
+it("clears an earlier event-delivery error when final analysis is later accepted", async () => {
+  const { ApiFault } = await import("../src/core");
+  vi.mocked(deliver).mockRejectedValue(
+    new ApiFault(500, "EVENT_DELIVERY_FAILED", "temporary", true),
+  );
+  const id = await ready();
+  const base = `/v1/investigations/${id}`;
+  expect((await call("GET", base)).value.error.code).toBe(
+    "EVENT_DELIVERY_FAILED",
+  );
+  const graph = (await call("GET", base + "/graph")).value;
+  expect(
+    (
+      await call(
+        "POST",
+        base + "/analysis",
+        {
+          ...analysisFixture,
+          graphFingerprint: graph.graphFingerprint,
+          usedEnrichmentIds: [],
+          clusters: [],
+        },
+        inference,
+      )
+    ).status,
+  ).toBe(201);
+  const resource = (await call("GET", base)).value;
+  expect(resource.analysisStatus).toBe("completed");
+  expect(resource.error).toBeUndefined();
+});

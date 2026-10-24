@@ -2,7 +2,7 @@ import { internalMutationGeneric as mutation, anyApi } from "convex/server";
 import { v } from "convex/values";
 import { get, put, immutable, type Ctx } from "./db";
 import { queue } from "./api";
-import { iso, limits, stable, validate } from "../src/core";
+import { iso, limits, stable, validate, providerMode } from "../src/core";
 import { checkGraph } from "../src/invariants";
 export const claim = mutation({
   args: { key: v.string() },
@@ -44,22 +44,30 @@ export const claim = mutation({
     await ctx.scheduler.runAfter(61000, anyApi.worker.tick, { key });
     if (job.kind === "ingest") {
       const inv = await get(ctx, "investigations", job.target);
+      inv.providerMode ??= providerMode();
       inv.resource.ingestionStatus = "running";
       inv.resource.updatedAt = iso(now);
       await put(ctx, "investigations", job.target, inv);
-      return { key, job, investigation: inv.resource };
+      return {
+        key,
+        job,
+        investigation: inv.resource,
+        providerMode: inv.providerMode,
+      };
     }
     if (job.kind === "enrich") {
       const e = await get(ctx, "enrichments", job.target);
       e.resource.status = "running";
       e.resource.startedAt ??= iso(now);
       await put(ctx, "enrichments", job.target, e);
-      return {
-        key,
-        job,
-        enrichment: e,
-        graph: await get(ctx, "graphs", e.resource.investigationId),
-      };
+      const graph = await get(ctx, "graphs", e.resource.investigationId);
+      const inv = await get(ctx, "investigations", e.resource.investigationId);
+      const mode =
+        inv.providerMode ??
+        (graph.coverage.limitations.some((l: string) => l.includes("SYNTHETIC"))
+          ? "fixture"
+          : "live");
+      return { key, job, enrichment: e, graph, providerMode: mode };
     }
     return { key, job };
   },
@@ -119,6 +127,15 @@ export const settle = mutation({
       return;
     }
     if (o.state) {
+      if (new TextEncoder().encode(stable(o.state)).length > 700_000) {
+        await fail(ctx, job, key, {
+          code: "JOB_STATE_TOO_LARGE",
+          message:
+            "Persistent execution state exceeds the configured storage bound",
+          retryable: false,
+        });
+        return;
+      }
       job.payload = o.state;
       job.status = "queued";
       job.lease = null;
@@ -180,13 +197,24 @@ export const settle = mutation({
           set: cached.set,
           expires: Date.now() + limits().cacheMs,
         });
-        if (cached.set.coverage.sourceSnapshotRef)
-          await put(ctx, "snapshots", cached.set.coverage.sourceSnapshotRef, {
-            raw: cached.raw,
+      }
+      const snapshots = new Map<string, unknown>(
+        (o.snapshots ?? []).map((s: { key: string; raw: unknown }) => [
+          s.key,
+          s.raw,
+        ]),
+      );
+      // Permit an older in-flight action's internal result during rollout.
+      for (const cached of o.caches ?? [])
+        if (cached.raw !== undefined && cached.set.coverage.sourceSnapshotRef)
+          snapshots.set(cached.set.coverage.sourceSnapshotRef, cached.raw);
+      for (const [key, raw] of snapshots)
+        if (!(await get(ctx, "snapshots", key)))
+          await put(ctx, "snapshots", key, {
+            raw,
             createdAt: iso(),
             investigationId: enr.resource.investigationId,
           });
-      }
     } else if (job.kind === "event") {
       const inv = await get(ctx, "investigations", job.target);
       if (inv.resource.analysisStatus === "queued") {

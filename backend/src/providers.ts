@@ -589,7 +589,7 @@ export function historySets(
         oldestFetchedAt: times[0] ?? null,
         newestFetchedAt: times.at(-1) ?? null,
         collectedAt: iso(),
-        sourceSnapshotRef: `${snapshot}:${authorId}`,
+        sourceSnapshotRef: snapshot,
         actorRunIds: tasks.map((t) => t.run.id),
         limitations: [
           "Best-effort authored candidates, capped at 150; not a lifetime-history census.",

@@ -3,6 +3,7 @@ import { v } from "convex/values";
 import {
   ApiFault,
   capabilities,
+  providerMode,
   iso,
   limits,
   stable,
@@ -125,6 +126,7 @@ async function dispatch(
   if (!invId && post) {
     const req = validate("InvestigationCreateRequest", a.body);
     const resolved = source(req.sourceUrl);
+    const mode = providerMode();
     const investigationId = id("inv");
     const resource = validate("InvestigationResource", {
       schemaVersion: "1.0.0",
@@ -142,6 +144,7 @@ async function dispatch(
     commit = async () => {
       await put(ctx, "investigations", investigationId, {
         owner: p.sub,
+        providerMode: mode,
         resource,
       });
       await queue(ctx, "ingest", investigationId);
@@ -233,6 +236,7 @@ async function dispatch(
     commit = async () => {
       await immutable(ctx, "analyses", invId, resource);
       inv.resource.analysisStatus = "completed";
+      delete inv.resource.error;
       inv.resource.updatedAt = iso(now);
       await put(ctx, "investigations", invId, inv);
     };

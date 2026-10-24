@@ -26,6 +26,8 @@ enrichments (request + job/results), jobs (execution and outbox state), snapshot
 No raw-snapshot public read route exists. Opaque snapshot references contain no
 provider token or unrestricted dataset URL. Enrichment profiles do not update graphs.
 
+Batched history snapshots are stored once and shared through opaque references, rather than duplicated in every author result. Persistent job payloads are capped at 700000 bytes; an oversized plan fails explicitly with `JOB_STATE_TOO_LARGE` before reaching the document limit.
+
 Graph fingerprinting hashes UTF-8, recursively key-sorted JSON of the complete
 GraphEnvelope **excluding `graphFingerprint`**, with nodes sorted by ID and edges
 by canonical JSON. Array order is otherwise significant. SHA-256 is lowercase hex.
@@ -93,6 +95,8 @@ the investigation. GET also returns 413 if the configured ceiling is subsequentl
 lowered. Comment caps produce an explicit partial graph; an Actor's success is
 never proof of complete coverage. Raw provider state/snapshots are bounded to
 650000 bytes. Larger raw collections fail honestly instead of silently losing data.
+
+Each investigation pins its provider mode at creation; changing deployment mode cannot silently replace a running live collection with fixture data or turn a synthetic investigation into a live lookup. Enrichment jobs persist their initial cache hits and missing-author plan before external work, so cache fills and expiry in another job cannot change an in-flight plan.
 
 History candidates target 150 per author, with cache keys including mode,
 platform, author and collection policy. One batch deduplicates repeated authors;
