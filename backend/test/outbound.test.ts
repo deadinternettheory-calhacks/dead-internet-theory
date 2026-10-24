@@ -58,6 +58,9 @@ it("pins the validated public IP to the TLS connection lookup", async () => {
   const cb = vi.fn();
   (options.lookup as Function)("example.com", {}, cb);
   expect(cb).toHaveBeenCalledWith(null, "8.8.8.8", 4);
+  const all = vi.fn();
+  (options.lookup as Function)("example.com", { all: true }, all);
+  expect(all).toHaveBeenCalledWith(null, [{ address: "8.8.8.8", family: 4 }]);
 });
 it("blocks redirects without following their Location", async () => {
   vi.mocked(lookup).mockResolvedValue([

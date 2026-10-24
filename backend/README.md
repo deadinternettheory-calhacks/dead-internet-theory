@@ -8,10 +8,15 @@ application is preserved.
 
 Synthetic ingestion and an independent mock inference consumer have been verified
 against a real local Convex deployment. The authenticated REST lifecycle has also
-been verified on the hosted development deployment described below. No live Apify
-Actor has been exercised.
-Candidate provider adapters are intentionally disabled until authorized runtime
-verification is reviewed. Do not describe this as production or provider ready.
+been verified on the hosted development deployment described below. One authorized
+Reddit discussion smoke returned a valid partial graph from a live Apify Actor.
+A follow-up history check produced a valid ten-comment sample for one of two
+authors; the other returned no content. Runs and collected content were deleted
+after verification. See the [discussion](verification/2026-10-24-reddit-discussion.md)
+and [history](verification/2026-10-24-reddit-history.md) verification records for
+their scope. Candidate provider adapters remain disabled: the hosted live
+workflow and broader provider coverage have not been verified. Do not describe
+this as production ready.
 
 ## Setup and checks
 
@@ -44,7 +49,9 @@ runs in `fixture` mode. It is not a production deployment or a live-provider
 integration. Synthetic ingestion, graph retrieval, two history results, analysis
 submission/readback, idempotency, ownership checks and the persisted ready event
 were verified there. An external inference event receiver is not configured yet;
-the real worker remains unimplemented. The existing website is not connected.
+the separate [CREAO/Claude inference service](../inference/README.md) is implemented
+and verified locally on synthetic data. Its connection to this hosted backend and
+the deployed website is not verified.
 
 From the repository root, validate the unchanged contracts and client:
 
