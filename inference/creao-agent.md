@@ -117,6 +117,12 @@ npx convex env set CREAO_WEBHOOK_URL "https://<inference>.convex.site/creao-webh
 With `ANTHROPIC_API_KEY` set, the agent is only used for scoring. Without it,
 the agent runs both stages as before.
 
+The key must be in the inference deployment's Convex runtime, not just the
+private setup file in `backend/`. Use the
+[production configuration and safe readback](README.md#production-triage-configuration)
+before testing the hosted path. The Anthropic key is used by the direct triage
+client; it is not sent as agent input to CREAO.
+
 The reply is parsed as JSON and schema-checked
 ([`outputs.ts`](convex/lib/inference/outputs.ts)). Rubric points, caps, tiers
 and confidence are recomputed from the rule IDs

@@ -51,8 +51,8 @@ unfinished documentation, not established requirements.
 The backend implements the v1 API and durable jobs with synthetic end-to-end
 verification on local Convex and authenticated REST checks on a hosted development
 deployment. The website's server proxy issues scoped frontend tokens, and reviewed
-Reddit adapters are enabled with pinned Actor builds. The inference service consumes the backend's ready events, uses a
-CREAO agent running Claude for triage and rubric scoring, and re-scores deterministically; it has
+Reddit adapters are enabled with pinned Actor builds. The inference service consumes the backend's ready events,
+calls Claude directly for triage, uses a CREAO agent for rubric scoring, and re-scores deterministically; it has
 run end to end locally and on the hosted site, including one permitted real post.
 The rubric and its mapping to contract axes are uncalibrated proposals.
 The frontend renders v1 analyses through a configured API base and shows a labeled

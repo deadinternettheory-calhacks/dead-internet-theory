@@ -61,9 +61,6 @@ describe('homepage globe motion and fallback', () => {
   async function render() {
     await act(async () => { root.render(<GraveyardGlobe/>); });
   }
-  function clickMotion() {
-    act(() => container.querySelector<HTMLButtonElement>('.globe-motion-control')!.click());
-  }
   function scene() { return container.querySelector('[data-testid="scene"]'); }
   function stage() { return container.querySelector<HTMLDivElement>('.globe-stage')!; }
   function prepareDrag() {
@@ -81,25 +78,25 @@ describe('homepage globe motion and fallback', () => {
     act(() => stage().dispatchEvent(event));
   }
 
-  it('shows a static illustration for reduced motion, with explicit opt-in to play', async () => {
+  it('shows a static illustration for reduced motion', async () => {
     reducedMotion = true;
     await render();
     expect(scene()).toBeNull();
     expect(container.querySelector('.globe-poster-layer.is-hidden')).toBeNull();
-    expect(container.querySelector('.globe-motion-control')?.getAttribute('aria-label')).toBe('Play globe animation');
-    await act(async () => { clickMotion(); });
-    expect(scene()?.getAttribute('data-animate')).toBe('true');
-    expect(container.querySelector('.globe-motion-control')?.getAttribute('aria-label')).toBe('Pause globe animation');
+    expect(container.querySelector('.globe-motion-control')).toBeNull();
   });
 
-  it('keeps a manual pause when the browser tab becomes visible again', async () => {
+  it('keeps globe instructions accessible without visible controls', async () => {
     await render();
-    clickMotion();
-    expect(scene()?.getAttribute('data-animate')).toBe('false');
+    expect(container.querySelector('.globe-caption')).toBeNull();
+    expect(container.querySelector('.globe-motion-control')).toBeNull();
+    expect(container.querySelector('.sr-only')?.textContent).toContain('Drag to spin.');
+  });
+
+  it('resumes automatic motion when the browser tab becomes visible again', async () => {
+    await render();
     act(() => { hidden = true; document.dispatchEvent(new Event('visibilitychange')); });
     act(() => { hidden = false; document.dispatchEvent(new Event('visibilitychange')); });
-    expect(scene()?.getAttribute('data-animate')).toBe('false');
-    clickMotion();
     expect(scene()?.getAttribute('data-animate')).toBe('true');
   });
 
@@ -121,7 +118,6 @@ describe('homepage globe motion and fallback', () => {
     await render();
     act(() => { reducedMotion = true; preferenceChanged?.(); });
     expect(scene()?.getAttribute('data-animate')).toBe('false');
-    expect(container.querySelector('.globe-motion-control')?.getAttribute('aria-label')).toBe('Play globe animation');
   });
 
   it('restores the poster when the graphics context fails', async () => {
@@ -131,7 +127,6 @@ describe('homepage globe motion and fallback', () => {
     expect(scene()).toBeNull();
     expect(container.querySelector('.globe-poster-layer.is-hidden')).toBeNull();
     expect(container.querySelector('svg.globe-poster')).not.toBeNull();
-    expect(container.querySelector('.globe-motion-control')).toBeNull();
   });
 
   it('captures a drag outside the stage and releases with momentum', async () => {
@@ -160,7 +155,7 @@ describe('homepage globe motion and fallback', () => {
     expect(stage().dataset.dragging).toBe('false');
   });
 
-  it('cancels a held gesture when the window loses focus or Pause is pressed', async () => {
+  it('cancels a held gesture when the window loses focus', async () => {
     await render();
     prepareDrag();
     pointer('pointerdown', 100, 100, 0);
@@ -168,10 +163,6 @@ describe('homepage globe motion and fallback', () => {
     act(() => window.dispatchEvent(new Event('blur')));
     expect(renderedMotionRef.current.drag).toBeNull();
     expect(renderedMotionRef.current.velocityYaw).toBe(0);
-    pointer('pointerdown', 100, 100, 200);
-    clickMotion();
-    expect(renderedMotionRef.current.drag).toBeNull();
-    expect(stage().hasPointerCapture(1)).toBe(false);
   });
 
   it('leaves vertical touch scrolling alone and ignores secondary fingers', async () => {
@@ -186,21 +177,20 @@ describe('homepage globe motion and fallback', () => {
     expect(renderedMotionRef.current.pitch).toBe(0);
   });
 
-  it('supports direct drag and keyboard turns while paused without starting inertia', async () => {
+  it('supports direct drag and keyboard turns', async () => {
     await render();
     prepareDrag();
-    clickMotion();
     expect(stage().tabIndex).toBe(0);
     act(() => stage().dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true })));
     expect(renderedMotionRef.current.yaw).toBeGreaterThan(0);
-    expect(renderedMotionRef.current.velocityYaw).toBe(0);
+    expect(renderedMotionRef.current.velocityYaw).toBeGreaterThan(0);
     const yaw = renderedMotionRef.current.yaw;
     pointer('pointerdown', 100, 100, 0);
     pointer('pointermove', 200, 100, 100);
     pointer('pointerup', 200, 100, 110);
     expect(renderedMotionRef.current.yaw).toBeGreaterThan(yaw);
-    expect(renderedMotionRef.current.velocityYaw).toBe(0);
-    expect(scene()?.getAttribute('data-animate')).toBe('false');
+    expect(renderedMotionRef.current.velocityYaw).toBeGreaterThan(0);
+    expect(scene()?.getAttribute('data-animate')).toBe('true');
     expect(requestFrame).toHaveBeenCalled();
     act(() => stage().dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true, cancelable: true })));
     expect(renderedMotionRef.current.yaw).toBe(0);

@@ -18,10 +18,12 @@ frontend calls.
   inference; this Convex service coordinates events, stages and validated writes.
   Hosted synthetic checks and one permitted real Reddit post completed; see the
   [verification record](../backend/verification/2026-10-24-hosted-live.md).
-- Direct Claude triage was checked live inside a local Convex deployment on
-  the synthetic thread: 8.8 s, valid reply. The full speed-up path (Claude
-  triage, early histories, webhooks) has not run end to end against a
-  backend; the hosted deployment does not have it until this change is deployed.
+- Direct Claude triage was checked inside a local Convex deployment on a small
+  synthetic thread (8.8 s), then through the production website on a permitted
+  100-comment video. The hosted direct-Claude-triage/CREAO-scoring path completed
+  in 150 seconds and passed saved-report validation; see the
+  [production correction and verification](../backend/verification/2026-10-24-direct-claude-triage.md).
+  CREAO webhook delivery remains unverified; this check used polling.
 - Scores come from an uncalibrated rubric with a provisional axis mapping.
 
 ## Commands
@@ -58,13 +60,35 @@ or settings; never commit them or put them in `VITE_*`.
 | `CREAO_APP_ID` | With `capi_` | The CREAO agent's ID. |
 | `CREAO_AGENT_ID` | With `cr_sk_` | The agent ID for `developer.creao.ai/v1/runs`. |
 | `CREAO_MODEL` | No | Model ID for `cr_sk_` runs. |
-| `ANTHROPIC_API_KEY` | Recommended | Runs triage as one direct Claude call (about 10 s) instead of a CREAO run (about 1 min). Without it, triage uses CREAO. |
+| `ANTHROPIC_API_KEY` | Hosted production | Runs triage directly through the Anthropic Messages API. Without it, the worker falls back to CREAO triage; local fixtures may omit it. Timings depend on input size and provider latency. |
 | `ANTHROPIC_MODEL` | No | Claude model for triage. Default `claude-opus-5-5` at low effort. |
 | `CREAO_WEBHOOK_SECRET` | With a webhook | Random secret that authenticates CREAO's callbacks. |
 | `CREAO_WEBHOOK_URL` | Recommended | `<this deployment's .convex.site URL>/creao-webhook?token=<CREAO_WEBHOOK_SECRET>`. CREAO calls it when a run finishes, so the worker continues at once instead of at the next poll. |
 
 On the backend, set `INFERENCE_EVENT_URL` to `<this deployment's .convex.site URL>/events`.
 Create the CREAO agent with [creao-agent.md](creao-agent.md).
+
+### Production triage configuration
+
+Set `ANTHROPIC_API_KEY` on the **inference deployment** (`grandiose-barracuda-22`),
+which runs triage. A key in `backend/.env.server.local` is only part of the private
+setup inventory; that file is not automatically synchronized to inference's
+Convex runtime. The ingestion deployment does not need the Anthropic key.
+
+From `inference/`, select the deployment explicitly and upload a private file
+containing only `ANTHROPIC_API_KEY` and an optional `ANTHROPIC_MODEL`:
+
+```sh
+npx convex env set --env-file .env.local --from-file /path/to/inference-runtime.env
+npx convex run --env-file .env.local --inline-query 'return {hasAnthropicKey: Boolean(process.env.ANTHROPIC_API_KEY?.trim())};'
+```
+
+The readback must return `hasAnthropicKey:true` before a production verification
+run. Never print the key or import the entire setup inventory, which also holds
+Convex admin and unrelated provider credentials. Runtime environment updates take
+effect without a code deployment. Confirm a fresh job creates no CREAO triage
+run and its saved inference version includes `claude:<model>+creao-app-trigger`;
+CREAO still handles scoring when the discussion needs it.
 
 Sharing `BACKEND_JWT_SECRET` lets this service sign any backend token. The
 backend's token issuance mechanism is still an open decision

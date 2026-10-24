@@ -14,7 +14,7 @@
 
 .globe-stage[data-interactive="true"] { cursor: grab; }
 .globe-stage[data-dragging="true"] { cursor: grabbing; }
-.globe-stage:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; border-radius: 12px; }
+.globe-stage:focus-visible { outline: none; }
 .globe-artwork { position: absolute; inset: 0; pointer-events: none; }
 
 .globe-poster-layer, .globe-canvas {
@@ -42,33 +42,6 @@
   pointer-events: none;
 }
 
-.globe-caption {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  min-height: 44px;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.4;
-}
-
-.globe-motion-control {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  min-height: 44px;
-  min-width: 64px;
-  padding: 0 4px;
-  border: 0;
-  background: transparent;
-  color: var(--brand);
-  font: inherit;
-  cursor: pointer;
-}
-
-.globe-motion-control:hover { text-decoration: underline; }
 .hero:has(.graveyard-globe) { padding-top: 32px; padding-bottom: 72px; }
 .hero-content:has(.graveyard-globe) { transform: none; }
 
@@ -86,6 +59,5 @@
 .graveyard-globe--compact { width: 112px; margin: 0; }
 .graveyard-globe--compact .globe-stage { height: 104px; }
 .graveyard-globe--compact .globe-stage::after { width: 40px; left: calc(50% - 20px); height: 3px; }
-.graveyard-globe--compact .globe-caption > span { display: none; }
 ::view-transition-group(graveyard-globe) { animation-duration: 650ms; animation-timing-function: cubic-bezier(.22,1,.36,1); }
 @media (prefers-reduced-motion: reduce) { ::view-transition-group(graveyard-globe) { animation-duration: 0s; } }
