@@ -106,6 +106,22 @@ describe('assembled analysis', () => {
     expect(safeText('Pattern consistent with coordinated promotion.', 'fallback')).toBe('Pattern consistent with coordinated promotion.');
   });
 
+  it('re-runs a stage when CREAO replies without the requested JSON', async () => {
+    const replies: Record<string, string[]> = {
+      triage: ['Dashboard rendered; session metrics recorded.', read('creao-triage-response.json')],
+      scoring: ['{"stage":"scoring","coordination_score":0.5}', 'Full JSON described above.', read('creao-scoring-response.json')],
+    };
+    const started: string[] = [];
+    const creao = {
+      label: 'flaky',
+      startRun: async (i: { stage: string }) => { started.push(i.stage); return `${i.stage}-${started.length}`; },
+      getRun: async (id: string) => ({ runId: id, status: 'completed' as const, outputs: [replies[id.split('-')[0]].shift()!], errorCode: null }),
+    };
+    const result = await runSequential(graph, { creao, requestEnrichment: async () => enrichment, getEnrichment: async () => enrichment, sleep: async () => {} });
+    expect(started).toEqual(['triage', 'triage', 'scoring', 'scoring', 'scoring']);
+    expect(result.submission.overallCoordinationRisk.score).toBe(76);
+  });
+
   it('fails instead of submitting when CREAO output is unusable', async () => {
     const creao = new MockCreaoClient({ triage: 'I cannot help with that.', scoring: '{}' });
     await expect(runSequential(graph, { creao, sleep: async () => {} })).rejects.toThrow(/no JSON/);

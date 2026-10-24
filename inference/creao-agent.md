@@ -67,8 +67,22 @@ The requested JSON came in `chatText` (triage) or in a file such as
 `files/coordination_analysis.json` (scoring). The client therefore tries
 `text`, then `chatText`, then up to three small JSON artifacts, and uses the
 first one that parses and validates. Artifact downloads send the key only to
-CREAO, never to the storage redirect. If you edit the agent, ask CREAO to make
-the final result exactly the JSON object from the instructions.
+CREAO, never to the storage redirect. If no candidate validates, the worker
+re-runs the stage, up to three runs in total, before failing the analysis.
+
+### Recommended agent edit
+
+CREAO turned the prompt into its own workflow. In live runs that workflow
+sometimes rendered a dashboard, recorded "session metrics" and returned a
+summary in its own format, without the requested JSON anywhere. To make replies
+reliable, edit the agent on agent.creao.ai with:
+
+```text
+Remove every step except answering the instructions input. Do not render
+dashboards, record session metrics, create files, or write summaries. Your final
+result must be exactly the single JSON object described in the instructions
+input, with no other text.
+```
 
 The reply is parsed as JSON and schema-checked
 ([`outputs.ts`](convex/lib/inference/outputs.ts)). Rubric points, caps, tiers
