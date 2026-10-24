@@ -18,10 +18,11 @@ describe('How it works page', () => {
     ]);
   });
 
-  it('states that checking is unavailable and places the disclaimer after a divider', () => {
-    expect(markup).toContain('analysis service is not connected');
-    expect(markup).toContain('does not currently generate a score');
-    expect(markup).toContain('TikTok and YouTube are not available.');
+  it('describes current support accurately and places the disclaimer after a divider', () => {
+    expect(markup).toContain('Our website helps you investigate suspicious activity and find signs of manipulation.');
+    expect(markup).toContain('Those integrations are not yet verified as operational.');
+    expect(markup).toContain('A high score, if provided, would suggest suspicious activity, but it would not be proof.');
+    expect(markup).toContain('TikTok and YouTube are not supported by the current checker.');
     expect(markup).toContain('<p class="about-disclaimer">Results are estimates based on public signals. They are not proof of coordinated activity.</p>');
     expect(markup.indexOf('about-disclaimer')).toBeGreaterThan(markup.lastIndexOf('</h3>'));
   });
