@@ -1,9 +1,9 @@
 # Dead Internet Theory
 
 Investigates public discussion content for possible coordinated promotion.
-The repository contains a frontend-only app, proposed scoring rubric, and v1
-wire contracts. Backend/inference integration and live-provider behavior remain
-unverified.
+The repository contains a frontend app, a Convex ingestion backend with a verified
+synthetic workflow, a proposed scoring rubric, and v1 wire contracts. Live providers,
+production deployment, and a real inference worker remain unverified.
 
 ## Repository guide
 
@@ -15,6 +15,7 @@ unverified.
 - [contracts/](contracts/README.md): v1 schemas, OpenAPI definitions, synthetic
   examples, provider adapter notes, and validation instructions.
 - [web/](web/README.md): frontend setup, commands, and current behavior.
+- [backend/](backend/README.md): backend setup, synthetic demo, tests and integration.
 - [deltas/](deltas/README.md): specification-change records and their template.
 - [rubrics/product-astroturfing.md](rubrics/product-astroturfing.md):
   rules an AI agent follows to score a product recommendation in a Reddit, X,
@@ -37,7 +38,10 @@ unfinished documentation, not established requirements.
 
 ## Current status
 
-The v1 contracts define the intended wire interface; importing and validating
-them does not implement an API, inference worker, or provider integration.
-The rubric remains an uncalibrated proposal. Frontend behavior and limitations
-are documented in `web/README.md`.
+The backend implements the v1 API and durable jobs with synthetic end-to-end
+verification on local Convex. Candidate Apify adapters remain disabled pending
+authorized runtime verification and retention review. No real inference model or
+public credential issuer is implemented. The rubric remains an uncalibrated proposal.
+The frontend is not connected; its behavior is documented in `web/README.md`.
+The frozen master spec records the implementation baseline; see `backend/README.md`
+for the newer backend implementation and its verification limits.
