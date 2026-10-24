@@ -19,7 +19,7 @@ import type { CandidateSet } from "./history";
 import { outbound } from "./outbound";
 import { sameNative } from "./identity";
 import { source } from "./url";
-import { redditRecord, redditRowType } from "./reddit";
+import { redditAuthor, redditRecord, redditRowType } from "./reddit";
 import { verification } from "./provider-policy";
 export { verification } from "./provider-policy";
 export const actors = {
@@ -59,6 +59,7 @@ export function liveGate(platform: Platform) {
 }
 interface Task {
   authorIds?: string[];
+  authorHandles?: Record<string, string>;
   actor: string;
   input: unknown;
   role: "root" | "discussion" | "history";
@@ -111,6 +112,9 @@ export function plan(
             "history",
           ),
           authorIds: authors.map((a) => a.id),
+          authorHandles: Object.fromEntries(
+            authors.map((a) => [a.id, a.handle!]),
+          ),
         },
       ];
     // Authored search, never replies TO a profile. Date filtering is deliberately
@@ -577,17 +581,27 @@ export function historySets(
     const tasks = raw.filter(
       (t) => !t.authorIds || t.authorIds.includes(authorId),
     );
-    const rows = tasks
-      .flatMap((t) => t.rows)
-      .filter((row) => {
-        if (p === "x" && !row.inReplyToId && row.isReply !== true) return false;
-        const a = person(row, p);
-        return a?.nativeId
-          ? authorId === `${p}:author:${a.nativeId}`
-          : a?.handle
-            ? authorId === `${p}:author:handle:${a.handle}`
-            : false;
-      })
+    const ownRows = tasks.flatMap((task) =>
+      task.rows.filter((row) => {
+        const a = p === "reddit" ? redditAuthor(row) : person(row, p);
+        // An observed native identity takes precedence over a matching handle.
+        if (a?.nativeId) return authorId === `${p}:author:${a.nativeId}`;
+        const handle = a?.handle ?? (p === "reddit" ? row._username : null);
+        if (typeof handle !== "string") return false;
+        const requestedHandle = task.authorHandles?.[authorId];
+        return p === "reddit" && requestedHandle
+          ? handle.toLowerCase() === requestedHandle.toLowerCase()
+          : authorId === `${p}:author:handle:${handle}`;
+      }),
+    );
+    const rows = ownRows
+      .filter((row) =>
+        p === "reddit"
+          ? // Older persisted plans can contain untyped comment rows.
+            (redditRowType(row) == null || redditRowType(row) === "comment") &&
+            (row._status == null || row._status === "found")
+          : p !== "x" || row.inReplyToId || row.isReply === true,
+      )
       .slice(0, 150);
     const comments = rows.map((row) => {
       const c = mapRecord(p, row);
@@ -599,7 +613,10 @@ export function historySets(
         ...timestamp(c.timestamp, c.estimated),
         url: c.url ?? null,
         sourceDiscussionNativeId: nativeString(
-          row.sourceDiscussionNativeId ?? row.postId ?? row.conversationId,
+          row.sourceDiscussionNativeId ??
+            (p === "reddit"
+              ? (row.link_id ?? row.postId)
+              : (row.postId ?? row.conversationId)),
         ),
         metrics: c.metrics ?? {},
       };
@@ -610,21 +627,40 @@ export function historySets(
       .sort();
     const failed =
       tasks.length === 0 || tasks.every((t) => t.run?.status !== "SUCCEEDED");
+    const unavailable =
+      p === "reddit" &&
+      !rows.length &&
+      ownRows.some((r) =>
+        ["not_found", "suspended", "unavailable"].includes(r._status),
+      );
     result.set(authorId, {
       comments,
-      ...(failed
+      ...(unavailable
         ? {
-            status: "failed" as const,
+            status: "unavailable" as const,
             error: {
-              code: "PROVIDER_FAILED",
-              message: "History Actor did not succeed",
-              retryable: true,
+              code: "PROVIDER_UNAVAILABLE",
+              message: "Provider reported this author's content unavailable",
+              retryable: ownRows.some((r) => r._status === "unavailable"),
             },
           }
-        : {}),
+        : failed
+          ? {
+              status: "failed" as const,
+              error: {
+                code: "PROVIDER_FAILED",
+                message: "History Actor did not succeed",
+                retryable: true,
+              },
+            }
+          : {}),
       coverage: {
         candidateFetchedCount: rows.length,
-        providerTruncated: tasks.some((t) => t.truncated) ? true : null,
+        providerTruncated:
+          rows.length >= 150 ||
+          tasks.some((t) => t.truncated || t.done === false)
+            ? true
+            : null,
         oldestFetchedAt: times[0] ?? null,
         newestFetchedAt: times.at(-1) ?? null,
         collectedAt: iso(),
@@ -634,6 +670,11 @@ export function historySets(
           .map((t) => t.run.id),
         limitations: [
           "Best-effort authored candidates, capped at 150; not a lifetime-history census.",
+          ...(p === "reddit" && !ownRows.length && !failed
+            ? [
+                "Provider returned no rows identifying this requested author; availability and lifetime history are unknown.",
+              ]
+            : []),
         ],
       },
     });

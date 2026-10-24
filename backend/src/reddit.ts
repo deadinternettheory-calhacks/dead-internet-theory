@@ -4,7 +4,7 @@ import type { Model } from "./core";
 // Clearpath's flat post/comment rows use _type and retain Reddit-native fields.
 // These mappings never infer profile attributes or retrieve linked media.
 export function redditRowType(row: any): unknown {
-  return row._type ?? row.type;
+  return row._type ?? row._content_type ?? row.type;
 }
 function observedNumber(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value);
@@ -28,7 +28,7 @@ function redditMetrics(row: any): Model<"Engagement"> {
   if (observedNumber(ratio)) result.upvoteRatio = ratio;
   return result;
 }
-function redditAuthor(row: any): Person | null {
+export function redditAuthor(row: any): Person | null {
   const nested = row.author && typeof row.author === "object" ? row.author : {};
   const nativeId = nativeString(
     row.authorId ?? row.author_fullname ?? nested.id,
