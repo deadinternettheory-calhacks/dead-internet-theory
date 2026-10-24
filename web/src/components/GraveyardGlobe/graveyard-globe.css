@@ -7,8 +7,14 @@
 .globe-stage {
   position: relative;
   height: 300px;
-  touch-action: pan-y;
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
 }
+
+.globe-stage[data-interactive="true"] { cursor: grab; }
+.globe-stage[data-dragging="true"] { cursor: grabbing; }
+.globe-stage:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; border-radius: 12px; }
+.globe-artwork { position: absolute; inset: 0; pointer-events: none; }
 
 .globe-poster-layer, .globe-canvas {
   position: absolute !important;

@@ -69,13 +69,18 @@ ambiguous live requests retain their idempotency key to avoid duplicate starts.
 ## Animated homepage globe
 
 The homepage shows an original, procedural wireframe globe with 28 modeled
-gravestones, slow rotation, a gentle float and pointer tilt. It is a decorative
+gravestones, slow rotation, a gentle float and pointer tilt. Drag to turn it;
+releasing a flick carries angular momentum that decays back to the gentle spin.
+Grabbing again stops the momentum. Horizontal touch swipes spin the globe while
+vertical gestures scroll the page and pinch zoom remains available. Arrow keys
+turn the focused globe, and Home resets its orientation. It is a decorative
 illustration, not a visualization of collected accounts or analysis results.
 The existing form and analysis flow remain usable independently of the scene.
 
 Three.js and React Three Fiber load in a separate chunk, with an inline SVG
 poster for first paint or graphics failure. Reduced-motion preferences start
-with the static poster and an explicit Play control; Pause freezes the 3D scene.
+with the static poster and an explicit Play control; Pause stops automatic motion
+and momentum while direct dragging and keyboard turns remain available.
 Animation also stops offscreen and in background tabs. The renderer caps pixel
 ratio at 1.5, uses simple lighting without post-processing or external assets,
 and releases its resources when leaving the homepage.

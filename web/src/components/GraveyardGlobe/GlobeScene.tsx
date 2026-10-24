@@ -2,11 +2,13 @@ import { useEffect, useMemo, useRef, type RefObject } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { CanvasTexture, ExtrudeGeometry, MathUtils, type Group, type Mesh, SRGBColorSpace } from 'three';
 import { createHeadstoneShape, createWireframe, GLOBE_RADIUS, GRAVES } from './globe-model';
+import { advanceGlobe, type GlobeMotion } from './globe-motion';
 
 type SceneProps = {
   animate: boolean;
   pointer: RefObject<{ x: number; y: number }>;
-  onReady: () => void;
+  motion: RefObject<GlobeMotion>;
+  onReady: (invalidate: () => void) => void;
   onFailure: () => void;
 };
 
@@ -25,7 +27,7 @@ function inscription(color: string) {
   return texture;
 }
 
-function Model({ animate, pointer, onReady }: Omit<SceneProps, 'onFailure'>) {
+function Model({ animate, pointer, motion, onReady }: Omit<SceneProps, 'onFailure'>) {
   const globe = useRef<Group>(null);
   const tilt = useRef<Group>(null);
   const satellite = useRef<Mesh>(null);
@@ -48,14 +50,16 @@ function Model({ animate, pointer, onReady }: Omit<SceneProps, 'onFailure'>) {
     resources.lightInk.dispose();
   }, [resources]);
 
-  useFrame((_, delta) => {
-    if (firstFrame.current) { firstFrame.current = false; onReady(); }
-    if (!animate || !globe.current || !tilt.current || !satellite.current) return;
+  useFrame((state, delta) => {
+    if (firstFrame.current) { firstFrame.current = false; onReady(state.invalidate); }
+    if (!globe.current || !tilt.current || !satellite.current) return;
     // Clamp the first frame after a background tab so resuming never jumps ahead.
     const dt = Math.min(delta, 0.05);
+    if (animate) advanceGlobe(motion.current, dt);
+    globe.current.rotation.set(motion.current.pitch, motion.current.yaw, 0, 'YXZ');
+    if (!animate || motion.current.drag) return;
     elapsed.current += dt;
     const t = elapsed.current;
-    globe.current.rotation.y = t * 0.12;
     tilt.current.rotation.x = MathUtils.damp(tilt.current.rotation.x, 0.14 + pointer.current.y * 0.14, 3, dt);
     tilt.current.rotation.z = MathUtils.damp(tilt.current.rotation.z, -0.18 - pointer.current.x * 0.14, 3, dt);
     tilt.current.position.y = Math.sin(t * 0.8) * 0.055;
@@ -63,7 +67,7 @@ function Model({ animate, pointer, onReady }: Omit<SceneProps, 'onFailure'>) {
   });
 
   return <group ref={tilt} rotation={[0.14, 0, -0.18]}>
-    <group ref={globe} rotation={[0, 0, 0]}>
+    <group ref={globe} name="graveyard-globe-rotation" rotation={[0, 0, 0]}>
       <mesh>
         <sphereGeometry args={[GLOBE_RADIUS - 0.006, 48, 32]}/>
         <meshBasicMaterial color="#FAFAF8" toneMapped={false}/>
@@ -96,7 +100,7 @@ function Model({ animate, pointer, onReady }: Omit<SceneProps, 'onFailure'>) {
   </group>;
 }
 
-export default function GlobeScene({ animate, pointer, onReady, onFailure }: SceneProps) {
+export default function GlobeScene({ animate, pointer, motion, onReady, onFailure }: SceneProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     // Canvas owns and disposes the renderer; the listener also handles later GPU loss.
@@ -111,6 +115,6 @@ export default function GlobeScene({ animate, pointer, onReady, onFailure }: Sce
     <ambientLight intensity={1.8}/>
     <directionalLight position={[-3, 5, 4]} intensity={3.2} color="#FFFFFF"/>
     <directionalLight position={[4, 1, -3]} intensity={1.8} color="#EAF1ED"/>
-    <Model animate={animate} pointer={pointer} onReady={onReady}/>
+    <Model animate={animate} pointer={pointer} motion={motion} onReady={onReady}/>
   </Canvas>;
 }

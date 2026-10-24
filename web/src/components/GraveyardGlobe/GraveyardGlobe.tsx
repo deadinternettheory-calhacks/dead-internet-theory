@@ -1,6 +1,7 @@
-import { Component, lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
+import { Component, lazy, Suspense, useCallback, useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { Pause, Play } from 'lucide-react';
 import { GlobePoster } from './GlobePoster';
+import { useGlobeDrag } from './useGlobeDrag';
 import './graveyard-globe.css';
 
 const GlobeScene = lazy(() => import('./GlobeScene'));
@@ -21,6 +22,13 @@ export function GraveyardGlobe() {
   const [requestedScene, setRequestedScene] = useState(false);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
+  const helpId = useId();
+  const { stage, motion, invalidate, dragging, cancel, handlers } = useGlobeDrag(ready && !failed, motionEnabled, pointer);
+  const handleReady = useCallback((requestFrame: () => void) => {
+    invalidate.current = requestFrame;
+    setReady(true);
+  }, [invalidate]);
+  const handleFailure = useCallback(() => setFailed(true), []);
 
   useEffect(() => {
     const preference = window.matchMedia?.('(prefers-reduced-motion: reduce)');
@@ -47,27 +55,25 @@ export function GraveyardGlobe() {
 
   const animate = motionEnabled && inView && tabVisible;
   useEffect(() => { if (animate) setRequestedScene(true); }, [animate]);
+  useEffect(() => {
+    if (!motionEnabled || !inView || !tabVisible || failed) cancel();
+  }, [motionEnabled, inView, tabVisible, failed, cancel]);
 
   return <figure className="graveyard-globe" ref={frame} aria-label="Illustration of a wireframe globe with gravestones">
-    <div className="globe-stage" aria-hidden="true"
-      onPointerMove={event => {
-        if (event.pointerType === 'touch') return;
-        const box = event.currentTarget.getBoundingClientRect();
-        pointer.current = {
-          x: (event.clientX - box.left) / box.width * 2 - 1,
-          y: (event.clientY - box.top) / box.height * 2 - 1,
-        };
-      }}
-      onPointerLeave={() => { pointer.current = { x: 0, y: 0 }; }}>
-      <div className={`globe-poster-layer${ready && !failed ? ' is-hidden' : ''}`}><GlobePoster/></div>
-      {requestedScene && !failed && <SceneBoundary onFailure={() => setFailed(true)}>
-        <Suspense fallback={null}>
-          <GlobeScene animate={animate} pointer={pointer} onReady={() => setReady(true)} onFailure={() => setFailed(true)}/>
-        </Suspense>
-      </SceneBoundary>}
+    <div className="globe-stage" ref={stage} role="group" aria-label="Spin the globe" aria-describedby={helpId}
+      tabIndex={ready && !failed ? 0 : undefined} data-interactive={ready && !failed} data-dragging={dragging} {...handlers}>
+      <div className="globe-artwork" aria-hidden="true">
+        <div className={`globe-poster-layer${ready && !failed ? ' is-hidden' : ''}`}><GlobePoster/></div>
+        {requestedScene && !failed && <SceneBoundary onFailure={handleFailure}>
+          <Suspense fallback={null}>
+            <GlobeScene animate={animate} pointer={pointer} motion={motion} onReady={handleReady} onFailure={handleFailure}/>
+          </Suspense>
+        </SceneBoundary>}
+      </div>
     </div>
+    <span className="sr-only" id={helpId}>Drag to spin. On touch screens, swipe sideways to spin or vertically to scroll. Use arrow keys to turn the globe and Home to reset its orientation.</span>
     <figcaption className="globe-caption">
-      <span>Dead internet. Still spinning.</span>
+      <span>{ready && !failed ? 'Drag to spin' : 'Dead internet. Still spinning.'}</span>
       {!failed && <button type="button" className="globe-motion-control"
         aria-label={motionEnabled ? 'Pause globe animation' : 'Play globe animation'}
         onClick={() => setMotionEnabled(value => !value)}>
