@@ -188,17 +188,26 @@ The ingestion service persists it under the `investigationId` for the frontend.
 
 ## 8. Platform support
 
-Initial discussion graphs are supported on all four platforms. Arbitrary
-commenter histories are not, so enrichment status varies by platform. Reported
-in design discussion from Apify Actor and platform API documentation; not yet
-verified in this repository.
+All four platforms are in scope. Discussion graphs are supported on all of
+them; commenter history is modelled only for Reddit and X.
 
-| Platform | Discussion graph | Arbitrary commenter history |
+| Platform | Discussion graph | Commenter history |
 | --- | --- | --- |
-| Reddit | Supported by Actors | Supported by user-history Actors, with date filtering, subject to access restrictions |
-| X / Twitter | Supported by Actors | Author and date search available; results may be incomplete and some queries have minimums |
-| YouTube | Video comments supported | No general author-history lookup through the official comments API |
-| TikTok | Video comments supported | Not established by the reviewed Actors |
+| Reddit | Supported by Actors | Modelled. User-history Actors with date filtering, subject to access restrictions |
+| X / Twitter | Supported by Actors | Modelled. Author and date search; results may be incomplete (often `partial`) and some queries have minimums |
+| YouTube | Video comments supported | **Not modelled.** No general author-history lookup through the official comments API |
+| TikTok | Video comments supported | **Not modelled.** Reviewed Actors only fetch comments under given videos or a creator's videos |
+
+For YouTube and TikTok:
+
+- Inference should not request histories for these platforms.
+- If it does, the ingestion service returns `unavailable` for each author
+  without calling a provider.
+- Inference must work from the discussion graph alone.
+
+The provider capabilities above come from the design discussion's reading of
+Apify Actor and platform API documentation; they are not yet verified in this
+repository.
 
 Rollout: get Reddit working end to end first (graph, history requests,
 inference response, frontend persistence), then add the other adapters.
@@ -211,7 +220,7 @@ To settle before freezing:
    response.
 2. How the discussion root (the post or video) is represented in the graph.
 3. Author profile fields. The scoring rubric in
-   [rubrics/reddit-product-astroturfing.md](../rubrics/reddit-product-astroturfing.md)
+   [rubrics/product-astroturfing.md](../rubrics/product-astroturfing.md)
    uses account age and post/comment karma, which this contract does not yet
    include.
 4. History size. The rubric's Medium and High confidence levels expect at least
