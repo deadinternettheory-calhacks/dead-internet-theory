@@ -49,7 +49,7 @@ in the inference service's job records.
 
 ADR-006 is superseded by ADR-008, and ADR-007 is superseded for the inference
 worker. Open items:
-- live CREAO verification (the agent ID is pending), plus CREAO data-retention and cost review
+- CREAO data-retention and cost review, and inference cloud deployment
 - rubric calibration and axis-mapping review
 - scoped credential issuance and the frontend proxy
 - a contract route for inference failure, if wanted
@@ -68,5 +68,7 @@ backend:
 - a two-deployment local end-to-end run in fixture mode, with duplicate-event and credential checks
 - a Playwright check of `/example`
 
-Not verified: a live CREAO run, any live provider, cloud deployment, a Vercel
-preview, and a browser test of the live flow through a proxy.
+A live CREAO run through both local deployments also completed (see SPEC 12.1).
+
+Not verified: any live provider, inference cloud deployment, connection to the
+hosted development backend, and a browser test of the live flow through a proxy.

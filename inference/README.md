@@ -9,8 +9,11 @@ analyzes the discussion with a CREAO agent and the
 frontend calls.
 
 **Status:**
-- Implemented and unit-tested; it has run against a local backend in fixture mode.
-- No live CREAO run has completed yet (the agent ID is pending).
+- Implemented and unit-tested.
+- On 2026-10-24 it ran end to end against a local backend in fixture mode, both
+  with recorded replies and with the live CREAO agent. Each CREAO run took about
+  40–80 s.
+- Not deployed to the cloud or connected to the hosted development backend.
 - Scores come from an uncalibrated rubric with a provisional axis mapping.
 
 ## Commands
@@ -144,7 +147,8 @@ end-to-end run works without a CREAO key.
 
 ## Open items
 
-- Live CREAO verification and CREAO data-retention and cost review.
+- CREAO data-retention and cost review. The agent's reply format varies (summary vs. JSON, and files); asking CREAO to make the final result the JSON itself would remove the fallbacks.
+- Cloud deployment, and setting `INFERENCE_EVENT_URL`/`INFERENCE_EVENT_TOKEN` on the hosted backend (`impartial-sheep-516`).
 - Rubric calibration, and review of the axis mapping.
 - Scoped credential issuance from the backend instead of a shared signing secret.
 - A contract route for reporting inference failure, if the team wants one.
