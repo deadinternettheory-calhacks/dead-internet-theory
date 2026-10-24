@@ -14,8 +14,8 @@ import { recordedResponsesFor } from './lib/fixtures';
 import { assembleAnalysis } from './lib/inference/assemble';
 import { createCreaoClient, CreaoError, MockCreaoClient, type CreaoClient } from './lib/inference/creao';
 import { checkSubmission } from './lib/inference/evidence';
-import { parseScoring, parseTriage, type ScoringOutput, type TriageOutput } from './lib/inference/outputs';
-import { enrichmentRequestFor, needsScoring, scoringInputs, triageInputs } from './lib/inference/pipeline';
+import { ModelOutputError, parseScoring, parseTriage, type ScoringOutput, type TriageOutput } from './lib/inference/outputs';
+import { enrichmentRequestFor, MAX_STAGE_ATTEMPTS, needsScoring, scoringInputs, triageInputs } from './lib/inference/pipeline';
 import { validateModel } from './lib/schema';
 
 const CREAO_POLL_MS = 5_000;
@@ -33,6 +33,9 @@ interface JobState {
   enrichmentId?: string;
   enrichmentNote?: string;
   scoringRunId?: string;
+  /** CREAO runs started per stage, including retries after unusable replies. */
+  triageAttempts?: number;
+  scoringAttempts?: number;
   scoring?: ScoringOutput | null;
   analysisId?: string;
 }
@@ -178,7 +181,14 @@ export const step = internalAction({
         case 'triage_wait': {
           const text = await pollRun(creao, state.triageRunId!, elapsed);
           if (text === null) return void (await next('triage_wait', CREAO_POLL_MS));
-          state.triage = parseTriage(text);
+          try {
+            state.triage = parseTriage(text);
+          } catch (err) {
+            if (!(err instanceof ModelOutputError) || (state.triageAttempts ?? 1) >= MAX_STAGE_ATTEMPTS) throw err;
+            state.triageAttempts = (state.triageAttempts ?? 1) + 1;
+            state.triageRunId = await creao.startRun(triageInputs(graph).inputs);
+            return void (await next('triage_wait', CREAO_POLL_MS));
+          }
           return void (await next('enrich_start'));
         }
         case 'enrich_start': {
@@ -217,7 +227,14 @@ export const step = internalAction({
           } else {
             const text = await pollRun(creao, state.scoringRunId!, elapsed);
             if (text === null) return void (await next('scoring_wait', CREAO_POLL_MS));
-            state.scoring = parseScoring(text);
+            try {
+              state.scoring = parseScoring(text);
+            } catch (err) {
+              if (!(err instanceof ModelOutputError) || (state.scoringAttempts ?? 1) >= MAX_STAGE_ATTEMPTS) throw err;
+              state.scoringAttempts = (state.scoringAttempts ?? 1) + 1;
+              state.scoringRunId = await creao.startRun(scoringInputs(graph, state.triage!, await currentEnrichment()));
+              return void (await next('scoring_wait', CREAO_POLL_MS));
+            }
           }
           const enrichment = await currentEnrichment();
           const { submission } = assembleAnalysis({

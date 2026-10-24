@@ -108,7 +108,9 @@ exists.
    evidence reference, then POSTs it with a stable idempotency key.
 
 Each stage is a separately scheduled action. CREAO runs are polled every 5 s,
-with a 15-minute limit per stage. Retryable backend or CREAO errors are retried
+with a 15-minute limit per stage. A reply with no valid JSON (in `result.text`,
+the chat reply, or a JSON file) starts a fresh run of that stage, up to three
+runs in total. Retryable backend or CREAO errors are retried
 within that limit. Otherwise the job is marked `failed` here with its reason,
 and nothing is submitted. The v1 API has no failure-report route, so the
 backend keeps showing the analysis as running.

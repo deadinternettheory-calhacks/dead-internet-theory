@@ -4,7 +4,7 @@ import type { EnrichmentJob, EnrichmentRequest, GraphEnvelope } from '../contrac
 import { assembleAnalysis, type AssembleResult } from './assemble';
 import { checkSubmission } from './evidence';
 import type { CreaoClient, CreaoInputs } from './creao';
-import { parseScoring, parseTriage, type ScoringOutput, type TriageOutput } from './outputs';
+import { ModelOutputError, parseScoring, parseTriage, type ScoringOutput, type TriageOutput } from './outputs';
 import { buildScoringPacket, buildTriagePacket, selectEnrichmentPairs } from './packet';
 import { scoringInstructions, triageInstructions } from './prompts';
 
@@ -54,10 +54,23 @@ async function runToText(creao: CreaoClient, inputs: CreaoInputs, deps: Sequenti
   throw new Error(`CREAO ${inputs.stage} run did not finish in time.`);
 }
 
+/** CREAO agents sometimes reply without the requested JSON; run a stage this many times in total. */
+export const MAX_STAGE_ATTEMPTS = 3;
+
+async function runStage<T>(creao: CreaoClient, makeInputs: () => CreaoInputs, parse: (outputs: string[]) => T, deps: SequentialDeps): Promise<T> {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return parse(await runToText(creao, makeInputs(), deps));
+    } catch (err) {
+      if (!(err instanceof ModelOutputError) || attempt >= MAX_STAGE_ATTEMPTS) throw err;
+    }
+  }
+}
+
 /** Runs triage, optional enrichment, scoring and assembly in one process. */
 export async function runSequential(graph: GraphEnvelope, deps: SequentialDeps): Promise<AssembleResult & { triage: TriageOutput; scoring: ScoringOutput | null; enrichment: EnrichmentJob | null }> {
   const { inputs, analyzedCommentIds } = triageInputs(graph);
-  const triage = parseTriage(await runToText(deps.creao, inputs, deps));
+  const triage = await runStage(deps.creao, () => inputs, parseTriage, deps);
 
   let enrichment: EnrichmentJob | null = null;
   const request = enrichmentRequestFor(graph, triage);
@@ -70,7 +83,7 @@ export async function runSequential(graph: GraphEnvelope, deps: SequentialDeps):
     }
   }
 
-  const scoring = needsScoring(triage) ? parseScoring(await runToText(deps.creao, scoringInputs(graph, triage, enrichment), deps)) : null;
+  const scoring = needsScoring(triage) ? await runStage(deps.creao, () => scoringInputs(graph, triage, enrichment), parseScoring, deps) : null;
   const result = assembleAnalysis({ graph, triage, analyzedCommentIds, enrichment, scoring, inferredAt: deps.inferredAt, modelLabel: deps.creao.label });
   const problem = checkSubmission(result.submission, graph, enrichment && enrichment.status === 'completed' ? [enrichment] : []);
   if (problem) throw new Error(`Assembled analysis is invalid (${problem.code}): ${problem.message}`);
