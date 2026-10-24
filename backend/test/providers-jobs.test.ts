@@ -624,3 +624,19 @@ it("stores one protected snapshot for a batched history response shared by multi
   ).toHaveLength(1);
   expect(await t.run((ctx) => ctx.db.query("cache").collect())).toHaveLength(2);
 });
+it("does not duplicate an X original tweet returned in both root and replies datasets", () => {
+  const tasks = plan("x", "discussion", "https://x.com/synthetic/status/100");
+  tasks[0].rows = [{ id: "100", text: "SYNTHETIC root" }];
+  tasks[1].rows = [
+    { id: "100", text: "SYNTHETIC root again" },
+    { id: "101", text: "SYNTHETIC reply", inReplyToId: "100" },
+  ];
+  for (const [i, task] of tasks.entries())
+    task.run = {
+      id: `run-${i}`,
+      defaultDatasetId: `dataset-${i}`,
+      status: "SUCCEEDED",
+    };
+  const data = discussion("x", "https://x.com/synthetic/status/100", tasks);
+  expect(data.comments.map((c) => c.nativeId)).toEqual(["101"]);
+});

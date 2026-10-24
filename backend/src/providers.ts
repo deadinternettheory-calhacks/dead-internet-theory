@@ -339,7 +339,7 @@ export async function advance(args: {
         );
       if (rows.length < pageLimit || task.offset >= budget) {
         task.done = true;
-        task.truncated = task.offset >= budget;
+        task.truncated = task.role !== "root" && task.offset >= budget;
         state.index++;
       }
     }
@@ -478,6 +478,7 @@ export function discussion(
     .filter(
       (r) =>
         r !== root &&
+        !(p === "x" && nativeString(r.id ?? r.commentId) === native) &&
         r.type !== "post" &&
         r.type !== "video" &&
         r.type !== "discussion",
