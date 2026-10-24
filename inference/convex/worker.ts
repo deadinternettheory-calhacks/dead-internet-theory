@@ -126,12 +126,12 @@ function creaoFor(graph: GraphEnvelope): CreaoClient {
   throw new CreaoError('CREAO_API_KEY is not set.', 'CREAO_NOT_CONFIGURED', false);
 }
 
-/** Returns result text when the run completed, null while it is still running. */
-async function pollRun(creao: CreaoClient, runId: string, elapsedMs: number): Promise<string | null> {
+/** Returns candidate reply texts when the run completed, null while it is still running. */
+async function pollRun(creao: CreaoClient, runId: string, elapsedMs: number): Promise<string[] | null> {
   const run = await creao.getRun(runId);
   if (run.status === 'completed') {
-    if (!run.text) throw new Error('CREAO run completed without result text.');
-    return run.text;
+    if (run.outputs.length === 0) throw new Error('CREAO run completed without result text.');
+    return run.outputs;
   }
   if (run.status === 'failed' || run.status === 'cancelled') throw new Error(`CREAO run ${run.status}: ${run.errorCode ?? 'no error code'}`);
   if (elapsedMs > STAGE_DEADLINE_MS) throw new Error('CREAO run did not finish within the stage deadline.');

@@ -56,6 +56,13 @@ using recorded responses.
 
 ## What the backend does with the reply
 
+CREAO returns two texts per run: `result.text` (the agent's final result) and
+`result.chatText` (its full reply). With the agent created from this prompt,
+the first live run put a short summary in `text` and the requested JSON in
+`chatText`. The client therefore tries `text` first, then `chatText`, and uses
+the first one that parses and validates. If you edit the agent, ask CREAO to
+make the final result exactly the JSON object from the instructions.
+
 The reply is parsed as JSON and schema-checked
 ([`outputs.ts`](convex/lib/inference/outputs.ts)). Rubric points, caps, tiers
 and confidence are recomputed from the rule IDs

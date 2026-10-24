@@ -3,7 +3,9 @@
 //   with {"inputs": {...}}, then GET .../runs/{id}.
 // - CREAO CLI / Developer API: `cr_sk_` key, POST https://developer.creao.ai/v1/runs with
 //   {"agent_id", "input"}, then GET /v1/runs/{run_id}.
-// Both are async: start a run, poll until completed/failed/cancelled, read result.text.
+// Both are async: start a run, poll until completed/failed/cancelled, then read
+// result.text and the full reply in result.chatText (or chat_text). Agents can put
+// a short summary in text and the requested JSON in chatText, so both are kept.
 // Keys are server-side secrets and must never reach the browser or the repository.
 
 export type CreaoStage = 'triage' | 'scoring';
@@ -18,7 +20,8 @@ export interface CreaoInputs {
 export interface CreaoRunState {
   runId: string;
   status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled';
-  text: string | null;
+  /** Candidate reply texts, most specific first: result.text, then the full chat reply. Empty until completed. */
+  outputs: string[];
   errorCode: string | null;
 }
 
@@ -119,12 +122,13 @@ class HttpCreaoClient implements CreaoClient {
   async getRun(runId: string): Promise<CreaoRunState> {
     const run = await this.request(this.runsUrl(runId), { method: 'GET' });
     const status = String(run.status ?? 'pending') as CreaoRunState['status'];
-    const result = (run.result ?? {}) as { text?: unknown };
+    const result = (run.result ?? {}) as { text?: unknown; chatText?: unknown; chat_text?: unknown };
+    const outputs = [result.text, result.chatText, result.chat_text].filter((t): t is string => typeof t === 'string' && t.trim().length > 0);
     const error = run.error as { code?: string } | undefined;
     return {
       runId,
       status: TERMINAL.has(status) || status === 'running' ? status : 'pending',
-      text: typeof result.text === 'string' ? result.text : null,
+      outputs: Array.from(new Set(outputs)),
       errorCode: (run.errorCode as string | undefined) ?? error?.code ?? null,
     };
   }
@@ -140,7 +144,7 @@ export class MockCreaoClient implements CreaoClient {
   async getRun(runId: string): Promise<CreaoRunState> {
     const stage = runId.replace(/^mock-/, '') as CreaoStage;
     const text = this.responses[stage];
-    if (text === undefined) return { runId, status: 'failed', text: null, errorCode: 'MOCK_NO_RESPONSE' };
-    return { runId, status: 'completed', text, errorCode: null };
+    if (text === undefined) return { runId, status: 'failed', outputs: [], errorCode: 'MOCK_NO_RESPONSE' };
+    return { runId, status: 'completed', outputs: [text], errorCode: null };
   }
 }

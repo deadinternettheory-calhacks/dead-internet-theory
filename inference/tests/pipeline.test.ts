@@ -28,6 +28,13 @@ describe('model output parsing', () => {
     expect(() => parseTriage('no json here')).toThrow(/no JSON/);
   });
 
+  it('falls back to the full chat reply when result.text is a summary', () => {
+    const summary = '{"stage":"triage","coordination_score":0.68,"duplicate_clusters":1}';
+    const chat = `Triage complete.\n\n\`\`\`json\n${read('creao-triage-response.json')}\n\`\`\``;
+    expect(parseTriage([summary, chat]).subject.label).toBe('BrewMaster Mini');
+    expect(() => parseTriage([summary])).toThrow(/Triage output failed validation/);
+  });
+
   it('accepts the recorded fixture responses', () => {
     expect(parseTriage(read('creao-triage-response.json')).comments).toHaveLength(8);
     expect(parseScoring(read('creao-scoring-response.json')).assessments).toHaveLength(5);

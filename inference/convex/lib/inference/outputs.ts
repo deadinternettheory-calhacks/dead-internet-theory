@@ -174,10 +174,25 @@ function parseWith<T>(schema: object, text: string, label: string): T {
   return value as T;
 }
 
-export function parseTriage(text: string): TriageOutput {
-  return parseWith<TriageOutput>(TRIAGE_OUTPUT_SCHEMA, text, 'Triage');
+/** Parses the first candidate reply that yields valid output; otherwise throws the first error. */
+function parseFirst<T>(schema: object, outputs: string | string[], label: string): T {
+  const candidates = typeof outputs === 'string' ? [outputs] : outputs;
+  if (candidates.length === 0) throw new ModelOutputError(`${label} run returned no text.`);
+  let first: unknown;
+  for (const text of candidates) {
+    try {
+      return parseWith<T>(schema, text, label);
+    } catch (err) {
+      first ??= err;
+    }
+  }
+  throw first;
 }
 
-export function parseScoring(text: string): ScoringOutput {
-  return parseWith<ScoringOutput>(SCORING_OUTPUT_SCHEMA, text, 'Scoring');
+export function parseTriage(outputs: string | string[]): TriageOutput {
+  return parseFirst<TriageOutput>(TRIAGE_OUTPUT_SCHEMA, outputs, 'Triage');
+}
+
+export function parseScoring(outputs: string | string[]): ScoringOutput {
+  return parseFirst<ScoringOutput>(SCORING_OUTPUT_SCHEMA, outputs, 'Scoring');
 }

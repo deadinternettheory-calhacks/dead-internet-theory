@@ -39,14 +39,14 @@ export interface SequentialDeps {
   inferredAt?: string;
 }
 
-async function runToText(creao: CreaoClient, inputs: CreaoInputs, deps: SequentialDeps): Promise<string> {
+async function runToText(creao: CreaoClient, inputs: CreaoInputs, deps: SequentialDeps): Promise<string[]> {
   const runId = await creao.startRun(inputs);
   const sleep = deps.sleep ?? (ms => new Promise(r => setTimeout(r, ms)));
   for (let i = 0; i < (deps.maxPolls ?? 240); i++) {
     const run = await creao.getRun(runId);
     if (run.status === 'completed') {
-      if (!run.text) throw new Error(`CREAO ${inputs.stage} run completed without text.`);
-      return run.text;
+      if (run.outputs.length === 0) throw new Error(`CREAO ${inputs.stage} run completed without text.`);
+      return run.outputs;
     }
     if (run.status === 'failed' || run.status === 'cancelled') throw new Error(`CREAO ${inputs.stage} run ${run.status}: ${run.errorCode ?? 'no code'}.`);
     await sleep(deps.pollIntervalMs ?? 5000);

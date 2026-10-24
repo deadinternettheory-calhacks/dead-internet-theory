@@ -28,7 +28,7 @@ describe('CREAO client', () => {
     expect((calls[0].init.headers as Record<string, string>).Authorization).toBe('Bearer capi_test');
     const run = await client.getRun('run-1');
     expect(calls[1].url).toBe('https://agent.creao.ai/api/v1/apps/app-1/runs/run-1');
-    expect(run).toEqual({ runId: 'run-1', status: 'completed', text: '{"ok":true}', errorCode: null });
+    expect(run).toEqual({ runId: 'run-1', status: 'completed', outputs: ['{"ok":true}'], errorCode: null });
   });
 
   it('uses the developer API for cr_sk_ keys', async () => {
@@ -65,5 +65,18 @@ describe('CREAO client', () => {
     const client = createCreaoClient({ apiKey: 'capi_x', appId: 'a', fetchImpl: impl });
     await expect(client.startRun({ ...inputs, evidence: 'x'.repeat(300_000) })).rejects.toMatchObject({ code: 'INPUT_TOO_LARGE' });
     expect(calls).toHaveLength(0);
+  });
+});
+
+describe('CREAO reply candidates', () => {
+  it('keeps the full chat reply when result.text is only a summary', async () => {
+    const { calls, impl } = fakeFetch([
+      { status: 200, body: { id: 'run-3', status: 'completed', result: { text: '{"stage":"triage","coordination_score":0.7}', chatText: 'Triage complete.\n```json\n{"subject":{}}\n```' } } },
+    ]);
+    const client = createCreaoClient({ apiKey: 'capi_x', appId: 'a', fetchImpl: impl });
+    const run = await client.getRun('run-3');
+    expect(calls).toHaveLength(1);
+    expect(run.outputs).toHaveLength(2);
+    expect(run.outputs[1]).toContain('```json');
   });
 });
