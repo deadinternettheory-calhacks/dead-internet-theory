@@ -291,8 +291,13 @@ Homepage submission routes to `/analysis?url=...` with the URL encoded as a quer
 
 The homepage includes an original animated wireframe globe with modeled
 gravestones as a decorative illustration. It rotates, floats and responds to
-pointer movement, with a visible Pause/Play control. Reduced motion starts with
-a static SVG poster; graphics failure also retains the poster and working form.
+pointer movement, with a visible Pause/Play control. Dragging turns the globe;
+a release flick adds bounded angular velocity with frame-rate-independent
+friction. Re-grabbing stops momentum. Horizontal touch swipes preserve vertical
+page scrolling and pinch zoom; arrow keys turn the focused globe and Home resets
+its orientation. Pause stops automatic motion and inertia while permitting
+direct turns. Reduced motion starts with a static SVG poster; graphics failure
+also retains the poster and working form.
 The 3D code is loaded separately and animation stops offscreen or in hidden tabs.
 
 `web/src/` contains shared header/footer/wordmark, URL input, shortcut and platform notices, Home/About/Analysis pages, unavailable/unsupported states, and typed presentation components for verdict, score, findings, evidence, empty/error states. Their props are local view types, not backend schemas. Until the proxy has backend credentials, the analysis route renders the submitted URL and an honest “service not connected” state. When the proxy has backend credentials (`BACKEND_BASE_URL`, `BACKEND_JWT_SECRET`), the route creates a v1 investigation, shows progress text that tracks the real `ingestionStatus`/`analysisStatus`, and renders the stored analysis via `src/analysis/report.ts` (post, cautious verdict, up to three findings with quoted evidence, detailed signals, coverage and limitations), or a specific failure state. The coordination index appears only inside the detailed analysis, labeled uncalibrated. `/example` renders the generated synthetic report with a banner; synthetic reports never link to their made-up source URLs.
