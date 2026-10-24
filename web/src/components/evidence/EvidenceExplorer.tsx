@@ -51,7 +51,7 @@ export function EvidenceExplorer({ report, mode: controlledMode, onModeChange, o
     </div>
     <div className="explorer-body" key={mode}>
       <div className="explorer-visual" ref={visual} tabIndex={-1}>
-        <div className="explorer-visual-heading"><span>{mode === 'overview' ? 'A conversation, up close' : mode === 'wording' ? 'Follow the words' : mode === 'timing' ? 'Put the timing in context' : 'Look beyond one comment'}</span><small>{report.synthetic ? 'EXAMPLE DATA' : 'RETURNED EVIDENCE'}</small></div>
+        <div className="explorer-visual-heading"><span>{mode === 'overview' ? 'A conversation, up close' : mode === 'wording' ? 'Follow the words' : mode === 'timing' ? 'Put the timing in context' : 'Look beyond one comment'}</span></div>
         {mode === 'wording' && <div className="phrase-controls">
           {phrases.length ? phrases.map((p, index) => <button key={p.text} type="button" aria-label={`Compare phrase “${p.text}” in ${p.commentIds.length} comments`} aria-pressed={phraseIndex === index} onClick={() => { setPhraseIndex(index); onInteraction?.(); }}><Quote size={12} aria-hidden="true"/><span>{p.text}</span><b>{p.commentIds.length}</b></button>) : <p>No repeated phrase of three or more words was found in the displayed cited comments.</p>}
         </div>}
@@ -61,14 +61,14 @@ export function EvidenceExplorer({ report, mode: controlledMode, onModeChange, o
         <button className="mobile-evidence-jump" type="button" onClick={() => jump(inspector.current)}>Read selected comment <ArrowDown size={14} aria-hidden="true"/></button>
       </div>
       <aside className="evidence-inspector" aria-label="Selected comment" ref={inspector} tabIndex={-1}>
-        <div className="inspector-heading"><span className="inspector-kicker">{selected?.source === 'history' ? 'PUBLIC-HISTORY SAMPLE' : 'COMMENT IN CONTEXT'}</span><span className="inspector-index">{selected ? String([...all.keys()].indexOf(selected.id) + 1).padStart(2, '0') : '—'}</span></div>
-        {mode !== 'history' && report.discussion.length > 0 && <div className="comment-picker"><label htmlFor={chooserId}>Read any discussion comment</label><select id={chooserId} value={selectedId ?? ''} onChange={event => select(event.target.value)}>
+        <div className="inspector-heading"><span className="inspector-kicker">{selected?.source === 'history' ? 'FROM HISTORY' : 'COMMENT'}</span><span className="inspector-index">{selected ? String([...all.keys()].indexOf(selected.id) + 1).padStart(2, '0') : '—'}</span></div>
+        {mode !== 'history' && report.discussion.length > 0 && <div className="comment-picker"><label htmlFor={chooserId} className="sr-only">Choose a comment</label><select id={chooserId} value={selectedId ?? ''} onChange={event => select(event.target.value)}>
           <option value="" disabled>Choose a comment</option>{report.discussion.map((comment, index) => <option key={comment.id} value={comment.id}>{index + 1} · {comment.author ?? 'Unknown author'} · {comment.text.slice(0, 72)}{comment.text.length > 72 ? '…' : ''}</option>)}
         </select></div>}
         <div aria-live="polite" aria-atomic="true">{selected ? <div className="inspector-comment" key={selected.id}>
           <span className="inspector-author">{selected.author ?? 'Unknown author'}</span><time dateTime={selected.createdAt ?? undefined}>{evidenceTime(selected.createdAt, true)}</time>
           <blockquote><HighlightedText text={selected.text} phrase={phrase}/></blockquote>
-          {phrase && <p className="inspector-observation">{activeIds.has(selected.id) ? 'This comment contains the highlighted phrase.' : 'This comment does not contain this exact phrase.'}</p>}
+          {phrase && <p className="inspector-observation">{activeIds.has(selected.id) ? 'Contains the phrase.' : 'Does not contain the phrase.'}</p>}
           {!report.synthetic && selected.url && /^https:\/\//i.test(selected.url) && <a href={selected.url} target="_blank" rel="noopener noreferrer" className="text-link">Open original comment <ArrowUpRight size={14} aria-hidden="true"/></a>}
         </div> : <p className="evidence-empty">Select an available comment to read its evidence.</p>}</div>
         <button className="mobile-evidence-jump" type="button" onClick={() => jump(visual.current)}>Back to evidence <ArrowUp size={14} aria-hidden="true"/></button>

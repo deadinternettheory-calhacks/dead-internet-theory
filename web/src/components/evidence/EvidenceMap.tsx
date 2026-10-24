@@ -25,6 +25,6 @@ export function EvidenceMap({ comments, activeIds, selectedId, onSelect, overvie
         <span className="map-node-dot"/><span className="map-node-label">{comment.author?.replace(/^u\//, '') ?? `Comment ${index + 1}`}</span>
       </button>)}
     </div>
-    <p className="evidence-visual-note">{overview ? 'Each node is a comment in this discussion.' : 'Lines connect comments containing the selected phrase.'}{comments.length > visible.length ? ` Showing ${visible.length} of ${comments.length} comments.` : ''}</p>
+    <p className="evidence-visual-note">{overview ? '' : 'Lines link comments with the phrase. '}{comments.length > visible.length ? `${visible.length} of ${comments.length} shown.` : ''}</p>
   </div>;
 }

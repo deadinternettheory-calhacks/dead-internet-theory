@@ -69,11 +69,11 @@ const AXIS_TITLE: Record<AxisName, string> = {
 const FINDING_MIN_SCORE = 35;
 
 export function verdictFor(score: number | null, subject: string): Report['verdict'] {
-  const about = subject ? ` about ${subject}` : '';
-  if (score === null) return { tone: 'neutral', label: 'We couldn’t measure coordinated promotion here.', description: `There was not enough evidence${about} to apply our checks.` };
-  if (score >= 55) return { tone: 'high', label: 'We found several signs of possible coordinated promotion.', description: `Some recommendations${about} show patterns that often appear in coordinated campaigns.` };
-  if (score >= 35) return { tone: 'medium', label: 'We found some signals worth a closer look.', description: `A few patterns in the recommendations${about} stood out.` };
-  return { tone: 'low', label: 'We found few signs of coordinated promotion.', description: `The recommendations${about} did not show strong coordination signals.` };
+  const about = subject ? ` for ${subject}` : '';
+  if (score === null) return { tone: 'neutral', label: 'Not enough to score', description: `Too little evidence${about}.` };
+  if (score >= 55) return { tone: 'high', label: 'Strong signs of coordinated promotion', description: `Several recommendations${about} look coordinated.` };
+  if (score >= 35) return { tone: 'medium', label: 'Some signs of coordinated promotion', description: `A few recommendations${about} look unusual.` };
+  return { tone: 'low', label: 'Few signs of coordinated promotion', description: `Recommendations${about} look like ordinary users.` };
 }
 
 export function isSyntheticGraph(graph: GraphEnvelope): boolean {

@@ -15,12 +15,11 @@ export function HistoryPanel({ histories, selectedId, onSelect }: { histories: R
         <span>{h.author ?? 'Unknown author'}</span>{h.comments.length ? <Check size={13} aria-hidden="true"/> : <Minus size={13} aria-hidden="true"/>}
       </button>)}
     </div>
-    <div className="history-sample-meta"><span className={`history-status status-${sample.status}`}>{STATUS[sample.status] ?? sample.status}</span><span>{sample.comments.length} sampled comments</span></div>
+    <div className="history-sample-meta"><span className={`history-status status-${sample.status}`}>{STATUS[sample.status] ?? sample.status}</span><span>{sample.comments.length} comments</span></div>
     <div className="history-snippets">{sample.comments.slice(0, expanded ? undefined : 3).map(c => <button key={c.id} type="button" className={selectedId === c.id ? 'is-selected' : ''} onClick={() => onSelect(c.id)}>
       <span>{c.text}</span><ArrowUpRight size={14} aria-hidden="true"/>
     </button>)}</div>
-    {sample.comments.length > 3 && <button type="button" className="evidence-text-button" onClick={() => setExpanded(v => !v)}>{expanded ? 'Show fewer' : `See all ${sample.comments.length} sampled comments`}</button>}
-    {!sample.comments.length && <p className="evidence-empty">{sample.status === 'complete' ? 'No comments were returned in this bounded sample.' : 'No history comments were available for this sample.'} Missing history is not a negative signal.</p>}
-    <p className="evidence-visual-note">A bounded sample of public comments, with gaps shown explicitly.</p>
+    {sample.comments.length > 3 && <button type="button" className="evidence-text-button" onClick={() => setExpanded(v => !v)}>{expanded ? 'Show fewer' : `All ${sample.comments.length}`}</button>}
+    {!sample.comments.length && <p className="evidence-empty">No comments returned.</p>}
   </div>;
 }
