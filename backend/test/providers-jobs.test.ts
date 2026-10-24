@@ -11,6 +11,8 @@ import {
   liveGate,
   advance,
   verification,
+  ApifyHttpError,
+  startRejection,
 } from "../src/providers";
 import { publicAddress } from "../src/outbound";
 import { iso, limits } from "../src/core";
@@ -676,4 +678,79 @@ it("does not duplicate an X original tweet returned in both root and replies dat
     };
   const data = discussion("x", "https://x.com/synthetic/status/100", tasks);
   expect(data.comments.map((c) => c.nativeId)).toEqual(["101"]);
+});
+
+it("frees capacity and reports the reason when Apify definitely refuses a start", async () => {
+  vi.stubEnv("PROVIDER_MODE", "live");
+  vi.stubEnv("APIFY_TOKEN", "SYNTHETIC-MOCK-CREDENTIAL");
+  vi.stubEnv("PROVIDER_AUTHORIZATION_APPROVED", "true");
+  vi.stubEnv("RETENTION_POLICY_REF", "synthetic-test-only");
+  const old = { ...verification.reddit };
+  verification.reddit = {
+    runtimeVerified: true,
+    evidence: "SYNTHETIC MOCK, not provider verification",
+  };
+  const run = (error: unknown) => {
+    vi.spyOn(Apify.prototype, "start").mockRejectedValueOnce(error);
+    const release = vi.fn().mockResolvedValue(true);
+    const promise = advance({
+      platform: "reddit",
+      kind: "discussion",
+      url: "https://www.reddit.com/r/example/comments/demo/",
+      state: {},
+      reserve: vi.fn().mockResolvedValue({ status: "reserved" }),
+      observe: vi.fn().mockResolvedValue(true),
+      release,
+    });
+    return { promise, release };
+  };
+  try {
+    const refused = run(new ApifyHttpError(402, "PROVIDER_FAILED", "x", false));
+    await expect(refused.promise).rejects.toMatchObject({
+      code: "PROVIDER_REJECTED",
+      message: expect.stringContaining("HTTP 402"),
+    });
+    expect(refused.release).toHaveBeenCalledWith("run:0");
+    const unknown = run(new ApifyHttpError(502, "PROVIDER_FAILED", "x", true));
+    await expect(unknown.promise).rejects.toMatchObject({
+      code: "PROVIDER_START_AMBIGUOUS",
+    });
+    expect(unknown.release).not.toHaveBeenCalled();
+    expect(startRejection(new Error("socket hang up"))).toBeNull();
+    expect(
+      startRejection(new ApifyHttpError(429, "PROVIDER_FAILED", "x", true))
+        ?.retryable,
+    ).toBe(true);
+  } finally {
+    verification.reddit = old;
+  }
+});
+it("returns a refused start's slot and budget so the next request can run", async () => {
+  vi.useFakeTimers();
+  vi.stubEnv("MAX_ACTIVE_PROVIDER_RUNS", "1");
+  vi.stubEnv("APIFY_DAILY_BUDGET_CENTS", "100");
+  const t = convexTest(schema, modules);
+  await t.run(async (ctx) => {
+    for (const key of ["a", "b"])
+      await ctx.db.insert("jobs", {
+        key,
+        status: "running",
+        due: Date.now(),
+        data: { status: "running", token: key, lease: Date.now() + 60000 },
+      });
+  });
+  const a = { key: "a", token: "a", operation: "run:0" };
+  expect(await t.mutation(anyApi.jobs.reserve, a)).toEqual({
+    status: "reserved",
+  });
+  expect(await t.mutation(anyApi.jobs.releaseRejected, a)).toBe(true);
+  expect(
+    await t.mutation(anyApi.jobs.reserve, {
+      key: "b",
+      token: "b",
+      operation: "run:0",
+    }),
+  ).toEqual({ status: "reserved" });
+  // The refused operation can retry (e.g. after HTTP 429) once capacity frees.
+  expect(await t.mutation(anyApi.jobs.reserve, a)).toEqual({ status: "busy" });
 });

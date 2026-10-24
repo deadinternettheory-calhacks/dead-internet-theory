@@ -74,3 +74,13 @@ it('shows the collected post and comments while the analysis runs', async () => 
   await act(async () => vi.advanceTimersByTimeAsync(2500));
   expect(getGraph).toHaveBeenCalledTimes(1);
 });
+it('blames the service, not the post, and retries a refused start with a fresh request', async () => {
+  const key = idempotencyKeyFor(url);
+  vi.mocked(createInvestigation).mockResolvedValueOnce(failed('PROVIDER_REJECTED')).mockImplementationOnce(() => new Promise(() => {}));
+  await render();
+  expect(container.textContent).toContain('Collection is temporarily unavailable.');
+  expect(container.textContent).not.toContain('private, deleted');
+  const retry = [...container.querySelectorAll('button')].find(b => /try again/i.test(b.textContent ?? ''))!;
+  await act(async () => retry.click());
+  expect(vi.mocked(createInvestigation).mock.calls[1][1]).not.toBe(key);
+});
