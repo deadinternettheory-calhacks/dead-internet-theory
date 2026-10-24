@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { BrowserRouter, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { SiteFooter, SiteHeader } from './components/SiteLayout';
 import { AboutPage } from './pages/AboutPage';
@@ -6,6 +6,7 @@ import { AnalysisPage, UnsupportedPrefixPage } from './pages/AnalysisPage';
 import { ExamplePage } from './pages/ExamplePage';
 import { HomePage } from './pages/HomePage';
 import { parsePrefixPath } from './url';
+import '@fontsource-variable/inter';
 import './styles.css';
 function RouterView() {
   const location = useLocation();
@@ -26,6 +27,19 @@ function HashScroll() {
     const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
     target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
   }, [hash, pathname, location.state]);
+  return null;
+}
+function RouteScroll() {
+  const { pathname, hash } = useLocation();
+  const previous = useRef(pathname);
+  useLayoutEffect(() => {
+    if (previous.current === pathname) return;
+    previous.current = pathname;
+    if (hash) return;
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    const heading = document.querySelector<HTMLElement>('main h1');
+    if (heading) { heading.tabIndex = -1; heading.focus({ preventScroll: true }); }
+  }, [pathname, hash]);
   return null;
 }
 function SectionUrlSync() {
@@ -71,5 +85,5 @@ function SectionUrlSync() {
   return null;
 }
 export default function App() {
-  return <BrowserRouter><HashScroll/><SectionUrlSync/><div className="site-shell"><SiteHeader/><RouterView/><SiteFooter/></div></BrowserRouter>;
+  return <BrowserRouter><HashScroll/><RouteScroll/><SectionUrlSync/><div className="site-shell"><SiteHeader/><RouterView/><SiteFooter/></div></BrowserRouter>;
 }

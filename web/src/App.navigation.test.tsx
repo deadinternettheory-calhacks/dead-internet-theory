@@ -29,6 +29,7 @@ describe('homepage How it works navigation', () => {
     Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', { configurable: true, value: scrollIntoView });
     vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => { callback(0); return 1; });
     vi.stubGlobal('cancelAnimationFrame', vi.fn());
+    vi.stubGlobal('scrollTo', vi.fn());
     container = document.createElement('div');
     document.body.append(container);
     root = createRoot(container);
@@ -94,6 +95,16 @@ describe('homepage How it works navigation', () => {
     expect(window.location.pathname).toBe('/');
     expect(window.location.hash).toBe('#how-it-works');
     expect(scrollIntoView).toHaveBeenCalled();
+  });
+
+  it('starts the demo at the top and focuses its heading', () => {
+    renderApp();
+    const link = container.querySelector<HTMLAnchorElement>('.home-play-demo')!;
+    act(() => link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 })));
+    expect(window.location.pathname).toBe('/example');
+    expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'instant' });
+    expect(document.activeElement?.textContent).toBe('Follow the evidence.');
+    expect(container.textContent).toContain('Synthetic demo');
   });
 
   it('redirects the legacy /about URL to the homepage section', () => {

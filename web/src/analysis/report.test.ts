@@ -32,6 +32,16 @@ describe('analysis report', () => {
     expect(report.coverage.histories).toBe('6 account histories requested: 5 complete, 1 partial.');
   });
 
+  it('keeps every axis citation available even when findings share quotes', () => {
+    const semantic = report.axes.find(x => x.axis === 'semantic_coordination')!;
+    const temporal = report.axes.find(x => x.axis === 'temporal_coordination')!;
+    expect(semantic.evidence).toHaveLength(3);
+    expect(temporal.evidence.map(e => e.id)).toEqual(semantic.evidence.map(e => e.id));
+    expect(report.discussion).toHaveLength(8);
+    expect(report.histories).toHaveLength(5);
+    expect(report.histories.find(h => h.status === 'unavailable')?.comments).toEqual([]);
+  });
+
   it('does not treat a missing score as low risk', () => {
     expect(verdictFor(null, 'Thing').tone).toBe('neutral');
     expect(verdictFor(10, 'Thing').tone).toBe('low');
@@ -44,5 +54,6 @@ describe('analysis report', () => {
     expect(preview.comments).toHaveLength(3);
     expect(preview.moreCount).toBe(syntheticDemo.graph.coverage.retrievedCommentCount - 3);
     expect(preview.comments[0].author).toMatch(/^u\//);
+    expect(preview.collectedCount).toBe(8);
   });
 });
