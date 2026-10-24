@@ -7,3 +7,27 @@
 .retry-button{border:0;background:transparent;padding:0;cursor:pointer;font-family:inherit}.risk-score{padding:20px}.risk-score>p{font-size:14px;color:var(--muted);margin:0}.risk-score strong{font-size:38px;line-height:1.2}.risk-score>span{font-size:14px;color:var(--muted);margin-left:8px}.risk-track{height:8px;background:linear-gradient(to right,#76a58c 0 33%,#d3a85a 33% 66%,#c8756c 66% 100%);border-radius:99px;margin:12px 0 4px;overflow:hidden}.risk-track i{display:block;height:100%;background:rgba(32,35,34,.45)}.risk-labels{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}.finding-card{display:flex;gap:12px;padding:16px;margin-top:10px}.finding-icon{color:var(--brand)}.finding-card h3{font-size:16px;margin:0 0 4px}.finding-card p{font-size:14px;color:var(--muted);margin:0}.finding-card summary{font-size:14px;color:var(--brand);cursor:pointer;margin-top:8px}
 .risk-track{position:relative;display:flex;background:transparent;overflow:visible}.risk-track>span{display:block;height:8px}.risk-track .risk-low{background:#76a58c;border-radius:99px 0 0 99px}.risk-track .risk-moderate{background:#d3a85a}.risk-track .risk-high{background:#c8756c;border-radius:0 99px 99px 0}.risk-track i{position:absolute;top:-3px;width:3px;height:14px;background:#202322;transform:translateX(-1px);border-radius:2px}
 .loading-indicator{display:inline-block;width:20px;height:20px;flex:none;border:2px solid #d5dfd9;border-top-color:var(--brand);border-radius:50%;animation:spin .9s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+
+/* FE-002 homepage search experience */
+.header nav a{font-size:14px}
+.home-main{display:flex;flex-direction:column}
+.hero{flex:1;max-width:none;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px 76px}
+.hero h1{width:100%;max-width:880px;color:#202322;font-size:56px;line-height:1.12;letter-spacing:-1.6px;margin:0 auto 36px;font-weight:700}
+.search-form{width:100%;max-width:680px;margin:0 auto}
+.input-wrap{height:60px;border-color:#D7DDD7;padding:0 18px}
+.input-wrap input{flex:1;min-width:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:16px}
+.input-wrap input::placeholder{font-size:16px}
+.search-form>.primary-button{display:flex;width:190px;height:50px;min-height:50px;margin:18px auto 0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:16px;font-weight:600}
+.search-form>.primary-button:focus-visible{outline:3px solid #284D43;outline-offset:3px}
+.shortcut{width:100%;max-width:680px;margin:22px auto 0;color:#626864;font-size:14px;line-height:1.5;text-align:center}
+.shortcut>span{font-weight:600}
+.shortcut code{color:#284D43;font-weight:600}
+.home-footer{border-top:0;padding-top:14px;padding-bottom:20px}
+.home-footer .footer-main{justify-content:center}
+@media(max-width:767px){
+  .hero{min-height:calc(100svh - 122px);padding:20px 20px 58px}
+  .hero h1{font-size:36px;line-height:1.15;letter-spacing:-.8px;margin-bottom:36px}
+  .search-form>.primary-button{width:100%}
+  .shortcut{line-height:1.5}
+  .home-footer{padding:12px 20px 16px}
+}
