@@ -1323,6 +1323,77 @@
           "items": {
             "$ref": "#/$defs/NodeId"
           }
+        },
+        "accountSignals": {
+          "type": "object",
+          "description": "Optional (added 2026-10-24, backward compatible). Automation-signal index for this comment's author, from their sampled public history (rubric family B). An uncalibrated 0-100 index of observed signals, not a probability that the account is automated. Attached to the author's anchor comment.",
+          "properties": {
+            "authorId": {
+              "$ref": "#/$defs/NodeId"
+            },
+            "score": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "historyCount": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "signals": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ruleId": {
+                    "type": "string",
+                    "pattern": "^B[1-9]$"
+                  },
+                  "points": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "evidence": {
+                    "type": "string"
+                  },
+                  "evidenceRefs": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/NodeId"
+                    }
+                  }
+                },
+                "required": [
+                  "ruleId",
+                  "points",
+                  "evidence",
+                  "evidenceRefs"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "unknown": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "authorId",
+            "score",
+            "historyCount",
+            "signals",
+            "unknown"
+          ],
+          "additionalProperties": false
         }
       },
       "required": [

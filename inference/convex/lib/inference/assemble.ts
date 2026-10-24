@@ -6,6 +6,7 @@ import type {
   AxisAssessment,
   AxisName,
   ClusterAssessment,
+  CommentAssessment,
   EnrichmentJob,
   GraphEnvelope,
   InferredEdge,
@@ -14,13 +15,13 @@ import type {
 } from '../contract';
 import { SCHEMA_VERSION } from '../contract';
 import { unique, utcNow } from '../util';
-import { round2, wordJaccard } from './features';
+import { daysBetween, mentions, round2, wordJaccard } from './features';
 import type { ScoringOutput, TriageOutput } from './outputs';
 import { GraphIndex, historyResults, sampleHistoryAuthors } from './packet';
 import { sectionIndex } from './section';
 import { PROMPT_VERSION } from './prompts';
 import { CONFIDENCE_VALUE, RUBRIC_VERSION, RULES, RULES_BY_ID } from './rubric';
-import { scoreComment, type CommentScore, type EvidenceAvailability } from './scoring';
+import { scoreAccount, scoreComment, type CommentScore, type EvidenceAvailability } from './scoring';
 import { knownEvidenceIds } from './evidence';
 
 export const INFERENCE_VERSION = `dit-inference/0.2.0; rubric/${RUBRIC_VERSION}; ${PROMPT_VERSION}`;
@@ -176,7 +177,7 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
   const counts: Record<Stance, number> = { supportive: 0, critical: 0, neutral: 0, mixed: 0, unclear: 0 };
   let unclassified = 0;
   const promoMax = axisMax('promotional_intent', platform);
-  const commentAssessments = analyzed.map(commentId => {
+  const commentAssessments: CommentAssessment[] = analyzed.map(commentId => {
     const t = triageById.get(commentId);
     if (!t) unclassified++;
     const stance: Stance = t?.stance ?? 'unclear';
@@ -209,6 +210,35 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
       evidenceRefs: [commentId],
     };
   });
+  // --- Account automation signals for each sampled user with history ---------------------------
+  const sample = sampleHistoryAuthors(graph, triage);
+  const mentionTerms = unique([triage.subject.label, ...triage.comments.map(c => c.recommendsProduct ?? '')].map(t => t.trim()).filter(Boolean));
+  const accountProposals = new Map((input.scoring?.accounts ?? []).map(a => [a.authorId, a]));
+  const assessmentById = new Map(commentAssessments.map(c => [c.commentId, c]));
+  for (const pair of sample.pairs) {
+    const r = resultByAuthor.get(pair.authorId);
+    if (!r || r.comments.length === 0) continue;
+    // Attach to the anchor comment, or to any analyzed comment by the same author.
+    const target = assessmentById.get(pair.anchorCommentId) ?? commentAssessments.find(c => index.comment(c.commentId)?.authorId === pair.authorId);
+    if (!target) continue;
+    const profile = r.profile ?? index.authors.get(pair.authorId)?.profile;
+    const account = scoreAccount(accountProposals.get(pair.authorId), {
+      authorId: pair.authorId,
+      platform,
+      historyCount: r.comments.length,
+      historyPartial: r.status === 'partial',
+      productMentionIds: r.comments.filter(c => mentionTerms.some(t => mentions(c.text, t)) && known.has(c.id)).map(c => c.id),
+      accountAgeDays: daysBetween(profile?.accountCreatedAt, index.comment(pair.anchorCommentId)?.createdAt ?? null),
+      anchorCommentId: target.commentId,
+    }, known);
+    target.accountSignals = {
+      authorId: account.authorId,
+      score: account.score,
+      historyCount: account.historyCount,
+      signals: account.signals.map(x => ({ ruleId: x.id, points: x.points, evidence: x.evidence, evidenceRefs: x.evidenceRefs })),
+      unknown: account.unknown,
+    };
+  }
   if (unclassified) limitations.push(`${unclassified} analyzed comment(s) were not classified by the model and are counted as unclear.`);
   const census = analyzed.length === graph.coverage.retrievedCommentCount;
   const sentimentLimitations = [
@@ -268,10 +298,9 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
   }
 
   // --- Overall comment-section index -------------------------------------------------------------
-  const sample = sampleHistoryAuthors(graph, triage);
   const { score: overallCoordinationRisk } = sectionIndex({
     index,
-    mentionTerms: unique([triage.subject.label, ...triage.comments.map(c => c.recommendsProduct ?? '')].map(t => t.trim()).filter(Boolean)),
+    mentionTerms,
     scored,
     noRecommendations: targets.size === 0,
     clusters,

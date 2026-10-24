@@ -68,3 +68,12 @@ it('opens relevant evidence and shows the section score without per-item caveats
   const sections = [...container.querySelectorAll('.summary-card, .result-card, .report-findings, .evidence, .limitations')].map(node => node.className);
   expect(sections).toEqual(['card summary-card', 'card result-card tone-high', 'findings report-findings', 'card evidence', 'limitations']);
 });
+it('lists each sampled account with its automation-signal score, never a bot label', async () => {
+  await render(<AnalysisReport report={exampleReport}/>);
+  const rows = [...container.querySelectorAll('.report-accounts li')];
+  expect(rows).toHaveLength(6);
+  expect(rows[0].textContent).toMatch(/\d+\/100/);
+  expect(rows[0].textContent).toContain('Brand focus');
+  expect(container.querySelector('.report-accounts')?.textContent).not.toMatch(/\bbots?\b/i);
+  expect(container.querySelector('.report-accounts .signal-sources a')?.getAttribute('href')).toBe('https://arxiv.org/abs/2602.02838');
+});

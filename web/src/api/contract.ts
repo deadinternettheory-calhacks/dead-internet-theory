@@ -6,6 +6,15 @@ export type Platform = 'reddit' | 'x' | 'youtube' | 'tiktok';
 export type Stance = 'supportive' | 'critical' | 'neutral' | 'mixed' | 'unclear';
 export type AxisName = 'promotional_intent' | 'semantic_coordination' | 'temporal_coordination' | 'account_anomalies' | 'engagement_anomalies' | 'disclosure_concerns';
 
+/** Optional automation-signal index for a sampled author (rubric family B); not a probability. */
+export interface AccountSignals {
+  authorId: string;
+  score: number | null;
+  historyCount: number;
+  signals: { ruleId: string; points: number; evidence: string; evidenceRefs: string[] }[];
+  unknown: string[];
+}
+
 export interface ErrorDetail { code: string; message: string; retryable: boolean }
 export interface ApiErrorBody { error: ErrorDetail & { requestId: string } }
 
@@ -72,7 +81,7 @@ export interface AnalysisSubmission {
   };
   overallCoordinationRisk: Score;
   axes: AxisAssessment[];
-  commentAssessments: { commentId: string; stance: Stance; promotionalIntentScore: number | null; rationale: string; evidenceRefs: string[] }[];
+  commentAssessments: { commentId: string; stance: Stance; promotionalIntentScore: number | null; rationale: string; evidenceRefs: string[]; accountSignals?: AccountSignals }[];
   clusters: { clusterId: string; commentIds: string[]; coordinationScore: number | null; explanation: string; evidenceRefs: string[] }[];
   usedEnrichmentIds: string[];
   limitations: string[];

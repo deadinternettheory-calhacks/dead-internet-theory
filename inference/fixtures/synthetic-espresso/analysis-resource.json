@@ -7,7 +7,7 @@
     "schemaVersion": "1.0.0",
     "graphRevision": 1,
     "graphFingerprint": "77f2bd8c21bcc034068d8d089c74f2e916881b7f6769f93bacf8307073be55a2",
-    "inferenceVersion": "dit-inference/0.2.0; rubric/0.3; prompts-2026-10-24c; creao-mock",
+    "inferenceVersion": "dit-inference/0.2.0; rubric/0.3; prompts-2026-10-24d; creao-mock",
     "inferredAt": "2026-10-24T06:03:00Z",
     "subject": {
       "label": "BrewMaster Mini",
@@ -146,7 +146,35 @@
           "reddit:comment:t1_syn_a04",
           "reddit:comment:t1_syn_a05",
           "reddit:discussion:t3_syn_espresso"
-        ]
+        ],
+        "accountSignals": {
+          "authorId": "reddit:author:t2_syn_a",
+          "score": 63,
+          "historyCount": 10,
+          "signals": [
+            {
+              "ruleId": "B1",
+              "points": 20,
+              "evidence": "5 of 10 recent comments mention the recommended products.",
+              "evidenceRefs": [
+                "reddit:comment:t1_syn_a01",
+                "reddit:comment:t1_syn_a02",
+                "reddit:comment:t1_syn_a03",
+                "reddit:comment:t1_syn_a04",
+                "reddit:comment:t1_syn_a05"
+              ]
+            }
+          ],
+          "unknown": [
+            "B2",
+            "B3",
+            "B5",
+            "B6",
+            "B7",
+            "B8",
+            "B9"
+          ]
+        }
       },
       {
         "commentId": "reddit:comment:t1_syn02",
@@ -164,7 +192,34 @@
           "reddit:comment:t1_syn_b03",
           "reddit:comment:t1_syn_b04",
           "reddit:discussion:t3_syn_espresso"
-        ]
+        ],
+        "accountSignals": {
+          "authorId": "reddit:author:t2_syn_b",
+          "score": 63,
+          "historyCount": 10,
+          "signals": [
+            {
+              "ruleId": "B1",
+              "points": 20,
+              "evidence": "4 of 10 recent comments mention the recommended products.",
+              "evidenceRefs": [
+                "reddit:comment:t1_syn_b01",
+                "reddit:comment:t1_syn_b02",
+                "reddit:comment:t1_syn_b03",
+                "reddit:comment:t1_syn_b04"
+              ]
+            }
+          ],
+          "unknown": [
+            "B2",
+            "B3",
+            "B5",
+            "B6",
+            "B7",
+            "B8",
+            "B9"
+          ]
+        }
       },
       {
         "commentId": "reddit:comment:t1_syn03",
@@ -181,7 +236,33 @@
           "reddit:comment:t1_syn_c02",
           "reddit:comment:t1_syn_c03",
           "reddit:discussion:t3_syn_espresso"
-        ]
+        ],
+        "accountSignals": {
+          "authorId": "reddit:author:t2_syn_c",
+          "score": 63,
+          "historyCount": 6,
+          "signals": [
+            {
+              "ruleId": "B1",
+              "points": 20,
+              "evidence": "3 of 6 recent comments mention the recommended products.",
+              "evidenceRefs": [
+                "reddit:comment:t1_syn_c01",
+                "reddit:comment:t1_syn_c02",
+                "reddit:comment:t1_syn_c03"
+              ]
+            }
+          ],
+          "unknown": [
+            "B2",
+            "B3",
+            "B5",
+            "B6",
+            "B7",
+            "B8",
+            "B9"
+          ]
+        }
       },
       {
         "commentId": "reddit:comment:t1_syn04",
@@ -195,7 +276,22 @@
           "reddit:comment:t1_syn_d05",
           "reddit:comment:t1_syn_d07",
           "reddit:discussion:t3_syn_espresso"
-        ]
+        ],
+        "accountSignals": {
+          "authorId": "reddit:author:t2_syn_d",
+          "score": 0,
+          "historyCount": 10,
+          "signals": [],
+          "unknown": [
+            "B2",
+            "B3",
+            "B5",
+            "B6",
+            "B7",
+            "B8",
+            "B9"
+          ]
+        }
       },
       {
         "commentId": "reddit:comment:t1_syn05",
@@ -204,7 +300,22 @@
         "rationale": "Reports a leak and unresponsive support.",
         "evidenceRefs": [
           "reddit:comment:t1_syn05"
-        ]
+        ],
+        "accountSignals": {
+          "authorId": "reddit:author:t2_syn_e",
+          "score": 0,
+          "historyCount": 10,
+          "signals": [],
+          "unknown": [
+            "B2",
+            "B3",
+            "B5",
+            "B6",
+            "B7",
+            "B8",
+            "B9"
+          ]
+        }
       },
       {
         "commentId": "reddit:comment:t1_syn06",
@@ -237,7 +348,22 @@
         "rationale": "Asks about the grinder; no product stance.",
         "evidenceRefs": [
           "reddit:comment:t1_syn08"
-        ]
+        ],
+        "accountSignals": {
+          "authorId": "reddit:author:t2_syn_f",
+          "score": 0,
+          "historyCount": 10,
+          "signals": [],
+          "unknown": [
+            "B2",
+            "B3",
+            "B5",
+            "B6",
+            "B7",
+            "B8",
+            "B9"
+          ]
+        }
       }
     ],
     "clusters": [

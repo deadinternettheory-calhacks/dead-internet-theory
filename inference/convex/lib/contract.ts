@@ -227,12 +227,22 @@ export interface AxisAssessment extends Score {
   assessedCommentCount: number;
 }
 
+/** Automation-signal index for a sampled author (optional, rubric family B). Not a probability. */
+export interface AccountSignals {
+  authorId: string;
+  score: number | null;
+  historyCount: number;
+  signals: { ruleId: string; points: number; evidence: string; evidenceRefs: string[] }[];
+  unknown: string[];
+}
+
 export interface CommentAssessment {
   commentId: string;
   stance: Stance;
   promotionalIntentScore: number | null;
   rationale: string;
   evidenceRefs: string[];
+  accountSignals?: AccountSignals;
 }
 
 export interface ClusterAssessment {

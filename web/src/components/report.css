@@ -121,3 +121,19 @@
 .signal-sources > span:first-child { font-weight: 600; }
 .signal-sources a { color: var(--brand); text-decoration: underline; text-underline-offset: 2px; }
 .signal-sources cite { font-style: normal; }
+
+/* Account signals: one row per sampled account. */
+.report-accounts { margin: 22px 0 16px; }
+.report-accounts h2 { font-size: 20px; margin: 0 0 8px; }
+.report-accounts ul { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--border); }
+.report-accounts li { display: grid; grid-template-columns: minmax(120px, 180px) 64px 1fr; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+.account-name { font-weight: 550; overflow-wrap: anywhere; }
+.account-score { font-weight: 650; font-variant-numeric: tabular-nums; }
+.account-score small { font-weight: 400; color: var(--muted); margin-left: 1px; }
+.account-score.is-medium { color: #9a6b1f; }
+.account-score.is-high { color: #a3473d; }
+.account-signals { display: flex; flex-wrap: wrap; gap: 6px; }
+.account-signals > span { font-size: 12px; padding: 2px 8px; border-radius: 99px; background: var(--light-brand); color: #3c4942; }
+.account-signals > span.is-none { background: transparent; color: var(--muted); padding: 2px 0; }
+.history-account-score { font-weight: 600; }
+@media (max-width: 767px) { .report-accounts li { grid-template-columns: 1fr auto; } .account-signals { grid-column: 1 / -1; } }

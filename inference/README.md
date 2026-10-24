@@ -136,7 +136,14 @@ for application, Apify and upstream-provider retention boundaries.
    number.
 7. **Section score.** `section.ts` computes one 0–100 astroturfing index for
    the whole comment section (`overallCoordinationRisk`); see the table below.
-8. **Submit.** `assemble.ts` builds the `AnalysisSubmission` and replaces
+8. **Account signals.** For each sampled user with a history, the scoring
+   reply lists which account rules (B1–B9) fire. `scoring.ts` keeps only family
+   B rules with evidence that exists, adds brand focus (3+ of 10 comments) and
+   a new account (under 30 days) when measured, and scores the share of
+   evaluable B points that fired (unchecked rules are unknown). The result is
+   attached to the user's anchor comment as `accountSignals`. It is not a bot
+   probability.
+9. **Submit.** `assemble.ts` builds the `AnalysisSubmission` and replaces
    accusatory model text. The worker checks it against the schema and every
    evidence reference, then POSTs it with a stable idempotency key.
 

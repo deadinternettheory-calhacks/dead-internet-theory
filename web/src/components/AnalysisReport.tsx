@@ -1,6 +1,7 @@
 import type { Report } from '../analysis/report';
 import { SourceLink, formatTime } from './EvidenceQuote';
 import { ReportFindings } from './ReportFindings';
+import { AccountSignals } from './AccountSignals';
 import { Sources } from './Sources';
 import { HISTORY_CONTRAST_SOURCES, SIGNAL_SOURCES } from '../analysis/sources';
 import { EvidenceDetails } from './AnalysisPresentation';
@@ -47,6 +48,7 @@ export function AnalysisReport({ report }: { report: Report }) {
 
     <div className="report-coverage-summary"><span><strong>{coverage.analyzed}</strong> comments</span><span><strong>{coverage.completeness}</strong> coverage</span><span><strong>{historiesReturned}/{report.histories.length}</strong> histories</span></div>
     <ReportFindings report={report}/>
+    <AccountSignals report={report}/>
 
     <EvidenceDetails>
       {report.index && <div className="index-note">

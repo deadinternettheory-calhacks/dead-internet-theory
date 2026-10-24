@@ -45,9 +45,18 @@ export interface ProposedCluster {
   evidenceRefs: string[];
 }
 
+/** Account rules (family B) the model sees in one sampled user's history. */
+export interface ProposedAccount {
+  authorId: string;
+  signals: ProposedSignal[];
+  unknown: string[];
+}
+
 export interface ScoringOutput {
   assessments: ProposedAssessment[];
   clusters: ProposedCluster[];
+  /** Optional: replies recorded before account signals existed have none. */
+  accounts?: ProposedAccount[];
   overallSummary: string;
 }
 
@@ -126,6 +135,14 @@ export const SCORING_OUTPUT_SCHEMA = {
           explanation: { type: 'string' },
           evidenceRefs: stringArray,
         },
+      },
+    },
+    accounts: {
+      type: 'array',
+      items: {
+        type: 'object',
+        required: ['authorId', 'signals', 'unknown'],
+        properties: { authorId: { type: 'string' }, signals: { type: 'array', items: signal }, unknown: stringArray },
       },
     },
     overallSummary: { type: 'string' },
