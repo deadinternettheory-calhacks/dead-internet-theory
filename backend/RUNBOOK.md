@@ -77,7 +77,15 @@ The private `.env.server.local` setup inventory contains CLI access, backend
 configuration and reserved worker keys. **Do not bulk-import that entire file.**
 Only backend runtime names from `.env.example` were imported to Convex; the
 Convex admin credential and CREAO/Anthropic keys were kept out of the ingestion
-runtime. Keep CLI selection explicit, for example:
+runtime.
+
+The inference runtime must separately receive `ANTHROPIC_API_KEY` for direct
+Claude triage; leaving the key only in this private inventory makes the worker
+fall back to CREAO triage. Follow the
+[inference production preflight](../inference/README.md#production-triage-configuration)
+and verify the deployed key's presence without printing its value.
+
+Keep CLI selection explicit, for example:
 
 ```sh
 npm run generate

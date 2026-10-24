@@ -81,7 +81,7 @@ sequenceDiagram
     participant Ingest as Apify Actor and authorized connector (selected, pending; synthetic stand-in)
     participant Analyze as Inference worker in Convex: deterministic scoring (implemented)
     participant Search as Elasticsearch retrieval (planned)
-    participant Agent as Claude (triage, direct API; local only) and CREAO agent with Claude required (hosted calls verified)
+    participant Agent as Claude (triage, direct API; hosted verified) and CREAO agent with Claude required (hosted calls verified)
     participant Store as Convex database (implemented; 24-hour application retention)
     User->>Web: Submit supported post URL
     Web->>Web: Parse and validate protocol/host
@@ -369,6 +369,8 @@ URL tests cover Reddit acceptance, unsupported host, invalid URL, unsafe protoco
 Hosted rollout on 2026-10-24: 139 backend tests, 49 inference tests, 36 frontend tests, relevant type/lint/format/build checks and canonical contract validation passed. The [hosted verification record](backend/verification/2026-10-24-hosted-live.md) records synthetic and real-data paths, partial coverage, explicit history limits and retention boundaries. This is operational verification, not model calibration or a field study.
 
 Four-platform rollout on 2026-10-24: 152 backend, 130 website and 65 inference tests passed, together with relevant type/lint/format/build checks and canonical contract validation. Permitted X, TikTok and YouTube links completed through the production website proxy, Apify, CREAO and persisted-analysis validation in 222–321 seconds. The [four-platform hosted record](backend/verification/2026-10-24-four-platform-hosted.md) records scoped counts, partial histories, X demo limits and retention. Production mobile checks and local 320px/1440px checks found no horizontal overflow. These are operational checks, not calibration or detection-accuracy measurements.
+
+Production triage correction on 2026-10-24: the supplied Anthropic key was installed on the separate inference deployment. A fresh permitted 100-comment YouTube analysis completed through direct Claude triage and CREAO scoring in 150 seconds, with no CREAO triage run. Saved graph/analysis validation and all 65 inference tests passed; see the [correction record](backend/verification/2026-10-24-direct-claude-triage.md). The earlier 321-second CREAO-only check is an individual comparison, not a latency guarantee.
 
 ### 12.2 Required validation
 
