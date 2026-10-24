@@ -6,8 +6,7 @@ import { AnalysisProgress } from './AnalysisProgress';
 import { ThreadPreviewCard } from './ThreadPreviewCard';
 import { AnalysisReport } from './AnalysisReport';
 import { buildThreadPreview } from '../analysis/report';
-import { exampleReport } from '../demo/report';
-import { syntheticDemo } from '../demo';
+import { testDemo as exampleData, testReport as exampleReport } from '../test/fixtures';
 
 let container: HTMLDivElement;
 let root: Root;
@@ -43,13 +42,13 @@ it('distinguishes queued analysis from an actively running worker', async () => 
   expect(container.textContent).not.toContain('checking the evidence for patterns');
 });
 it('lets readers expand already-collected comments without fetching more data', async () => {
-  await render(<ThreadPreviewCard preview={buildThreadPreview(syntheticDemo.graph, 100)}/>);
+  await render(<ThreadPreviewCard preview={buildThreadPreview(exampleData.graph, 100)}/>);
   expect(container.querySelectorAll('.comment-row')).toHaveLength(6);
   await act(async () => container.querySelector<HTMLButtonElement>('.preview-more')!.click());
   expect(container.querySelectorAll('.comment-row')).toHaveLength(8);
   expect(container.querySelector('.preview-more')).toBeNull();
 });
-it('opens relevant evidence and preserves the visible uncalibrated section score', async () => {
+it('opens relevant evidence and shows the section score without per-item caveats', async () => {
   await render(<AnalysisReport report={exampleReport}/>);
   const finding = [...container.querySelectorAll('.finding-card')].find(article => article.querySelector('h3')?.textContent === 'Accounts used nearly identical wording')!;
   expect(container.querySelector<HTMLDetailsElement>('.finding-more')?.open).toBe(false);
@@ -59,7 +58,7 @@ it('opens relevant evidence and preserves the visible uncalibrated section score
   expect(container.querySelector('.mode-wording')).not.toBeNull();
   expect(container.querySelector('.index-note')?.closest('details')?.open).toBe(false);
   expect(container.querySelector('.risk-score')?.textContent).toContain('Astroturfing score for this comment section');
-  expect(container.querySelector('.risk-note')?.textContent).toContain('not a probability');
+  expect(container.querySelector('.risk-note')).toBeNull();
   expect(container.querySelector('a')).toBeNull();
   expect(container.textContent).toContain('6 history samples with returned comments');
   const sections = [...container.querySelectorAll('.summary-card, .verdict-card, .report-findings, .evidence, .limitations')].map(node => node.className);

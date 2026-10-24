@@ -165,7 +165,7 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
       confidence: CONFIDENCE_VALUE[best.s.confidence],
       assessedCommentCount: assessed,
       explanation: fired.length
-        ? `${AXIS_LABEL[axis]}: highest for the recommendation by ${handle(best.s.commentId)}. ${fired.map(f => `${f.id}: ${f.evidence}`).join(' ')} Index = share of this axis's rubric points that fired; not a probability.`
+        ? `${AXIS_LABEL[axis]}: highest for the recommendation by ${handle(best.s.commentId)}. ${fired.map(f => `${f.id}: ${f.evidence}`).join(' ')} Index = share of this axis's rubric points that fired.`
         : `${AXIS_LABEL[axis]}: assessed ${assessed} recommendation(s); no rubric signals on this axis fired.`,
       evidenceRefs: unique(fired.flatMap(f => f.evidenceRefs)),
     };
@@ -230,7 +230,7 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
       clusterId: `cluster_${clusters.length + 1}`,
       commentIds: members,
       coordinationScore: Math.min(100, Math.round((100 * cPoints) / cMax)),
-      explanation: `${safeText(proposal.explanation, 'These recommendations share coordination signals.')} Linked by rubric rules ${firedIds.join(', ')}. Being in a cluster does not show that the accounts share an operator.`,
+      explanation: `${safeText(proposal.explanation, 'These recommendations share coordination signals.')} Linked by rubric rules ${firedIds.join(', ')}.`,
       evidenceRefs: unique([...members, ...proposal.evidenceRefs.filter(r => known.has(r))]),
     });
   }
@@ -260,7 +260,7 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
           to: members[j],
           type: 'POTENTIALLY_COORDINATED',
           strength: round2((cluster.coordinationScore ?? 0) / 100),
-          explanation: `Both comments are in ${cluster.clusterId}. This is a lead for review, not evidence of a shared operator.`,
+          explanation: `Both comments are in ${cluster.clusterId}.`,
           evidenceRefs: [members[i], members[j]],
         });
       }
@@ -271,7 +271,7 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
   const sample = sampleHistoryAuthors(graph, triage);
   const { score: overallCoordinationRisk } = sectionIndex({
     index,
-    subjectLabel: triage.subject.label,
+    mentionTerms: unique([triage.subject.label, ...triage.comments.map(c => c.recommendsProduct ?? '')].map(t => t.trim()).filter(Boolean)),
     scored,
     noRecommendations: targets.size === 0,
     clusters,
@@ -285,21 +285,22 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
   });
 
   // --- Limitations --------------------------------------------------------------------------------
-  limitations.unshift(
-    `Scores come from an uncalibrated, hand-weighted rubric (version ${RUBRIC_VERSION}) and a provisional rubric-to-axis mapping. They are heuristic indices, not probabilities, and not a finding of astroturfing.`,
-  );
   if (input.enrichmentNote) limitations.push(input.enrichmentNote);
   if (sample.pairs.length) {
     limitations.push(
-      `Account histories were requested for a seeded random sample of users, not everyone: ${sample.supportive.sampled.length} of ${sample.supportive.population} supportive and ${sample.unsupportive.sampled.length} of ${sample.unsupportive.population} unsupportive users${sample.rootAuthorIncluded ? ', plus the post author' : ''}. Rules that need an unsampled user's history are unknown, and a small sample can miss patterns.`,
+      `Account histories were requested for a seeded random sample of users, not everyone: ${sample.supportive.sampled.length} of ${sample.supportive.population} supportive and ${sample.unsupportive.sampled.length} of ${sample.unsupportive.population} unsupportive users${sample.rootAuthorIncluded ? ', plus the post author' : ''}. Rules that need an unsampled user's history are unknown.`,
     );
   }
-  // Report history gaps for the sampled users.
+  // One summary line for the sampled users' history outcomes.
   const relevantAuthors = new Set(sample.pairs.map(p => p.authorId));
-  for (const r of results) {
-    if (!relevantAuthors.has(r.authorId)) continue;
-    if (r.status !== 'complete') limitations.push(`History for ${who(r.authorId)} was ${r.status} (${r.comments.length} of 10 items); missing history is not evidence either way.`);
+  const sampledResults = results.filter(r => relevantAuthors.has(r.authorId));
+  const gaps = sampledResults.filter(r => r.status !== 'complete');
+  if (gaps.length) {
+    const byStatus = new Map<string, number>();
+    for (const r of gaps) byStatus.set(r.status, (byStatus.get(r.status) ?? 0) + 1);
+    limitations.push(`${sampledResults.length - gaps.length} of ${sampledResults.length} sampled users returned a full history (${Array.from(byStatus, ([k, n]) => `${n} ${k}`).join(', ')}).`);
   }
+
   if (platform === 'youtube' || platform === 'tiktok') limitations.push('Commenter histories are not modelled on this platform, so scores cannot exceed 74 and confidence is low.');
   if (index.root.authorId && !results.some(r => r.authorId === index.root.authorId)) limitations.push('The root author’s history was not available, so seeding checks that need it (T2, C5) are unknown.');
   limitations.push(...graph.coverage.limitations);

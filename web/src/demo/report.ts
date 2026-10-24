@@ -1,4 +1,4 @@
 import { buildReport } from '../analysis/report';
-import { syntheticDemo } from './index';
+import { exampleData } from './index';
 
-export const exampleReport = buildReport(syntheticDemo.analysis, syntheticDemo.graph, syntheticDemo.enrichments);
+export const exampleReport = buildReport(exampleData.analysis, exampleData.graph, exampleData.enrichments);

@@ -144,7 +144,7 @@ never proof of complete coverage. Raw provider state/snapshots are bounded to
 
 Each investigation pins its provider mode at creation; changing deployment mode cannot silently replace a running live collection with fixture data or turn a synthetic investigation into a live lookup. Enrichment jobs persist their initial cache hits and missing-author plan before external work, so cache fills and expiry in another job cannot change an in-flight plan.
 
-History candidates target 150 per author, with cache keys including mode,
+History candidates target `HISTORY_CANDIDATES_PER_AUTHOR` per author (default 40, at most 150); rows are slimmed to the fields mapping uses before they are stored, with cache keys including mode,
 platform, author and collection policy. One batch deduplicates repeated authors;
 Reddit uses a single bulk run, X uses authored-search plans. Independent concurrent
 jobs can miss the same cache and make separate bounded runs. Final samples remain

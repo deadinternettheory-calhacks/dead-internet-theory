@@ -104,7 +104,7 @@ describe('homepage How it works navigation', () => {
     expect(window.location.pathname).toBe('/example');
     expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'instant' });
     expect(document.activeElement?.textContent).toBe('Follow the evidence.');
-    expect(container.textContent).toContain('Synthetic demo');
+    expect(container.textContent).toContain('A real Reddit thread');
   });
 
   it('redirects the legacy /about URL to the homepage section', () => {

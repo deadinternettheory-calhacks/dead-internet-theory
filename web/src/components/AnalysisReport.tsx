@@ -1,4 +1,3 @@
-import { FlaskConical } from 'lucide-react';
 import type { Report } from '../analysis/report';
 import { SourceLink, formatTime } from './EvidenceQuote';
 import { ReportFindings } from './ReportFindings';
@@ -9,9 +8,6 @@ import './report.css';
 const PLATFORM_LABEL: Record<string, string> = { reddit: 'REDDIT', x: 'X / TWITTER', youtube: 'YOUTUBE', tiktok: 'TIKTOK' };
 const STANCE_LABEL: Record<string, string> = { supportive: 'Supportive', critical: 'Critical', neutral: 'Neutral', mixed: 'Mixed', unclear: 'Unclear' };
 
-export function SyntheticBanner({ notice }: { notice: string }) {
-  return <aside className="synthetic-banner" role="note"><FlaskConical size={20} aria-hidden="true"/><p>{notice}</p></aside>;
-}
 
 export function AnalysisReport({ report }: { report: Report }) {
   const { post, coverage } = report;
@@ -29,8 +25,7 @@ export function AnalysisReport({ report }: { report: Report }) {
 
     <VerdictCard label={report.verdict.label} description={report.verdict.description} tone={report.verdict.tone}/>
     {/* Bands follow the rubric tiers: under 35 low, 35-54 moderate, 55+ high. */}
-    {report.index && <RiskScoreIndicator score={report.index.score} lowMax={35} moderateMax={55} title="Astroturfing score for this comment section"
-      note="A hand-weighted, uncalibrated index combining rubric results, coordination between accounts, and a random sample of supportive and unsupportive users' histories. It ranks discussions for review; it is not a probability."/>}
+    {report.index && <RiskScoreIndicator score={report.index.score} lowMax={35} moderateMax={55} title="Astroturfing score for this comment section"/>}
 
     <div className="report-coverage-summary"><span><strong>{coverage.analyzed}</strong> comments analyzed</span><span><strong>{coverage.completeness}</strong> coverage</span><span><strong>{report.histories.filter(history => history.comments.length > 0).length}</strong> history samples with returned comments</span></div>
     <ReportFindings report={report}/>
@@ -64,11 +59,10 @@ export function AnalysisReport({ report }: { report: Report }) {
     </EvidenceDetails>
 
     <aside className="limitations">
-      <h2>What we checked, and what this means</h2>
+      <h2>What we checked</h2>
       <p>We analyzed {coverage.analyzed} of {coverage.retrieved} comments we could retrieve{coverage.reported !== null ? ` (the platform reported ${coverage.reported})` : ''}. Whether we retrieved every comment: {coverage.completeness}.</p>
       <p>Stance toward {report.subject}: {coverage.sentiment.supportive} supportive, {coverage.sentiment.critical} critical, {coverage.sentiment.neutral} neutral, {coverage.sentiment.mixed} mixed, {coverage.sentiment.unclear} unclear.</p>
       {coverage.histories && <p>{coverage.histories}</p>}
-      <p>Unusual patterns can have innocent explanations, such as fans of a product, a launch, or a community reacting to the same news. This report highlights signals worth examining. It does not prove that anyone was paid or that any account is fake.</p>
       <ul className="limitation-list">{report.limitations.map(l => <li key={l}>{l}</li>)}</ul>
     </aside>
   </div>;

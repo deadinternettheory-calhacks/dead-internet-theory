@@ -126,7 +126,7 @@ it("batches Reddit repeated author lookup plans, separates X root and authored s
   expect(reddit[0].input).toMatchObject({
     usernames: ["alice", "ben"],
     contentType: "comments",
-    maxItemsPerUser: 150,
+    maxItemsPerUser: 40,
   });
   const x = plan("x", "discussion", "https://x.com/synthetic/status/100");
   expect(x.map((t) => t.role)).toEqual(["root", "discussion"]);
@@ -553,6 +553,7 @@ it("reuses a confirmed run after loss of the action's payload write", async () =
   }
 });
 it("bounds each X author's dataset independently from the total batch size", async () => {
+  vi.stubEnv("HISTORY_CANDIDATES_PER_AUTHOR", "150");
   vi.stubEnv("PROVIDER_MODE", "live");
   vi.stubEnv("APIFY_TOKEN", "SYNTHETIC-MOCK-CREDENTIAL");
   vi.stubEnv("PROVIDER_AUTHORIZATION_APPROVED", "true");

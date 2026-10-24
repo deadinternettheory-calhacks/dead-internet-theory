@@ -9,7 +9,7 @@ import { extractJsonObject, parseScoring, parseTriage, type TriageOutput } from 
 import { buildScoringPacket, buildTriagePacket } from '../convex/lib/inference/packet';
 import { runSequential } from '../convex/lib/inference/pipeline';
 import { validateModel } from '../convex/lib/schema';
-import { buildDemo } from '../scripts/generate-demo';
+import { buildDemo, buildExample } from '../scripts/generate-demo';
 
 const dir = resolve(__dirname, '../fixtures/synthetic-espresso');
 const read = (name: string) => readFileSync(resolve(dir, name), 'utf8');
@@ -67,9 +67,10 @@ describe('assembled analysis', () => {
   it('keeps generated example files in sync (npm run demo)', async () => {
     const demo = await buildDemo();
     expect(JSON.parse(read('analysis-resource.json'))).toEqual(demo.analysis);
-    const web = JSON.parse(readFileSync(resolve(__dirname, '../../web/src/demo/synthetic-report.json'), 'utf8'));
-    expect(web.analysis).toEqual(demo.analysis);
-    expect(web.graph).toEqual(graph);
+    const example = await buildExample();
+    const web = JSON.parse(readFileSync(resolve(__dirname, '../../web/src/demo/example-report.json'), 'utf8'));
+    expect(web.analysis).toEqual(example.analysis);
+    expect(web.graph).toEqual(example.graph);
   });
 
   it('rejects a submission citing evidence that does not exist', async () => {

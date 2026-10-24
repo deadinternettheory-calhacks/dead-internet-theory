@@ -7,7 +7,7 @@
     "schemaVersion": "1.0.0",
     "graphRevision": 1,
     "graphFingerprint": "77f2bd8c21bcc034068d8d089c74f2e916881b7f6769f93bacf8307073be55a2",
-    "inferenceVersion": "dit-inference/0.2.0; rubric/0.3; prompts-2026-10-24b; creao-mock",
+    "inferenceVersion": "dit-inference/0.2.0; rubric/0.3; prompts-2026-10-24c; creao-mock",
     "inferredAt": "2026-10-24T06:03:00Z",
     "subject": {
       "label": "BrewMaster Mini",
@@ -39,22 +39,22 @@
     "overallCoordinationRisk": {
       "score": 63,
       "confidence": 0.7,
-      "explanation": "Comment-section astroturfing index: 63/100 (High). Rubric strength 76: the top 3 recommendation(s) scored 76 (u/brewfan_22), 76 (u/crema_queen), 76 (u/daily_grind_dan) on the rubric. Coordination 55: 4 recommendations form the strongest cluster. History contrast 50: sampled supportive users mention BrewMaster Mini in 47% of their recent comments, unsupportive users in 0%; 0% of supportive and 0% of unsupportive sampled accounts were under 90 days old. One-sided support 67: 83% of comments taking a side were supportive. Weights: rubric 40%, coordination 25%, history contrast 25%, one-sided support 10%, spread over the parts that could be measured. Histories came from a random sample of 3 of 3 supportive and 3 of 3 unsupportive users. This is an uncalibrated, hand-weighted index for prioritizing review, not a probability or a finding that the discussion was astroturfed.",
+      "explanation": "Comment-section astroturfing index: 63/100 (High). Rubric strength 76: the top 3 recommendation(s) scored 76 (u/brewfan_22), 76 (u/crema_queen), 76 (u/daily_grind_dan) on the rubric. Coordination 55: 4 recommendations form the strongest cluster. History contrast 50: sampled supportive users mention the recommended products in 40% of their recent comments, unsupportive users in 0%; 0% of supportive and 0% of unsupportive sampled accounts were under 90 days old. One-sided support 67: 83% of comments taking a side were supportive. Weights: rubric 40%, coordination 25%, history contrast 25%, one-sided support 10%, spread over the parts that could be measured. Histories came from a random sample of 4 of 4 supportive and 2 of 2 unsupportive users.",
       "evidenceRefs": [
         "reddit:comment:t1_syn01",
         "reddit:comment:t1_syn02",
         "reddit:comment:t1_syn03",
         "reddit:comment:t1_syn06",
+        "reddit:comment:t1_syn_b01",
+        "reddit:comment:t1_syn_b02",
+        "reddit:comment:t1_syn_b03",
+        "reddit:comment:t1_syn_b04",
         "reddit:comment:t1_syn_a01",
         "reddit:comment:t1_syn_a02",
         "reddit:comment:t1_syn_a03",
         "reddit:comment:t1_syn_a04",
         "reddit:comment:t1_syn_a05",
-        "reddit:comment:t1_syn_c01",
-        "reddit:comment:t1_syn_c02",
-        "reddit:comment:t1_syn_c03",
-        "reddit:comment:t1_syn_b01",
-        "reddit:comment:t1_syn_b02"
+        "reddit:comment:t1_syn_d04"
       ]
     },
     "axes": [
@@ -63,7 +63,7 @@
         "score": 39,
         "confidence": 0.55,
         "assessedCommentCount": 5,
-        "explanation": "Promotional intent: highest for the recommendation by u/brewfan_22. B1: The brand appears in 5 of the author's last 10 comments across r/Coffee, r/BuyItForLife, r/Frugal and r/Cooking. X2: Lists the product with a spec-sheet feature list. Index = share of this axis's rubric points that fired; not a probability.",
+        "explanation": "Promotional intent: highest for the recommendation by u/brewfan_22. B1: The brand appears in 5 of the author's last 10 comments across r/Coffee, r/BuyItForLife, r/Frugal and r/Cooking. X2: Lists the product with a spec-sheet feature list. Index = share of this axis's rubric points that fired.",
         "evidenceRefs": [
           "reddit:comment:t1_syn_a01",
           "reddit:comment:t1_syn_a02",
@@ -78,7 +78,7 @@
         "score": 42,
         "confidence": 0.55,
         "assessedCommentCount": 5,
-        "explanation": "Similar wording across accounts: highest for the recommendation by u/brewfan_22. C1: Near-identical wording across three accounts: the same three features (15-bar pump, steam wand, 30-second heat-up) and \"best budget machine\". Index = share of this axis's rubric points that fired; not a probability.",
+        "explanation": "Similar wording across accounts: highest for the recommendation by u/brewfan_22. C1: Near-identical wording across three accounts: the same three features (15-bar pump, steam wand, 30-second heat-up) and \"best budget machine\". Index = share of this axis's rubric points that fired.",
         "evidenceRefs": [
           "reddit:comment:t1_syn01",
           "reddit:comment:t1_syn02",
@@ -90,7 +90,7 @@
         "score": 56,
         "confidence": 0.55,
         "assessedCommentCount": 5,
-        "explanation": "Timing: highest for the recommendation by u/brewfan_22. C4: All three recommendations arrived 6 to 19 minutes after the post; the next comment came 82 minutes later. Index = share of this axis's rubric points that fired; not a probability.",
+        "explanation": "Timing: highest for the recommendation by u/brewfan_22. C4: All three recommendations arrived 6 to 19 minutes after the post; the next comment came 82 minutes later. Index = share of this axis's rubric points that fired.",
         "evidenceRefs": [
           "reddit:comment:t1_syn01",
           "reddit:comment:t1_syn02",
@@ -110,7 +110,7 @@
         "score": 42,
         "confidence": 0.55,
         "assessedCommentCount": 5,
-        "explanation": "Interaction patterns: highest for the recommendation by u/brewfan_22. C2: Two co-recommenders defended the product together against the critical reply, and crema_queen backed this author in another thread. Index = share of this axis's rubric points that fired; not a probability.",
+        "explanation": "Interaction patterns: highest for the recommendation by u/brewfan_22. C2: Two co-recommenders defended the product together against the critical reply, and crema_queen backed this author in another thread. Index = share of this axis's rubric points that fired.",
         "evidenceRefs": [
           "reddit:comment:t1_syn06",
           "reddit:comment:t1_syn07",
@@ -250,7 +250,7 @@
           "reddit:comment:t1_syn06"
         ],
         "coordinationScore": 55,
-        "explanation": "Three near-identical recommendations within 13 minutes, and two of the same accounts defending the product together. Linked by rubric rules C1, C2, C4. Being in a cluster does not show that the accounts share an operator.",
+        "explanation": "Three near-identical recommendations within 13 minutes, and two of the same accounts defending the product together. Linked by rubric rules C1, C2, C4.",
         "evidenceRefs": [
           "reddit:comment:t1_syn01",
           "reddit:comment:t1_syn02",
@@ -299,7 +299,7 @@
         "to": "reddit:comment:t1_syn02",
         "type": "POTENTIALLY_COORDINATED",
         "strength": 0.55,
-        "explanation": "Both comments are in cluster_1. This is a lead for review, not evidence of a shared operator.",
+        "explanation": "Both comments are in cluster_1.",
         "evidenceRefs": [
           "reddit:comment:t1_syn01",
           "reddit:comment:t1_syn02"
@@ -310,7 +310,7 @@
         "to": "reddit:comment:t1_syn03",
         "type": "POTENTIALLY_COORDINATED",
         "strength": 0.55,
-        "explanation": "Both comments are in cluster_1. This is a lead for review, not evidence of a shared operator.",
+        "explanation": "Both comments are in cluster_1.",
         "evidenceRefs": [
           "reddit:comment:t1_syn01",
           "reddit:comment:t1_syn03"
@@ -321,7 +321,7 @@
         "to": "reddit:comment:t1_syn06",
         "type": "POTENTIALLY_COORDINATED",
         "strength": 0.55,
-        "explanation": "Both comments are in cluster_1. This is a lead for review, not evidence of a shared operator.",
+        "explanation": "Both comments are in cluster_1.",
         "evidenceRefs": [
           "reddit:comment:t1_syn01",
           "reddit:comment:t1_syn06"
@@ -332,7 +332,7 @@
         "to": "reddit:comment:t1_syn03",
         "type": "POTENTIALLY_COORDINATED",
         "strength": 0.55,
-        "explanation": "Both comments are in cluster_1. This is a lead for review, not evidence of a shared operator.",
+        "explanation": "Both comments are in cluster_1.",
         "evidenceRefs": [
           "reddit:comment:t1_syn02",
           "reddit:comment:t1_syn03"
@@ -343,7 +343,7 @@
         "to": "reddit:comment:t1_syn06",
         "type": "POTENTIALLY_COORDINATED",
         "strength": 0.55,
-        "explanation": "Both comments are in cluster_1. This is a lead for review, not evidence of a shared operator.",
+        "explanation": "Both comments are in cluster_1.",
         "evidenceRefs": [
           "reddit:comment:t1_syn02",
           "reddit:comment:t1_syn06"
@@ -354,7 +354,7 @@
         "to": "reddit:comment:t1_syn06",
         "type": "POTENTIALLY_COORDINATED",
         "strength": 0.55,
-        "explanation": "Both comments are in cluster_1. This is a lead for review, not evidence of a shared operator.",
+        "explanation": "Both comments are in cluster_1.",
         "evidenceRefs": [
           "reddit:comment:t1_syn03",
           "reddit:comment:t1_syn06"
@@ -365,9 +365,8 @@
       "enr_synthetic_espresso"
     ],
     "limitations": [
-      "Scores come from an uncalibrated, hand-weighted rubric (version 0.3) and a provisional rubric-to-axis mapping. They are heuristic indices, not probabilities, and not a finding of astroturfing.",
-      "Account histories were requested for a seeded random sample of users, not everyone: 3 of 3 supportive and 3 of 3 unsupportive users. Rules that need an unsampled user's history are unknown, and a small sample can miss patterns.",
-      "History for u/daily_grind_dan was partial (6 of 10 items); missing history is not evidence either way.",
+      "Account histories were requested for a seeded random sample of users, not everyone: 4 of 4 supportive and 2 of 2 unsupportive users. Rules that need an unsampled user's history are unknown.",
+      "5 of 6 sampled users returned a full history (1 partial).",
       "The root author’s history was not available, so seeding checks that need it (T2, C5) are unknown.",
       "Synthetic fixture: every account, comment and number is fabricated. No scraper ran."
     ]

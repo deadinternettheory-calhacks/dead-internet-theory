@@ -1,0 +1,325 @@
+{
+  "completedAt": "2026-10-24T20:29:46.406Z",
+  "createdAt": "2026-10-24T20:29:26.588Z",
+  "enrichmentId": "enr_example_knife",
+  "investigationId": "inv_example_knife",
+  "results": [
+    {
+      "anchorCommentId": "reddit:comment:example_c022",
+      "authorId": "reddit:author:example_14",
+      "comments": [],
+      "coverage": {
+        "actorRunIds": [],
+        "candidateFetchedCount": 0,
+        "collectedAt": "2026-10-24T20:15:34.015Z",
+        "limitations": [
+          "Best-effort authored candidates, capped at 150; not a lifetime-history census.",
+          "Provider returned no rows identifying this requested author; availability and lifetime history are unknown.",
+          "No usable collected candidates; this does not establish empty lifetime history."
+        ],
+        "newestFetchedAt": null,
+        "oldestFetchedAt": null,
+        "providerTruncated": true,
+        "reachedAnchorWindow": null,
+        "requestedCount": 10,
+        "returnedCount": 0,
+        "sourceSnapshotRef": null
+      },
+      "error": {
+        "code": "PROVIDER_SIZE_LIMIT",
+        "message": "Raw dataset exceeds configured snapshot budget",
+        "retryable": false
+      },
+      "status": "failed",
+      "strategy": "none"
+    },
+    {
+      "authorId": "reddit:author:example_40",
+      "anchorCommentId": "reddit:comment:example_c064",
+      "status": "unavailable",
+      "strategy": "none",
+      "comments": [],
+      "coverage": {
+        "requestedCount": 10,
+        "returnedCount": 0,
+        "candidateFetchedCount": 0,
+        "providerTruncated": null,
+        "reachedAnchorWindow": null,
+        "oldestFetchedAt": null,
+        "newestFetchedAt": null,
+        "collectedAt": null,
+        "sourceSnapshotRef": null,
+        "actorRunIds": [],
+        "limitations": [
+          "History was not collected for this user."
+        ]
+      }
+    },
+    {
+      "authorId": "reddit:author:example_57",
+      "anchorCommentId": "reddit:comment:example_c092",
+      "status": "unavailable",
+      "strategy": "none",
+      "comments": [],
+      "coverage": {
+        "requestedCount": 10,
+        "returnedCount": 0,
+        "candidateFetchedCount": 0,
+        "providerTruncated": null,
+        "reachedAnchorWindow": null,
+        "oldestFetchedAt": null,
+        "newestFetchedAt": null,
+        "collectedAt": null,
+        "sourceSnapshotRef": null,
+        "actorRunIds": [],
+        "limitations": [
+          "History was not collected for this user."
+        ]
+      }
+    },
+    {
+      "authorId": "reddit:author:example_51",
+      "anchorCommentId": "reddit:comment:example_c076",
+      "status": "unavailable",
+      "strategy": "none",
+      "comments": [],
+      "coverage": {
+        "requestedCount": 10,
+        "returnedCount": 0,
+        "candidateFetchedCount": 0,
+        "providerTruncated": null,
+        "reachedAnchorWindow": null,
+        "oldestFetchedAt": null,
+        "newestFetchedAt": null,
+        "collectedAt": null,
+        "sourceSnapshotRef": null,
+        "actorRunIds": [],
+        "limitations": [
+          "History was not collected for this user."
+        ]
+      }
+    },
+    {
+      "anchorCommentId": "reddit:comment:example_c026",
+      "authorId": "reddit:author:example_17",
+      "comments": [],
+      "coverage": {
+        "actorRunIds": [],
+        "candidateFetchedCount": 0,
+        "collectedAt": "2026-10-24T20:15:34.015Z",
+        "limitations": [
+          "Best-effort authored candidates, capped at 150; not a lifetime-history census.",
+          "Provider returned no rows identifying this requested author; availability and lifetime history are unknown.",
+          "No usable collected candidates; this does not establish empty lifetime history."
+        ],
+        "newestFetchedAt": null,
+        "oldestFetchedAt": null,
+        "providerTruncated": true,
+        "reachedAnchorWindow": null,
+        "requestedCount": 10,
+        "returnedCount": 0,
+        "sourceSnapshotRef": null
+      },
+      "error": {
+        "code": "PROVIDER_SIZE_LIMIT",
+        "message": "Raw dataset exceeds configured snapshot budget",
+        "retryable": false
+      },
+      "status": "failed",
+      "strategy": "none"
+    },
+    {
+      "authorId": "reddit:author:example_45",
+      "anchorCommentId": "reddit:comment:example_c069",
+      "status": "unavailable",
+      "strategy": "none",
+      "comments": [],
+      "coverage": {
+        "requestedCount": 10,
+        "returnedCount": 0,
+        "candidateFetchedCount": 0,
+        "providerTruncated": null,
+        "reachedAnchorWindow": null,
+        "oldestFetchedAt": null,
+        "newestFetchedAt": null,
+        "collectedAt": null,
+        "sourceSnapshotRef": null,
+        "actorRunIds": [],
+        "limitations": [
+          "History was not collected for this user."
+        ]
+      }
+    },
+    {
+      "authorId": "reddit:author:example_60",
+      "anchorCommentId": "reddit:comment:example_c096",
+      "status": "unavailable",
+      "strategy": "none",
+      "comments": [],
+      "coverage": {
+        "requestedCount": 10,
+        "returnedCount": 0,
+        "candidateFetchedCount": 0,
+        "providerTruncated": null,
+        "reachedAnchorWindow": null,
+        "oldestFetchedAt": null,
+        "newestFetchedAt": null,
+        "collectedAt": null,
+        "sourceSnapshotRef": null,
+        "actorRunIds": [],
+        "limitations": [
+          "History was not collected for this user."
+        ]
+      }
+    },
+    {
+      "authorId": "reddit:author:example_37",
+      "anchorCommentId": "reddit:comment:example_c057",
+      "status": "unavailable",
+      "strategy": "none",
+      "comments": [],
+      "coverage": {
+        "requestedCount": 10,
+        "returnedCount": 0,
+        "candidateFetchedCount": 0,
+        "providerTruncated": null,
+        "reachedAnchorWindow": null,
+        "oldestFetchedAt": null,
+        "newestFetchedAt": null,
+        "collectedAt": null,
+        "sourceSnapshotRef": null,
+        "actorRunIds": [],
+        "limitations": [
+          "History was not collected for this user."
+        ]
+      }
+    },
+    {
+      "authorId": "reddit:author:example_36",
+      "anchorCommentId": "reddit:comment:example_c056",
+      "status": "unavailable",
+      "strategy": "none",
+      "comments": [],
+      "coverage": {
+        "requestedCount": 10,
+        "returnedCount": 0,
+        "candidateFetchedCount": 0,
+        "providerTruncated": null,
+        "reachedAnchorWindow": null,
+        "oldestFetchedAt": null,
+        "newestFetchedAt": null,
+        "collectedAt": null,
+        "sourceSnapshotRef": null,
+        "actorRunIds": [],
+        "limitations": [
+          "History was not collected for this user."
+        ]
+      }
+    },
+    {
+      "anchorCommentId": "reddit:comment:example_c036",
+      "authorId": "reddit:author:example_23",
+      "comments": [],
+      "coverage": {
+        "actorRunIds": [],
+        "candidateFetchedCount": 0,
+        "collectedAt": "2026-10-24T20:29:46.008Z",
+        "limitations": [
+          "Best-effort authored candidates, capped at 150; not a lifetime-history census.",
+          "Provider returned no rows identifying this requested author; availability and lifetime history are unknown.",
+          "No usable collected candidates; this does not establish empty lifetime history."
+        ],
+        "newestFetchedAt": null,
+        "oldestFetchedAt": null,
+        "providerTruncated": true,
+        "reachedAnchorWindow": null,
+        "requestedCount": 10,
+        "returnedCount": 0,
+        "sourceSnapshotRef": null
+      },
+      "error": {
+        "code": "PROVIDER_SIZE_LIMIT",
+        "message": "Raw dataset exceeds configured snapshot budget",
+        "retryable": false
+      },
+      "status": "failed",
+      "strategy": "none"
+    },
+    {
+      "authorId": "reddit:author:example_5",
+      "anchorCommentId": "reddit:comment:example_c005",
+      "status": "unavailable",
+      "strategy": "none",
+      "comments": [],
+      "coverage": {
+        "requestedCount": 10,
+        "returnedCount": 0,
+        "candidateFetchedCount": 0,
+        "providerTruncated": null,
+        "reachedAnchorWindow": null,
+        "oldestFetchedAt": null,
+        "newestFetchedAt": null,
+        "collectedAt": null,
+        "sourceSnapshotRef": null,
+        "actorRunIds": [],
+        "limitations": [
+          "History was not collected for this user."
+        ]
+      }
+    },
+    {
+      "authorId": "reddit:author:example_61",
+      "anchorCommentId": "reddit:comment:example_c098",
+      "status": "unavailable",
+      "strategy": "none",
+      "comments": [],
+      "coverage": {
+        "requestedCount": 10,
+        "returnedCount": 0,
+        "candidateFetchedCount": 0,
+        "providerTruncated": null,
+        "reachedAnchorWindow": null,
+        "oldestFetchedAt": null,
+        "newestFetchedAt": null,
+        "collectedAt": null,
+        "sourceSnapshotRef": null,
+        "actorRunIds": [],
+        "limitations": [
+          "History was not collected for this user."
+        ]
+      }
+    },
+    {
+      "anchorCommentId": "reddit:comment:example_c011",
+      "authorId": "reddit:author:example_op",
+      "comments": [],
+      "coverage": {
+        "actorRunIds": [],
+        "candidateFetchedCount": 0,
+        "collectedAt": "2026-10-24T20:15:34.015Z",
+        "limitations": [
+          "Best-effort authored candidates, capped at 150; not a lifetime-history census.",
+          "Provider returned no rows identifying this requested author; availability and lifetime history are unknown.",
+          "No usable collected candidates; this does not establish empty lifetime history."
+        ],
+        "newestFetchedAt": null,
+        "oldestFetchedAt": null,
+        "providerTruncated": true,
+        "reachedAnchorWindow": null,
+        "requestedCount": 10,
+        "returnedCount": 0,
+        "sourceSnapshotRef": null
+      },
+      "error": {
+        "code": "PROVIDER_SIZE_LIMIT",
+        "message": "Raw dataset exceeds configured snapshot budget",
+        "retryable": false
+      },
+      "status": "failed",
+      "strategy": "none"
+    }
+  ],
+  "schemaVersion": "1.0.0",
+  "startedAt": "2026-10-24T20:29:26.699Z",
+  "status": "completed"
+}
