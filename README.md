@@ -39,7 +39,8 @@ unfinished documentation, not established requirements.
 ## Current status
 
 The backend implements the v1 API and durable jobs with synthetic end-to-end
-verification on local Convex. Candidate Apify adapters remain disabled pending
+verification on local Convex and authenticated REST checks on a hosted development
+deployment. Candidate Apify adapters remain disabled pending
 authorized runtime verification and retention review. No real inference model or
 public credential issuer is implemented. The rubric remains an uncalibrated proposal.
 The frontend is not connected; its behavior is documented in `web/README.md`.
