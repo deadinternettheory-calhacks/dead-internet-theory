@@ -34,7 +34,7 @@ it('clears the previous quote when an unavailable history is selected', async ()
   await render({ ...exampleReport, histories: [...exampleReport.histories, unavailable] }); await click('History');
   const buttons = [...container.querySelectorAll<HTMLButtonElement>('.history-accounts button')];
   await act(async () => buttons.find(b => b.textContent === unavailable.author)!.click());
-  expect(container.textContent).toContain('Missing history is not a negative signal.');
+  expect(container.textContent).toContain('No comments returned.');
   expect(container.querySelector('.inspector-comment')).toBeNull();
   expect(container.querySelector('.evidence-inspector')?.textContent).toContain('Select an available comment');
 });
@@ -56,7 +56,7 @@ it('keeps cited evidence selectable in a large thread', async () => {
   await click('Wording');
   expect(container.querySelectorAll('.map-node')).toHaveLength(12);
   expect(container.querySelector('.map-node.is-selected')).not.toBeNull();
-  expect(container.textContent).toContain('Showing 12 of 28 comments.');
+  expect(container.textContent).toContain('12 of 28 shown.');
   const picker = container.querySelector<HTMLSelectElement>('select')!;
   expect(picker.options).toHaveLength(29);
   await act(async () => { picker.value = 'extra-19'; picker.dispatchEvent(new Event('change', { bubbles: true })); });

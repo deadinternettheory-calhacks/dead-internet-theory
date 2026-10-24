@@ -26,6 +26,6 @@ export function EvidenceTimeline({ comments, citedIds, selectedId, onSelect }: {
           aria-label={`Read ${comment.author ?? 'comment'} at ${evidenceTime(comment.createdAt)}`} onClick={() => onSelect(comment.id)}><span/></button></div>
       </div>)}
     </div>
-    <p className="evidence-visual-note">Highlighted timestamps are cited in the timing finding. Close timing alone does not establish coordination.{comments.length > dated.length ? ` ${comments.length - dated.length} comments have no usable time.` : ''}{dated.length > visible.length ? ` Showing ${visible.length} of ${dated.length} dated comments, prioritizing cited evidence.` : ''}</p>
+    <p className="evidence-visual-note">Highlighted: cited in the timing finding.{comments.length > dated.length ? ` ${comments.length - dated.length} without a time.` : ''}{dated.length > visible.length ? ` ${visible.length} of ${dated.length} shown.` : ''}</p>
   </div>;
 }

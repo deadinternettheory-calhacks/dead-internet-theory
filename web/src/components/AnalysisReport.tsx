@@ -1,7 +1,9 @@
 import type { Report } from '../analysis/report';
 import { SourceLink, formatTime } from './EvidenceQuote';
 import { ReportFindings } from './ReportFindings';
-import { EvidenceDetails, RiskScoreIndicator, VerdictCard } from './AnalysisPresentation';
+import { Sources } from './Sources';
+import { HISTORY_CONTRAST_SOURCES, SIGNAL_SOURCES } from '../analysis/sources';
+import { EvidenceDetails } from './AnalysisPresentation';
 import './report.css';
 
 
@@ -9,11 +11,29 @@ const PLATFORM_LABEL: Record<string, string> = { reddit: 'REDDIT', x: 'X / TWITT
 const STANCE_LABEL: Record<string, string> = { supportive: 'Supportive', critical: 'Critical', neutral: 'Neutral', mixed: 'Mixed', unclear: 'Unclear' };
 
 
+/** Score and verdict in one card. Bands follow the rubric tiers: under 35 low, 35-54 moderate, 55+ high. */
+function ResultCard({ report }: { report: Report }) {
+  const score = report.index?.score ?? null;
+  return <section className={`card result-card tone-${report.verdict.tone}`} aria-label="Result">
+    <div className="result-score">{score === null ? <strong>–</strong> : <strong>{score}</strong>}<span>/ 100</span></div>
+    <div className="result-text">
+      <h2>{report.verdict.label}</h2>
+      <p>{report.verdict.description}</p>
+      {score !== null && <div className="result-track" role="img" aria-label={`Astroturfing score: ${score} out of 100`}>
+        <span className="risk-low" style={{ width: '35%' }}/><span className="risk-moderate" style={{ width: '20%' }}/><span className="risk-high" style={{ width: '45%' }}/>
+        <i style={{ left: `${Math.max(0, Math.min(100, score))}%` }}/>
+      </div>}
+    </div>
+  </section>;
+}
+
 export function AnalysisReport({ report }: { report: Report }) {
   const { post, coverage } = report;
   const time = formatTime(post.createdAt);
   const recommendations = report.comments.filter(c => c.isRecommendation);
   const others = report.comments.filter(c => !c.isRecommendation);
+  const historiesReturned = report.histories.filter(history => history.comments.length > 0).length;
+  const s = coverage.sentiment;
   return <div className="report-view">
     <article className="card summary-card">
       <span className="platform-label">{PLATFORM_LABEL[post.platform] ?? 'POST'}</span>
@@ -23,19 +43,18 @@ export function AnalysisReport({ report }: { report: Report }) {
       <SourceLink synthetic={report.synthetic} url={post.url}>View original post</SourceLink>
     </article>
 
-    <VerdictCard label={report.verdict.label} description={report.verdict.description} tone={report.verdict.tone}/>
-    {/* Bands follow the rubric tiers: under 35 low, 35-54 moderate, 55+ high. */}
-    {report.index && <RiskScoreIndicator score={report.index.score} lowMax={35} moderateMax={55} title="Astroturfing score for this comment section"/>}
+    <ResultCard report={report}/>
 
-    <div className="report-coverage-summary"><span><strong>{coverage.analyzed}</strong> comments analyzed</span><span><strong>{coverage.completeness}</strong> coverage</span><span><strong>{report.histories.filter(history => history.comments.length > 0).length}</strong> history samples with returned comments</span></div>
+    <div className="report-coverage-summary"><span><strong>{coverage.analyzed}</strong> comments</span><span><strong>{coverage.completeness}</strong> coverage</span><span><strong>{historiesReturned}/{report.histories.length}</strong> histories</span></div>
     <ReportFindings report={report}/>
 
     <EvidenceDetails>
       {report.index && <div className="index-note">
         <p><strong>Astroturfing score: {report.index.score} / 100.</strong> {report.index.explanation}</p>
+        <Sources sources={HISTORY_CONTRAST_SOURCES}/>
       </div>}
       <h3 className="detail-heading">Each signal we checked</h3>
-      <ul className="axis-list">{report.axes.map(x => <li key={x.axis}><strong>{x.title}: {x.score === null ? 'not measured' : `${x.score} / 100`}</strong><p>{x.explanation}</p></li>)}</ul>
+      <ul className="axis-list">{report.axes.map(x => <li key={x.axis}><strong>{x.title}: {x.score === null ? 'not measured' : `${x.score} / 100`}</strong><p>{x.explanation}</p><Sources sources={SIGNAL_SOURCES[x.axis]}/></li>)}</ul>
       {report.clusters.length > 0 && <>
         <h3 className="detail-heading">Groups of related comments</h3>
         <ul className="axis-list">{report.clusters.map(c => <li key={c.id}><strong>{c.size} comments</strong><p>{c.explanation}</p></li>)}</ul>
@@ -59,11 +78,13 @@ export function AnalysisReport({ report }: { report: Report }) {
     </EvidenceDetails>
 
     <aside className="limitations">
-      <h2>What we checked</h2>
-      <p>We analyzed {coverage.analyzed} of {coverage.retrieved} comments we could retrieve{coverage.reported !== null ? ` (the platform reported ${coverage.reported})` : ''}. Whether we retrieved every comment: {coverage.completeness}.</p>
-      <p>Stance toward {report.subject}: {coverage.sentiment.supportive} supportive, {coverage.sentiment.critical} critical, {coverage.sentiment.neutral} neutral, {coverage.sentiment.mixed} mixed, {coverage.sentiment.unclear} unclear.</p>
-      {coverage.histories && <p>{coverage.histories}</p>}
-      <ul className="limitation-list">{report.limitations.map(l => <li key={l}>{l}</li>)}</ul>
+      <h2>Coverage</h2>
+      <dl className="coverage-list">
+        <div><dt>Comments</dt><dd>{coverage.analyzed} analyzed{coverage.reported !== null ? ` of ${coverage.reported}` : ''}</dd></div>
+        <div><dt>Stance</dt><dd>{s.supportive} supportive · {s.critical} critical · {s.mixed} mixed · {s.neutral + s.unclear} neutral</dd></div>
+        <div><dt>Histories</dt><dd>{historiesReturned} of {report.histories.length} sampled users</dd></div>
+      </dl>
+      {report.limitations.length > 0 && <details className="coverage-details"><summary>Details</summary><ul className="limitation-list">{report.limitations.map(l => <li key={l}>{l}</li>)}</ul></details>}
     </aside>
   </div>;
 }

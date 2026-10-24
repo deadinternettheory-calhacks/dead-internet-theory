@@ -57,10 +57,14 @@ it('opens relevant evidence and shows the section score without per-item caveats
   expect(container.querySelector<HTMLDetailsElement>('.report-explorer')?.open).toBe(true);
   expect(container.querySelector('.mode-wording')).not.toBeNull();
   expect(container.querySelector('.index-note')?.closest('details')?.open).toBe(false);
-  expect(container.querySelector('.risk-score')?.textContent).toContain('Astroturfing score for this comment section');
+  // Score and verdict share one card; the signals link their research.
+  expect(container.querySelector('.result-card')?.textContent).toMatch(/^\d+\/ 100Strong signs of coordinated promotion/);
+  expect(container.querySelector('.result-track')?.getAttribute('aria-label')).toMatch(/Astroturfing score: \d+ out of 100/);
   expect(container.querySelector('.risk-note')).toBeNull();
-  expect(container.querySelector('a')).toBeNull();
-  expect(container.textContent).toContain('6 history samples with returned comments');
-  const sections = [...container.querySelectorAll('.summary-card, .verdict-card, .report-findings, .evidence, .limitations')].map(node => node.className);
-  expect(sections).toEqual(['card summary-card', 'card verdict-card tone-high', 'findings report-findings', 'card evidence', 'limitations']);
+  expect([...container.querySelectorAll('.signal-sources a')].map(a => a.getAttribute('href'))).toContain('https://arxiv.org/abs/2112.00443');
+  // Synthetic reports never link to their made-up sources; only research links remain.
+  expect([...container.querySelectorAll('a')].every(a => a.closest('.signal-sources'))).toBe(true);
+  expect(container.querySelector('.report-coverage-summary')?.textContent).toMatch(/6\/\d+ histories/);
+  const sections = [...container.querySelectorAll('.summary-card, .result-card, .report-findings, .evidence, .limitations')].map(node => node.className);
+  expect(sections).toEqual(['card summary-card', 'card result-card tone-high', 'findings report-findings', 'card evidence', 'limitations']);
 });
