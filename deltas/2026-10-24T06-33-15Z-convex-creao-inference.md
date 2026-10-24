@@ -2,7 +2,7 @@
 
 Date: 2026-10-24T06:33:15+00:00 (record created; approval given earlier in the same session)
 Status: Directed by the user, who owns the inference ("AI agent") workstream:
-"We are using CREAO for inference" and "Use convex for backend". The user asked
+"We are using CREAO for inference" and "Use convex for backend". The user later asked that the spec state the inference is CREAO and Claude. The user asked
 for the full link-to-analysis flow and a mocked example response, assuming
 contract requests are fulfilled. This authorizes the implementation below. It
 does not attest to live provider behavior, CREAO data terms or deployment.
@@ -20,6 +20,7 @@ use, retention policy and production deployment.
 | Sections | Previous | Approved revision | Rationale |
 | --- | --- | --- | --- |
 | SPEC 5.3, 9, 13.4 ADR-006 | CREAO **proposed**: "do not add until integration behavior and incremental value are verified", and "If CREAO is selected later…" | CREAO **selected** as the model-reasoning provider. Each analysis makes two bounded runs (triage, rubric scoring). The agent gets no tools and untrusted-data framing, and every reply is re-validated deterministically | User decision for the inference workstream |
+| SPEC 5.3, 9, 13.3, 13.4 ADR-008 | Anthropic Claude **proposed**, not integrated | Claude **selected** as the inference model. It runs as the CREAO agent's model, set in the agent's CREAO settings or with `CREAO_MODEL`, and the service makes no direct Anthropic API call | User direction: inference is CREAO and Claude |
 | SPEC 5.3, 13.4 ADR-003 | Convex selected direction; no backend code | Convex hosts both the ingestion backend (`backend/`, built separately) and a second, independent deployment for inference (`inference/`) that consumes `investigation.ready` over authenticated HTTPS, per backend/INTEGRATION.md | User decision; keeps the ingestion/inference ownership boundary in the contract |
 | SPEC 5.3, 13.4 ADR-007 | Python selected for deterministic analysis | Superseded for the inference worker: deterministic measurements and rubric scoring run in TypeScript in the inference Convex app. Python libraries remain candidates for later research analysis | One runtime for the Convex service |
 | SPEC 8 | Mapping rubric signal rules to contract axes is unresolved; do not expose rubric scores as operational findings until they are evaluated and explicitly mapped | A **provisional, explicit** mapping is implemented and documented in `inference/README.md`. Scores remain uncalibrated heuristic indices, labeled as such in the API limitations and UI; evaluation is still required | The requested link-to-analysis flow needs a defined mapping; it stays visibly provisional |

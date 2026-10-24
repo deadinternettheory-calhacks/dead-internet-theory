@@ -1,6 +1,6 @@
 # Dead Internet Theory - Master Specification
 
-Status: Product scope and frontend UX are specified. The v1.0.0 contract bundle is adopted for repository implementation. A Convex ingestion backend (`backend/`, see its README) and an independent CREAO-based inference service (`inference/`, [delta](deltas/2026-10-24T06-33-15Z-convex-creao-inference.md)) are implemented and have run together locally on synthetic fixtures, including with the live CREAO agent; live providers, credential issuance, and inference deployment remain unverified. This specification preserves that distinction.
+Status: Product scope and frontend UX are specified. The v1.0.0 contract bundle is adopted for repository implementation. A Convex ingestion backend (`backend/`, see its README) and an independent inference service using CREAO with Claude (`inference/`, [delta](deltas/2026-10-24T06-33-15Z-convex-creao-inference.md)) are implemented and have run together locally on synthetic fixtures, including with the live CREAO agent; live providers, credential issuance, and inference deployment remain unverified. This specification preserves that distinction.
 
 The initial master specification filled TBD placeholders that did not establish requirements. The later v1.0.0 contract adoption supersedes draft 0.1 through the approved [contract delta](deltas/2026-10-24T05-47-50Z-astroturfing-contracts-v1.md); preserve that history and follow [CONTRIBUTING.md](CONTRIBUTING.md) and [deltas/README.md](deltas/README.md) for future changes.
 
@@ -14,7 +14,7 @@ A user submits a supported public post URL using the homepage or URL-prefix shor
 
 **Repository:** Git remote `origin` points to [deadinternettheory-calhacks/dead-internet-theory](https://github.com/deadinternettheory-calhacks/dead-internet-theory). This verifies the local remote configuration, not that a hosted deployment is connected.
 
-**Current verified state:** a React/TypeScript SPA in `web/` validates a limited set of Reddit and X/Twitter hostnames, supports homepage and URL-prefix navigation, and shows an honest unavailable state. V1.0.0 wire contracts, synthetic protocol fixtures, candidate provider-adapter notes, and a validator are present. `backend/` contains the Convex ingestion backend: the authenticated v1 API, durable ingestion/enrichment jobs, graph persistence and `investigation.ready` delivery, with provider adapters disabled pending authorized verification (see [backend/README.md](backend/README.md)). `inference/` contains a separate Convex service that receives those events, calls a CREAO agent for triage and rubric scoring, re-scores deterministically, and submits analyses through the v1 API ([inference/README.md](inference/README.md)). The two have run end to end on local Convex deployments in fixture mode, with recorded CREAO replies and with the live CREAO agent. No live provider, search index or production deployment is verified. The SPA can render v1 analyses through a configured API base (a trusted proxy is still required) and shows a labeled synthetic example at `/example`. See [Section 10](#10-frontend-and-ux-requirements) and [Section 12](#12-testing-and-validation).
+**Current verified state:** a React/TypeScript SPA in `web/` validates a limited set of Reddit and X/Twitter hostnames, supports homepage and URL-prefix navigation, and shows an honest unavailable state. V1.0.0 wire contracts, synthetic protocol fixtures, candidate provider-adapter notes, and a validator are present. `backend/` contains the Convex ingestion backend: the authenticated v1 API, durable ingestion/enrichment jobs, graph persistence and `investigation.ready` delivery, with provider adapters disabled pending authorized verification (see [backend/README.md](backend/README.md)). `inference/` contains a separate Convex service that receives those events, calls a CREAO agent running a Claude model for triage and rubric scoring, re-scores deterministically, and submits analyses through the v1 API ([inference/README.md](inference/README.md)). The two have run end to end on local Convex deployments in fixture mode, with recorded CREAO replies and with the live CREAO agent. No live provider, search index or production deployment is verified. The SPA can render v1 analyses through a configured API base (a trusted proxy is still required) and shows a labeled synthetic example at `/example`. See [Section 10](#10-frontend-and-ux-requirements) and [Section 12](#12-testing-and-validation).
 
 ## 2. Goals, scope, and non-goals
 
@@ -81,7 +81,7 @@ sequenceDiagram
     participant Ingest as Apify Actor and authorized connector (selected, pending; synthetic stand-in)
     participant Analyze as Inference worker in Convex: deterministic scoring (implemented)
     participant Search as Elasticsearch retrieval (planned)
-    participant Agent as CREAO agent (selected; client implemented, live run unverified)
+    participant Agent as CREAO agent running Claude (selected; live runs verified locally)
     participant Store as Convex database (implemented; retention policy pending)
     User->>Web: Submit supported post URL
     Web->>Web: Parse and validate protocol/host
@@ -173,7 +173,7 @@ flowchart LR
     Convex --> Python[Inference worker: deterministic measurements and rubric re-scoring in TypeScript<br/>Implemented]
     Python --> Packet[Evidence packet and sampling manifest]
     Packet -. optional related evidence .-> Elastic[Elasticsearch retrieval<br/>Planned]
-    Packet -->|bounded triage and scoring runs| CREAO[CREAO agent<br/>Selected; live run unverified]
+    Packet -->|bounded triage and scoring runs| CREAO[CREAO agent running Claude<br/>Selected; live runs verified locally]
     Elastic --> Validate[Backend validation and result assembly<br/>Implemented]
     CREAO --> Validate
     Packet --> Validate
@@ -193,8 +193,8 @@ No provider secret may be embedded in a Vite `VITE_*` variable. Provider calls/s
 | Apify | **Selected managed-ingestion direction; pending access review and implementation.** Prefer a project-owned Actor that validates input, uses permitted connectors, enforces limits, handles pagination/retries, normalizes records, and records omissions. The merged provider-adapter document also lists third-party Actor candidates for discussion/history collection; choosing between those candidates and a custom Actor, and validating terms and actual behavior, remains open. | A custom Actor gives project control over collection and output. A third-party Actor may accelerate experiments but introduces variable quality, cost, maintenance, output, and retention. Publishing an Actor is a separate decision. Best Actor sponsor opportunity is only a potential benefit. Apify does not authorize bypassing source restrictions. [Actor input/output](https://docs.apify.com/actors/running/input-and-output), [running Actors](https://docs.apify.com/actors/running). |
 | Python; NumPy, scikit-learn, NetworkX | **Superseded for the inference worker** by TypeScript inside Convex (ADR-008). Remain candidates for later research analysis; implementation absent. Candidate roles: numeric summaries; evaluated similarity/clustering; account/thread/claim graphs. | Deterministic features should be testable before model interpretation. Libraries are not currently dependencies and do not validate a signal. Methods, versions, thresholds, performance, and false positives remain research decisions. |
 | Elasticsearch / Agent Builder | **Planned.** Index permitted normalized records/evidence; retrieve related claims with filters and lexical/semantic/hybrid search if corpus is useful. Agent Builder may expose retrieval tools. | Adds cross-thread candidates beyond in-memory one-thread comparison. Quality depends on permitted corpus, normalization, cost, and evaluation. A match is a lead, not proof. Defer until a data basis and relevance evaluation exist. Check license/features and sponsor rules. [Agent Builder agents](https://www.elastic.co/docs/solutions/search/agent-builder/agent-builder-agents), [tools](https://www.elastic.co/docs/explore-analyze/ai-features/agent-builder/tools). |
-| CREAO | **Selected (ADR-008); live runs verified locally against synthetic fixtures.** One CREAO agent runs twice per analysis: triage (subject, stance, recommendations) and rubric scoring (which rules fire, with cited IDs). Supports app-scoped `capi_` keys and `cr_sk_` developer keys; agent setup is in [inference/creao-agent.md](inference/creao-agent.md). | The agent gets no tools and is told evidence is untrusted data. Its replies are parsed, schema-checked and re-scored deterministically; it cannot set numbers or add evidence. Data handling, retention and cost terms of CREAO and its underlying model still need review. [API Trigger docs](https://docs.creao.ai/pro/api-trigger). |
-| Anthropic Claude | **Not called directly.** CREAO runs agents on its own model catalog (default `anthropic/claude-sonnet-5-5` on the developer API); model choice is configured in CREAO or `CREAO_MODEL`. | Cannot create evidence, verify sources, or set unvalidated probabilities. App code must execute and validate tool calls. Compare cost, latency, privacy, retention, and output quality. [Claude tool use](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview). |
+| CREAO | **Selected (ADR-008) as the agent platform for inference; live runs verified locally against synthetic fixtures.** CREAO hosts the agent and runs it on Claude (below). One CREAO agent runs twice per analysis: triage (subject, stance, recommendations) and rubric scoring (which rules fire, with cited IDs). Supports app-scoped `capi_` keys and `cr_sk_` developer keys; agent setup is in [inference/creao-agent.md](inference/creao-agent.md). | The agent gets no tools and is told evidence is untrusted data. Its replies are parsed, schema-checked and re-scored deterministically; it cannot set numbers or add evidence. Data handling, retention and cost terms of CREAO and its underlying model still need review. [API Trigger docs](https://docs.creao.ai/pro/api-trigger). |
+| Anthropic Claude | **Selected (ADR-008) as the inference model, run through CREAO.** The CREAO agent's model must be a Claude model: set it in the agent's settings on agent.creao.ai for app-scoped keys, or with `CREAO_MODEL` (for example `anthropic/claude-sonnet-5-5`, CREAO's developer-API default) for `cr_sk_` keys. The inference service does not call the Anthropic API directly, and no Anthropic key is configured. CREAO's run API did not report which model served the verified runs, so confirm the agent's model setting. | Claude classifies comments and proposes rubric signals; it cannot create evidence, verify sources, or set scores. The worker re-validates every reply and computes all scores deterministically. Review CREAO's and Anthropic's data handling, retention and cost for inference traffic. |
 
 ### 5.4 Integration boundaries
 
@@ -203,7 +203,7 @@ No provider secret may be embedded in a Vite `VITE_*` variable. Provider calls/s
 - Ingestion retrieves permitted sources and reports provenance/coverage; it does not interpret intent.
 - Inference owns author/anchor selection and interpretation; ingestion owns history candidate collection/sampling under the v1 algorithm. The rubric remains a proposal, not an implemented deterministic analysis. Neither role establishes motive.
 - Search returns candidates plus references, not proof.
-- AI (the CREAO agent) classifies comments and proposes rubric signals from supplied data; it cannot publish directly. The worker submits only after deterministic re-scoring and contract validation, through the same internal functions as the REST routes.
+- AI (Claude, running as the CREAO agent) classifies comments and proposes rubric signals from supplied data; it cannot publish directly. The worker submits only after deterministic re-scoring and contract validation, through the same internal functions as the REST routes.
 - Result validator verifies state, contract, evidence IDs, sources, bounds, and safe claims.
 
 ## 6. Interfaces and data contracts
@@ -263,8 +263,8 @@ AI is an optional explanation layer behind deterministic analysis and validation
 
 1. Construct a bounded packet from validated source records and deterministic signals. Each item has a stable evidence ID and source reference.
 2. Treat social posts, comments, profiles, pages, and retrieved records as untrusted data, including possible prompt injection. Source text cannot change system instructions or grant tools.
-3. CREAO is selected (ADR-008). The agent is granted no tools; its prompt forbids browsing, code and integrations. Each run has a 256 KB input cap (packets are bounded to 180 KB) and a 15-minute stage limit. Any future tool must be allowlisted with validated arguments, budgets, timeouts and recorded outputs.
-4. If Claude is used, request observations vs interpretations, contrary evidence, plausible benign explanations, unavailable inputs, and citations to supplied graph/history evidence IDs.
+3. Inference uses CREAO with Claude (ADR-008): CREAO hosts the agent and Claude is its model. The agent is granted no tools; its prompt forbids browsing, code and integrations. Each run has a 256 KB input cap (packets are bounded to 180 KB) and a 15-minute stage limit. Any future tool must be allowlisted with validated arguments, budgets, timeouts and recorded outputs.
+4. The Claude prompts request observations vs interpretations, contrary evidence, plausible benign explanations, unavailable inputs, and citations to supplied graph/history evidence IDs.
 5. Treat model output as draft data. A deterministic validator checks the AnalysisSubmission contract, confirms every evidence ID exists in the graph or referenced enrichment, rejects invented metrics/sources, enforces limits, and prevents unsupported allegations. Invalid output becomes partial/unavailable, not a fabricated report.
 6. Persist only permitted fields; retain prompts/provider output only as justified by an approved policy. Never expose credentials or hidden reasoning to the browser.
 7. Record provider/model and analysis/prompt version where permitted. Review report-semantic changes with regression tests.
@@ -389,7 +389,7 @@ The repository records no individual owners. Assign people during planning; work
 
 - Bluesky provider after access review; X/Twitter and TikTok only after separate access, cost, and maintenance review.
 - Elasticsearch/Agent Builder after a permitted corpus exists and retrieval adds measured value.
-- CREAO after evaluation shows meaningful controllable orchestration over a small explicit workflow; any model after privacy/cost/quality review.
+- CREAO with Claude is selected for inference (ADR-008); complete its privacy, retention, cost and quality review before public use. Any other model also requires that review.
 - Expanded history, cross-thread investigations, and new visualizations only after budgets, provenance, retention, and false-positive controls.
 
 ### 13.3 Sponsor alignment (not an eligibility claim)
@@ -397,8 +397,8 @@ The repository records no individual owners. Assign people during planning; work
 | Sponsor | Integration status | Potential relevance | Prize status |
 | --- | --- | --- | --- |
 | Apify | Selected ingestion direction; no Actor/provider in repo. | Bounded collection and transformation. | Best Actor opportunity is only a possibility; verify current rubric and whether a private/custom Actor qualifies. |
-| CREAO | Selected; live runs verified locally. | Multi-step evidence workflow if controlled and useful. | Eligibility not verified. |
-| Anthropic | Proposed; no API call. | Grounded explanation/alternatives after deterministic analysis. | Eligibility not verified. |
+| CREAO | Selected: agent platform running Claude; live runs verified locally. | Multi-step evidence workflow if controlled and useful. | Eligibility not verified. |
+| Anthropic | Selected: Claude is the model behind the CREAO agent; no direct API call. | Grounded explanation/alternatives after deterministic analysis. | Eligibility not verified. |
 | Elastic | Planned; no cluster/index. | Cross-thread retrieval and optional Agent Builder tools. | Verify current product, license, and event requirements. |
 | Convex | Implemented locally; not deployed. | Job state and allowed result storage/reads. | Eligibility not verified. |
 | Microsoft | No role/integration evidenced. | Not defined; only consider for a real product need. | Eligibility not verified. |
@@ -419,7 +419,7 @@ These entries capture project direction and the adopted v1 interface delta; they
 | ADR-005 | 2026-10-23 | Planned, not accepted for P0 | Consider Elastic/Agent Builder after a permitted corpus and demonstrated retrieval value. A match is not proof. |
 | ADR-006 | 2026-10-23 | Superseded by ADR-008 | Evaluate CREAO/Claude for controlled evidence reasoning; do not add until integration behavior and incremental value are verified. |
 | ADR-007 | 2026-10-23 | Superseded for the inference worker by ADR-008 | Use Python for deterministic analysis. NumPy, scikit-learn, NetworkX are candidates only, not current dependencies. |
-| ADR-008 | 2026-10-24 UTC | Selected by the inference owner; implemented and run locally with live CREAO; not deployed | Inference runs as an independent Convex service (TypeScript) that consumes backend events: two bounded CREAO agent runs (triage, rubric scoring) with no tools, deterministic measurements, rubric re-scoring with caps, a provisional rubric-to-axis mapping, and contract validation before submission. See the [delta](deltas/2026-10-24T06-33-15Z-convex-creao-inference.md) and [inference/README.md](inference/README.md). |
+| ADR-008 | 2026-10-24 UTC | Selected by the inference owner; implemented and run locally with live CREAO; not deployed | Inference is CREAO with Claude: an independent Convex service (TypeScript) consumes backend events and makes two bounded runs of a CREAO agent whose model is Claude (triage, rubric scoring) with no tools, deterministic measurements, rubric re-scoring with caps, a provisional rubric-to-axis mapping, and contract validation before submission. See the [delta](deltas/2026-10-24T06-33-15Z-convex-creao-inference.md) and [inference/README.md](inference/README.md). |
 
 
 ### 13.5 Specification change history
@@ -428,6 +428,6 @@ These entries capture project direction and the adopted v1 interface delta; they
 | --- | --- | --- |
 | 2026-10-23 | Replaced the initial TBD-only scaffold with the DOC-001 master product/architecture baseline; TBD placeholders were not established requirements. | No delta required for filling placeholders. |
 | 2026-10-24 UTC | Adopted the supplied v1.0.0 wire-contract bundle, superseding draft 0.1; documented contract limits, owner acceptance, provider verification, and rubric mapping as outstanding. | [Approved v1 contract delta](deltas/2026-10-24T05-47-50Z-astroturfing-contracts-v1.md). |
-| 2026-10-24 UTC | Selected CREAO for inference and Convex for the backend; implemented the independent inference service, provisional rubric mapping, frontend report rendering and the labeled synthetic example. | [Convex and CREAO delta](deltas/2026-10-24T06-33-15Z-convex-creao-inference.md). |
+| 2026-10-24 UTC | Selected CREAO with Claude for inference and Convex for the backend; implemented the independent inference service, provisional rubric mapping, frontend report rendering and the labeled synthetic example. | [Convex and CREAO delta](deltas/2026-10-24T06-33-15Z-convex-creao-inference.md). |
 
 Future changes that conflict with an established requirement follow [CONTRIBUTING.md](CONTRIBUTING.md): propose affected sections/rationale, obtain explicit approval, create the timestamped delta, update the spec and decision log together, and preserve the historical decision. Filling a TBD or correcting an evidence-based implementation status does not itself require a delta. The v1.0.0 contract adoption is recorded by its linked approved delta.

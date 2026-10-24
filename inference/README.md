@@ -2,8 +2,8 @@
 
 Independent inference service, built as its own Convex app. It consumes
 `investigation.ready` events from the [ingestion backend](../backend/README.md),
-analyzes the discussion with a CREAO agent and the
-[astroturfing rubric](../rubrics/product-astroturfing.md), and submits a v1
+analyzes the discussion with a CREAO agent that runs on
+Claude and the [astroturfing rubric](../rubrics/product-astroturfing.md), and submits a v1
 `AnalysisSubmission` back to the backend. It follows the consumer workflow in
 [backend/INTEGRATION.md](../backend/INTEGRATION.md) and owns no API that the
 frontend calls.

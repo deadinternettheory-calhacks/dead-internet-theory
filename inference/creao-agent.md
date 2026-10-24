@@ -13,6 +13,10 @@ In [agent.creao.ai](https://agent.creao.ai), create an agent with:
 
 **Name:** Dead Internet Theory – Astroturf Analyst
 
+**Model:** a Claude model (for example Claude Sonnet). Inference is CREAO with
+Claude: set the agent's model in its CREAO settings, or pass `CREAO_MODEL` with
+a `cr_sk_` key.
+
 **Inputs** (three text inputs, exact names):
 
 | Input | Contents |
