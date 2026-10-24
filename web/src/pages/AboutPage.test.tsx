@@ -18,10 +18,11 @@ describe('How it works page', () => {
     ]);
   });
 
-  it('states that checking is unavailable and places the disclaimer after a divider', () => {
-    expect(markup).toContain('analysis service is not connected');
-    expect(markup).toContain('does not currently generate a score');
-    expect(markup).toContain('TikTok and YouTube are not available.');
+  it('renders the requested copy in order and places the disclaimer after a divider', () => {
+    expect(markup).toContain('Dead Internet Theory suggests that much of today\'s internet is driven by bots and AI-generated content rather than real people. Our website helps you investigate suspicious activity and find signs of manipulation.');
+    expect(markup).toContain('Paste a public post link. We analyze patterns in comments, accounts, and activity to identify potential signs of coordination and explain what we find.');
+    expect(markup).toContain('No. A high score suggests suspicious activity, but it\'s not proof. Real users can show similar patterns.');
+    expect(markup).toContain('Reddit, X (Twitter), TikTok, and YouTube are supported.');
     expect(markup).toContain('<p class="about-disclaimer">Results are estimates based on public signals. They are not proof of coordinated activity.</p>');
     expect(markup.indexOf('about-disclaimer')).toBeGreaterThan(markup.lastIndexOf('</h3>'));
   });
