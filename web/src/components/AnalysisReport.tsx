@@ -1,7 +1,7 @@
 import { ArrowUpRight, FlaskConical } from 'lucide-react';
 import type { Report, EvidenceItem, ThreadPreview } from '../analysis/report';
 import { createContext, useContext, type ReactNode } from 'react';
-import { EvidenceDetails, VerdictCard } from './AnalysisPresentation';
+import { EvidenceDetails, RiskScoreIndicator, VerdictCard } from './AnalysisPresentation';
 
 const PLATFORM_LABEL: Record<string, string> = { reddit: 'REDDIT', x: 'X / TWITTER', youtube: 'YOUTUBE', tiktok: 'TIKTOK' };
 const SyntheticContext = createContext(false);
@@ -71,6 +71,9 @@ export function AnalysisReport({ report }: { report: Report }) {
     </article>
 
     <VerdictCard label={report.verdict.label} description={report.verdict.description} tone={report.verdict.tone}/>
+    {/* Bands follow the rubric tiers: under 35 low, 35-54 moderate, 55+ high. */}
+    {report.index && <RiskScoreIndicator score={report.index.score} lowMax={35} moderateMax={55} title="Astroturfing score for this comment section"
+      note="A hand-weighted, uncalibrated index combining rubric results, coordination between accounts, and a random sample of supportive and unsupportive users' histories. It ranks discussions for review; it is not a probability."/>}
 
     <section className="findings" aria-labelledby="findings-heading">
       <h2 id="findings-heading">What stood out</h2>
@@ -89,7 +92,7 @@ export function AnalysisReport({ report }: { report: Report }) {
 
     <EvidenceDetails>
       {report.index && <div className="index-note">
-        <p><strong>Coordination index: {report.index.score} / 100.</strong> This comes from a hand-weighted, uncalibrated scoring guide. It is a way to rank leads for review, not a probability that the discussion was manipulated.</p>
+        <p><strong>Astroturfing score: {report.index.score} / 100.</strong> {report.index.explanation}</p>
       </div>}
       <h3 className="detail-heading">Each signal we checked</h3>
       <ul className="axis-list">{report.axes.map(x => <li key={x.axis}><strong>{x.title}: {x.score === null ? 'not measured' : `${x.score} / 100`}</strong><p>{x.explanation}</p></li>)}</ul>

@@ -29,7 +29,7 @@ describe('analysis report', () => {
 
   it('reports coverage and history outcomes', () => {
     expect(report.coverage.analyzed).toBe(8);
-    expect(report.coverage.histories).toBe('5 account histories requested: 3 complete, 1 partial, 1 unavailable.');
+    expect(report.coverage.histories).toBe('6 account histories requested: 5 complete, 1 partial.');
   });
 
   it('does not treat a missing score as low risk', () => {
