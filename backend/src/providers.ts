@@ -178,6 +178,43 @@ export function plan(
     ),
   ];
 }
+/** An Apify API call that got an HTTP response; keeps the status for diagnosis. */
+export class ApifyHttpError extends ApiFault {
+  constructor(
+    public httpStatus: number,
+    code: string,
+    message: string,
+    retryable: boolean,
+  ) {
+    super(500, code, message, retryable);
+  }
+}
+/**
+ * Maps a failed start to a definite rejection when Apify answered with a 4xx
+ * (the run was not created) or the request was never sent. Returns null when
+ * the start may have been accepted (network error, timeout, 5xx).
+ */
+export function startRejection(e: unknown): ApiFault | null {
+  if (e instanceof ApiFault && e.code === "PROVIDER_NOT_CONFIGURED") return e;
+  if (
+    !(e instanceof ApifyHttpError) ||
+    e.httpStatus < 400 ||
+    e.httpStatus >= 500
+  )
+    return null;
+  const s = e.httpStatus;
+  const message =
+    s === 401
+      ? "Apify rejected the server credential (HTTP 401); check APIFY_TOKEN"
+      : s === 402
+        ? "Apify refused to start the run (HTTP 402); the account is likely out of credit or over its usage limit"
+        : s === 403 || s === 404
+          ? `Apify refused access to the Actor or its pinned build (HTTP ${s})`
+          : s === 429
+            ? "Apify rate-limited the run start (HTTP 429)"
+            : `Apify rejected the run start (HTTP ${s})`;
+  return new ApiFault(500, "PROVIDER_REJECTED", message, s === 429);
+}
 export class Apify {
   constructor(
     private token = process.env.APIFY_TOKEN,
@@ -196,12 +233,12 @@ export class Apify {
       headers: { authorization: `Bearer ${this.token}` },
     });
     if (response.status < 200 || response.status >= 300)
-      throw new ApiFault(
-        500,
+      throw new ApifyHttpError(
+        response.status,
         response.status === 403 || response.status === 404
           ? "PROVIDER_UNAVAILABLE"
           : "PROVIDER_FAILED",
-        "Apify request failed",
+        `Apify request failed (HTTP ${response.status})`,
         response.status === 429 || response.status >= 500,
       );
     return response.body;
@@ -248,6 +285,8 @@ export async function advance(args: {
   authors?: Model<"AuthorNode">[];
   state: PlanState;
   reserve: (op: string) => Promise<RunAdmission>;
+  /** Frees a reservation whose start Apify definitely refused. */
+  release?: (op: string) => Promise<unknown>;
   observe: (
     op: string,
     runId: string,
@@ -320,7 +359,14 @@ export async function advance(args: {
       let run;
       try {
         run = await provider.start(task.actor, task.input);
-      } catch {
+      } catch (e) {
+        // A definite refusal frees the slot and reports why; anything else may
+        // have started a billable run, so the slot is kept for an operator.
+        const rejected = startRejection(e);
+        if (rejected && args.release) {
+          await args.release(operation);
+          throw rejected;
+        }
         throw new ApiFault(
           500,
           "PROVIDER_START_AMBIGUOUS",

@@ -255,7 +255,14 @@ export const reserve = mutation({
       return { status: "denied", reason: "lease" };
     const reservation = stable(["provider", a.key, a.operation]);
     const previous = await get(ctx, "providerSlots", reservation);
-    if (previous)
+    if (previous?.rejected) {
+      // A refused start (e.g. HTTP 429) left no run; drop the record so a retry reserves afresh.
+      const doc = await (ctx as Ctx).db
+        .query("providerSlots")
+        .withIndex("key", (q) => q.eq("key", reservation))
+        .unique();
+      if (doc) await (ctx as Ctx).db.delete(doc._id);
+    } else if (previous)
       return previous.runId
         ? { status: "resume", runId: previous.runId }
         : { status: "denied", reason: "ambiguous" };
@@ -276,6 +283,27 @@ export const reserve = mutation({
       createdAt: iso(),
     });
     return { status: "reserved" };
+  },
+});
+// Called only when Apify definitely refused the start (HTTP 4xx, or the request
+// was never sent): no run exists, so the slot and the reserved budget go back.
+export const releaseRejected = mutation({
+  args: { key: v.string(), token: v.string(), operation: v.string() },
+  handler: async (ctx, a) => {
+    const job = await get(ctx, "jobs", a.key);
+    if (!job || job.token !== a.token || job.status !== "running") return false;
+    const reservation = stable(["provider", a.key, a.operation]);
+    const slot = await get(ctx, "providerSlots", reservation);
+    if (!slot || slot.runId || slot.status !== "active") return false;
+    await put(ctx, "providerSlots", reservation, {
+      ...slot,
+      status: "released",
+      rejected: true,
+    });
+    const day = `budget:${String(slot.createdAt ?? iso()).slice(0, 10)}`;
+    const used = (await get(ctx, "controls", day)) ?? 0;
+    await put(ctx, "controls", day, Math.max(0, used - limits().cents));
+    return true;
   },
 });
 export const observeRun = mutation({
