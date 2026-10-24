@@ -46,6 +46,8 @@ export interface CreaoConfig {
   agentId?: string;
   /** Optional model id, `cr_sk_` path only. */
   model?: string;
+  /** Public URL CREAO POSTs the terminal result to (CREAO_WEBHOOK_URL); polling remains the fallback. */
+  webhookUrl?: string;
   agentBaseUrl?: string;
   developerBaseUrl?: string;
   fetchImpl?: typeof fetch;
@@ -108,9 +110,10 @@ class HttpCreaoClient implements CreaoClient {
   }
 
   async startRun(inputs: CreaoInputs): Promise<string> {
+    const hook = this.config.webhookUrl;
     const body = this.mode === 'app'
-      ? { inputs }
-      : { agent_id: this.config.agentId, input: inputs, ...(this.config.model ? { model: this.config.model } : {}) };
+      ? { inputs, ...(hook ? { webhookUrl: hook } : {}) }
+      : { agent_id: this.config.agentId, input: inputs, ...(this.config.model ? { model: this.config.model } : {}), ...(hook ? { webhook_url: hook } : {}) };
     const serialized = JSON.stringify(body);
     if (new TextEncoder().encode(serialized).length > MAX_INPUT_BYTES) {
       throw new CreaoError('Evidence packet exceeds the CREAO 256 KB input limit.', 'INPUT_TOO_LARGE', false);

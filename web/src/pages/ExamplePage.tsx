@@ -5,7 +5,7 @@ import { AnalysisReport, SyntheticBanner } from '../components/AnalysisReport';
 import { syntheticDemo as fixture } from '../demo';
 
 export function ExamplePage() {
-  const report = buildReport(fixture.analysis, fixture.graph, [fixture.enrichment]);
+  const report = buildReport(fixture.analysis, fixture.graph, fixture.enrichments);
   return <main className="analysis-main">
     <Link className="back-link" to="/">{String.fromCharCode(8592)} Check a post</Link>
     <SyntheticBanner notice={fixture.notice}/>

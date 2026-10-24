@@ -7,6 +7,6 @@ export const syntheticDemo = demo as unknown as {
   notice: string;
   investigation: InvestigationResource;
   graph: GraphEnvelope;
-  enrichment: EnrichmentJob;
+  enrichments: EnrichmentJob[];
   analysis: AnalysisResource;
 };

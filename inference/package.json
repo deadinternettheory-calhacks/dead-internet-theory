@@ -12,6 +12,7 @@
     "demo:check": "tsx scripts/generate-demo.ts --check"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "0.133.0",
     "@cfworker/json-schema": "4.1.1",
     "convex": "1.46.0",
     "jose": "6.2.12"

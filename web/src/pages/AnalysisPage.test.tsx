@@ -4,12 +4,14 @@ import { createRoot, type Root } from 'react-dom/client';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { AnalysisPage } from './AnalysisPage';
-import { createInvestigation, getInvestigation, idempotencyKeyFor } from '../api/client';
+import { createInvestigation, getGraph, getInvestigation, idempotencyKeyFor } from '../api/client';
+import { syntheticDemo } from '../demo';
 import type { InvestigationResource } from '../api/contract';
 vi.mock('../api/client', async original => ({
   ...await original<typeof import('../api/client')>(),
   createInvestigation: vi.fn(),
   getInvestigation: vi.fn(),
+  getGraph: vi.fn(),
 }));
 const url = 'https://www.reddit.com/r/synthetic/comments/abc123/';
 const queued: InvestigationResource = { investigationId: 'synthetic-old', sourceUrl: url, platform: 'reddit', ingestionStatus: 'queued', analysisStatus: 'waiting_for_graph', graphRevision: null };
@@ -56,4 +58,19 @@ it('bounds fixture recovery instead of repeatedly creating failed investigations
   await render();
   expect(createInvestigation).toHaveBeenCalledTimes(2);
   expect(container.textContent).toContain('We can’t collect this post yet.');
+});
+it('shows the collected post and comments while the analysis runs', async () => {
+  const analyzing: InvestigationResource = { ...queued, ingestionStatus: 'completed', analysisStatus: 'running', graphRevision: 1 };
+  vi.mocked(createInvestigation).mockResolvedValue(analyzing);
+  vi.mocked(getInvestigation).mockResolvedValue(analyzing);
+  vi.mocked(getGraph).mockResolvedValue(syntheticDemo.graph);
+  await render();
+  await act(async () => vi.advanceTimersByTimeAsync(0));
+  expect(getGraph).toHaveBeenCalledTimes(1);
+  expect(container.textContent).toContain('Analyzing the discussion…');
+  expect(container.textContent).toContain('Comments we collected');
+  const firstComment = syntheticDemo.graph.nodes.find(n => n.type === 'comment')!;
+  expect(container.textContent).toContain(firstComment.type === 'comment' ? firstComment.text : '');
+  await act(async () => vi.advanceTimersByTimeAsync(2500));
+  expect(getGraph).toHaveBeenCalledTimes(1);
 });

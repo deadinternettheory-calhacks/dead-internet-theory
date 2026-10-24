@@ -2,8 +2,8 @@
 
 Independent inference service, built as its own Convex app. It consumes
 `investigation.ready` events from the [ingestion backend](../backend/README.md),
-analyzes the discussion with a CREAO agent that runs on
-Claude and the [astroturfing rubric](../rubrics/product-astroturfing.md), and submits a v1
+analyzes the discussion with Claude and a CREAO agent that runs on Claude,
+using the [astroturfing rubric](../rubrics/product-astroturfing.md), and submits a v1
 `AnalysisSubmission` back to the backend. It follows the consumer workflow in
 [backend/INTEGRATION.md](../backend/INTEGRATION.md) and owns no API that the
 frontend calls.
@@ -14,10 +14,14 @@ frontend calls.
   with recorded replies and with the live CREAO agent. Each CREAO run took about
   40–80 s.
 - Deployed at `https://grandiose-barracuda-22.convex.site`, connected to the
-  hosted ingestion backend and website. CREAO remains responsible for AI
+  hosted ingestion backend and website. Claude and CREAO do the AI
   inference; this Convex service coordinates events, stages and validated writes.
   Hosted synthetic checks and one permitted real Reddit post completed; see the
   [verification record](../backend/verification/2026-10-24-hosted-live.md).
+- Direct Claude triage was checked live inside a local Convex deployment on
+  the synthetic thread: 8.8 s, valid reply. The full speed-up path (Claude
+  triage, early histories, webhooks) has not run end to end against a
+  backend; the hosted deployment does not have it until this change is deployed.
 - Scores come from an uncalibrated rubric with a provisional axis mapping.
 
 ## Commands
@@ -50,6 +54,10 @@ or settings; never commit them or put them in `VITE_*`.
 | `CREAO_APP_ID` | With `capi_` | The CREAO agent's ID. |
 | `CREAO_AGENT_ID` | With `cr_sk_` | The agent ID for `developer.creao.ai/v1/runs`. |
 | `CREAO_MODEL` | No | Model ID for `cr_sk_` runs. |
+| `ANTHROPIC_API_KEY` | Recommended | Runs triage as one direct Claude call (about 10 s) instead of a CREAO run (about 1 min). Without it, triage uses CREAO. |
+| `ANTHROPIC_MODEL` | No | Claude model for triage. Default `claude-opus-5-5` at low effort. |
+| `CREAO_WEBHOOK_SECRET` | With a webhook | Random secret that authenticates CREAO's callbacks. |
+| `CREAO_WEBHOOK_URL` | Recommended | `<this deployment's .convex.site URL>/creao-webhook?token=<CREAO_WEBHOOK_SECRET>`. CREAO calls it when a run finishes, so the worker continues at once instead of at the next poll. |
 
 On the backend, set `INFERENCE_EVENT_URL` to `<this deployment's .convex.site URL>/events`.
 Create the CREAO agent with [creao-agent.md](creao-agent.md).
@@ -59,7 +67,8 @@ backend's token issuance mechanism is still an open decision
 (backend/INTEGRATION.md); replace this with issued, scoped credentials when one
 exists.
 
-Coordinator job state expires after 24 hours and is deleted by a minute sweep.
+Coordinator job state and cached model replies expire after 24 hours and are
+deleted by a minute sweep.
 Expired jobs stop processing. See [the retention policy](../backend/RETENTION.md)
 for application, Apify and upstream-provider retention boundaries.
 
@@ -97,26 +106,41 @@ for application, Apify and upstream-provider retention boundaries.
    without starting another analysis.
 2. **Graph.** The worker reads the graph and requires the event's revision and
    fingerprint.
-3. **Triage (CREAO run 1).** The agent gets a bounded packet of the post and
-   every retrieved comment (under 180 KB). It returns the subject, each
-   comment's stance, and any product the comment recommends.
-4. **Enrichment.** The worker requests histories for the subject's recommenders,
-   then other product recommenders, one anchor per author, up to 25 pairs,
-   Reddit and X only. It continues without them after 5 minutes or a failed job.
-5. **Scoring (CREAO run 2).** The agent gets the comments, deterministic
+3. **Early histories.** Before triage, the worker guesses likely recommenders
+   from the thread alone (tracking links, wording shared with another author,
+   a brand-like term several authors use, top-level position; questions are
+   skipped). It requests up to 10 of their histories so the backend collects
+   them while triage runs.
+4. **Triage.** A bounded packet of the post and every retrieved comment
+   (under 180 KB) goes to Claude directly when `ANTHROPIC_API_KEY` is set
+   (structured outputs, so the reply is always valid JSON), otherwise to a
+   CREAO run. It returns the subject, each comment's stance, and any product
+   the comment recommends.
+5. **Follow-up histories.** The worker requests histories only for
+   recommenders the early request missed, one anchor per author, up to 25
+   pairs in total, Reddit and X only. It continues without them after
+   5 minutes or a failed job.
+6. **Scoring (CREAO run).** The agent gets the recommendations and their
+   context (parents, replies, the recommenders' other comments and the 15
+   most-engaged comments) rather than every comment, plus deterministic
    measurements (timing, burst size, word overlap, tracking links, brand
    mentions in histories, account age) and the rubric rules. It returns which
    rules fire for each recommendation, with cited IDs.
-6. **Re-scoring.** `scoring.ts` drops rules the platform or evidence cannot
+7. **Re-scoring.** `scoring.ts` drops rules the platform or evidence cannot
    support, or whose cited IDs do not exist. It then applies the rubric's
    points, caps K1–K6, tiers and confidence itself; the model never sets a
    number.
-7. **Submit.** `assemble.ts` builds the `AnalysisSubmission` and replaces
+8. **Submit.** `assemble.ts` builds the `AnalysisSubmission` and replaces
    accusatory model text. The worker checks it against the schema and every
    evidence reference, then POSTs it with a stable idempotency key.
 
-Each stage is a separately scheduled action. CREAO runs are polled every 5 s,
-with a 15-minute limit per stage. A reply with no valid JSON (in `result.text`,
+Each stage is a separately scheduled action. CREAO runs are polled every 5 s
+(every 20 s as a fallback when `CREAO_WEBHOOK_URL` is set), with a 15-minute
+limit per stage. A webhook call only wakes the job; the worker still fetches
+and validates the run itself, and a lease plus a per-step token stop a webhook
+and a poll from advancing the same job twice. Validated triage and scoring
+replies are cached for 24 hours, keyed by stage, prompt version, model and the
+exact evidence packet, so re-analyzing an unchanged thread skips the model. A reply with no valid JSON (in `result.text`,
 the chat reply, or a JSON file) starts a fresh run of that stage, up to three
 runs in total. Retryable backend or CREAO errors are retried
 within that limit. Otherwise the job is marked `failed` here with its reason,
@@ -157,7 +181,8 @@ end-to-end run works without a CREAO key.
 
 ## Open items
 
-- CREAO data-retention and cost review. The agent's reply format varies (summary vs. JSON, and files); asking CREAO to make the final result the JSON itself would remove the fallbacks.
+- CREAO data-retention and cost review. The agent's reply format varies (summary vs. JSON, and files) until it is edited as in [creao-agent.md](creao-agent.md#edit-the-agent-for-speed).
+- Anthropic data-retention and cost review for direct triage calls.
 - Cloud deployment, and setting `INFERENCE_EVENT_URL`/`INFERENCE_EVENT_TOKEN` on the hosted backend (`impartial-sheep-516`).
 - Rubric calibration, and review of the axis mapping.
 - Scoped credential issuance from the backend instead of a shared signing secret.

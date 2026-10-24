@@ -60,7 +60,7 @@ describe('packets and selection', () => {
   });
 
   it('computes measurements for the scoring packet', () => {
-    const packet = buildScoringPacket(graph, triage, enrichment);
+    const packet = buildScoringPacket(graph, triage, [enrichment]);
     expect(packet.measurements.largestRecommendationBurst30m.commentIds).toHaveLength(3);
     expect(packet.measurements.similarPairs[0].wordOverlap).toBeGreaterThan(0.5);
     expect(packet.authors.find(a => a.handle === 'brewfan_22')?.subjectMentionCount).toBe(5);
@@ -71,7 +71,7 @@ describe('assembled analysis', () => {
   it('produces a contract-valid submission from the demo pipeline', async () => {
     const demo = await buildDemo();
     expect(validateModel('AnalysisResource', demo.analysis).valid).toBe(true);
-    expect(checkSubmission(demo.analysis.result, graph, [enrichment])).toBeNull();
+    expect(checkSubmission(demo.analysis.result, graph, demo.enrichments)).toBeNull();
     expect(demo.analysis.result.overallCoordinationRisk.score).toBe(76);
   });
 
@@ -95,7 +95,7 @@ describe('assembled analysis', () => {
   it('returns a null index when nothing recommends a product', () => {
     const quiet: TriageOutput = { ...triage, comments: triage.comments.map(c => ({ ...c, recommendsProduct: null, recommendsSubject: false })) };
     const { analyzedCommentIds } = buildTriagePacket(graph);
-    const { submission } = assembleAnalysis({ graph, triage: quiet, analyzedCommentIds, enrichment: null, scoring: { assessments: [], clusters: [], overallSummary: '' } });
+    const { submission } = assembleAnalysis({ graph, triage: quiet, analyzedCommentIds, enrichments: [], scoring: { assessments: [], clusters: [], overallSummary: '' } });
     expect(submission.overallCoordinationRisk.score).toBeNull();
     expect(submission.overallCoordinationRisk.confidence).toBeNull();
     expect(checkSubmission(submission, graph, [])).toBeNull();

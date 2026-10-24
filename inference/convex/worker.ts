@@ -1,8 +1,12 @@
 // Inference worker. Each investigation.ready event becomes one job that moves
-// through persisted stages, each run by a separately scheduled action, so no
-// Convex action waits for a whole CREAO run:
-//   triage_start -> triage_wait -> enrich_start -> enrich_wait
+// through persisted stages, each run by a separately scheduled action:
+//   triage_start -> [triage_wait] -> enrich_start -> enrich_wait
 //   -> scoring_start -> scoring_wait -> done | failed
+// Speed: likely recommenders' histories are requested before triage and
+// collected while it runs; triage is one direct Claude call when
+// ANTHROPIC_API_KEY is set (otherwise a CREAO run); validated model replies are
+// cached by their exact input; CREAO can wake the job by webhook instead of
+// waiting for the next poll.
 // All reads and writes go to the ingestion backend's v1 API with stable
 // idempotency keys (backend/INTEGRATION.md).
 import { v } from 'convex/values';
@@ -12,33 +16,44 @@ import { BackendError, createBackendClient, type BackendClient } from './lib/bac
 import type { EnrichmentJob, GraphEnvelope, InvestigationReadyEvent } from './lib/contract';
 import { recordedResponsesFor } from './lib/fixtures';
 import { assembleAnalysis } from './lib/inference/assemble';
+import { ClaudeError, claudeTriage, DEFAULT_CLAUDE_MODEL, type ClaudeConfig } from './lib/inference/claude';
 import { createCreaoClient, CreaoError, MockCreaoClient, type CreaoClient } from './lib/inference/creao';
 import { checkSubmission } from './lib/inference/evidence';
 import { ModelOutputError, parseScoring, parseTriage, type ScoringOutput, type TriageOutput } from './lib/inference/outputs';
-import { enrichmentRequestFor, MAX_STAGE_ATTEMPTS, needsScoring, scoringInputs, triageInputs } from './lib/inference/pipeline';
+import { followupRequestFor, MAX_STAGE_ATTEMPTS, needsScoring, scoringInputs, speculativeRequestFor, triageInputs } from './lib/inference/pipeline';
+import { PROMPT_VERSION } from './lib/inference/prompts';
 import { validateModel } from './lib/schema';
+import { sha256Hex } from './lib/util';
 
-const CREAO_POLL_MS = 5_000;
 const STAGE_DEADLINE_MS = 15 * 60_000;
 const ENRICHMENT_POLL_MS = 3_000;
 const ENRICHMENT_DEADLINE_MS = 5 * 60_000;
 const RETRY_MS = 10_000;
+/** Longer than any single step (Convex actions stop at 10 minutes). */
+const LEASE_MS = 11 * 60_000;
+const CACHE_TTL_MS = 24 * 60 * 60_000;
 
 type Stage = 'triage_start' | 'triage_wait' | 'enrich_start' | 'enrich_wait' | 'scoring_start' | 'scoring_wait' | 'done' | 'failed';
 
 interface JobState {
   analyzedCommentIds?: string[];
   triageRunId?: string;
+  triageCacheKey?: string;
   triage?: TriageOutput;
-  enrichmentId?: string;
+  /** Author IDs already requested (speculatively or as follow-up). */
+  requestedAuthors?: string[];
+  speculativeRequested?: boolean;
+  enrichmentIds?: string[];
   enrichmentNote?: string;
   scoringRunId?: string;
-  /** CREAO runs started per stage, including retries after unusable replies. */
+  scoringCacheKey?: string;
   triageAttempts?: number;
   scoringAttempts?: number;
   scoring?: ScoringOutput | null;
   analysisId?: string;
 }
+
+const newToken = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
 
 /** Durably stores an event; repeats of the same (investigationId, graphRevision) are acknowledged only. */
 export const receive = internalMutation({
@@ -56,6 +71,7 @@ export const receive = internalMutation({
       return { duplicate: true };
     }
     const now = Date.now();
+    const token = newToken();
     const jobId = await ctx.db.insert('jobs', {
       investigationId: event.investigationId,
       graphRevision: event.graphRevision,
@@ -65,42 +81,103 @@ export const receive = internalMutation({
       stage: 'triage_start',
       state: '{}',
       stageStartedAt: now,
+      stepToken: token,
       updatedAt: now,
       expiresAt: now + 24 * 60 * 60_000,
     });
-    await ctx.scheduler.runAfter(0, internal.worker.step, { jobId });
+    await ctx.scheduler.runAfter(0, internal.worker.step, { jobId, token });
     return { duplicate: false };
   },
 });
 
-export const loadJob = internalQuery({
-  args: { jobId: v.id('jobs') },
-  returns: v.union(
-    v.null(),
-    v.object({ investigationId: v.string(), graphRevision: v.number(), graphFingerprint: v.string(), stage: v.string(), state: v.string(), stageStartedAt: v.number() }),
-  ),
-  handler: async (ctx, { jobId }) => {
+const claimed = v.object({
+  investigationId: v.string(),
+  graphRevision: v.number(),
+  graphFingerprint: v.string(),
+  stage: v.string(),
+  state: v.string(),
+  stageStartedAt: v.number(),
+});
+
+/**
+ * Takes the job for one step. Fails if another step holds it or if the step was
+ * scheduled before the job last moved on (stale token), so a CREAO webhook and
+ * a scheduled poll can never both advance it.
+ */
+export const claim = internalMutation({
+  args: { jobId: v.id('jobs'), token: v.string() },
+  returns: v.union(v.null(), claimed),
+  handler: async (ctx, { jobId, token }) => {
     const job = await ctx.db.get(jobId);
-    if (!job || (job.expiresAt ?? Infinity) <= Date.now()) return null;
+    const now = Date.now();
+    if (!job || (job.expiresAt ?? Infinity) <= now || job.stage === 'done' || job.stage === 'failed') return null;
+    if (job.stepToken !== token || (job.leaseUntil ?? 0) > now) return null;
+    await ctx.db.patch(jobId, { leaseUntil: now + LEASE_MS });
     const { investigationId, graphRevision, graphFingerprint, stage, state, stageStartedAt } = job;
     return { investigationId, graphRevision, graphFingerprint, stage, state, stageStartedAt };
   },
 });
 
+/** Saves progress, releases the lease and returns the token the next step must carry (null once the job expired). */
 export const saveJob = internalMutation({
-  args: { jobId: v.id('jobs'), stage: v.string(), state: v.string(), newStage: v.boolean(), error: v.optional(v.string()) },
-  returns: v.null(),
+  args: {
+    jobId: v.id('jobs'),
+    stage: v.string(),
+    state: v.string(),
+    newStage: v.boolean(),
+    activeRunId: v.optional(v.string()),
+    error: v.optional(v.string()),
+  },
+  returns: v.union(v.null(), v.string()),
   handler: async (ctx, args) => {
     const now = Date.now();
     const job = await ctx.db.get(args.jobId);
     if (!job || (job.expiresAt ?? Infinity) <= now) return null;
+    const token = newToken();
     await ctx.db.patch(args.jobId, {
       stage: args.stage,
       state: args.state,
       updatedAt: now,
+      stepToken: token,
+      leaseUntil: undefined,
+      activeRunId: args.activeRunId,
       ...(args.newStage ? { stageStartedAt: now } : {}),
       ...(args.error ? { error: args.error } : {}),
     });
+    return token;
+  },
+});
+
+/** Called from the CREAO webhook route: wakes the job waiting on this run now instead of at its next poll. */
+export const wakeForRun = internalMutation({
+  args: { runId: v.string() },
+  returns: v.boolean(),
+  handler: async (ctx, { runId }) => {
+    const job = await ctx.db.query('jobs').withIndex('by_active_run', q => q.eq('activeRunId', runId)).first();
+    if (!job || !job.stepToken || (job.expiresAt ?? Infinity) <= Date.now() || job.stage === 'done' || job.stage === 'failed') return false;
+    await ctx.scheduler.runAfter(0, internal.worker.step, { jobId: job._id, token: job.stepToken });
+    return true;
+  },
+});
+
+export const cacheGet = internalQuery({
+  args: { key: v.string() },
+  returns: v.union(v.null(), v.string()),
+  handler: async (ctx, { key }) => {
+    const row = await ctx.db.query('modelCache').withIndex('by_key', q => q.eq('key', key)).first();
+    return row && row.expiresAt > Date.now() ? row.output : null;
+  },
+});
+
+export const cachePut = internalMutation({
+  args: { key: v.string(), stage: v.string(), output: v.string() },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const existing = await ctx.db.query('modelCache').withIndex('by_key', q => q.eq('key', args.key)).first();
+    // Same 24-hour limit as job state (backend/RETENTION.md); the retention sweep deletes expired rows.
+    const now = Date.now();
+    if (existing) await ctx.db.patch(existing._id, { output: args.output, createdAt: now, expiresAt: now + CACHE_TTL_MS });
+    else await ctx.db.insert('modelCache', { ...args, createdAt: now, expiresAt: now + CACHE_TTL_MS });
     return null;
   },
 });
@@ -121,16 +198,30 @@ function backend(): BackendClient {
   return createBackendClient({ baseUrl, jwtSecret: process.env.BACKEND_JWT_SECRET, staticToken: process.env.BACKEND_API_TOKEN });
 }
 
+function claudeConfig(): ClaudeConfig | null {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  return apiKey ? { apiKey, model: process.env.ANTHROPIC_MODEL || DEFAULT_CLAUDE_MODEL } : null;
+}
+
 function creaoFor(graph: GraphEnvelope): CreaoClient {
   const apiKey = process.env.CREAO_API_KEY;
   if (apiKey) {
-    return createCreaoClient({ apiKey, appId: process.env.CREAO_APP_ID, agentId: process.env.CREAO_AGENT_ID, model: process.env.CREAO_MODEL });
+    return createCreaoClient({
+      apiKey,
+      appId: process.env.CREAO_APP_ID,
+      agentId: process.env.CREAO_AGENT_ID,
+      model: process.env.CREAO_MODEL,
+      webhookUrl: process.env.CREAO_WEBHOOK_URL,
+    });
   }
   // Without a key, only labeled synthetic fixtures can be analyzed, from recorded replies.
   const recorded = recordedResponsesFor(graph);
   if (recorded) return new MockCreaoClient(recorded);
   throw new CreaoError('CREAO_API_KEY is not set.', 'CREAO_NOT_CONFIGURED', false);
 }
+
+/** With a webhook configured, polling is only a fallback. */
+const creaoPollMs = () => (process.env.CREAO_WEBHOOK_URL ? 20_000 : 5_000);
 
 /** Returns candidate reply texts when the run completed, null while it is still running. */
 async function pollRun(creao: CreaoClient, runId: string, elapsedMs: number): Promise<string[] | null> {
@@ -144,137 +235,208 @@ async function pollRun(creao: CreaoClient, runId: string, elapsedMs: number): Pr
   return null;
 }
 
+/** Keyed by stage, prompt version, the model that answers, and the exact evidence. */
+const cacheKey = async (stage: string, model: string, evidence: string) => sha256Hex(`${stage}\n${PROMPT_VERSION}\n${model}\n${evidence}`);
+
 export const step = internalAction({
-  args: { jobId: v.id('jobs') },
+  args: { jobId: v.id('jobs'), token: v.string() },
   returns: v.null(),
-  handler: async (ctx, { jobId }) => {
-    const job = await ctx.runQuery(internal.worker.loadJob, { jobId });
-    if (!job || job.stage === 'done' || job.stage === 'failed') return null;
+  handler: async (ctx, { jobId, token }) => {
+    const job = await ctx.runMutation(internal.worker.claim, { jobId, token });
+    if (!job) return null;
     const state = JSON.parse(job.state) as JobState;
     const id = job.investigationId;
     const elapsed = Date.now() - job.stageStartedAt;
 
-    const save = (stage: Stage, error?: string) =>
-      ctx.runMutation(internal.worker.saveJob, { jobId, stage, state: JSON.stringify(state), newStage: stage !== job.stage, ...(error ? { error: error.slice(0, 2000) } : {}) });
-    const next = async (stage: Stage, delayMs = 0) => {
-      await save(stage);
-      await ctx.scheduler.runAfter(delayMs, internal.worker.step, { jobId });
+    const save = (stage: Stage, opts: { activeRunId?: string; error?: string } = {}) =>
+      ctx.runMutation(internal.worker.saveJob, {
+        jobId,
+        stage,
+        state: JSON.stringify(state),
+        newStage: stage !== job.stage,
+        ...(opts.activeRunId ? { activeRunId: opts.activeRunId } : {}),
+        ...(opts.error ? { error: opts.error.slice(0, 2000) } : {}),
+      });
+    const next = async (stage: Stage, delayMs = 0, activeRunId?: string) => {
+      const nextToken = await save(stage, { activeRunId });
+      if (nextToken === null) return; // expired: stop processing
+      await ctx.scheduler.runAfter(delayMs, internal.worker.step, { jobId, token: nextToken });
     };
 
     try {
       const api = backend();
       const graph = await api.getGraph(id);
       if (graph.graphRevision !== job.graphRevision || graph.graphFingerprint !== job.graphFingerprint) {
-        return void (await save('failed', 'STALE_EVENT: graph revision or fingerprint differs from the event.'));
+        return void (await save('failed', { error: 'STALE_EVENT: graph revision or fingerprint differs from the event.' }));
       }
+      const claude = claudeConfig();
       const creao = creaoFor(graph);
-      const currentEnrichment = async (): Promise<EnrichmentJob | null> => {
-        if (!state.enrichmentId) return null;
-        const job = await api.getEnrichment(id, state.enrichmentId);
-        return job.status === 'completed' ? job : null;
-      };
+      const completedJobs = () => fetchCompleted(api, id, state.enrichmentIds ?? []);
+      const submitWith = (scoring: ScoringOutput | null) => submit(api, graph, state, scoring, claude, creao, save);
 
       switch (job.stage as Stage) {
         case 'triage_start': {
+          // Request likely recommenders' histories first so they are collected while triage runs.
+          if (!state.speculativeRequested) {
+            const request = speculativeRequestFor(graph);
+            if (request) {
+              try {
+                const created = await api.requestEnrichment(id, request, `dit-inference:enrich:spec:${id}:${graph.graphRevision}`);
+                state.enrichmentIds = [created.enrichmentId];
+                state.requestedAuthors = request.authors.map(a => a.authorId);
+              } catch (err) {
+                if (err instanceof BackendError && err.retryable) throw err;
+                // Not fatal: triage's follow-up request still asks for what is needed.
+              }
+            }
+            state.speculativeRequested = true;
+          }
           const { inputs, analyzedCommentIds } = triageInputs(graph);
           state.analyzedCommentIds = analyzedCommentIds;
+          state.triageCacheKey = await cacheKey('triage', claude ? `claude:${claude.model}` : creao.label, inputs.evidence);
+          const cached = await ctx.runQuery(internal.worker.cacheGet, { key: state.triageCacheKey });
+          if (cached) {
+            state.triage = parseTriage(cached);
+            return void (await next('enrich_start'));
+          }
+          if (claude) {
+            state.triage = await parseWithRetries(() => claudeTriage(claude, inputs), parseTriage);
+            await ctx.runMutation(internal.worker.cachePut, { key: state.triageCacheKey, stage: 'triage', output: JSON.stringify(state.triage) });
+            return void (await next('enrich_start'));
+          }
           state.triageRunId = await creao.startRun(inputs);
-          return void (await next('triage_wait', CREAO_POLL_MS));
+          state.triageAttempts = 1;
+          return void (await next('triage_wait', creaoPollMs(), state.triageRunId));
         }
         case 'triage_wait': {
-          const text = await pollRun(creao, state.triageRunId!, elapsed);
-          if (text === null) return void (await next('triage_wait', CREAO_POLL_MS));
+          const outputs = await pollRun(creao, state.triageRunId!, elapsed);
+          if (outputs === null) return void (await next('triage_wait', creaoPollMs(), state.triageRunId));
           try {
-            state.triage = parseTriage(text);
+            state.triage = parseTriage(outputs);
           } catch (err) {
             if (!(err instanceof ModelOutputError) || (state.triageAttempts ?? 1) >= MAX_STAGE_ATTEMPTS) throw err;
             state.triageAttempts = (state.triageAttempts ?? 1) + 1;
             state.triageRunId = await creao.startRun(triageInputs(graph).inputs);
-            return void (await next('triage_wait', CREAO_POLL_MS));
+            return void (await next('triage_wait', creaoPollMs(), state.triageRunId));
           }
+          await ctx.runMutation(internal.worker.cachePut, { key: state.triageCacheKey!, stage: 'triage', output: JSON.stringify(state.triage) });
           return void (await next('enrich_start'));
         }
         case 'enrich_start': {
-          const request = enrichmentRequestFor(graph, state.triage!);
-          if (!request) return void (await next('scoring_start'));
-          try {
-            const created = await api.requestEnrichment(id, request, `dit-inference:enrich:${id}:${graph.graphRevision}`);
-            state.enrichmentId = created.enrichmentId;
-            return void (await next('enrich_wait', ENRICHMENT_POLL_MS));
-          } catch (err) {
-            if (err instanceof BackendError && err.retryable) throw err;
-            state.enrichmentNote = `Author histories could not be requested (${err instanceof BackendError ? err.code : 'error'}); rules that need them are unknown.`;
-            return void (await next('scoring_start'));
+          const request = followupRequestFor(graph, state.triage!, new Set(state.requestedAuthors ?? []));
+          if (request) {
+            try {
+              const created = await api.requestEnrichment(id, request, `dit-inference:enrich:followup:${id}:${graph.graphRevision}`);
+              state.enrichmentIds = [...(state.enrichmentIds ?? []), created.enrichmentId];
+              state.requestedAuthors = [...(state.requestedAuthors ?? []), ...request.authors.map(a => a.authorId)];
+            } catch (err) {
+              if (err instanceof BackendError && err.retryable) throw err;
+              state.enrichmentNote = `Some author histories could not be requested (${err instanceof BackendError ? err.code : 'error'}); rules that need them are unknown.`;
+            }
           }
+          return void (await next(state.enrichmentIds?.length ? 'enrich_wait' : 'scoring_start', state.enrichmentIds?.length ? ENRICHMENT_POLL_MS : 0));
         }
         case 'enrich_wait': {
-          const current = await api.getEnrichment(id, state.enrichmentId!);
-          if (current.status === 'queued' || current.status === 'running') {
-            if (elapsed < ENRICHMENT_DEADLINE_MS) return void (await next('enrich_wait', ENRICHMENT_POLL_MS));
-            state.enrichmentNote = 'Author histories did not arrive in time; rules that need them are unknown.';
-            state.enrichmentId = undefined;
-          } else if (current.status === 'failed') {
-            state.enrichmentNote = 'The author-history job failed; rules that need histories are unknown.';
-            state.enrichmentId = undefined;
-          }
+          const jobs = await Promise.all((state.enrichmentIds ?? []).map(eid => api.getEnrichment(id, eid)));
+          const pending = jobs.filter(j => j.status === 'queued' || j.status === 'running');
+          if (pending.length && elapsed < ENRICHMENT_DEADLINE_MS) return void (await next('enrich_wait', ENRICHMENT_POLL_MS));
+          if (pending.length) state.enrichmentNote = 'Some author histories did not arrive in time; rules that need them are unknown.';
+          if (jobs.some(j => j.status === 'failed')) state.enrichmentNote = 'An author-history job failed; rules that need those histories are unknown.';
+          state.enrichmentIds = jobs.filter(j => j.status === 'completed').map(j => j.enrichmentId);
           return void (await next('scoring_start'));
         }
-        case 'scoring_start':
+        case 'scoring_start': {
+          if (!needsScoring(state.triage!)) return void (await submitWith(null));
+          const inputs = scoringInputs(graph, state.triage!, await completedJobs());
+          state.scoringCacheKey = await cacheKey('scoring', creao.label, inputs.evidence);
+          const cached = await ctx.runQuery(internal.worker.cacheGet, { key: state.scoringCacheKey });
+          if (cached) return void (await submitWith(parseScoring(cached)));
+          state.scoringRunId = await creao.startRun(inputs);
+          state.scoringAttempts = 1;
+          return void (await next('scoring_wait', creaoPollMs(), state.scoringRunId));
+        }
         case 'scoring_wait': {
-          if (job.stage === 'scoring_start') {
-            if (needsScoring(state.triage!)) {
-              state.scoringRunId = await creao.startRun(scoringInputs(graph, state.triage!, await currentEnrichment()));
-              return void (await next('scoring_wait', CREAO_POLL_MS));
-            }
-            state.scoring = null;
-          } else {
-            const text = await pollRun(creao, state.scoringRunId!, elapsed);
-            if (text === null) return void (await next('scoring_wait', CREAO_POLL_MS));
-            try {
-              state.scoring = parseScoring(text);
-            } catch (err) {
-              if (!(err instanceof ModelOutputError) || (state.scoringAttempts ?? 1) >= MAX_STAGE_ATTEMPTS) throw err;
-              state.scoringAttempts = (state.scoringAttempts ?? 1) + 1;
-              state.scoringRunId = await creao.startRun(scoringInputs(graph, state.triage!, await currentEnrichment()));
-              return void (await next('scoring_wait', CREAO_POLL_MS));
-            }
-          }
-          const enrichment = await currentEnrichment();
-          const { submission } = assembleAnalysis({
-            graph,
-            triage: state.triage!,
-            analyzedCommentIds: state.analyzedCommentIds ?? [],
-            enrichment,
-            enrichmentNote: state.enrichmentNote,
-            scoring: state.scoring ?? null,
-            modelLabel: creao.label,
-          });
-          const problem = checkSubmission(submission, graph, enrichment ? [enrichment] : []);
-          if (problem) return void (await save('failed', `Assembled analysis invalid (${problem.code}): ${problem.message}`));
+          const outputs = await pollRun(creao, state.scoringRunId!, elapsed);
+          if (outputs === null) return void (await next('scoring_wait', creaoPollMs(), state.scoringRunId));
+          let scoring: ScoringOutput;
           try {
-            const receipt = await api.submitAnalysis(id, submission, `dit-inference:analysis:${id}:${graph.graphRevision}`);
-            state.analysisId = receipt.analysisId;
+            scoring = parseScoring(outputs);
           } catch (err) {
-            // A conflict means an earlier attempt of this job was already stored.
-            const settled = err instanceof BackendError && (err.code === 'ANALYSIS_ALREADY_SUBMITTED' || err.code === 'IDEMPOTENCY_CONFLICT');
-            if (!settled) throw err;
+            if (!(err instanceof ModelOutputError) || (state.scoringAttempts ?? 1) >= MAX_STAGE_ATTEMPTS) throw err;
+            state.scoringAttempts = (state.scoringAttempts ?? 1) + 1;
+            state.scoringRunId = await creao.startRun(scoringInputs(graph, state.triage!, await completedJobs()));
+            return void (await next('scoring_wait', creaoPollMs(), state.scoringRunId));
           }
-          return void (await save('done'));
+          await ctx.runMutation(internal.worker.cachePut, { key: state.scoringCacheKey!, stage: 'scoring', output: JSON.stringify(scoring) });
+          return void (await submitWith(scoring));
         }
         default:
           return null;
       }
     } catch (err) {
-      const retryable = (err instanceof CreaoError || err instanceof BackendError) && err.retryable;
+      const retryable = (err instanceof CreaoError || err instanceof BackendError || err instanceof ClaudeError) && err.retryable;
       if (retryable && elapsed < STAGE_DEADLINE_MS) {
-        const after = err instanceof CreaoError && err.retryAfterSeconds ? err.retryAfterSeconds * 1000 : RETRY_MS;
-        await ctx.scheduler.runAfter(after, internal.worker.step, { jobId });
+        const after = (err instanceof CreaoError || err instanceof ClaudeError) && err.retryAfterSeconds ? err.retryAfterSeconds * 1000 : RETRY_MS;
+        const nextToken = await save(job.stage as Stage);
+        if (nextToken !== null) await ctx.scheduler.runAfter(after, internal.worker.step, { jobId, token: nextToken });
         return null;
       }
       // The v1 API has no failure-report route; the backend keeps analysisStatus
       // as running. The reason stays here for operators.
-      await save('failed', err instanceof Error ? `${err.name}: ${err.message}` : String(err));
+      await save('failed', { error: err instanceof Error ? `${err.name}: ${err.message}` : String(err) });
     }
     return null;
   },
 });
+
+async function parseWithRetries<T>(run: () => Promise<string[]>, parse: (outputs: string[]) => T): Promise<T> {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return parse(await run());
+    } catch (err) {
+      if (!(err instanceof ModelOutputError) || attempt >= MAX_STAGE_ATTEMPTS) throw err;
+    }
+  }
+}
+
+async function fetchCompleted(api: BackendClient, investigationId: string, ids: string[]): Promise<EnrichmentJob[]> {
+  const jobs = await Promise.all(ids.map(eid => api.getEnrichment(investigationId, eid)));
+  return jobs.filter(j => j.status === 'completed');
+}
+
+async function submit(
+  api: BackendClient,
+  graph: GraphEnvelope,
+  state: JobState,
+  scoring: ScoringOutput | null,
+  claude: ClaudeConfig | null,
+  creao: CreaoClient,
+  save: (stage: Stage, opts?: { error?: string }) => Promise<string | null>,
+): Promise<void> {
+  state.scoring = scoring;
+  const enrichments = await fetchCompleted(api, graph.investigationId, state.enrichmentIds ?? []);
+  const { submission } = assembleAnalysis({
+    graph,
+    triage: state.triage!,
+    analyzedCommentIds: state.analyzedCommentIds ?? [],
+    enrichments,
+    enrichmentNote: state.enrichmentNote,
+    scoring,
+    modelLabel: claude ? `claude:${claude.model}+${creao.label}` : creao.label,
+  });
+  const problem = checkSubmission(submission, graph, enrichments);
+  if (problem) {
+    await save('failed', { error: `Assembled analysis invalid (${problem.code}): ${problem.message}` });
+    return;
+  }
+  try {
+    const receipt = await api.submitAnalysis(graph.investigationId, submission, `dit-inference:analysis:${graph.investigationId}:${graph.graphRevision}`);
+    state.analysisId = receipt.analysisId;
+  } catch (err) {
+    // A conflict means an earlier attempt of this job was already stored.
+    const settled = err instanceof BackendError && (err.code === 'ANALYSIS_ALREADY_SUBMITTED' || err.code === 'IDEMPOTENCY_CONFLICT');
+    if (!settled) throw err;
+  }
+  await save('done');
+}
+

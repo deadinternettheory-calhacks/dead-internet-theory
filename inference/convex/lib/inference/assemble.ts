@@ -53,7 +53,8 @@ export interface AssembleInput {
   graph: GraphEnvelope;
   triage: TriageOutput;
   analyzedCommentIds: string[];
-  enrichment: EnrichmentJob | null;
+  /** Every enrichment job requested for this analysis (speculative and follow-up). */
+  enrichments: EnrichmentJob[];
   enrichmentNote?: string;
   scoring: ScoringOutput | null;
   inferredAt?: string;
@@ -70,11 +71,11 @@ function axisMax(axis: AxisName, platform: Platform): number {
 }
 
 export function assembleAnalysis(input: AssembleInput): AssembleResult {
-  const { graph, triage, enrichment } = input;
+  const { graph, triage } = input;
   const index = new GraphIndex(graph);
   const platform = graph.platform;
-  const jobs = enrichment && enrichment.status === 'completed' ? [enrichment] : [];
-  const results = historyResults(enrichment);
+  const jobs = input.enrichments.filter(j => j.status === 'completed');
+  const results = historyResults(jobs);
   const resultByAuthor = new Map(results.map(r => [r.authorId, r]));
   const known = knownEvidenceIds(graph, jobs);
   const triageById = new Map(triage.comments.filter(c => index.comment(c.commentId)).map(c => [c.commentId, c]));
@@ -289,7 +290,10 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
     `Scores come from an uncalibrated, hand-weighted rubric (version ${RUBRIC_VERSION}) and a provisional rubric-to-axis mapping. They are heuristic indices, not probabilities, and not a finding of astroturfing.`,
   );
   if (input.enrichmentNote) limitations.push(input.enrichmentNote);
+  // Report history gaps only for authors that matter to the result (speculative requests may cover others).
+  const relevantAuthors = new Set([index.root.authorId, ...Array.from(targets, id => index.comment(id)?.authorId)].filter(Boolean));
   for (const r of results) {
+    if (!relevantAuthors.has(r.authorId)) continue;
     if (r.status !== 'complete') limitations.push(`History for ${who(r.authorId)} was ${r.status} (${r.comments.length} of 10 items); missing history is not evidence either way.`);
   }
   if (platform === 'youtube' || platform === 'tiktok') limitations.push('Commenter histories are not modelled on this platform, so scores cannot exceed 74 and confidence is low.');

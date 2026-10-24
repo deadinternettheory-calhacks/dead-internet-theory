@@ -1,5 +1,5 @@
 import { ArrowUpRight, FlaskConical } from 'lucide-react';
-import type { Report, EvidenceItem } from '../analysis/report';
+import type { Report, EvidenceItem, ThreadPreview } from '../analysis/report';
 import { createContext, useContext, type ReactNode } from 'react';
 import { EvidenceDetails, VerdictCard } from './AnalysisPresentation';
 
@@ -32,6 +32,28 @@ function EvidenceQuote({ item }: { item: EvidenceItem }) {
     <blockquote>{item.text}</blockquote>
     <SourceLink url={item.url}>View source</SourceLink>
   </li>;
+}
+
+/** The collected post and first comments, shown while the analysis runs. */
+export function ThreadPreviewCard({ preview }: { preview: ThreadPreview }) {
+  const { post } = preview;
+  return <>
+    <article className="card summary-card">
+      <span className="platform-label">{PLATFORM_LABEL[post.platform] ?? 'POST'}</span>
+      {post.title && <h2 className="url-title">{post.title}</h2>}
+      {post.text && <p className="post-text">{post.text}</p>}
+      {post.author && <p className="url-display">{post.author}</p>}
+    </article>
+    <section className="card thread-preview" aria-labelledby="thread-preview-heading">
+      <h2 id="thread-preview-heading" className="detail-heading">Comments we collected</h2>
+      {preview.comments.length === 0 && <p className="empty-note">No visible comments were collected.</p>}
+      <ul className="comment-list">{preview.comments.map(c => <li key={c.id} className={`comment-row${c.isReply ? ' is-reply' : ''}`}>
+        <p className="quote-meta">{c.author ?? 'Unknown author'}{c.isReply ? ' · reply' : ''}</p>
+        <blockquote>{c.text}</blockquote>
+      </li>)}</ul>
+      {preview.moreCount > 0 && <p className="repeat-note">And {preview.moreCount} more comment{preview.moreCount === 1 ? '' : 's'}.</p>}
+    </section>
+  </>;
 }
 
 export function AnalysisReport({ report }: { report: Report }) {

@@ -75,8 +75,9 @@ export interface PacketComment {
   text: string;
 }
 
-function packetComments(index: GraphIndex, maxChars: number, maxComments: number): PacketComment[] {
-  return index.comments.slice(0, maxComments).map(c => ({
+function packetComments(index: GraphIndex, maxChars: number, maxComments: number, only?: ReadonlySet<string>): PacketComment[] {
+  const source = only ? index.comments.filter(c => only.has(c.id)) : index.comments;
+  return source.slice(0, maxComments).map(c => ({
     id: c.id,
     authorId: c.authorId,
     authorHandle: index.handle(c.authorId),
@@ -189,6 +190,8 @@ export interface ScoringPacket {
   root: ReturnType<typeof rootSummary>;
   comments: (PacketComment & { stance: string; recommendsProduct: string | null; recommendsSubject: boolean })[];
   targets: string[];
+  /** Retrieved comments left out of this packet (not recommendations or their context). */
+  omittedCommentCount: number;
   measurements: {
     recommendationTimeline: { commentId: string; authorHandle: string | null; minutesAfterRoot: number | null }[];
     largestRecommendationBurst30m: { commentIds: string[]; windowMinutes: number };
@@ -199,15 +202,81 @@ export interface ScoringPacket {
   evidenceLevels: { discussion: true; authorHistory: boolean; coRecommenderHistory: boolean; note: string };
 }
 
-export function historyResults(job: EnrichmentJob | null): HistoryResult[] {
-  return job && job.status === 'completed' ? job.results ?? [] : [];
+/** Results from every completed job; the first result per author wins. */
+export function historyResults(jobs: EnrichmentJob[]): HistoryResult[] {
+  const byAuthor = new Map<string, HistoryResult>();
+  for (const job of jobs) {
+    if (job.status !== 'completed') continue;
+    for (const r of job.results ?? []) if (!byAuthor.has(r.authorId)) byAuthor.set(r.authorId, r);
+  }
+  return Array.from(byAuthor.values());
 }
 
-export function buildScoringPacket(graph: GraphEnvelope, triage: TriageOutput, job: EnrichmentJob | null): ScoringPacket {
+export const MAX_SPECULATIVE_PAIRS = 10;
+const QUESTION = /\?\s*$/;
+
+/**
+ * Picks likely recommenders without a model so their histories can be requested
+ * while triage runs. Signals: tracking links or codes, near-duplicate wording
+ * shared with another author, a capitalized term (likely a product name) used by
+ * several authors, and top-level answers. Questions are skipped. Triage later
+ * adds any recommender this misses with a second request.
+ */
+export function speculativeEnrichmentPairs(graph: GraphEnvelope, max = MAX_SPECULATIVE_PAIRS): AuthorAnchor[] {
+  if (!HISTORY_PLATFORMS.includes(graph.platform)) return [];
+  const index = new GraphIndex(graph);
+  const comments = index.comments.filter(c => c.authorId && c.contentStatus === 'visible' && c.text.trim() && !QUESTION.test(c.text));
+  const terms = (text: string) =>
+    new Set(Array.from(text.matchAll(/(?<![.!?]\s)(?<!^)\b([A-Z][a-zA-Z0-9]+(?:\s+[A-Z0-9][a-zA-Z0-9]*)*)\b/g), m => m[1].toLowerCase()));
+  const termAuthors = new Map<string, Set<string>>();
+  for (const c of comments) for (const t of terms(c.text)) {
+    if (!termAuthors.has(t)) termAuthors.set(t, new Set());
+    termAuthors.get(t)!.add(c.authorId!);
+  }
+  const scored = comments.map(c => {
+    let score = 0;
+    const links = linkFacts(c.text);
+    if (links.trackingParams.length || links.shortened || links.discountCode || links.linkInBio) score += 3;
+    if (comments.some(o => o.authorId !== c.authorId && wordJaccard(o.text, c.text) >= 0.3)) score += 3;
+    if (Array.from(terms(c.text)).some(t => (termAuthors.get(t)?.size ?? 0) >= 2)) score += 2;
+    if (c.parentId === graph.rootId) score += 1;
+    return { c, score };
+  });
+  const best = new Map<string, { anchor: string; score: number; at: string }>();
+  for (const { c, score } of scored) {
+    if (score < 2) continue;
+    const prev = best.get(c.authorId!);
+    if (!prev || score > prev.score) best.set(c.authorId!, { anchor: c.id, score, at: c.createdAt ?? '' });
+  }
+  return Array.from(best, ([authorId, v]) => ({ authorId, anchorCommentId: v.anchor, score: v.score, at: v.at }))
+    .sort((a, b) => b.score - a.score || a.at.localeCompare(b.at))
+    .slice(0, max)
+    .map(({ authorId, anchorCommentId }) => ({ authorId, anchorCommentId }));
+}
+
+/** Comments the scoring stage needs: recommendations, their parents, replies to them, and the most-engaged others. */
+export function scoringContext(index: GraphIndex, targets: ReadonlySet<string>, extra = 15): Set<string> {
+  const keep = new Set<string>(targets);
+  const targetAuthors = new Set(index.comments.filter(c => targets.has(c.id)).map(c => c.authorId));
+  for (const c of index.comments) {
+    if (targets.has(c.id) && c.parentId && index.comment(c.parentId)) keep.add(c.parentId);
+    if (c.parentId && targets.has(c.parentId)) keep.add(c.id);
+    if (c.authorId && targetAuthors.has(c.authorId)) keep.add(c.id);
+  }
+  const engagement = (c: CommentNode) => c.metrics.score ?? c.metrics.likeCount ?? 0;
+  index.comments
+    .filter(c => !keep.has(c.id))
+    .sort((a, b) => engagement(b) - engagement(a))
+    .slice(0, extra)
+    .forEach(c => keep.add(c.id));
+  return keep;
+}
+
+export function buildScoringPacket(graph: GraphEnvelope, triage: TriageOutput, jobs: EnrichmentJob[]): ScoringPacket {
   const index = new GraphIndex(graph);
   const triageById = new Map(triage.comments.map(c => [c.commentId, c]));
   const label = triage.subject.label;
-  const results = historyResults(job);
+  const results = historyResults(jobs);
   const resultByAuthor = new Map(results.map(r => [r.authorId, r]));
   const targets = index.comments.filter(c => triageById.get(c.id)?.recommendsProduct).map(c => c.id);
   const subjectRecs = index.comments.filter(c => triageById.get(c.id)?.recommendsSubject);
@@ -259,18 +328,21 @@ export function buildScoringPacket(graph: GraphEnvelope, triage: TriageOutput, j
   });
 
   const withHistory = authors.filter(a => a.historyCount > 0);
+  // Only recommendations and their surroundings are sent; measurements above still use every comment.
+  const context = scoringContext(index, new Set(targets));
   const { packet } = fit((chars, count) => ({
     stage: 'scoring' as const,
     platform: graph.platform,
     subject: triage.subject,
     root: rootSummary(index),
-    comments: packetComments(index, chars, count).map(c => ({
+    comments: packetComments(index, chars, count, context).map(c => ({
       ...c,
       stance: triageById.get(c.id)?.stance ?? 'unclear',
       recommendsProduct: triageById.get(c.id)?.recommendsProduct ?? null,
       recommendsSubject: triageById.get(c.id)?.recommendsSubject ?? false,
     })),
     targets,
+    omittedCommentCount: index.comments.length - context.size,
     measurements: {
       recommendationTimeline: timeline,
       largestRecommendationBurst30m: largestBurst(subjectRecs, 30),
