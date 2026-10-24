@@ -1,0 +1,544 @@
+openapi: 3.1.0
+info:
+  title: Discussion Graph & Enrichment API
+  version: 1.0.0
+  description: Contract between Apify ingestion, inference, and frontend. Canonical model definitions in models.schema.json (JSON Schema 2020-12).
+servers:
+- url: https://api.example.invalid
+  description: Replace with deployment base URL
+tags:
+- name: Investigations
+- name: Enrichment
+- name: Inference
+security:
+- BearerAuth: []
+paths:
+  /v1/investigations:
+    post:
+      operationId: createInvestigation
+      summary: Queue ingestion for one public discussion URL
+      description: Frontend initiates; backend queues Apify runs, stores normalized graph, emits investigation.ready internally and schedules inference. Caller polls GET resource.
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        required: true
+        description: 8–128 ASCII characters; deduplicated per caller, operation and canonical payload for 24h. Same key and different payload yields 409.
+        schema:
+          type: string
+          minLength: 8
+          maxLength: 128
+          pattern: ^[\x20-\x7E]{8,128}$
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvestigationCreateRequest'
+      responses:
+        '202':
+          description: Created or idempotently replayed queued investigation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvestigationResource'
+        '400':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '422':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /v1/investigations/{investigationId}:
+    get:
+      operationId: getInvestigation
+      summary: Poll ingestion and inference states
+      parameters:
+      - name: investigationId
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: Investigation state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvestigationResource'
+        '401':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /v1/investigations/{investigationId}/graph:
+    get:
+      operationId: getGraph
+      summary: Return immutable normalized ingestion graph
+      description: Available only when ingestionStatus=completed; full graph JSON, one discussion root. Backend may apply configured server response compression. Graph is immutable per graphRevision.
+      parameters:
+      - name: investigationId
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: Complete normalized graph for retrieved discussion
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphEnvelope'
+        '401':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '413':
+          description: Discussion exceeds configured graph payload limit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /v1/investigations/{investigationId}/enrichments:
+    post:
+      operationId: requestAuthorEnrichment
+      summary: Queue batched best-effort author-history retrieval
+      description: Inference-only. Request up to 25 author+anchor pairs, with limit=10. YouTube and TikTok return unsupported per author without provider requests.
+      parameters:
+      - name: investigationId
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      - name: Idempotency-Key
+        in: header
+        required: true
+        description: 8–128 ASCII characters; deduplicated per caller, operation and canonical payload for 24h. Same key and different payload yields 409.
+        schema:
+          type: string
+          minLength: 8
+          maxLength: 128
+          pattern: ^[\x20-\x7E]{8,128}$
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnrichmentRequest'
+      responses:
+        '202':
+          description: Enrichment job queued or replayed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnrichmentJob'
+        '400':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '422':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '429':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /v1/investigations/{investigationId}/enrichments/{enrichmentId}:
+    get:
+      operationId: getAuthorEnrichment
+      summary: Poll enrichment state and retrieve normalized historical comments
+      parameters:
+      - name: investigationId
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      - name: enrichmentId
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: Enrichment job, results once completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnrichmentJob'
+        '401':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /v1/investigations/{investigationId}/analysis:
+    post:
+      operationId: submitAnalysis
+      summary: Persist finalized inference findings
+      description: Inference-only; exactly one final analysis per graph revision in v1; evidenceRefs must resolve to persisted graph or authorized enrichment-history records. Inferred edges remain in analysis, never mutate ingestion graph.
+      parameters:
+      - name: investigationId
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      - name: Idempotency-Key
+        in: header
+        required: true
+        description: 8–128 ASCII characters; deduplicated per caller, operation and canonical payload for 24h. Same key and different payload yields 409.
+        schema:
+          type: string
+          minLength: 8
+          maxLength: 128
+          pattern: ^[\x20-\x7E]{8,128}$
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalysisSubmission'
+      responses:
+        '201':
+          description: Analysis persisted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisReceipt'
+        '400':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '422':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    get:
+      operationId: getAnalysis
+      summary: Get completed analysis for frontend display
+      parameters:
+      - name: investigationId
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: Stored final analysis
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisResource'
+        '401':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /v1/capabilities:
+    get:
+      operationId: getCapabilities
+      summary: Provider capability matrix (not a runtime guarantee)
+      responses:
+        '200':
+          description: Supported platform operation classes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CapabilityResponse'
+        '401':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Standard API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Frontend/user bearer auth for create/read; service-scoped token for enrichment/write analysis.
+  schemas:
+    Timestamp:
+      $ref: ./models.schema.json#/$defs/Timestamp
+    Platform:
+      $ref: ./models.schema.json#/$defs/Platform
+    NodeId:
+      $ref: ./models.schema.json#/$defs/NodeId
+    SourceUrl:
+      $ref: ./models.schema.json#/$defs/SourceUrl
+    Sha256:
+      $ref: ./models.schema.json#/$defs/Sha256
+    Engagement:
+      $ref: ./models.schema.json#/$defs/Engagement
+    AuthorProfile:
+      $ref: ./models.schema.json#/$defs/AuthorProfile
+    DiscussionNode:
+      $ref: ./models.schema.json#/$defs/DiscussionNode
+    AuthorNode:
+      $ref: ./models.schema.json#/$defs/AuthorNode
+    CommentNode:
+      $ref: ./models.schema.json#/$defs/CommentNode
+    GraphNode:
+      $ref: ./models.schema.json#/$defs/GraphNode
+    GraphEdge:
+      $ref: ./models.schema.json#/$defs/GraphEdge
+    ActorRun:
+      $ref: ./models.schema.json#/$defs/ActorRun
+    Coverage:
+      $ref: ./models.schema.json#/$defs/Coverage
+    GraphEnvelope:
+      $ref: ./models.schema.json#/$defs/GraphEnvelope
+    InvestigationCreateRequest:
+      $ref: ./models.schema.json#/$defs/InvestigationCreateRequest
+    InvestigationResource:
+      $ref: ./models.schema.json#/$defs/InvestigationResource
+    AuthorAnchor:
+      $ref: ./models.schema.json#/$defs/AuthorAnchor
+    EnrichmentRequest:
+      $ref: ./models.schema.json#/$defs/EnrichmentRequest
+    HistoryComment:
+      $ref: ./models.schema.json#/$defs/HistoryComment
+    HistoryCoverage:
+      $ref: ./models.schema.json#/$defs/HistoryCoverage
+    ErrorDetail:
+      $ref: ./models.schema.json#/$defs/ErrorDetail
+    HistoryResult:
+      $ref: ./models.schema.json#/$defs/HistoryResult
+    EnrichmentJob:
+      $ref: ./models.schema.json#/$defs/EnrichmentJob
+    Subject:
+      $ref: ./models.schema.json#/$defs/Subject
+    SentimentCounts:
+      $ref: ./models.schema.json#/$defs/SentimentCounts
+    SentimentDistribution:
+      $ref: ./models.schema.json#/$defs/SentimentDistribution
+    Score:
+      $ref: ./models.schema.json#/$defs/Score
+    AxisAssessment:
+      $ref: ./models.schema.json#/$defs/AxisAssessment
+    CommentAssessment:
+      $ref: ./models.schema.json#/$defs/CommentAssessment
+    ClusterAssessment:
+      $ref: ./models.schema.json#/$defs/ClusterAssessment
+    InferredEdge:
+      $ref: ./models.schema.json#/$defs/InferredEdge
+    AnalysisSubmission:
+      $ref: ./models.schema.json#/$defs/AnalysisSubmission
+    AnalysisResource:
+      $ref: ./models.schema.json#/$defs/AnalysisResource
+    AnalysisReceipt:
+      $ref: ./models.schema.json#/$defs/AnalysisReceipt
+    ApiError:
+      $ref: ./models.schema.json#/$defs/ApiError
+    Capability:
+      $ref: ./models.schema.json#/$defs/Capability
+    CapabilityResponse:
+      $ref: ./models.schema.json#/$defs/CapabilityResponse
+    InvestigationReadyEvent:
+      $ref: ./models.schema.json#/$defs/InvestigationReadyEvent

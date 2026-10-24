@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "platforms": [
+    {
+      "platform": "reddit",
+      "discussion": "supported_best_effort",
+      "authorHistory": "supported_best_effort",
+      "profileEnrichment": "reddit_only_optional",
+      "actorRuntimeVerified": false
+    },
+    {
+      "platform": "x",
+      "discussion": "supported_best_effort",
+      "authorHistory": "supported_best_effort",
+      "profileEnrichment": "not_supported",
+      "actorRuntimeVerified": false
+    },
+    {
+      "platform": "youtube",
+      "discussion": "supported_best_effort",
+      "authorHistory": "unsupported",
+      "profileEnrichment": "not_supported",
+      "actorRuntimeVerified": false
+    },
+    {
+      "platform": "tiktok",
+      "discussion": "supported_best_effort",
+      "authorHistory": "unsupported",
+      "profileEnrichment": "not_supported",
+      "actorRuntimeVerified": false
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "schemaVersion": "1.0.0",
+  "enrichmentId": "enr_demo_01",
+  "investigationId": "inv_demo_01",
+  "status": "completed",
+  "createdAt": "2026-10-23T22:20:10Z",
+  "startedAt": "2026-10-23T22:20:11Z",
+  "completedAt": "2026-10-23T22:21:00Z",
+  "results": [
+    {
+      "authorId": "reddit:author:t2_alex",
+      "anchorCommentId": "reddit:comment:t1_a",
+      "status": "partial",
+      "strategy": "recent_fallback",
+      "comments": [
+        {
+          "id": "reddit:comment:t1_history1",
+          "nativeId": "t1_history1",
+          "authorId": "reddit:author:t2_alex",
+          "text": "Previously recommended a similar product.",
+          "createdAt": "2026-10-22T12:00:00Z",
+          "timestampPrecision": "exact",
+          "url": "https://www.reddit.com/r/other/comments/old/comment/history1",
+          "sourceDiscussionNativeId": "t3_old",
+          "metrics": {
+            "score": 2
+          }
+        }
+      ],
+      "profile": {
+        "accountCreatedAt": "2025-06-01T00:00:00Z",
+        "postKarma": 11,
+        "commentKarma": 200,
+        "fetchedAt": "2026-10-23T22:20:00Z"
+      },
+      "coverage": {
+        "requestedCount": 10,
+        "returnedCount": 1,
+        "candidateFetchedCount": 1,
+        "providerTruncated": null,
+        "reachedAnchorWindow": true,
+        "oldestFetchedAt": "2026-10-22T12:00:00Z",
+        "newestFetchedAt": "2026-10-22T12:00:00Z",
+        "collectedAt": "2026-10-23T22:20:00Z",
+        "sourceSnapshotRef": "snapshot_demo_h1",
+        "actorRunIds": [
+          "demo_run_h1"
+        ],
+        "limitations": [
+          "Only one candidate returned; completeness unknown."
+        ]
+      }
+    },
+    {
+      "authorId": "reddit:author:t2_ben",
+      "anchorCommentId": "reddit:comment:t1_b",
+      "status": "partial",
+      "strategy": "none",
+      "comments": [],
+      "coverage": {
+        "requestedCount": 10,
+        "returnedCount": 0,
+        "candidateFetchedCount": 0,
+        "providerTruncated": null,
+        "reachedAnchorWindow": null,
+        "oldestFetchedAt": null,
+        "newestFetchedAt": null,
+        "collectedAt": "2026-10-23T22:20:00Z",
+        "sourceSnapshotRef": "snapshot_demo_h2",
+        "actorRunIds": [
+          "demo_run_h2"
+        ],
+        "limitations": [
+          "Actor returned no accessible history; no claim that author has no history."
+        ]
+      }
+    }
+  ]
+}

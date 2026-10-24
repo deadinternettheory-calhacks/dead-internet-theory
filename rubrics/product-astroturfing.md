@@ -119,7 +119,9 @@ Platform translations of individual rules are listed in each rule's
 4. **Collect evidence** at the levels the platform allows. For Reddit and X,
    request histories for the target author, the root author and the
    co-recommenders. Record each history's status (`complete`, `partial`,
-   `unavailable`). `unavailable` means unknown, never "no history".
+   `unavailable`, `unsupported`, `failed`). Unavailable, unsupported, and failed
+   retrievals mean missing evidence, never "no history". Read returned profiles
+   and history from enrichment evidence; v1 does not backfill immutable graphs.
 5. **Check disclosure.** If the author discloses a commercial tie, apply rule
    E1 and skip to step 9.
 6. **Evaluate every rule** in section 5 that the platform allows. For each one
@@ -245,7 +247,7 @@ Return one JSON object:
 
 ```json
 {
-  "comment_id": "reddit:t1_abc123",
+  "comment_id": "reddit:comment:t1_abc123",
   "platform": "reddit",
   "product": "Brand ModelName",
   "label": "scored",
@@ -253,7 +255,7 @@ Return one JSON object:
   "tier": "High",
   "confidence": "Medium",
   "evidence_levels": ["T", "A"],
-  "history_status": {"reddit:user123": "complete"},
+  "history_status": {"reddit:author:user123": "complete"},
   "signals": [
     {"id": "B1", "points": 20, "evidence": "Brand named in 4 of last 10 comments across r/fitness, r/cooking, r/BuyItForLife"},
     {"id": "B2", "points": 20, "evidence": "Same two-sentence recommendation posted in 3 other threads this month"},
@@ -273,8 +275,10 @@ Return one JSON object:
 
 `label` is one of `scored`, `disclosed_promotion` or `not_applicable`.
 `platform` is one of `reddit`, `x`, `youtube` or `tiktok`. IDs use the
-contract's platform-prefixed form. This object is the rubric's own output; how
-it maps into `submitAnalysis` is an open decision in the contract.
+contract's platform-and-kind-prefixed form. This object is the rubric's own
+output, not the v1 `AnalysisSubmission` wire payload. The inference implementation
+must define how these heuristic signals map to the typed v1 axes and evidence
+references; the contract does not establish that mapping or calibrate the rubric.
 
 ## 9. Conduct rules
 
