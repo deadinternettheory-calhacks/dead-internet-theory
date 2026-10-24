@@ -13,6 +13,7 @@ import { fixtureDiscussion, fixtureHistory, emptySet } from "../src/fixture";
 import { sample, type CandidateSet } from "../src/history";
 import { deliver } from "../src/outbound";
 import { advance, historySets, type PlanState } from "../src/providers";
+import type { ProviderResources } from "../src/provider-cleanup";
 interface HistoryContext {
   mode: ProviderMode;
   missing: string[];
@@ -24,13 +25,19 @@ export const tick = action({
     const work = await ctx.runMutation(anyApi.jobs.claim, { key });
     if (!work) return;
     const { job } = work;
-    const observe = (operation: string, runId: string, status: string) =>
+    const observe = (
+      operation: string,
+      runId: string,
+      status: string,
+      resources?: ProviderResources,
+    ) =>
       ctx.runMutation(anyApi.jobs.observeRun, {
         key,
         token: job.token,
         operation,
         runId,
         status,
+        ...(resources ? { resources } : {}),
       });
     try {
       let outcome: unknown;

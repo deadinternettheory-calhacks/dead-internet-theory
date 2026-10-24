@@ -19,5 +19,6 @@ export default defineSchema({
     stageStartedAt: v.number(),
     error: v.optional(v.string()),
     updatedAt: v.number(),
-  }).index('by_investigation_revision', ['investigationId', 'graphRevision']),
+    expiresAt: v.optional(v.number()),
+  }).index('by_investigation_revision', ['investigationId', 'graphRevision']).index('expiry', ['expiresAt']),
 });

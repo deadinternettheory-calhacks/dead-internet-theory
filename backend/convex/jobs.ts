@@ -1,6 +1,6 @@
 import { internalMutationGeneric as mutation, anyApi } from "convex/server";
 import { v } from "convex/values";
-import { get, put, immutable, type Ctx } from "./db";
+import { get, put, immutable, deadline, RETENTION_MS, type Ctx } from "./db";
 import { queue } from "./api";
 import { iso, limits, stable, validate, providerMode } from "../src/core";
 import { checkGraph } from "../src/invariants";
@@ -285,6 +285,13 @@ export const observeRun = mutation({
     operation: v.string(),
     runId: v.string(),
     status: v.string(),
+    resources: v.optional(
+      v.object({
+        dataset: v.optional(v.string()),
+        keyValueStore: v.optional(v.string()),
+        requestQueue: v.optional(v.string()),
+      }),
+    ),
   },
   handler: async (ctx, a) => {
     const job = await get(ctx, "jobs", a.key);
@@ -303,6 +310,27 @@ export const observeRun = mutation({
     if (["SUCCEEDED", "FAILED", "ABORTED", "TIMED-OUT"].includes(a.status))
       slot.status = "released";
     await put(ctx, "providerSlots", key, slot);
+    const tracked = await ctx.db
+      .query("providerCleanup")
+      .withIndex("key", (q) => q.eq("key", a.runId))
+      .unique();
+    if (!tracked) {
+      const expiresAt =
+        (await deadline(ctx, "jobs", a.key)) ?? Date.now() + RETENTION_MS;
+      await ctx.db.insert("providerCleanup", {
+        key: a.runId,
+        expiresAt,
+        nextAttemptAt: expiresAt,
+        data: { resources: a.resources ?? {} },
+      });
+    } else if (a.resources) {
+      await ctx.db.patch(tracked._id, {
+        data: {
+          ...tracked.data,
+          resources: { ...tracked.data.resources, ...a.resources },
+        },
+      });
+    }
     return true;
   },
 });

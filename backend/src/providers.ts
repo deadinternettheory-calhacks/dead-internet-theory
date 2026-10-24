@@ -20,6 +20,7 @@ import { outbound } from "./outbound";
 import { sameNative } from "./identity";
 import { source } from "./url";
 import { redditAuthor, redditRecord, redditRowType } from "./reddit";
+import type { ProviderResources } from "./provider-cleanup";
 import { verification } from "./provider-policy";
 export { verification } from "./provider-policy";
 export const actors = {
@@ -241,7 +242,12 @@ export async function advance(args: {
   authors?: Model<"AuthorNode">[];
   state: PlanState;
   reserve: (op: string) => Promise<RunAdmission>;
-  observe: (op: string, runId: string, status: string) => Promise<boolean>;
+  observe: (
+    op: string,
+    runId: string,
+    status: string,
+    resources?: ProviderResources,
+  ) => Promise<boolean>;
 }) {
   liveGate(args.platform);
   const state: Required<PlanState> = {
@@ -276,7 +282,14 @@ export async function advance(args: {
         "PROVIDER_INVALID_DATA",
         "Provider run metadata is invalid",
       );
-    if (!(await args.observe(operation, run.id, run.status)))
+    const resources: ProviderResources = {};
+    if (typeof run.defaultDatasetId === "string")
+      resources.dataset = run.defaultDatasetId;
+    if (typeof run.defaultKeyValueStoreId === "string")
+      resources.keyValueStore = run.defaultKeyValueStoreId;
+    if (typeof run.defaultRequestQueueId === "string")
+      resources.requestQueue = run.defaultRequestQueueId;
+    if (!(await args.observe(operation, run.id, run.status, resources)))
       throw new ApiFault(
         500,
         "JOB_LEASE_LOST",

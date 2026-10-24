@@ -104,3 +104,5 @@ submits the supplied illustrative scores, without calculating any scores.
 See the [runbook](RUNBOOK.md) for configuration, storage decisions, provider
 verification, operational recovery and deployment prerequisites, and the
 [integration guide](INTEGRATION.md) for frontend/inference authentication.
+The owner's 24-hour live-data policy and automated deletion scope are documented
+in [RETENTION.md](RETENTION.md).

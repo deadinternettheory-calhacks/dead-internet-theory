@@ -66,6 +66,7 @@ export const receive = internalMutation({
       state: '{}',
       stageStartedAt: now,
       updatedAt: now,
+      expiresAt: now + 24 * 60 * 60_000,
     });
     await ctx.scheduler.runAfter(0, internal.worker.step, { jobId });
     return { duplicate: false };
@@ -80,7 +81,7 @@ export const loadJob = internalQuery({
   ),
   handler: async (ctx, { jobId }) => {
     const job = await ctx.db.get(jobId);
-    if (!job) return null;
+    if (!job || (job.expiresAt ?? Infinity) <= Date.now()) return null;
     const { investigationId, graphRevision, graphFingerprint, stage, state, stageStartedAt } = job;
     return { investigationId, graphRevision, graphFingerprint, stage, state, stageStartedAt };
   },
@@ -91,6 +92,8 @@ export const saveJob = internalMutation({
   returns: v.null(),
   handler: async (ctx, args) => {
     const now = Date.now();
+    const job = await ctx.db.get(args.jobId);
+    if (!job || (job.expiresAt ?? Infinity) <= now) return null;
     await ctx.db.patch(args.jobId, {
       stage: args.stage,
       state: args.state,

@@ -55,6 +55,10 @@ backend's token issuance mechanism is still an open decision
 (backend/INTEGRATION.md); replace this with issued, scoped credentials when one
 exists.
 
+Coordinator job state expires after 24 hours and is deleted by a minute sweep.
+Expired jobs stop processing. See [the retention policy](../backend/RETENTION.md)
+for application, Apify and upstream-provider retention boundaries.
+
 ## Local end-to-end run (synthetic, no CREAO key)
 
 1. In `backend/`, follow its "Real local synthetic demo" setup through
