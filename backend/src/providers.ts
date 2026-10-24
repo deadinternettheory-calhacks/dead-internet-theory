@@ -19,6 +19,7 @@ import type { CandidateSet } from "./history";
 import { outbound } from "./outbound";
 import { sameNative } from "./identity";
 import { source } from "./url";
+import { redditRecord, redditRowType } from "./reddit";
 import { verification } from "./provider-policy";
 export { verification } from "./provider-policy";
 export const actors = {
@@ -396,6 +397,7 @@ function person(row: any, p: Platform): Person | null {
   };
 }
 export function mapRecord(p: Platform, row: any): RecordItem {
+  if (p === "reddit") return redditRecord(row);
   const rawTime =
     row.createdAt ?? row.publishedAt ?? row.postedAt ?? row.created_utc ?? null;
   const nativeId = nativeString(row.commentId ?? row.id);
@@ -438,17 +440,25 @@ export function discussion(
   tasks: Task[],
 ): DiscussionData {
   const all = tasks.flatMap((t) => t.rows);
+  const kind = (row: any) => (p === "reddit" ? redditRowType(row) : row.type);
   // Fail closed if original root is missing. Replies are never promoted to root.
   const root =
     tasks.find((t) => t.role === "root")?.rows[0] ??
     all.find(
-      (r) => r.type === "post" || r.type === "video" || r.type === "discussion",
+      (r) =>
+        kind(r) === "post" || kind(r) === "video" || kind(r) === "discussion",
     );
   if (!root)
     throw new ApiFault(
       500,
       "PROVIDER_INVALID_DATA",
       "Dataset lacks a verified original discussion root",
+    );
+  if (p === "reddit" && ["not_found", "unavailable"].includes(root._status))
+    throw new ApiFault(
+      500,
+      "PROVIDER_UNAVAILABLE",
+      "The permitted discussion was not available to the provider",
     );
   const r = mapRecord(p, root);
   const native = nativeString(root.id ?? root.videoId);
@@ -463,6 +473,20 @@ export function discussion(
       500,
       "PROVIDER_INVALID_DATA",
       "Original discussion identity does not match the requested source",
+    );
+  if (
+    p === "reddit" &&
+    all.some(
+      (row) =>
+        kind(row) === "comment" &&
+        row._post_id != null &&
+        !sameNative("reddit", "discussion", nativeString(row._post_id), native),
+    )
+  )
+    throw new ApiFault(
+      500,
+      "PROVIDER_INVALID_DATA",
+      "Provider returned comments for a different discussion",
     );
   r.text = text(
     root.text ??
@@ -479,23 +503,23 @@ export function discussion(
       (r) =>
         r !== root &&
         !(p === "x" && nativeString(r.id ?? r.commentId) === native) &&
-        r.type !== "post" &&
-        r.type !== "video" &&
-        r.type !== "discussion",
+        kind(r) !== "post" &&
+        kind(r) !== "video" &&
+        kind(r) !== "discussion" &&
+        (p !== "reddit" || kind(r) === "comment"),
     )
     .map((r) => mapRecord(p, r));
-  // Reddit candidate contract documents null top-level parents. Do not apply this
-  // rule to platforms where a missing parent is ambiguous.
-  if (p === "reddit")
-    for (const c of comments) if (c.parentNativeId === null) c.topLevel = true;
+
   const limited = tasks.some(
     (t) => t.truncated || t.run?.status !== "SUCCEEDED",
   );
+  const reportedValue =
+    root.commentCount ?? (p === "reddit" ? root.num_comments : undefined);
   const reported =
-    typeof root.commentCount === "number" &&
-    Number.isSafeInteger(root.commentCount) &&
-    root.commentCount >= 0
-      ? root.commentCount
+    typeof reportedValue === "number" &&
+    Number.isSafeInteger(reportedValue) &&
+    reportedValue >= 0
+      ? reportedValue
       : null;
   return {
     root: {
@@ -509,6 +533,20 @@ export function discussion(
     exhaustive: false,
     limitations: [
       "Third-party provider results are best effort; successful execution is not proof of exhaustive retrieval.",
+      ...(p === "reddit" &&
+      all.some((row) => row.isScoreHidden || row.score_hidden || row.hide_score)
+        ? [
+            "Provider-hidden scores are omitted rather than treated as observed values.",
+          ]
+        : []),
+      ...(p === "reddit" &&
+      (root.is_video === true ||
+        root.post_hint === "image" ||
+        root.post_hint === "rich:video")
+        ? [
+            "Linked image/video content is not collected or analyzed; only available title and text metadata are included.",
+          ]
+        : []),
       ...(p === "youtube"
         ? [
             "Video metadata and estimated comment dates only; no audiovisual analysis.",
