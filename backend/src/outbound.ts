@@ -78,7 +78,18 @@ export async function outbound(
             : {}),
           ...options.headers,
         },
-        lookup: (_h, _o, cb) => cb(null, selected.address, selected.family),
+        lookup: (_h, options, cb) => {
+          // Node's autoSelectFamily path requests all=true even though we pin
+          // one validated destination. Its callback then expects an array.
+          if ((options as { all?: boolean }).all) {
+            (
+              cb as unknown as (
+                error: null,
+                addresses: { address: string; family: number }[],
+              ) => void
+            )(null, [selected]);
+          } else cb(null, selected.address, selected.family);
+        },
       },
       (res) => {
         if ((res.statusCode ?? 500) >= 300 && (res.statusCode ?? 500) < 400) {
