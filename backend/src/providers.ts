@@ -570,7 +570,7 @@ export function historySets(
       .filter((t): t is string => !!t)
       .sort();
     const failed =
-      tasks.length === 0 || tasks.every((t) => t.run.status !== "SUCCEEDED");
+      tasks.length === 0 || tasks.every((t) => t.run?.status !== "SUCCEEDED");
     result.set(authorId, {
       comments,
       ...(failed
@@ -590,7 +590,9 @@ export function historySets(
         newestFetchedAt: times.at(-1) ?? null,
         collectedAt: iso(),
         sourceSnapshotRef: snapshot,
-        actorRunIds: tasks.map((t) => t.run.id),
+        actorRunIds: tasks
+          .filter((t) => typeof t.run?.id === "string")
+          .map((t) => t.run.id),
         limitations: [
           "Best-effort authored candidates, capped at 150; not a lifetime-history census.",
         ],

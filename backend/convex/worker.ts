@@ -183,14 +183,44 @@ export const tick = action({
                     true,
                   );
             if (f.retryable && job.attempt + 1 < limits().attempts) throw f;
-            for (const author of missing)
-              sets.set(
-                author,
-                emptySet(
+            const raw = (job.payload as PlanState).tasks ?? [];
+            const snapshot = `snapshot:${key}`;
+            const hasCollectedRows = raw.some((t) => t.rows.length > 0);
+            const recovered = hasCollectedRows
+              ? historySets(graph.platform, missing, raw, snapshot)
+              : new Map<string, CandidateSet>();
+            if (hasCollectedRows) snapshots.set(snapshot, raw);
+            for (const author of missing) {
+              const set = recovered.get(author);
+              if (set && set.comments.length && set.status !== "failed") {
+                set.coverage.limitations.push(
+                  "Batch stopped after a provider failure; already-collected evidence was retained.",
+                );
+                if (
+                  raw.some(
+                    (t) =>
+                      (!t.authorIds || t.authorIds.includes(author)) && !t.done,
+                  )
+                )
+                  set.coverage.limitations.push(
+                    "Candidate paging did not finish.",
+                  );
+                sets.set(author, set);
+                if (
+                  raw
+                    .filter((t) => !t.authorIds || t.authorIds.includes(author))
+                    .every((t) => t.done)
+                )
+                  caches.push({ key: cacheKey(author), set });
+              } else {
+                const failed = emptySet(
                   f.code === "PROVIDER_UNAVAILABLE" ? "unavailable" : "failed",
                   { code: f.code, message: f.message, retryable: f.retryable },
-                ),
-              );
+                );
+                if (set) failed.coverage = set.coverage;
+                sets.set(author, failed);
+              }
+            }
           }
         }
         const root = graph.nodes.find(

@@ -102,7 +102,7 @@ History candidates target 150 per author, with cache keys including mode,
 platform, author and collection policy. One batch deduplicates repeated authors;
 Reddit uses a single bulk run, X uses authored-search plans. Independent concurrent
 jobs can miss the same cache and make separate bounded runs. Final samples remain
-anchor-specific and are not cached as candidate pools. Cache TTL is freshness,
+anchor-specific and are not cached as candidate pools. If a later author task fails, already-collected candidate evidence and its run/snapshot provenance are preserved; only affected authors receive failures. Incomplete candidate paging is reported explicitly, and transient failures are not cached as empty history. Cache TTL is freshness,
 not a deletion policy. Future, invalid, unknown-time and focal-discussion records
 are excluded. Unknown source-discussion IDs are excluded because focal exclusion
 cannot be established. Estimated dates force recent fallback for temporal purposes.
