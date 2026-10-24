@@ -19,7 +19,12 @@ import type { CandidateSet } from "./history";
 import { outbound } from "./outbound";
 import { sameNative } from "./identity";
 import { source } from "./url";
-import { redditAuthor, redditRecord, redditRowType } from "./reddit";
+import {
+  redditAuthor,
+  redditRecord,
+  redditRowType,
+  redditSourceUrl,
+} from "./reddit";
 import type { ProviderResources } from "./provider-cleanup";
 import { verification } from "./provider-policy";
 import { actors, actorBuilds } from "./actors";
@@ -54,6 +59,10 @@ export function liveGate(platform: Platform) {
     );
 }
 interface Task {
+  pageSize?: number;
+  oversizedRows?: number;
+  historyFetched?: Record<string, number>;
+  historyOmitted?: Record<string, number>;
   authorIds?: string[];
   authorHandles?: Record<string, string>;
   actor: string;
@@ -327,6 +336,39 @@ export function slimRedditHistoryRow(row: any): any {
   }
   return slim;
 }
+
+// Reserve space for every requested author, including mixed cache/live jobs.
+// Provider rows are paged past omissions so early authors cannot crowd out later ones.
+export function retainHistoryRows(p: Platform, task: Task, incoming: any[]) {
+  const authors = task.authorIds ?? [];
+  const bytes = new Map(
+    authors.map((author) => [
+      author,
+      task.rows
+        .filter((row) => belongsToAuthor(p, task, author, row))
+        .reduce(
+          (n, row) => n + new TextEncoder().encode(stable(row)).length,
+          0,
+        ),
+    ]),
+  );
+  task.historyFetched ??= {};
+  task.historyOmitted ??= {};
+  for (const row of incoming) {
+    const author = authors.find((a) => belongsToAuthor(p, task, a, row));
+    if (!author) continue;
+    if (isHistoryComment(p, row))
+      task.historyFetched[author] = (task.historyFetched[author] ?? 0) + 1;
+    const size = new TextEncoder().encode(stable(row)).length;
+    if ((bytes.get(author) ?? 0) + size > 16000) {
+      task.historyOmitted[author] = (task.historyOmitted[author] ?? 0) + 1;
+      task.truncated = true;
+      continue;
+    }
+    task.rows.push(row);
+    bytes.set(author, (bytes.get(author) ?? 0) + size);
+  }
+}
 export type RunAdmission =
   | { status: "reserved" }
   | { status: "resume"; runId: string }
@@ -442,12 +484,38 @@ export async function advance(args: {
           : task.role === "root"
             ? 1
             : limits().comments + 1;
-      const pageLimit = Math.min(100, budget - task.offset);
-      const rows = await provider.items(
-        task.run.defaultDatasetId,
-        task.offset,
-        pageLimit,
-      );
+      let pageLimit = Math.min(task.pageSize ?? 100, budget - task.offset);
+      let rows: any[];
+      while (true) {
+        try {
+          rows = await provider.items(
+            task.run.defaultDatasetId,
+            task.offset,
+            pageLimit,
+          );
+          break;
+        } catch (e) {
+          if (
+            args.kind !== "history" ||
+            !(e instanceof ApiFault) ||
+            e.code !== "PROVIDER_SIZE_LIMIT"
+          )
+            throw e;
+          if (pageLimit > 1) {
+            task.pageSize = pageLimit = Math.max(1, Math.floor(pageLimit / 2));
+            continue;
+          }
+          // A single oversized row must not prevent reading later authors.
+          task.offset++;
+          task.oversizedRows = (task.oversizedRows ?? 0) + 1;
+          task.truncated = true;
+          if (task.offset >= budget) {
+            task.done = true;
+            state.index++;
+          }
+          return { done: false as const, state };
+        }
+      }
       if (rows.length > pageLimit)
         throw new ApiFault(
           500,
@@ -456,13 +524,15 @@ export async function advance(args: {
         );
       // History rows are slimmed to the fields mapping uses: full provider rows
       // (100+ fields) filled the snapshot budget after about two authors.
-      task.rows.push(
-        ...(args.kind === "history" && args.platform === "reddit"
+      const retainedRows =
+        args.kind === "history" && args.platform === "reddit"
           ? rows.map(slimRedditHistoryRow)
           : args.platform !== "reddit"
             ? rows.map(slimSocialRow)
-            : rows),
-      );
+            : rows;
+      if (args.kind === "history")
+        retainHistoryRows(args.platform, task, retainedRows);
+      else task.rows.push(...retainedRows);
       task.offset += rows.length;
       if (new TextEncoder().encode(stable(state)).length > 650_000)
         throw new ApiFault(
@@ -472,7 +542,7 @@ export async function advance(args: {
         );
       if (rows.length < pageLimit || task.offset >= budget) {
         task.done = true;
-        task.truncated = task.role !== "root" && task.offset >= budget;
+        task.truncated ||= task.role !== "root" && task.offset >= budget;
         state.index++;
       }
     }
@@ -779,6 +849,26 @@ export function discussion(
     })),
   };
 }
+function belongsToAuthor(p: Platform, task: Task, authorId: string, row: any) {
+  const a = p === "reddit" ? redditAuthor(row) : person(row, p);
+  const expected = authorId.slice(`${p}:author:`.length);
+  if (a?.nativeId && !expected.startsWith("handle:"))
+    return p === "reddit"
+      ? expected.replace(/^t2_/, "") === a.nativeId.replace(/^t2_/, "")
+      : expected === a.nativeId;
+  const handle = a?.handle ?? (p === "reddit" ? row._username : null);
+  if (typeof handle !== "string") return false;
+  const requestedHandle = task.authorHandles?.[authorId];
+  return p === "reddit" && requestedHandle
+    ? handle.toLowerCase() === requestedHandle.toLowerCase()
+    : authorId === `${p}:author:handle:${handle}`;
+}
+function isHistoryComment(p: Platform, row: any) {
+  return p === "reddit"
+    ? (redditRowType(row) == null || redditRowType(row) === "comment") &&
+        (row._status == null || row._status === "found")
+    : p !== "x" || row.inReplyToId || row.isReply === true;
+}
 export function historySets(
   p: Platform,
   authors: string[],
@@ -791,26 +881,10 @@ export function historySets(
       (t) => !t.authorIds || t.authorIds.includes(authorId),
     );
     const ownRows = tasks.flatMap((task) =>
-      task.rows.filter((row) => {
-        const a = p === "reddit" ? redditAuthor(row) : person(row, p);
-        // An observed native identity takes precedence over a matching handle.
-        if (a?.nativeId) return authorId === `${p}:author:${a.nativeId}`;
-        const handle = a?.handle ?? (p === "reddit" ? row._username : null);
-        if (typeof handle !== "string") return false;
-        const requestedHandle = task.authorHandles?.[authorId];
-        return p === "reddit" && requestedHandle
-          ? handle.toLowerCase() === requestedHandle.toLowerCase()
-          : authorId === `${p}:author:handle:${handle}`;
-      }),
+      task.rows.filter((row) => belongsToAuthor(p, task, authorId, row)),
     );
     const rows = ownRows
-      .filter((row) =>
-        p === "reddit"
-          ? // Older persisted plans can contain untyped comment rows.
-            (redditRowType(row) == null || redditRowType(row) === "comment") &&
-            (row._status == null || row._status === "found")
-          : p !== "x" || row.inReplyToId || row.isReply === true,
-      )
+      .filter((row) => isHistoryComment(p, row))
       .slice(0, limits().historyCandidates);
     const comments = rows.map((row) => {
       const c = mapRecord(p, row);
@@ -824,7 +898,11 @@ export function historySets(
         sourceDiscussionNativeId: nativeString(
           row.sourceDiscussionNativeId ??
             (p === "reddit"
-              ? (row.link_id ?? row.postId)
+              ? (row.link_id ??
+                row.postId ??
+                redditSourceUrl(row)?.match(
+                  /\/comments\/([A-Za-z0-9]+)(?:\/|$)/,
+                )?.[1])
               : (row.postId ?? row.conversationId)),
         ),
         metrics: c.metrics ?? {},
@@ -835,7 +913,18 @@ export function historySets(
       .filter((t): t is string => !!t)
       .sort();
     const failed =
-      tasks.length === 0 || tasks.every((t) => t.run?.status !== "SUCCEEDED");
+      tasks.length === 0 ||
+      (!comments.length && tasks.every((t) => t.run?.status !== "SUCCEEDED"));
+    let omitted = tasks.reduce(
+      (n, task) => n + (task.historyOmitted?.[authorId] ?? 0),
+      0,
+    );
+    // Keep normalized cache pools bounded too, so cached and freshly collected
+    // authors together fit inside the durable job-state limit.
+    while (new TextEncoder().encode(stable(comments)).length > 18000) {
+      comments.pop();
+      omitted++;
+    }
     const unavailable =
       p === "reddit" &&
       !rows.length &&
@@ -864,9 +953,16 @@ export function historySets(
             }
           : {}),
       coverage: {
-        candidateFetchedCount: rows.length,
+        candidateFetchedCount: Math.max(
+          rows.length,
+          tasks.reduce(
+            (n, task) => n + (task.historyFetched?.[authorId] ?? 0),
+            0,
+          ),
+        ),
         providerTruncated:
           rows.length >= limits().historyCandidates ||
+          omitted > 0 ||
           tasks.some((t) => t.truncated || t.done === false)
             ? true
             : null,
@@ -879,6 +975,22 @@ export function historySets(
           .map((t) => t.run.id),
         limitations: [
           `Best-effort authored candidates, capped at ${limits().historyCandidates}; not a lifetime-history census.`,
+          ...(tasks.some((t) => t.oversizedRows)
+            ? [
+                "Oversized provider rows were omitted while later rows were still collected; per-author coverage may be incomplete.",
+              ]
+            : []),
+          ...(omitted
+            ? [
+                "History storage was bounded per author; some fetched candidates were omitted so other authors retain their own evidence budget.",
+              ]
+            : []),
+          ...(comments.length &&
+          tasks.some((t) => t.run?.status !== "SUCCEEDED")
+            ? [
+                "The provider run did not complete successfully; valid returned comments were retained with incomplete coverage.",
+              ]
+            : []),
           ...(p === "reddit" && !ownRows.length && !failed
             ? [
                 "Provider returned no rows identifying this requested author; availability and lifetime history are unknown.",
