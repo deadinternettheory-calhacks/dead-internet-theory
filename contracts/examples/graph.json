@@ -1,0 +1,166 @@
+{
+  "schemaVersion": "1.0.0",
+  "investigationId": "inv_demo_01",
+  "graphRevision": 1,
+  "graphFingerprint": "5fd5f59d3206ee88e52720f33e0ae3b6fd48cf7558c98603980b03119c3fccc1",
+  "platform": "reddit",
+  "rootId": "reddit:discussion:t3_demo",
+  "nodes": [
+    {
+      "id": "reddit:discussion:t3_demo",
+      "type": "discussion",
+      "nativeId": "t3_demo",
+      "platform": "reddit",
+      "kind": "post",
+      "url": "https://www.reddit.com/r/example/comments/demo",
+      "title": "Experiences with NimbusPods?",
+      "text": "Has anyone used NimbusPods headphones?",
+      "contentScope": "post_text",
+      "authorId": "reddit:author:t2_op",
+      "createdAt": "2026-10-23T19:00:00Z",
+      "timestampPrecision": "exact",
+      "metrics": {
+        "score": 15,
+        "replyCount": 3
+      }
+    },
+    {
+      "id": "reddit:author:t2_op",
+      "type": "author",
+      "nativeId": "t2_op",
+      "platform": "reddit",
+      "handle": "op",
+      "displayName": "op",
+      "identityQuality": "provider_id"
+    },
+    {
+      "id": "reddit:author:t2_alex",
+      "type": "author",
+      "nativeId": "t2_alex",
+      "platform": "reddit",
+      "handle": "alex",
+      "displayName": "alex",
+      "identityQuality": "provider_id"
+    },
+    {
+      "id": "reddit:author:t2_ben",
+      "type": "author",
+      "nativeId": "t2_ben",
+      "platform": "reddit",
+      "handle": "ben",
+      "displayName": "ben",
+      "identityQuality": "provider_id"
+    },
+    {
+      "id": "reddit:comment:t1_a",
+      "type": "comment",
+      "nativeId": "t1_a",
+      "idQuality": "provider_id",
+      "platform": "reddit",
+      "authorId": "reddit:author:t2_alex",
+      "parentId": "reddit:discussion:t3_demo",
+      "nativeParentId": "t3_demo",
+      "text": "NimbusPods are fantastic, highly recommend!",
+      "createdAt": "2026-10-23T19:04:00Z",
+      "timestampPrecision": "exact",
+      "sourceTimestamp": "2026-10-23T19:04:00Z",
+      "url": "https://www.reddit.com/r/example/comments/demo/comment/a",
+      "metrics": {
+        "score": 11
+      },
+      "contentStatus": "visible"
+    },
+    {
+      "id": "reddit:comment:t1_b",
+      "type": "comment",
+      "nativeId": "t1_b",
+      "idQuality": "provider_id",
+      "platform": "reddit",
+      "authorId": "reddit:author:t2_ben",
+      "parentId": "reddit:comment:t1_a",
+      "nativeParentId": "t1_a",
+      "text": "My pair broke within two weeks.",
+      "createdAt": "2026-10-23T19:10:00Z",
+      "timestampPrecision": "exact",
+      "sourceTimestamp": "2026-10-23T19:10:00Z",
+      "url": "https://www.reddit.com/r/example/comments/demo/comment/b",
+      "metrics": {
+        "score": 4
+      },
+      "contentStatus": "visible"
+    },
+    {
+      "id": "reddit:comment:t1_c",
+      "type": "comment",
+      "nativeId": "t1_c",
+      "idQuality": "provider_id",
+      "platform": "reddit",
+      "authorId": "reddit:author:t2_alex",
+      "parentId": "reddit:discussion:t3_demo",
+      "nativeParentId": "t3_demo",
+      "text": "Honestly amazing value, cannot recommend it enough.",
+      "createdAt": "2026-10-23T19:11:00Z",
+      "timestampPrecision": "exact",
+      "sourceTimestamp": "2026-10-23T19:11:00Z",
+      "url": "https://www.reddit.com/r/example/comments/demo/comment/c",
+      "metrics": {
+        "score": 6
+      },
+      "contentStatus": "visible"
+    }
+  ],
+  "edges": [
+    {
+      "from": "reddit:author:t2_alex",
+      "to": "reddit:comment:t1_a",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "reddit:author:t2_ben",
+      "to": "reddit:comment:t1_b",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "reddit:author:t2_alex",
+      "to": "reddit:comment:t1_c",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "reddit:comment:t1_a",
+      "to": "reddit:discussion:t3_demo",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "reddit:comment:t1_b",
+      "to": "reddit:comment:t1_a",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "reddit:comment:t1_c",
+      "to": "reddit:discussion:t3_demo",
+      "type": "REPLIES_TO"
+    }
+  ],
+  "coverage": {
+    "retrievedCommentCount": 3,
+    "reportedCommentCount": 3,
+    "truncated": null,
+    "completeness": "unknown",
+    "sortOrder": "new",
+    "collectedAt": "2026-10-23T22:20:00Z",
+    "sourceSnapshotRef": "snapshot_demo_1",
+    "actorRuns": [
+      {
+        "actorId": "clearpath/reddit-post-comments-bulk-scraper",
+        "runId": "demo_run_1",
+        "datasetId": "demo_dataset_1",
+        "status": "SUCCEEDED",
+        "startedAt": "2026-10-23T22:15:00Z",
+        "completedAt": "2026-10-23T22:19:00Z"
+      }
+    ],
+    "limitations": [
+      "Synthetic example; scraper run not actually executed."
+    ]
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "schemaVersion": "1.0.0",
+  "graphRevision": 1,
+  "graphFingerprint": "5fd5f59d3206ee88e52720f33e0ae3b6fd48cf7558c98603980b03119c3fccc1",
+  "inferenceVersion": "example-inference-0.1",
+  "inferredAt": "2026-10-23T22:22:00Z",
+  "subject": {
+    "label": "NimbusPods",
+    "kind": "product",
+    "confidence": 0.98,
+    "evidenceRefs": [
+      "reddit:discussion:t3_demo",
+      "reddit:comment:t1_a"
+    ]
+  },
+  "sentiment": {
+    "population": "retrieved_comments",
+    "method": "census_of_retrieved",
+    "analyzedCommentCount": 3,
+    "counts": {
+      "supportive": 2,
+      "critical": 1,
+      "neutral": 0,
+      "mixed": 0,
+      "unclear": 0
+    },
+    "weighted": false,
+    "limitations": [
+      "Only three accessible comments in synthetic test graph."
+    ]
+  },
+  "overallCoordinationRisk": {
+    "score": 58,
+    "confidence": 0.4,
+    "explanation": "Some repeated endorsements; insufficient evidence of coordinated manipulation.",
+    "evidenceRefs": [
+      "reddit:comment:t1_a",
+      "reddit:comment:t1_c"
+    ]
+  },
+  "axes": [
+    {
+      "axis": "promotional_intent",
+      "score": 80,
+      "confidence": 0.7,
+      "assessedCommentCount": 3,
+      "explanation": "Several comments endorse product. This alone is not coordination.",
+      "evidenceRefs": [
+        "reddit:comment:t1_a",
+        "reddit:comment:t1_c"
+      ]
+    },
+    {
+      "axis": "semantic_coordination",
+      "score": 55,
+      "confidence": 0.4,
+      "assessedCommentCount": 3,
+      "explanation": "Two comments have similar promotional language.",
+      "evidenceRefs": [
+        "reddit:comment:t1_a",
+        "reddit:comment:t1_c"
+      ]
+    },
+    {
+      "axis": "temporal_coordination",
+      "score": null,
+      "confidence": null,
+      "assessedCommentCount": 3,
+      "explanation": "Insufficient evidence; near timestamps alone do not establish coordination.",
+      "evidenceRefs": []
+    }
+  ],
+  "commentAssessments": [
+    {
+      "commentId": "reddit:comment:t1_a",
+      "stance": "supportive",
+      "promotionalIntentScore": 80,
+      "rationale": "Endorses product explicitly.",
+      "evidenceRefs": [
+        "reddit:comment:t1_a"
+      ]
+    },
+    {
+      "commentId": "reddit:comment:t1_b",
+      "stance": "critical",
+      "promotionalIntentScore": 10,
+      "rationale": "Reports negative experience.",
+      "evidenceRefs": [
+        "reddit:comment:t1_b"
+      ]
+    },
+    {
+      "commentId": "reddit:comment:t1_c",
+      "stance": "supportive",
+      "promotionalIntentScore": 75,
+      "rationale": "Another endorsement.",
+      "evidenceRefs": [
+        "reddit:comment:t1_c"
+      ]
+    }
+  ],
+  "clusters": [
+    {
+      "clusterId": "cluster_demo_1",
+      "commentIds": [
+        "reddit:comment:t1_a",
+        "reddit:comment:t1_c"
+      ],
+      "coordinationScore": 40,
+      "explanation": "Illustrative pair of similar endorsements; same author does not demonstrate multiple coordinated accounts.",
+      "evidenceRefs": [
+        "reddit:comment:t1_a",
+        "reddit:comment:t1_c",
+        "reddit:comment:t1_history1"
+      ]
+    }
+  ],
+  "inferredEdges": [
+    {
+      "from": "reddit:comment:t1_a",
+      "to": "reddit:comment:t1_c",
+      "type": "SEMANTICALLY_SIMILAR",
+      "strength": 0.7,
+      "explanation": "Overlapping endorsement language.",
+      "evidenceRefs": [
+        "reddit:comment:t1_a",
+        "reddit:comment:t1_c"
+      ]
+    }
+  ],
+  "usedEnrichmentIds": [
+    "enr_demo_01"
+  ],
+  "limitations": [
+    "Scores are illustrative, not calibrated probabilities.",
+    "No finding of astroturfing can be inferred from this synthetic example."
+  ]
+}

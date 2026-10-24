@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.0.0",
+  "enrichmentId": "enr_unsupported_demo",
+  "investigationId": "inv_youtube_demo",
+  "status": "completed",
+  "createdAt": "2026-10-23T22:20:00Z",
+  "startedAt": "2026-10-23T22:20:01Z",
+  "completedAt": "2026-10-23T22:20:01Z",
+  "results": [
+    {
+      "authorId": "youtube:author:UCdemo",
+      "anchorCommentId": "youtube:comment:comment_demo",
+      "status": "unsupported",
+      "strategy": "none",
+      "comments": [],
+      "coverage": {
+        "requestedCount": 10,
+        "returnedCount": 0,
+        "candidateFetchedCount": 0,
+        "providerTruncated": null,
+        "reachedAnchorWindow": null,
+        "oldestFetchedAt": null,
+        "newestFetchedAt": null,
+        "collectedAt": null,
+        "sourceSnapshotRef": null,
+        "actorRunIds": [],
+        "limitations": [
+          "Arbitrary YouTube user comment history not supported."
+        ]
+      },
+      "error": {
+        "code": "HISTORY_UNSUPPORTED",
+        "message": "This platform does not support arbitrary authored-comment history enrichment in v1.",
+        "retryable": false
+      }
+    }
+  ]
+}

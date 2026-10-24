@@ -1,6 +1,7 @@
 # Dead Internet Theory — Project Specification
 
-Status: scaffold; product requirements and technical choices are TBD.
+Status: partial specification; v1 wire contracts adopted for implementation.
+Backend/inference acceptance and operational verification remain outstanding.
 
 This is the canonical location for project requirements once they are defined.
 TBDs and placeholders do not establish requirements or imply implementation.
@@ -40,18 +41,25 @@ contract, review affected producers and consumers, document compatibility and
 migration needs, and update relevant validation and examples together. Follow the
 specification-change workflow for changes that contradict established requirements.
 
-Choose schema formats and validation tooling when the stack and interfaces are
-defined. No concrete schemas or tooling are selected by this scaffold.
+The v1.0.0 interface design supersedes draft 0.1:
 
-Contracts:
+- [Discussion graph and enrichment API](contracts/discussion-graph-api.md):
+  normative lifecycle, sampling, identity, error, and compatibility semantics.
+- [models.schema.json](contracts/models.schema.json): single canonical model
+  source, using JSON Schema Draft 2020-12.
+- [openapi.yaml](contracts/openapi.yaml): OpenAPI 3.1 HTTP operations referencing
+  those models.
+- [Provider adapters](contracts/provider-adapters.md): candidate mappings and
+  operational verification needs.
+- [Synthetic examples](contracts/examples/README.md) and
+  [validator](scripts/validate_contracts.py): reproducible structure and selected
+  cross-record checks. See [contracts/README.md](contracts/README.md) for setup.
 
-- [Discussion graph and enrichment API](contracts/discussion-graph-api.md)
-  (draft 0.1): operations, identifiers, graph model, author-history
-  enrichment and analysis results between the ingestion service and the
-  inference engine. Its open decisions list what remains to be settled.
-
-TBD: error behavior and compatibility requirements (see the contract's open
-decisions).
+The design defines async REST jobs, immutable graph revisions, typed analysis
+with evidence references, and explicit per-author enrichment outcomes. The
+supplied bundle does not establish separate team-owner acceptance, live Actor
+correctness, or runtime implementation. The scoring rubric remains a proposal;
+its output must be explicitly mapped to the wire models by inference code.
 
 ## 7. Data handling and security
 
@@ -69,8 +77,10 @@ TBD: define reviewable milestones, dependencies, and owners.
 
 ## 10. Validation and implementation status
 
-Current state: documentation scaffold only. No application, build, tests, or
-deployment is configured. Documentation checks do not establish runtime behavior.
+Current state: a frontend-only app lives in `web/`; v1 contract definitions,
+synthetic fixtures and a Python contract validator are available. No connected
+backend/inference implementation or live-provider verification is established
+by this contract integration. Fixture validation does not establish runtime behavior.
 
 TBD: record acceptance checks, results, evidence, and outstanding limitations.
 
@@ -78,16 +88,25 @@ TBD: record acceptance checks, results, evidence, and outstanding limitations.
 
 - Product scope and intended users: TBD.
 - Stack, architecture, and deployment: TBD.
-- Interfaces, data handling, and validation: TBD.
+- Backend/inference owner acceptance, provider verification, deployment limits,
+  rubric-to-analysis mapping, and runtime integration remain outstanding.
 
 ## 12. Architecture decision log
 
-No architecture decisions recorded. For each future decision, record an ADR ID,
-date, status, context, decision, consequences, and any related delta. Preserve
-historical decisions and explicitly mark superseded decisions.
+### ADR-001: Adopt v1 wire contracts
+
+Date: 2026-10-24 (UTC). Status: selected for repository integration.
+
+Context: draft 0.1 left wire shapes and transport decisions open.
+Decision: adopt the supplied OpenAPI 3.1 / JSON Schema Draft 2020-12 bundle,
+with models.schema.json as the canonical model source.
+Consequences: producers and consumers must align to v1 IDs, job/status semantics,
+immutable graphs, evidence references, and versioning. Separate team acceptance
+and live verification are not implied.
+Related delta: [2026-10-24T05-47-50Z-astroturfing-contracts-v1.md](deltas/2026-10-24T05-47-50Z-astroturfing-contracts-v1.md).
 
 ## 13. Specification change history
 
-No specification deltas recorded. Use the workflow in
+The [v1 contract delta](deltas/2026-10-24T05-47-50Z-astroturfing-contracts-v1.md) supersedes draft 0.1. Use the workflow in
 [CONTRIBUTING.md](CONTRIBUTING.md) and the guidance in
 [deltas/README.md](deltas/README.md) when changing established requirements.

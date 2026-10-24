@@ -19,6 +19,11 @@
   copies in component directories or documentation.
 - Keep producers, consumers, examples, and relevant validation aligned when a
   contract changes. Check compatibility and document any migration needed.
+- Use `contracts/models.schema.json` as the canonical model source and
+  `contracts/openapi.yaml` for HTTP operations. Run
+  `scripts/validate_contracts.py` with the dependencies documented in
+  `contracts/README.md` after changing contracts or fixtures. Synthetic fixture
+  checks do not prove live provider behavior or backend implementation.
 - Follow `CONTRIBUTING.md` when a contract change contradicts established spec
   requirements. Do not invent schemas or select tooling to fill placeholders.
 

@@ -1,0 +1,15 @@
+{
+  "authors": [
+    {
+      "authorId": "reddit:author:t2_alex",
+      "anchorCommentId": "reddit:comment:t1_a"
+    },
+    {
+      "authorId": "reddit:author:t2_ben",
+      "anchorCommentId": "reddit:comment:t1_b"
+    }
+  ],
+  "limit": 10,
+  "windowDays": 14,
+  "fallback": "most_recent"
+}
