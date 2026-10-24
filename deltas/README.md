@@ -4,6 +4,7 @@ This directory records approved changes to established requirements in
 [SPEC.md](../SPEC.md). Recorded changes:
 
 - [2026-10-24T05-47-50Z-astroturfing-contracts-v1.md](2026-10-24T05-47-50Z-astroturfing-contracts-v1.md): adopt the supplied v1 wire contracts.
+- [2026-10-24T06-33-15Z-convex-creao-inference.md](2026-10-24T06-33-15Z-convex-creao-inference.md): select CREAO for inference and Convex for the backend.
 
 Follow [CONTRIBUTING.md](../CONTRIBUTING.md): propose the affected sections,
 previous and revised requirements, rationale, and intended timestamped filename

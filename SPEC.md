@@ -1,6 +1,6 @@
 # Dead Internet Theory - Master Specification
 
-Status: Product scope and frontend UX are specified. The v1.0.0 contract bundle is adopted for repository implementation; backend/inference owner acceptance, live-provider behavior, and deployment remain unverified. This specification preserves that distinction.
+Status: Product scope and frontend UX are specified. The v1.0.0 contract bundle is adopted for repository implementation. A Convex backend serving the v1 routes and a CREAO-based inference worker are implemented and tested locally ([delta](deltas/2026-10-24T06-33-15Z-convex-creao-inference.md)); ingestion-owner acceptance, live ingestion, live CREAO runs, and deployment remain unverified. This specification preserves that distinction.
 
 The initial master specification filled TBD placeholders that did not establish requirements. The later v1.0.0 contract adoption supersedes draft 0.1 through the approved [contract delta](deltas/2026-10-24T05-47-50Z-astroturfing-contracts-v1.md); preserve that history and follow [CONTRIBUTING.md](CONTRIBUTING.md) and [deltas/README.md](deltas/README.md) for future changes.
 
@@ -14,7 +14,7 @@ A user submits a supported public post URL using the homepage or URL-prefix shor
 
 **Repository:** Git remote `origin` points to [deadinternettheory-calhacks/dead-internet-theory](https://github.com/deadinternettheory-calhacks/dead-internet-theory). This verifies the local remote configuration, not that a hosted deployment is connected.
 
-**Current verified state:** a React/TypeScript SPA in `web/` validates a limited set of Reddit and X/Twitter hostnames, supports homepage and URL-prefix navigation, and shows an honest unavailable state. V1.0.0 wire contracts, synthetic protocol fixtures, candidate provider-adapter notes, and a validator are present. No application backend, inference worker, live provider calls, search index, or production deployment is present. See [Section 10](#10-frontend-and-ux-requirements) and [Section 12](#12-testing-and-validation).
+**Current verified state:** a React/TypeScript SPA in `web/` validates a limited set of Reddit and X/Twitter hostnames, supports homepage and URL-prefix navigation, and shows an honest unavailable state. V1.0.0 wire contracts, synthetic protocol fixtures, candidate provider-adapter notes, and a validator are present. `backend/` contains a Convex application serving the v1 REST routes and an inference worker that calls a CREAO agent and re-scores its output deterministically; it has run end to end on a local Convex backend against a labeled synthetic fixture. Live ingestion is not connected (real links fail with `INGESTION_NOT_CONNECTED`), no live CREAO run is verified, and no search index or production deployment is present. The SPA renders v1 analyses when `VITE_API_BASE_URL` is set and shows a labeled synthetic example at `/example`. See [Section 10](#10-frontend-and-ux-requirements) and [Section 12](#12-testing-and-validation).
 
 ## 2. Goals, scope, and non-goals
 
@@ -77,12 +77,12 @@ Reddit is the intended first provider, but it is not connected. No platform may 
 sequenceDiagram
     actor User
     participant Web as React SPA (implemented)
-    participant App as Investigation API / Convex (selected, pending)
-    participant Ingest as Apify Actor and authorized connector (selected, pending)
-    participant Analyze as Python deterministic analysis (selected, pending)
+    participant App as Investigation API / Convex (implemented; local only)
+    participant Ingest as Apify Actor and authorized connector (selected, pending; synthetic stand-in)
+    participant Analyze as Inference worker in Convex: deterministic scoring (implemented)
     participant Search as Elasticsearch retrieval (planned)
-    participant Agent as CREAO / Claude reasoning (proposed)
-    participant Store as Shared persistence (not implemented)
+    participant Agent as CREAO agent (selected; client implemented, live run unverified)
+    participant Store as Convex database (implemented; retention policy pending)
     User->>Web: Submit supported post URL
     Web->>Web: Parse and validate protocol/host
     Web->>App: POST /v1/investigations + Idempotency-Key
@@ -110,7 +110,7 @@ sequenceDiagram
     Web-->>User: Evidence-led report or honest partial/error state
 ```
 
-Only the SPA's URL parsing, local routes, static page components, and Vercel rewrite exist now. Other participants and arrows describe intended integration, not a verified runtime flow. V1 routes and event models are defined in Section 6; runtime APIs, event delivery, authentication, and backend/inference integration remain unimplemented.
+The SPA, the Convex v1 routes, internal `investigation.ready` delivery, enrichment job handling, and the inference worker (CREAO triage, enrichment request, CREAO rubric scoring, deterministic re-scoring, validated submission) exist and have run locally against the synthetic fixture with recorded CREAO replies. Apify ingestion, live history collection, Elasticsearch, live CREAO runs, frontend authentication, and deployment remain unimplemented or unverified. V1 routes and event models are defined in Section 6.
 
 ### 3.3 Outcomes
 
@@ -166,15 +166,15 @@ Naming a technology does not make it an integration.
 ```mermaid
 flowchart LR
     Person[Visitor] --> Web[React SPA on Vercel<br/>Implemented: UI and URL routes]
-    Web -->|adopted v1 REST contract| Convex[Convex application backend<br/>Selected / pending]
+    Web -->|adopted v1 REST contract| Convex[Convex application backend<br/>Implemented; local only]
     Convex -->|bounded job input| Apify[Apify Actor<br/>Selected / pending]
     Apify -->|authorized source data| Platform[Reddit first; other providers after access review]
     Apify -->|normalized records| Convex
-    Convex --> Python[Python deterministic analysis<br/>Selected / pending]
+    Convex --> Python[Inference worker: deterministic measurements and rubric re-scoring in TypeScript<br/>Implemented]
     Python --> Packet[Evidence packet and sampling manifest]
     Packet -. optional related evidence .-> Elastic[Elasticsearch retrieval<br/>Planned]
-    Packet -. optional explanation .-> CREAO[CREAO orchestration + Claude<br/>Proposed]
-    Elastic --> Validate[Backend validation and result assembly<br/>Not implemented]
+    Packet -->|bounded triage and scoring runs| CREAO[CREAO agent<br/>Selected; live run unverified]
+    Elastic --> Validate[Backend validation and result assembly<br/>Implemented]
     CREAO --> Validate
     Packet --> Validate
     Validate --> Convex
@@ -189,21 +189,21 @@ No provider secret may be embedded in a Vite `VITE_*` variable. Provider calls/s
 | --- | --- | --- |
 | React 19, TypeScript 5.8, Vite 6, Tailwind CSS 4, React Router 7, Lucide React; shadcn-style source control | **Implemented and verified** in `web/`. Own presentation, URL validation/routing, keyboard interactions, and rendering supplied props. | Small static SPA fits the current UI. It cannot hold secrets or calculate authoritative results. A server-rendered/full-stack framework is not selected. Installed versions are in `web/package.json`. |
 | Vercel | **Selected / partly configured.** `web/vercel.json` rewrites all paths to the SPA entry. | Static hosting fits the client application; configuration alone does not prove a Vercel project, domain, or live deployment. `web/README.md` documents `web/` as the intended project root. Project setup, DNS, deployment, and rollback remain to verify. |
-| Convex | **Selected architectural direction; pending.** Intended to create jobs, persist permitted state/results, schedule async work, and expose validated state/results. | TypeScript backend and reactive queries may simplify job-state delivery to this SPA. Queries/mutations/actions have distinct transaction/external-I/O behavior; long provider work should be asynchronous. Custom API + queue/database gives more control/portability but adds infrastructure. Supabase/Postgres may suit SQL-first needs or existing expertise. Validate limits, costs, retention, security, and deployment fit. [Convex overview](https://docs.convex.dev/understanding/overview), [queries](https://docs.convex.dev/functions/query-functions). |
+| Convex | **Implemented in `backend/`; deployment unverified.** Serves the v1 REST routes as HTTP actions, stores contract payloads, enforces idempotency, schedules ingestion, enrichment and inference, and hosts the inference worker as a scheduler-driven state machine. See [backend/README.md](backend/README.md). | TypeScript backend and reactive queries may simplify job-state delivery to this SPA. Queries/mutations/actions have distinct transaction/external-I/O behavior; long provider work should be asynchronous. Custom API + queue/database gives more control/portability but adds infrastructure. Supabase/Postgres may suit SQL-first needs or existing expertise. Validate limits, costs, retention, security, and deployment fit. [Convex overview](https://docs.convex.dev/understanding/overview), [queries](https://docs.convex.dev/functions/query-functions). |
 | Apify | **Selected managed-ingestion direction; pending access review and implementation.** Prefer a project-owned Actor that validates input, uses permitted connectors, enforces limits, handles pagination/retries, normalizes records, and records omissions. The merged provider-adapter document also lists third-party Actor candidates for discussion/history collection; choosing between those candidates and a custom Actor, and validating terms and actual behavior, remains open. | A custom Actor gives project control over collection and output. A third-party Actor may accelerate experiments but introduces variable quality, cost, maintenance, output, and retention. Publishing an Actor is a separate decision. Best Actor sponsor opportunity is only a potential benefit. Apify does not authorize bypassing source restrictions. [Actor input/output](https://docs.apify.com/actors/running/input-and-output), [running Actors](https://docs.apify.com/actors/running). |
-| Python; NumPy, scikit-learn, NetworkX | Python analysis direction selected; implementation absent. Candidate roles: numeric summaries; evaluated similarity/clustering; account/thread/claim graphs. | Deterministic features should be testable before model interpretation. Libraries are not currently dependencies and do not validate a signal. Methods, versions, thresholds, performance, and false positives remain research decisions. |
+| Python; NumPy, scikit-learn, NetworkX | **Superseded for the inference worker** by TypeScript inside Convex (ADR-008). Remain candidates for later research analysis; implementation absent. Candidate roles: numeric summaries; evaluated similarity/clustering; account/thread/claim graphs. | Deterministic features should be testable before model interpretation. Libraries are not currently dependencies and do not validate a signal. Methods, versions, thresholds, performance, and false positives remain research decisions. |
 | Elasticsearch / Agent Builder | **Planned.** Index permitted normalized records/evidence; retrieve related claims with filters and lexical/semantic/hybrid search if corpus is useful. Agent Builder may expose retrieval tools. | Adds cross-thread candidates beyond in-memory one-thread comparison. Quality depends on permitted corpus, normalization, cost, and evaluation. A match is a lead, not proof. Defer until a data basis and relevance evaluation exist. Check license/features and sponsor rules. [Agent Builder agents](https://www.elastic.co/docs/solutions/search/agent-builder/agent-builder-agents), [tools](https://www.elastic.co/docs/explore-analyze/ai-features/agent-builder/tools). |
-| CREAO | **Proposed.** Consider only if it meaningfully coordinates bounded evidence gathering and validation. | Not justified as a thin prompt relay. SDK/API, tool permissions, lifecycle, data handling, and failure behavior are unverified. A direct model call or small explicit workflow may be simpler. No redundant agent framework without demonstrated need. |
-| Anthropic Claude | **Proposed, not integrated.** Potentially drafts evidence-grounded explanations, alternatives, and uncertainty from a bounded packet. | Cannot create evidence, verify sources, or set unvalidated probabilities. App code must execute and validate tool calls. Compare cost, latency, privacy, retention, and output quality. [Claude tool use](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview). |
+| CREAO | **Selected (ADR-008); client implemented, live run unverified.** One CREAO agent runs twice per analysis: triage (subject, stance, recommendations) and rubric scoring (which rules fire, with cited IDs). Supports app-scoped `capi_` keys and `cr_sk_` developer keys; agent setup is in [backend/creao-agent.md](backend/creao-agent.md). | The agent gets no tools and is told evidence is untrusted data. Its replies are parsed, schema-checked and re-scored deterministically; it cannot set numbers or add evidence. Data handling, retention and cost terms of CREAO and its underlying model still need review. [API Trigger docs](https://docs.creao.ai/pro/api-trigger). |
+| Anthropic Claude | **Not called directly.** CREAO runs agents on its own model catalog (default `anthropic/claude-sonnet-5-5` on the developer API); model choice is configured in CREAO or `CREAO_MODEL`. | Cannot create evidence, verify sources, or set unvalidated probabilities. App code must execute and validate tool calls. Compare cost, latency, privacy, retention, and output quality. [Claude tool use](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview). |
 
 ### 5.4 Integration boundaries
 
-- Frontend handles presentation and URLs; it is intended to call the v1 REST API and makes no source fetch. That client integration is not implemented.
-- The ingestion backend implements the v1 REST boundary, revalidates, creates job state, invokes Apify, persists the graph, and emits investigation.ready. The inference worker consumes that event, reads the graph, selects authors/anchors, requests enrichment, and submits an evidence-backed analysis. Convex remains the selected backend direction, but how it hosts this REST/event boundary is unresolved.
+- Frontend handles presentation and URLs; it calls the v1 REST API when `VITE_API_BASE_URL` is set and makes no source fetch.
+- The ingestion backend implements the v1 REST boundary, revalidates, creates job state, invokes Apify, persists the graph, and emits investigation.ready. The inference worker consumes that event, reads the graph, selects authors/anchors, requests enrichment, and submits an evidence-backed analysis. Convex hosts this boundary: HTTP actions serve the REST routes, `investigation.ready` is an internal scheduled function, and the inference worker runs in the same deployment, calling the internal functions behind the routes. Apify invocation is still a stand-in that serves only the synthetic fixture.
 - Ingestion retrieves permitted sources and reports provenance/coverage; it does not interpret intent.
 - Inference owns author/anchor selection and interpretation; ingestion owns history candidate collection/sampling under the v1 algorithm. The rubric remains a proposal, not an implemented deterministic analysis. Neither role establishes motive.
 - Search returns candidates plus references, not proof.
-- AI drafts explanations from supplied data and cannot publish directly.
+- AI (the CREAO agent) classifies comments and proposes rubric signals from supplied data; it cannot publish directly. The worker submits only after deterministic re-scoring and contract validation, through the same internal functions as the REST routes.
 - Result validator verifies state, contract, evidence IDs, sources, bounds, and safe claims.
 
 ## 6. Interfaces and data contracts
@@ -237,7 +237,7 @@ These are contract-defined collection/sampling budgets, not validated statistica
 
 ## 8. Detection methodology
 
-These remain proposed research signals, not implemented or validated results. The repository now also contains v1 wire models, synthetic contract fixtures, and a contract validator; these do not implement inference or validate the signals.
+These remain proposed research signals, not validated results. The inference worker in `backend/` computes some of them deterministically (timing bursts, word overlap, tracking links, brand mentions in histories, account age) and passes them to the CREAO agent as facts for the rubric; this implements the signals but does not validate them.
 
 | Signal | Measurement examples | Interpretation limits |
 | --- | --- | --- |
@@ -251,7 +251,7 @@ These remain proposed research signals, not implemented or validated results. Th
 | Account participation | Posting intervals, diversity, bounded history patterns. | No one pattern proves automation; missing history creates bias. |
 | Cross-platform recurrence | Similar claims/links on separate permitted sources. | Similar usernames are not identity; coverage is incomplete. |
 
-Every finding needs real evidence references resolving to the graph or a history job referenced by usedEnrichmentIds. Separate measurements from interpretation and include population, sampling method, coverage, missingness, time window, and limitations. Contract scores are heuristic indices, not probabilities; axis score null means insufficient evidence/no measurement, and confidence is not statistical confidence. No calibration, validated cutoff, accuracy, or prevalence claim exists. The proposed [product astroturfing rubric](rubrics/product-astroturfing.md) is hand-weighted, unvalidated, and not the AnalysisSubmission wire payload; mapping its signal rules to contract axes remains unresolved. Do not expose its scores as operational findings until evaluated and explicitly mapped. Never label a post real/fake.
+Every finding needs real evidence references resolving to the graph or a history job referenced by usedEnrichmentIds. Separate measurements from interpretation and include population, sampling method, coverage, missingness, time window, and limitations. Contract scores are heuristic indices, not probabilities; axis score null means insufficient evidence/no measurement, and confidence is not statistical confidence. No calibration, validated cutoff, accuracy, or prevalence claim exists. The proposed [product astroturfing rubric](rubrics/product-astroturfing.md) is hand-weighted, unvalidated, and not the AnalysisSubmission wire payload. A provisional, explicit mapping of its rules to contract axes is implemented and documented in [backend/README.md](backend/README.md#provisional-rubric-mapping); it requires evaluation. Until then, scores must be presented as uncalibrated heuristic indices, as the API limitations and UI do. Never label a post real/fake.
 
 Do not allege fraud, paid promotion, bots, or deliberate manipulation by a named user/organization from weak signals. Strong factual allegations need independently reviewed evidence and an explicit product/legal review path. Outstanding decisions include backend/inference owner acceptance, live provider verification, deployment graph-size limits, mapping the proposed rubric to contract axes, and runtime integration.
 
@@ -263,13 +263,13 @@ AI is an optional explanation layer behind deterministic analysis and validation
 
 1. Construct a bounded packet from validated source records and deterministic signals. Each item has a stable evidence ID and source reference.
 2. Treat social posts, comments, profiles, pages, and retrieved records as untrusted data, including possible prompt injection. Source text cannot change system instructions or grant tools.
-3. If CREAO is selected later, permit only bounded tools with allowlisted actions, validated arguments, budgets, timeouts, and recorded outputs. No unrestricted browser, shell, credential, or arbitrary network tool.
+3. CREAO is selected (ADR-008). The agent is granted no tools; its prompt forbids browsing, code and integrations. Each run has a 256 KB input cap (packets are bounded to 180 KB) and a 15-minute stage limit. Any future tool must be allowlisted with validated arguments, budgets, timeouts and recorded outputs.
 4. If Claude is used, request observations vs interpretations, contrary evidence, plausible benign explanations, unavailable inputs, and citations to supplied graph/history evidence IDs.
 5. Treat model output as draft data. A deterministic validator checks the AnalysisSubmission contract, confirms every evidence ID exists in the graph or referenced enrichment, rejects invented metrics/sources, enforces limits, and prevents unsupported allegations. Invalid output becomes partial/unavailable, not a fabricated report.
 6. Persist only permitted fields; retain prompts/provider output only as justified by an approved policy. Never expose credentials or hidden reasoning to the browser.
 7. Record provider/model and analysis/prompt version where permitted. Review report-semantic changes with regression tests.
 
-If a provider fails, deterministic evidence may still support an explicitly partial result if the eventual contract permits; otherwise return failure. Never synthesize a completed state. CREAO remains unresolved until its API, tools, lifecycle, data terms, and multi-step value are verified. A direct Claude tool-use call is not equivalent to CREAO orchestration.
+If a provider fails, deterministic evidence may still support an explicitly partial result if the eventual contract permits; otherwise return failure. Never synthesize a completed state. In this implementation, a CREAO failure or unparseable reply marks the analysis failed; no deterministic-only partial report is stored, because the contract has no partial flag. CREAO data terms, retention and cost remain to verify.
 
 ## 10. Frontend and UX requirements
 
@@ -289,9 +289,9 @@ Homepage submission routes to `/analysis?url=...` with the URL encoded as a quer
 
 ### 10.3 Implemented UI and limits
 
-`web/src/` contains shared header/footer/wordmark, URL input, shortcut and platform notices, Home/About/Analysis pages, unavailable/unsupported states, and typed presentation components for verdict, score, findings, evidence, empty/error states. Their props are local view types, not backend schemas. The current analysis route renders a submitted URL and honest “service not connected” state. Loading, insufficient-data, completed-result, findings, and score components are not connected to a backend and must not be represented as real outcomes.
+`web/src/` contains shared header/footer/wordmark, URL input, shortcut and platform notices, Home/About/Analysis pages, unavailable/unsupported states, and typed presentation components for verdict, score, findings, evidence, empty/error states. Their props are local view types, not backend schemas. Without `VITE_API_BASE_URL`, the analysis route renders the submitted URL and an honest “service not connected” state. With it, the route creates a v1 investigation, shows progress text that tracks the real `ingestionStatus`/`analysisStatus`, and renders the stored analysis via `src/analysis/report.ts` (post, cautious verdict, up to three findings with quoted evidence, detailed signals, coverage and limitations), or a specific failure state. The coordination index appears only inside the detailed analysis, labeled uncalibrated. `/example` renders the generated synthetic report with a banner; synthetic reports never link to their made-up source URLs.
 
-`web/README.md` records commands and the missing backend. No provider, live API, analysis result, provider capability, or production host is verified. The contract platform enum lists Reddit, X, YouTube, and TikTok; that is interface scope, not proof of integration.
+`web/README.md` records commands and API configuration. No live provider, deployed API, real analysis result, or production host is verified. The contract platform enum lists Reddit, X, YouTube, and TikTok; that is interface scope, not proof of integration.
 
 ## 11. Security, privacy, and platform access
 
@@ -322,7 +322,14 @@ The `web/` project uses npm and exposes `npm run lint`, `npm test`, and `npm run
 - `npm run build`: passed with Vite 6.4.5.
 - `npm audit`: 0 vulnerabilities at check time.
 
-URL tests cover Reddit acceptance, unsupported host, invalid URL, unsafe protocol, query preservation, double-encoded rejection, raw nested prefix, encoded full URL, encoded fragment, malformed prefix, and Vercel rewrite configuration. They do not browser-test a deployed direct refresh. The repository contains contract fixtures and a structural contract validator, but no backend/provider runtime tests because those components are not implemented. No screenshot/browser test at 375px, 768px, or 1440px is present. No benchmark, model evaluation, real labeled dataset, or field study has run.
+On 2026-10-24, after the Convex/CREAO slice ([delta](deltas/2026-10-24T06-33-15Z-convex-creao-inference.md)):
+
+- `web`: `npm run lint`, `npm test` (16 tests: URL, rewrite and report building) and `npm run build` passed. A Playwright check of `/example`, the live flow against a local Convex backend, and a real-link failure at 375px and 1440px showed no console errors or horizontal overflow.
+- `backend`: `npm run lint` and `npm test` (38 tests: rubric table vs. Markdown, the rubric's five worked examples, caps K1–K5, signal validation, packet and selection rules, evidence-reference rejection, CREAO request shapes and error handling, URL checks, generated-example sync) passed.
+- `backend`: end-to-end on a local Convex backend, the synthetic URL went from create to completed analysis. Idempotency replay/conflict, URL rejection, inference-token enforcement, anchor/author and duplicate-pair 422s, not-ready 409s, capabilities and CORS preflight were checked with curl.
+- `scripts/validate_contracts.py` passed, and the generated synthetic analysis validated against the canonical schema with Python `jsonschema`.
+
+URL tests cover Reddit acceptance, unsupported host, invalid URL, unsafe protocol, query preservation, double-encoded rejection, raw nested prefix, encoded full URL, encoded fragment, malformed prefix, and Vercel rewrite configuration. They do not browser-test a deployed direct refresh. Backend tests do not exercise live providers or a live CREAO run. The browser checks above were run manually, not as committed tests, and 768px was not checked. No benchmark, model evaluation, real labeled dataset, or field study has run.
 
 ### 12.2 Required validation
 
@@ -388,10 +395,10 @@ The repository records no individual owners. Assign people during planning; work
 | Sponsor | Integration status | Potential relevance | Prize status |
 | --- | --- | --- | --- |
 | Apify | Selected ingestion direction; no Actor/provider in repo. | Bounded collection and transformation. | Best Actor opportunity is only a possibility; verify current rubric and whether a private/custom Actor qualifies. |
-| CREAO | Proposed; no integration. | Multi-step evidence workflow if controlled and useful. | Eligibility not verified. |
+| CREAO | Selected; client implemented, live run unverified. | Multi-step evidence workflow if controlled and useful. | Eligibility not verified. |
 | Anthropic | Proposed; no API call. | Grounded explanation/alternatives after deterministic analysis. | Eligibility not verified. |
 | Elastic | Planned; no cluster/index. | Cross-thread retrieval and optional Agent Builder tools. | Verify current product, license, and event requirements. |
-| Convex | Selected/pending; no app/schema. | Job state and allowed result storage/reads. | Eligibility not verified. |
+| Convex | Implemented locally; not deployed. | Job state and allowed result storage/reads. | Eligibility not verified. |
 | Microsoft | No role/integration evidenced. | Not defined; only consider for a real product need. | Eligibility not verified. |
 | Visa | No role/integration evidenced; payments are out of scope. | Not defined. | Eligibility not verified. |
 
@@ -405,11 +412,12 @@ These entries capture project direction and the adopted v1 interface delta; they
 | --- | --- | --- | --- |
 | ADR-001 | 2026-10-24 UTC | Adopted for repository implementation; owner acceptance pending | Adopt the v1.0.0 OpenAPI 3.1 / JSON Schema Draft 2020-12 bundle. Canonical models are in models.schema.json; routes are in openapi.yaml. Producers/consumers align to v1 IDs, async job/status semantics, immutable graph revisions, evidence references, and versioning. See the [approved delta](deltas/2026-10-24T05-47-50Z-astroturfing-contracts-v1.md). |
 | ADR-002 | 2026-10-23 | Selected; implemented in web/ | React, TypeScript, Vite, Tailwind, React Router, Lucide React, Vercel SPA. Keep secrets and authoritative analysis out of browser. Versions are in web/package.json; deployment is unverified. |
-| ADR-003 | 2026-10-23 | Selected direction; pending | Convex intended as MVP application/job backend. Validate execution limits, data retention, security, cost, and the v1 REST/event integration; no backend code/config is present. Record a new decision before replacement. |
+| ADR-003 | 2026-10-23; updated 2026-10-24 | Implemented locally; deployment pending | Convex is the application/job backend. `backend/` serves the v1 REST routes and hosts the inference worker (see ADR-008). Validate cloud deployment, data retention, security, rate limits and cost. Record a new decision before replacement. |
 | ADR-004 | 2026-10-23 | Selected direction; pending access/implementation | Apify is intended managed ingestion. A project-owned Actor remains preferred, while provider-adapters.md lists third-party Actor candidates. Select and verify an adapter; availability is not authorization or successful collection. |
 | ADR-005 | 2026-10-23 | Planned, not accepted for P0 | Consider Elastic/Agent Builder after a permitted corpus and demonstrated retrieval value. A match is not proof. |
-| ADR-006 | 2026-10-23 | Proposed | Evaluate CREAO/Claude for controlled evidence reasoning; do not add until integration behavior and incremental value are verified. |
-| ADR-007 | 2026-10-23 | Analysis direction selected; pending | Use Python for deterministic analysis. NumPy, scikit-learn, NetworkX are candidates only, not current dependencies. |
+| ADR-006 | 2026-10-23 | Superseded by ADR-008 | Evaluate CREAO/Claude for controlled evidence reasoning; do not add until integration behavior and incremental value are verified. |
+| ADR-007 | 2026-10-23 | Superseded for the inference worker by ADR-008 | Use Python for deterministic analysis. NumPy, scikit-learn, NetworkX are candidates only, not current dependencies. |
+| ADR-008 | 2026-10-24 UTC | Selected by the inference owner; implemented locally; live CREAO run unverified | Inference runs in Convex (TypeScript): two bounded CREAO agent runs (triage, rubric scoring) with no tools, deterministic measurements, rubric re-scoring with caps, a provisional rubric-to-axis mapping, and contract validation before submission. See the [delta](deltas/2026-10-24T06-33-15Z-convex-creao-inference.md) and [backend/README.md](backend/README.md). |
 
 
 ### 13.5 Specification change history
@@ -418,5 +426,6 @@ These entries capture project direction and the adopted v1 interface delta; they
 | --- | --- | --- |
 | 2026-10-23 | Replaced the initial TBD-only scaffold with the DOC-001 master product/architecture baseline; TBD placeholders were not established requirements. | No delta required for filling placeholders. |
 | 2026-10-24 UTC | Adopted the supplied v1.0.0 wire-contract bundle, superseding draft 0.1; documented contract limits, owner acceptance, provider verification, and rubric mapping as outstanding. | [Approved v1 contract delta](deltas/2026-10-24T05-47-50Z-astroturfing-contracts-v1.md). |
+| 2026-10-24 UTC | Selected CREAO for inference and Convex for the backend; implemented the v1 API, inference worker, provisional rubric mapping, frontend report rendering and the labeled synthetic example. | [Convex and CREAO delta](deltas/2026-10-24T06-33-15Z-convex-creao-inference.md). |
 
 Future changes that conflict with an established requirement follow [CONTRIBUTING.md](CONTRIBUTING.md): propose affected sections/rationale, obtain explicit approval, create the timestamped delta, update the spec and decision log together, and preserve the historical decision. Filling a TBD or correcting an evidence-based implementation status does not itself require a delta. The v1.0.0 contract adoption is recorded by its linked approved delta.
