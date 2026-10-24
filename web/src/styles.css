@@ -31,3 +31,16 @@
   .shortcut{line-height:1.5}
   .home-footer{padding:12px 20px 16px}
 }
+
+/* FE-003 informational page */
+.about-main{width:100%;max-width:760px;margin:0 auto;padding:42px 24px 48px;color:#202322}
+.about-main>h1{font-size:40px;line-height:1.2;letter-spacing:-.8px;margin:0 0 30px;color:#202322}
+.about-section{padding:0;margin:0 0 25px;border:0}
+.about-section h2{font-size:20px;line-height:1.35;font-weight:650;margin:0 0 7px;color:#202322}
+.about-section p{font-size:16px;line-height:1.7;color:#626864;margin:0}
+.about-disclaimer{border-top:1px solid #D7DDD7;padding-top:16px;margin:31px 0 0;color:#626864;font-size:14px;line-height:1.6}
+@media(max-width:767px){
+  .about-main{padding:32px 20px 36px}
+  .about-main>h1{font-size:36px;margin-bottom:26px}
+  .about-section{margin-bottom:23px}
+}
