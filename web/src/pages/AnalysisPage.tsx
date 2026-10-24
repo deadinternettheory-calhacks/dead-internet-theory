@@ -36,6 +36,7 @@ function statusText(inv: InvestigationResource): string {
 
 function failureView(inv: InvestigationResource): View {
   if (inv.ingestionStatus === 'failed') {
+    if (inv.error?.code === 'PROVIDER_NO_COMMENTS') return { kind: 'error', title: 'No public comments were returned.', message: 'Comments may be disabled or unavailable for this video, so there is no discussion to analyze.', retry: false };
     if (NOT_CONNECTED.has(inv.error?.code ?? '')) {
       return { kind: 'error', title: 'We can’t collect this post yet.', message: 'Live collection for this platform is not connected yet, so nothing was analyzed.', retry: false, showExample: true };
     }

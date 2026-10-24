@@ -32,6 +32,14 @@ afterEach(async () => {
 });
 const render = async () => act(async () => { root.render(<MemoryRouter><AnalysisPage url={url}/></MemoryRouter>); });
 
+it('explains an empty video collection without blaming the platform or offering a duplicate retry', async () => {
+  vi.mocked(createInvestigation).mockResolvedValue(failed('PROVIDER_NO_COMMENTS'));
+  await render();
+  expect(container.textContent).toContain('No public comments were returned.');
+  expect(container.textContent).toContain('Comments may be disabled or unavailable');
+  expect(container.querySelector('.retry-button')).toBeNull();
+});
+
 it('replaces a confirmed fixture failure once so a cached test-mode request can recover after launch', async () => {
   const oldKey = idempotencyKeyFor(url);
   vi.mocked(createInvestigation).mockResolvedValueOnce(queued).mockImplementationOnce(() => new Promise(() => {}));

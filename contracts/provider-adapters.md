@@ -12,7 +12,7 @@ The inference service **never** calls the adapters directly or receives raw Acto
 | Platform | Discussion Actor | Author-history Actor | Cautions |
 |---|---|---|---|
 | Reddit | [`clearpath/reddit-post-comments-bulk-scraper`](https://apify.com/clearpath/reddit-post-comments-bulk-scraper) | [`clearpath/reddit-user-content-scraper`](https://apify.com/clearpath/reddit-user-content-scraper) | Root is a distinct post row; top-level comments may have `parentId:null`, normalize to root. `sort:'new'`, `maxCommentsPerPost:0`, `expandAllComments:true`. User history sorted `new`, `contentType:'comments'`, ~150 rows/user for local timestamp selection. Provider pagination can omit old content; this Actor's `timeFilter` is relative and only affects certain sorts. |
-| X | [`apidojo/twitter-replies-scraper`](https://apify.com/apidojo/twitter-replies-scraper) **plus a separate root-tweet lookup** | [`apidojo/tweet-scraper`](https://apify.com/apidojo/tweet-scraper) query `from:handle` and date constraints, optional profile fallback | Replies Actor's `startUrls`, `maxItems`, `useSearch` exist. `inReplyToId` establishes hierarchy. X may omit some search results. Search-based author history may have result minimums and missing replies. The *profile* Actor `getReplies` covers replies to the account's posts and is **not equivalent** to the account's own comment history. |
+| X | [`apidojo/twitter-replies-scraper`](https://apify.com/apidojo/twitter-replies-scraper) **plus a separate root lookup with [`apidojo/twitter-scraper-lite`](https://apify.com/apidojo/twitter-scraper-lite)** | The same Lite Actor with `from:handle filter:replies` | Lite supports single-post lookups and small authored-reply searches; the older `tweet-scraper` Actor disallows single-post lookups and has query minimums. `inReplyToId` establishes hierarchy. Runs are conservatively serialized for the publisher's single-run policy. Free-plan demo limits and missing results remain provider constraints. Profile replies **to** an account are not its authored comment history. |
 | YouTube | [`datagleaner/youtube-comments-scraper`](https://apify.com/datagleaner/youtube-comments-scraper) | **None** | Use `videoUrls`, `sortBy:'newest'`, `includeReplies:true`, and adequate `maxRepliesPerComment`; `maxCommentsPerVideo` counts comments + replies. `publishedAt` may be estimated from relative text; no audiovisual analysis. Video title and ID available, description availability unknown. |
 | TikTok | [`deepmine/tiktok-comments-scraper`](https://apify.com/deepmine/tiktok-comments-scraper) | **None** | Use `videos`, `includeReplies:true`. `maxCommentsPerVideo` is **top-level** count with replies added beyond it; `parentCommentId` and `replyToCommentId` may differ. Actor only obtains visible public comments and not arbitrary user's comments across other videos. |
 
@@ -67,6 +67,14 @@ TikTok video comment thread:
 | `CommentNode.url` | `url`, `permalink`, comment link | Generate from a known canonical platform ID/URL only if deterministic and documented. Otherwise use null. |
 
 Store raw provider fields and dataset refs internally. Every candidate Actor has third-party behavior that can change; check output schemas and costs in the Apify console. Actor listed as available is not proof it succeeds against a target thread or that its public-data collection is authorized under the platform's terms. Maintain a consented/approved historical dataset fallback for the demo when live access is restricted.
+
+The video adapters use observed `videoId` plus `videoTitle` (YouTube) or
+`videoCaption` (TikTok) carried on comment rows to establish the original metadata
+root; comment text and commenter identity are never used as the root's content
+or creator. Foreign video IDs fail validation. Date-only estimated YouTube ages
+remain unknown canonical timestamps. The YouTube adapter has a
+[single-video runtime check](../backend/verification/2026-10-24-youtube-discussion.md);
+X and TikTok remain unverified candidates.
 
 ## Source documentation checked October 23, 2026
 

@@ -95,9 +95,7 @@ it("fails closed without approved authorization, retention and runtime evidence"
   expect(() => liveGate("x")).toThrow("runtime evidence");
   expect(verification.reddit.runtimeVerified).toBe(true);
   expect(
-    [verification.x, verification.youtube, verification.tiktok].every(
-      (v) => !v.runtimeVerified,
-    ),
+    [verification.x, verification.tiktok].every((v) => !v.runtimeVerified),
   ).toBe(true);
 });
 it("batches Reddit repeated author lookup plans, separates X root and authored searches and never fetches video histories", () => {
@@ -131,7 +129,7 @@ it("batches Reddit repeated author lookup plans, separates X root and authored s
   const x = plan("x", "discussion", "https://x.com/synthetic/status/100");
   expect(x.map((t) => t.role)).toEqual(["root", "discussion"]);
   expect(plan("x", "history", undefined, [...authors])[0].input).toMatchObject({
-    searchTerms: ["from:alice"],
+    searchTerms: ["from:alice filter:replies"],
   });
   expect(plan("youtube", "history")).toEqual([]);
   expect(plan("tiktok", "history")).toEqual([]);

@@ -15,13 +15,16 @@ authors; the other returned no content. Runs and collected content were deleted
 after verification. See the [discussion](verification/2026-10-24-reddit-discussion.md)
 and [history](verification/2026-10-24-reddit-history.md) verification records for
 their scope. Reddit is now enabled on the hosted site, with a verified real-post
-flow through Apify, CREAO and persisted analysis. Other providers remain gated.
+flow through Apify, CREAO and persisted analysis. YouTube discussion collection
+also has a permitted, schema-checked runtime verification record; X and TikTok
+remain gated until their runtime checks succeed.
 See the [hosted verification record](verification/2026-10-24-hosted-live.md) for
 scope and operational limits; this is not a general provider or quality guarantee.
 
 The discussion build is pinned to `0.0.129`, verified after Apify removed the
 previous build. See the [build recovery record](verification/2026-10-24-reddit-build-recovery.md)
 for the scoped check and capacity reconciliation. The history pin is `0.0.78`.
+YouTube uses build `0.1.3`; see its [discussion verification](verification/2026-10-24-youtube-discussion.md).
 
 ## Setup and checks
 

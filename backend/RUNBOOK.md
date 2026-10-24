@@ -167,8 +167,10 @@ YouTube dates are estimated unless explicitly attested exact; video roots are te
 metadata only. No account creation or karma value is fabricated; absent profile
 metadata remains absent.
 
-The Reddit `verification` entry in `src/provider-policy.ts` references the
-reviewed discussion/history evidence; the other three entries remain false.
+The Reddit and YouTube `verification` entries in `src/provider-policy.ts`
+reference reviewed runtime evidence; X and TikTok remain false pending permitted
+runtime checks. YouTube's scoped check is in its
+[verification record](verification/2026-10-24-youtube-discussion.md).
 The adapter gate and capabilities read this single policy source.
 Capabilities report the required contract support classes alongside the actual reviewed verification state and a computed `liveEnabled` flag. Initially both are false. Enabling live collection requires the reviewed flag/evidence, live mode, authorization, retention reference and a nonempty server credential. These
 classes describe operation intent, not live availability. Even setting an Apify
@@ -199,8 +201,13 @@ deleted, with authenticated 404 checks for remote resources. See the
 During that standalone smoke, no real content reached Convex or inference.
 Optional Reddit account dates/karma were not fetched or invented.
 
-Other candidate field mappings remain documentation/synthetic checks only and
-may require correction against authorized provider output.
+YouTube and TikTok video roots are built from observed video IDs and metadata
+carried on comment rows, with unavailable creator identity/time left unknown.
+Date-only YouTube comment ages are not turned into exact midnight timestamps.
+X root and authored-reply queries use the single-post-capable
+`apidojo/twitter-scraper-lite` Actor. X Actor runs are conservatively serialized
+before reserving spend. All selected builds are pinned in `src/actors.ts`.
+The X and TikTok mappings still require their permitted runtime checks.
 Review sources: [Reddit discussion](https://apify.com/clearpath/reddit-post-comments-bulk-scraper/input-schema),
 [Reddit history](https://apify.com/clearpath/reddit-user-content-scraper/input-schema),
 [X authored search](https://apify.com/apidojo/tweet-scraper/input-schema),

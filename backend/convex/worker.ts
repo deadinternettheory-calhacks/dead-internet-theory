@@ -59,11 +59,12 @@ export const tick = action({
             kind: "discussion",
             state: job.payload as PlanState,
             observe,
-            reserve: (operation) =>
+            reserve: (operation, actor) =>
               ctx.runMutation(anyApi.jobs.reserve, {
                 key,
                 token: job.token,
                 operation,
+                ...(actor ? { actor } : {}),
               }),
             release: (operation) =>
               ctx.runMutation(anyApi.jobs.releaseRejected, {
@@ -155,11 +156,12 @@ export const tick = action({
               ),
               state: job.payload as PlanState,
               observe,
-              reserve: (operation) =>
+              reserve: (operation, actor) =>
                 ctx.runMutation(anyApi.jobs.reserve, {
                   key,
                   token: job.token,
                   operation,
+                  ...(actor ? { actor } : {}),
                 }),
               release: (operation) =>
                 ctx.runMutation(anyApi.jobs.releaseRejected, {
