@@ -1,6 +1,6 @@
 // Vercel Function for /api/v1/* (see vercel.json). Configure BACKEND_BASE_URL and
 // BACKEND_JWT_SECRET as server-side environment variables in Vercel, never as VITE_*.
-import { handleProxy } from '../server/proxy';
+import { handleProxy } from '../server/proxy.js';
 
 export default {
   fetch(request: Request): Promise<Response> {

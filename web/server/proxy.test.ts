@@ -1,3 +1,5 @@
+import { readdirSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { jwtVerify } from 'jose';
 import { describe, expect, it } from 'vitest';
 import vercel from '../vercel.json';
@@ -20,6 +22,19 @@ async function subjectOf(init: RequestInit) {
   const { payload } = await jwtVerify(token, new TextEncoder().encode(secret), { issuer: 'dit-backend', audience: 'dit-v1' });
   return payload;
 }
+
+describe('Vercel Function modules', () => {
+  // Vercel runs api/ as native ES modules, where relative imports need a file
+  // extension; an extensionless import crashes the function at load time.
+  it('uses .js extensions for relative imports', () => {
+    for (const dir of ['api', 'server']) {
+      for (const file of readdirSync(resolve(__dirname, '..', dir)).filter(f => f.endsWith('.ts') && !f.endsWith('.test.ts') && f !== 'vitePlugin.ts')) {
+        const source = readFileSync(resolve(__dirname, '..', dir, file), 'utf8');
+        for (const [, spec] of source.matchAll(/from '(\.{1,2}\/[^']+)'/g)) expect(spec, `${dir}/${file}`).toMatch(/\.js$/);
+      }
+    }
+  });
+});
 
 describe('API proxy', () => {
   it('routes /api/v1/* through the proxy function before the SPA rewrite', () => {
