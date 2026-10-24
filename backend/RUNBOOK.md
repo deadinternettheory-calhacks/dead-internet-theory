@@ -201,7 +201,7 @@ After deploying, an operator may seed compatible retained results without
 collecting anything. From `backend/`, with the explicit deployment env file:
 
 ```sh
-npx convex run reuse:seed '{"versionPrefix":"dit-inference/0.2.0; rubric/0.3; prompts-2026-10-24d;"}' --env-file .env.server.local
+npx convex run reuse:seed '{"versionPrefix":"dit-inference/0.2.0; rubric/0.3; prompts-2026-10-24e;"}' --env-file .env.server.local
 npx convex run reuse:peek '{"sourceUrl":"https://www.youtube.com/watch?v=jDtG_pwIIv0"}' --env-file .env.server.local
 ```
 
