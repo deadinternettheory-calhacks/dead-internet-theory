@@ -27,7 +27,7 @@ export function ShortcutExplanation() {
   return <div className="shortcut"><p>Shortcut: Add <code>deadinternettheory.us/</code> before a post link to check it instantly.</p><div className="example">deadinternettheory.us/https://reddit.com/...</div><p className="fragment-note">Browsers do not send unencoded #fragments to the site. To preserve one, encode the full post link in the shortcut path, for example: <code>deadinternettheory.us/https%3A%2F%2Freddit.com%2Fr%2F...%23...</code>.</p></div>;
 }
 export function SupportedPlatforms() {
-  return <div className="platforms"><span>Check posts from</span><p>Reddit <b>{String.fromCharCode(183)}</b> X / Twitter <span className="planned">(checking is not available yet)</span></p></div>;
+  return <div className="platforms"><span>Check posts from</span><p>Reddit <b>{String.fromCharCode(183)}</b> X / Twitter <span className="planned">(checking is not available yet)</span></p><Link className="text-link" to="/example">See an example report (synthetic)</Link></div>;
 }
 const steps = [{ icon: Link2, title: 'Share a post', body: 'Paste a link to a public social media post.' }, { icon: Activity, title: 'We examine the activity', body: 'We look for patterns that may suggest coordinated or unusual engagement.' }, { icon: Search, title: 'Review the evidence', body: 'Get a clear summary of what stood out and why it matters.' }];
 export function HowItWorks() {
