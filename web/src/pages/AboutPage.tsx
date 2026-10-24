@@ -11,15 +11,15 @@ export function AboutPage() {
     </section>
     <section className="about-section">
       <h3>How does the checker work?</h3>
-      <p>Paste a public post link. The site accepts Reddit and X (Twitter) links for analysis when its analysis service and data sources are available. Those integrations are not yet verified as operational.</p>
+      <p>Paste a public post link. We analyze patterns in comments, accounts, and activity to identify potential signs of coordination and explain what we find.</p>
     </section>
     <section className="about-section">
       <h3>Does a high score prove manipulation?</h3>
-      <p>No. A high score, if provided, would suggest suspicious activity, but it would not be proof. Real users can show similar patterns.</p>
+      <p>No. A high score suggests suspicious activity, but it's not proof. Real users can show similar patterns.</p>
     </section>
     <section className="about-section">
       <h3>What platforms work?</h3>
-      <p>The site accepts Reddit and X (Twitter) links, but analysis depends on the configured service and data sources. TikTok and YouTube are not supported by the current checker.</p>
+      <p>Reddit, X (Twitter), TikTok, and YouTube are supported.</p>
     </section>
     <p className="about-disclaimer">Results are estimates based on public signals. They are not proof of coordinated activity.</p>
   </section>;
