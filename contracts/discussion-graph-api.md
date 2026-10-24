@@ -143,7 +143,7 @@ Batched: one request covers many authors.
 | `investigationId` | Investigation the authors belong to |
 | `authors[].authorId` | Author node ID from the graph |
 | `authors[].anchorCommentId` | Comment node ID whose timestamp anchors the sample |
-| `limit` | Maximum comments returned per author (example: 10) |
+| `limit` | Maximum comments returned per author. Set to 10 for now |
 | `windowDays` | Window around the anchor timestamp (example: 14) |
 | `fallback` | Strategy when the window yields too few comments (example: `most_recent`) |
 
@@ -223,16 +223,13 @@ To settle before freezing:
    [rubrics/product-astroturfing.md](../rubrics/product-astroturfing.md)
    uses account age and post/comment karma, which this contract does not yet
    include.
-4. History size. The rubric's Medium and High confidence levels expect at least
-   20 history items per author; the example request returns up to 10 within a
-   14-day window. Either the default `limit` or the rubric needs to change.
-5. Response shape of `getAuthorHistories`: field names for status, strategy
+4. Response shape of `getAuthorHistories`: field names for status, strategy
    and errors, and the allowed values of `fallback`.
-6. Asynchronous pattern for `createInvestigation` and `getAuthorHistories`
+5. Asynchronous pattern for `createInvestigation` and `getAuthorHistories`
    (polling, callback or webhook) and the transport.
-7. Timestamp format and time zone.
-8. `submitAnalysis` schema, including score scales, and whether similarity
+6. Timestamp format and time zone.
+7. `submitAnalysis` schema, including score scales, and whether similarity
    links are stored with results or merged into the graph.
-9. Who calls `createInvestigation`, and the frontend's read operations.
-10. Error behavior, versioning and compatibility rules for this contract.
-11. Schema format and validation tooling, chosen with the stack (SPEC section 6).
+8. Who calls `createInvestigation`, and the frontend's read operations.
+9. Error behavior, versioning and compatibility rules for this contract.
+10. Schema format and validation tooling, chosen with the stack (SPEC section 6).

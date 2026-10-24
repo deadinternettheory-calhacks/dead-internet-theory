@@ -1,6 +1,6 @@
 # Scoring product recommendations in comment sections for astroturfing
 
-Status: proposal, version 0.2. Covers Reddit, X (Twitter), YouTube and TikTok.
+Status: proposal, version 0.3. Covers Reddit, X (Twitter), YouTube and TikTok.
 The weights are expert priors drawn from the literature review
 [Detecting Astroturfing in Reddit Comments](https://claude.ai/artifact/SPMpbsXfLqjoAu4RwCcSUe).
 They have not been fitted or validated on labeled data (see
@@ -72,7 +72,7 @@ Evidence comes in three levels:
 | Level | Contents | Source in the contract |
 | --- | --- | --- |
 | **T — Discussion** | Target comment, its parent chain, the root, all sibling comments, visible metadata (author, timestamps, engagement, flair or badges, deleted/removed markers) | `getGraph` |
-| **A — Author history** | The target author's recent comments (aim for at least 20) with community and timestamp, plus profile fields where available | `getAuthorHistories` |
+| **A — Author history** | The target author's recent comments (up to 10, the contract's `limit`) with community and timestamp, plus profile fields where available | `getAuthorHistories` |
 | **C — Co-recommender history** | The same for the root author and every other account in the discussion recommending the same product | `getAuthorHistories` |
 
 ## 3. Platform profiles
@@ -146,14 +146,14 @@ Needs level A: Reddit and X only.
 
 | ID | Signal | Points | Basis | Platform notes |
 | --- | --- | --- | --- | --- |
-| B1 | Brand concentration: the brand or its product line appears in a large share of the author's recent comments (about 3 or more of the last 20, or most of the non-generic ones), especially across unrelated communities | +20 | Behavioral policy and posting-pattern work (Schneider et al. 2026); commercial equivalent of topic focus | Communities are subreddits on Reddit, unrelated conversations or topics on X |
+| B1 | Brand concentration: the brand or its product line appears in a large share of the author's recent comments (3 or more of the last 10, or most of the non-generic ones), especially across unrelated communities | +20 | Behavioral policy and posting-pattern work (Schneider et al. 2026); commercial equivalent of topic focus | Communities are subreddits on Reddit, unrelated conversations or topics on X |
 | B2 | The author has posted the same or near-identical recommendation in other discussions | +20 | Lexical redundancy as an indicator | Reddit, X |
 | B3 | Engagement farming: history is mostly generic, low-effort posts aimed at high-traffic spaces, followed by a switch to product talk. On Reddit, also a large post-karma vs comment-karma imbalance | +10 | Karma asymmetry (Pilaud & McCulloh 2025) | Karma part is Reddit only and needs profile fields |
 | B4 | Account age: under 30 days old (+8), or dormant for 6+ months and reactivated mainly to discuss products (+12) | +8 / +12 | Account age as a flag (Pilaud & McCulloh 2025); reactivation is **heuristic** (aged-account resale) | Reddit, X. Creation date needs profile fields; dormancy can be read from history gaps |
 | B5 | Abrupt style shift within the account: casual, typo-filled writing turns into polished marketing prose, or the language changes | +10 | IRA accounts showed inconsistent style within accounts, suggesting shared operators (Weerasinghe et al. 2022) | Reddit, X |
 | B6 | Schedule looks like a work shift: activity confined to weekday business hours of one time zone, or at machine-regular intervals, in an account that is not about work topics | +8 | Work-schedule metadata (Miller 2016); temporal regularity | Reddit, X |
 | B7 | Consistently positive about the brand where the community's view is mixed, and consistently negative about its competitors | +8 | Topic-level sentiment deviation (Pilaud & McCulloh 2025) | Reddit, X |
-| B8 | LLM-style prose across most of 20 or more of the author's comments | +8 | Per-account aggregation works much better than per-message detection (Trokhymovych et al. 2026); an agent's judgment is weaker than their trained model, so the weight is moderate | Reddit, X |
+| B8 | LLM-style prose across most of the author's 10 history comments | +5 | Per-account aggregation works much better than per-message detection (Trokhymovych et al. 2026), but their ~0.97 AUC used 20 messages and a trained model; with 10 messages and an agent's judgment, the weight is low | Reddit, X |
 | B9 | History hidden or mostly deleted | +3 | Weak; many users hide history for privacy | Reddit (hidden profile), X (protected account). Only when the platform reports it; an `unavailable` status alone never fires B9 |
 
 ### Family T — Discussion context (moderate)
@@ -224,9 +224,9 @@ Record every cap that changed the score.
 Confidence reflects how much evidence was available, not how high the score is:
 
 - **Low:** level T only (always the case on YouTube and TikTok), or an author
-  history of fewer than 20 items.
-- **Medium:** levels T and A, with at least 20 history items.
-- **High:** levels T, A and C, with histories of at least 20 items for the
+  history of fewer than 10 items.
+- **Medium:** levels T and A, with 10 history items.
+- **High:** levels T, A and C, with histories of 10 items for the
   author and each co-recommender.
 
 On X, lower confidence by one level (not below Low) if any history used is
@@ -248,7 +248,7 @@ Return one JSON object:
   "evidence_levels": ["T", "A"],
   "history_status": {"reddit:user123": "complete"},
   "signals": [
-    {"id": "B1", "points": 20, "evidence": "Brand named in 6 of last 20 comments across r/fitness, r/cooking, r/BuyItForLife"},
+    {"id": "B1", "points": 20, "evidence": "Brand named in 4 of last 10 comments across r/fitness, r/cooking, r/BuyItForLife"},
     {"id": "B2", "points": 20, "evidence": "Same two-sentence recommendation posted in 3 other threads this month"},
     {"id": "B3", "points": 10, "evidence": "History before this month is one-line replies in r/AskReddit and r/pics"},
     {"id": "T2", "points": 8, "evidence": "OP is 2 days old with no other posts"},
@@ -301,9 +301,9 @@ Nothing here has been tested against labeled data. Known limits:
 - Signals requiring level C are the most informative and the hardest to
   collect: Reddit is restricting its public API in 2026, X history search is
   incomplete, and YouTube and TikTok histories are not modelled.
-- The contract's example history request returns up to 10 comments per author;
-  Medium and High confidence here expect at least 20. This is an open decision
-  in the contract.
+- Histories are limited to 10 comments per author for now (the contract's
+  `limit`). Account-level text detection in the review used 20 messages, so
+  history-based rules, B8 especially, rest on a small sample.
 
 To calibrate, score a set of comments with known outcomes (for example
 moderator-confirmed spam rings and verified organic recommendations) on each
@@ -331,9 +331,9 @@ Signals: C2 +20, C3 +15, B1 +20, T2 +8, X3 +6. Sum 69, with C and B both
 present. Score 69, High, High confidence. Send to human review.
 
 **Partial history on X.** A reply to a "what laptop should I buy?" post names
-one brand with an affiliate link. Search returns 14 of the author's posts
-(`partial`); 5 promote the same brand. Signals: B1 +20, X1 +8, X2 +6.
-Exculpatory: E6 −5. Score 29, Low tier. Confidence is Low (fewer than 20
+one brand with an affiliate link. Search returns 6 of the author's posts
+(`partial`); 4 promote the same brand. Signals: B1 +20, X1 +8, X2 +6.
+Exculpatory: E6 −5. Score 29, Low tier. Confidence is Low (fewer than 10
 items), and the `partial` adjustment cannot take it lower.
 
 **Comment flood under a YouTube video.** Within 15 minutes of a video about
