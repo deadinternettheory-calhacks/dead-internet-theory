@@ -44,3 +44,16 @@
   .about-main>h1{font-size:36px;margin-bottom:26px}
   .about-section{margin-bottom:23px}
 }
+
+/* FE-005 homepage spacing and headline scale */
+.hero{padding:16px 20px 52px}
+.hero h1{max-width:900px;font-size:40px;line-height:1.15;letter-spacing:0;margin-bottom:32px;color:#202322}
+.search-form>.primary-button{margin-top:12px}
+.shortcut{margin-top:18px}
+@media(max-width:1023px){
+  .hero h1{font-size:36px}
+}
+@media(max-width:767px){
+  .hero{min-height:calc(100svh - 122px);padding:16px 20px 48px}
+  .hero h1{font-size:30px}
+}
