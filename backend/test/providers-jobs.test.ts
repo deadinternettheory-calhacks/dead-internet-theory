@@ -149,7 +149,9 @@ it("reports X demo limits without disabling the verified collector or changing o
   const entries = capabilities().platforms;
   const x = entries.find((p) => p.platform === "x")!;
   expect(x).toMatchObject({ liveEnabled: true, demoLimited: true });
-  expect(x.limitations.join(" ")).toContain("five runs");
+  expect(Array.isArray(x.limitations) && x.limitations.join(" ")).toContain(
+    "five runs",
+  );
   expect(
     entries
       .filter((p) => p.platform !== "x")
