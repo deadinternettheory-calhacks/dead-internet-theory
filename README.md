@@ -45,12 +45,13 @@ unfinished documentation, not established requirements.
 ## Current status
 
 The backend implements the v1 API and durable jobs with synthetic end-to-end
-verification on local Convex. Candidate Apify adapters remain disabled pending
+verification on local Convex and authenticated REST checks on a hosted development
+deployment. Candidate Apify adapters remain disabled pending
 authorized runtime verification and retention review. No public credential issuer
 is implemented. The inference service consumes the backend's ready events, uses a
-CREAO agent for triage and rubric scoring, and re-scores deterministically; no live
-CREAO run is verified yet. The rubric and its mapping to contract axes are
-uncalibrated proposals. The frontend renders v1 analyses through a configured
-API base and shows a labeled synthetic report at `/example`; see `web/README.md`.
-See `backend/README.md` and `inference/README.md` for implementation details and
-verification limits.
+CREAO agent for triage and rubric scoring, and re-scores deterministically; live
+CREAO runs have started against the configured agent but are not yet verified end
+to end. The rubric and its mapping to contract axes are uncalibrated proposals.
+The frontend renders v1 analyses through a configured API base and shows a labeled
+synthetic report at `/example`; see `web/README.md`. See `backend/README.md` and
+`inference/README.md` for implementation details and verification limits.

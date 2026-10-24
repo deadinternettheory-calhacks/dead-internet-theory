@@ -50,6 +50,48 @@ Local testing has one narrow exception: `LOCAL_SYNTHETIC_EVENT_DELIVERY=true`,
 `http://127.0.0.1:4010/events` allow the local mock receiver. Other HTTP/private
 destinations remain blocked. Remove this flag in hosted deployment.
 
+## Hosted development deployment
+
+On 2026-10-24 the merged backend (repository revision `de3b709`, including backend
+merge `d196cf7`) was deployed to the existing development deployment
+`impartial-sheep-516`. Its API base is `https://impartial-sheep-516.convex.site`.
+The target was confirmed empty of functions and environment variables before
+setup; no production deployment was changed.
+
+Authenticated cloud checks passed for all eight REST operations, create/analysis
+replays, owner isolation, synthetic graph provenance, two history results and
+analysis persistence. The canonical ready event was observed in its durable
+outbox. No external inference receiver is configured; outbound delivery to a real
+worker has not been tested on this cloud deployment. The full independent mock
+consumer/event-delivery flow remains verified locally.
+
+All four external credentials passed read-only authentication checks. Apify user
+access and Anthropic model listing returned 200. The CREAO key is recognized by
+its legacy `https://agent.creao.ai/api/v1` API (run listing 200), while the v2
+project-key endpoint rejected it. No billable Actor or model runs were started.
+These checks do not establish provider source permissions, Actor mappings,
+message-generation access/balance, or an implemented CREAO/Claude worker.
+
+The private `.env.server.local` setup inventory contains CLI access, backend
+configuration and reserved worker keys. **Do not bulk-import that entire file.**
+Only backend runtime names from `.env.example` were imported to Convex; the
+Convex admin credential and CREAO/Anthropic keys were kept out of the ingestion
+runtime. Keep CLI selection explicit, for example:
+
+```sh
+npm run generate
+npx convex deploy --env-file .env.server.local --typecheck enable
+npx convex env list --names-only --env-file .env.server.local
+# For runtime updates, first prepare a private file containing only .env.example names.
+npx convex env set --env-file .env.server.local --from-file <runtime-only-file>
+```
+
+Live collection stays disabled: `PROVIDER_MODE=fixture`,
+`PROVIDER_AUTHORIZATION_APPROVED=false`, and all adapter runtime-verification flags
+remain false. Provider authorization/retention review and a real inference worker
+are separate remaining steps. The production checklist below still applies before
+changing that state.
+
 ## Server configuration
 
 Copy `.env.example` to a private file, fill server-only values, and use
@@ -178,7 +220,7 @@ investigation; no v1 recollect/restart route exists. Terminal job errors retain
 the graph if one was completed. Independent inference may still submit a valid
 final analysis after a delivery failure.
 
-Before cloud deployment, approve: provider access/terms and runtime evidence;
+Before production deployment or live collection, approve: provider access/terms and runtime evidence;
 public-client issuer/BFF and key rotation; actual retention duration, deletion,
 correction and takedown procedure (including snapshots, jobs, cache, idempotency
 and Convex backups); per-deployment budget/capacity; HTTPS inference inbox and

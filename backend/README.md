@@ -7,7 +7,9 @@ analysis validation/storage. It contains no inference model. The existing Vite
 application is preserved.
 
 Synthetic ingestion and an independent mock inference consumer have been verified
-against a real local Convex deployment. No live Apify Actor has been exercised.
+against a real local Convex deployment. The authenticated REST lifecycle has also
+been verified on the hosted development deployment described below. No live Apify
+Actor has been exercised.
 Candidate provider adapters are intentionally disabled until authorized runtime
 verification is reviewed. Do not describe this as production or provider ready.
 
@@ -34,7 +36,15 @@ are also ignored because this package uses its generic function builders.
 The CLI prints the deployment URL and HTTP site URL. The usual anonymous local
 HTTP base is `http://127.0.0.1:3211`; cloud HTTP actions use
 `https://<deployment>.convex.site`, **not** `.convex.cloud`. The local service runs
-while `convex dev` runs. No cloud deployment or public backend URL has been created.
+while `convex dev` runs.
+
+Hosted **development** API, deployed and checked on 2026-10-24:
+`https://impartial-sheep-516.convex.site`. It requires bearer authentication and
+runs in `fixture` mode. It is not a production deployment or a live-provider
+integration. Synthetic ingestion, graph retrieval, two history results, analysis
+submission/readback, idempotency, ownership checks and the persisted ready event
+were verified there. An external inference event receiver is not configured yet;
+the real worker remains unimplemented. The existing website is not connected.
 
 From the repository root, validate the unchanged contracts and client:
 

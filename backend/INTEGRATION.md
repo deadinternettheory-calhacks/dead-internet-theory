@@ -6,8 +6,9 @@ and the [behavioral contract](../contracts/discussion-graph-api.md). Consume tho
 models. Do not import backend dependencies into `web/` or invent a report model.
 
 The verified local backend base is `http://127.0.0.1:3211` while the local Convex
-development process is running. Obtain a cloud site URL from the deployment owner;
-none is published by this change. A browser frontend should call its own trusted
+development process is running. The authenticated hosted development API is
+`https://impartial-sheep-516.convex.site` (verified 2026-10-24; synthetic fixtures
+only). No production backend is configured. A browser frontend should call its own trusted
 server/BFF, which forwards to the backend. This implementation does not enable
 cross-origin browser access or issue public browser credentials.
 
