@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { ArrowRight, ArrowUpRight, Link2 } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Link2, Play } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { parsePostUrl } from '../url';
+import { TransitionLink } from './TransitionLink';
 import { Button } from './ui/button';
 
 export function BrandWordmark() {
@@ -10,7 +11,7 @@ export function BrandWordmark() {
 export function SiteHeader() {
   const { pathname, hash } = useLocation();
   const alreadyAtSection = pathname === '/' && hash === '#how-it-works';
-  return <header className="header"><div className="header-inner"><BrandWordmark/><nav aria-label="Main navigation"><Link to="/#how-it-works" replace={alreadyAtSection}>How it works</Link></nav></div></header>;
+  return <header className="header"><div className="header-inner"><BrandWordmark/><nav aria-label="Main navigation"><Link to="/#how-it-works" replace={alreadyAtSection}>How it works</Link><TransitionLink className="header-play-demo" to="/example?play=1" ariaLabel="Play demo"><Play size={13} fill="currentColor" aria-hidden="true"/><span>Play demo</span></TransitionLink></nav></div></header>;
 }
 export function SiteFooter() {
   const pathname = useLocation().pathname;
@@ -25,7 +26,7 @@ export function PostUrlInput({ onSubmit }: { onSubmit: (url: string) => void }) 
     if (!result.ok) { setError(result.reason === 'empty' ? 'Paste a post link to get started.' : "Check the link and try a public Reddit post."); return; }
     setError(''); onSubmit(result.url.href);
   }
-  return <form className="search-form" onSubmit={submit} noValidate><label className="sr-only" htmlFor="post-url">Post link</label><div className="input-wrap"><Link2 size={20} aria-hidden="true"/><input id="post-url" type="url" value={value} onChange={event => { const nextValue = event.target.value; setValue(nextValue); if (error && parsePostUrl(nextValue).ok) setError(''); }} placeholder="Paste a public Reddit post link…" aria-invalid={!!error} aria-describedby={error ? 'url-error' : undefined}/></div>{error && <div id="url-error" className="form-error"><InlineError>{error}</InlineError></div>}<Button type="submit">Analyze post <ArrowRight size={18} aria-hidden="true"/></Button></form>;
+  return <form className="search-form" onSubmit={submit} noValidate><label className="sr-only" htmlFor="post-url">Post link</label><div className="input-wrap"><Link2 size={20} aria-hidden="true"/><input id="post-url" type="url" value={value} onChange={event => { const nextValue = event.target.value; setValue(nextValue); if (error && parsePostUrl(nextValue).ok) setError(''); }} placeholder="Paste a Reddit, TikTok, or YouTube link…" aria-invalid={!!error} aria-describedby={error ? 'url-error' : undefined}/></div>{error && <div id="url-error" className="form-error"><InlineError>{error}</InlineError></div>}<Button type="submit">Analyze post <ArrowRight size={18} aria-hidden="true"/></Button></form>;
 }
 export function ShortcutExplanation() {
   return <p className="shortcut">Or add <code>deadinternettheory.us/</code> before a post link to check it instantly.</p>;

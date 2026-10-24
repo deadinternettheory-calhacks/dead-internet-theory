@@ -1,7 +1,6 @@
-import { TransitionLink } from '../components/TransitionLink';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Play, ArrowDown } from 'lucide-react';
+import { ArrowDown } from 'lucide-react';
 import { PostUrlInput, ShortcutExplanation } from '../components/SiteLayout';
 import { AboutPage } from './AboutPage';
 import { GraveyardGlobe } from '../components/GraveyardGlobe/GraveyardGlobe';
@@ -29,10 +28,9 @@ export function HomePage() {
     };
   }, []);
 
-  return <main className="home-main"><section className="hero home-hero"><div className="hero-content"><GraveyardGlobe/>
-    <h1>Is this conversation<br/><span>being manipulated?</span></h1><p className="home-hero-description">See the evidence behind the patterns.</p>
+  return <main className="home-main"><section className="hero home-hero"><div className="hero-content"><GraveyardGlobe/><div className="hero-details">
+    <h1>Is this conversation being <span data-text="manipulated?">manipulated?</span></h1>
     <PostUrlInput onSubmit={url => navigate(`/analysis?url=${encodeURIComponent(url)}`)}/>
-    <div className="home-hero-secondary"><TransitionLink className="home-play-demo" to="/example?play=1"><span><Play size={13} fill="currentColor" aria-hidden="true"/></span>Play demo<small>30 sec</small></TransitionLink><span className="home-live-label"><i aria-hidden="true"/>Reddit is live</span></div>
     <ShortcutExplanation/>
-  </div>{showExplanation && <Link className="explanation-cue" to="/#how-it-works"><span>How it works</span><ArrowDown size={18} aria-hidden="true"/></Link>}</section><DemoTeaser/><HowSteps/><AboutPage/></main>;
+  </div></div>{showExplanation && <Link className="explanation-cue" to="/#how-it-works"><span>How it works</span><ArrowDown size={18} aria-hidden="true"/></Link>}</section><DemoTeaser/><HowSteps/><AboutPage/></main>;
 }

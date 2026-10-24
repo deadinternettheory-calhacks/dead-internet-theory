@@ -23,6 +23,7 @@ describe('homepage URL input errors', () => {
 
   it('shows the empty-link alert only after an empty submission', () => {
     const page = renderInput();
+    expect(page.querySelector('input')?.getAttribute('placeholder')).toBe('Paste a Reddit, TikTok, or YouTube link…');
     expect(page.querySelector('[role="alert"]')).toBeNull();
 
     act(() => page.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));

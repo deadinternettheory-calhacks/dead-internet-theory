@@ -99,12 +99,22 @@ describe('homepage How it works navigation', () => {
 
   it('starts the demo at the top and focuses its heading', () => {
     renderApp();
-    const link = container.querySelector<HTMLAnchorElement>('.home-play-demo')!;
+    const link = container.querySelector<HTMLAnchorElement>('.header-play-demo')!;
+    expect(container.querySelector('.home-play-demo')).toBeNull();
+    expect(link.previousElementSibling?.textContent).toBe('How it works');
+    expect(link.getAttribute('aria-label')).toBe('Play demo');
     act(() => link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 })));
     expect(window.location.pathname).toBe('/example');
     expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'instant' });
     expect(document.activeElement?.textContent).toBe('Follow the evidence.');
     expect(container.textContent).toContain('A real Reddit thread');
+  });
+
+  it('keeps the headline readable while isolating its emphasis', () => {
+    renderApp();
+    const heading = container.querySelector<HTMLHeadingElement>('.home-hero h1')!;
+    expect(heading.textContent).toBe('Is this conversation being manipulated?');
+    expect(heading.querySelector('span')?.textContent).toBe('manipulated?');
   });
 
   it('redirects the legacy /about URL to the homepage section', () => {
