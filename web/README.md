@@ -123,6 +123,18 @@ The coordination index appears only inside the detailed analysis, labeled as an
 uncalibrated heuristic. Types in `src/api/contract.ts` mirror only the fields
 the UI reads; the canonical models are in `../contracts/`.
 
+Findings show one quote initially and expand to reveal additional citations.
+**Explore evidence** opens the relevant interactive view; all axis citations
+remain accessible even when a quote is shared between findings. Ready and missing
+history outcomes remain distinct. Counts and charts use stored response data.
+
+While a live check runs, milestones distinguish queued collection, active
+collection, queued analysis and active analysis. The clock is elapsed time in
+the current view, not a completion estimate. Once collection finishes, a bounded
+preview lets readers browse up to 100 returned visible comments, six at a time,
+without fetching the graph again on each poll. The walkthrough's illustrative
+scene timing is never used as live progress.
+
 ## Routing
 
 Vercel `web/vercel.json` rewrites paths to the SPA entry point for refresh and shortcut links. Prefix URLs preserve nested path and query strings. A browser does not send an unencoded `#fragment` to the server; to preserve one, encode the complete source URL as the shortcut path segment first. Hash fragments are not needed to identify an ordinary post and the raw form cannot preserve them.

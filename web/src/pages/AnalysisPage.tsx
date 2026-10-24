@@ -4,8 +4,10 @@ import { ArrowRight } from 'lucide-react';
 import { buildReport, buildThreadPreview, type Report, type ThreadPreview } from '../analysis/report';
 import { ApiError, createInvestigation, forgetIdempotencyKeyFor, getAnalysis, getEnrichment, getGraph, getInvestigation, idempotencyKeyFor } from '../api/client';
 import type { EnrichmentJob, InvestigationResource } from '../api/contract';
-import { AnalysisErrorState, AnalysisLoadingState } from '../components/AnalysisPresentation';
-import { AnalysisReport, SyntheticBanner, ThreadPreviewCard } from '../components/AnalysisReport';
+import { AnalysisErrorState } from '../components/AnalysisPresentation';
+import { AnalysisReport, SyntheticBanner } from '../components/AnalysisReport';
+import { ThreadPreviewCard } from '../components/ThreadPreviewCard';
+import { AnalysisProgress, type ProgressPhase } from '../components/AnalysisProgress';
 import { ServiceUnavailable, UnsupportedLinkState } from '../components/AnalysisStates';
 import { PostSummaryCard } from '../components/SiteLayout';
 import { syntheticDemo } from '../demo';
@@ -20,7 +22,7 @@ const SERVICE_SIDE = new Set(['PROVIDER_REJECTED', 'PROVIDER_START_AMBIGUOUS', '
 const MAX_WAIT_MS = 8 * 60_000;
 
 type View =
-  | { kind: 'loading'; status: string; preview?: ThreadPreview }
+  | { kind: 'loading'; status: string; phase: ProgressPhase; preview?: ThreadPreview }
   | { kind: 'report'; report: Report }
   | { kind: 'unavailable' }
   | { kind: 'error'; title: string; message: string; retry: boolean; showExample?: boolean; freshRequest?: boolean };
@@ -52,12 +54,13 @@ function failureView(inv: InvestigationResource): View {
 }
 
 function LiveAnalysis({ url }: { url: string }) {
-  const [view, setView] = useState<View>({ kind: 'loading', status: 'Starting…' });
+  const [view, setView] = useState<View>({ kind: 'loading', status: 'Starting…', phase: 'starting' });
   const [attempt, setAttempt] = useState(0);
   const cancelled = useRef(false);
 
   const run = useCallback(async () => {
     const started = Date.now();
+    setView({ kind: 'loading', status: 'Starting…', phase: 'starting' });
     let preview: ThreadPreview | undefined;
     let previewTried = false;
     try {
@@ -78,13 +81,13 @@ function LiveAnalysis({ url }: { url: string }) {
         if (inv.ingestionStatus === 'completed' && !previewTried) {
           previewTried = true;
           try {
-            preview = buildThreadPreview(await getGraph(inv.investigationId));
+            preview = buildThreadPreview(await getGraph(inv.investigationId), 100);
           } catch {
             // The preview is optional; keep waiting for the analysis.
           }
           if (cancelled.current) return;
         }
-        setView({ kind: 'loading', status: statusText(inv), preview });
+        setView({ kind: 'loading', status: statusText(inv), phase: inv.ingestionStatus === 'completed' ? inv.analysisStatus === 'running' ? 'analyzing' : 'analysis-queued' : inv.ingestionStatus === 'running' ? 'collecting' : 'queued', preview });
         if (Date.now() - started > MAX_WAIT_MS) {
           return setView({ kind: 'error', title: 'This is taking longer than expected.', message: 'The analysis is still running. Try again in a few minutes.', retry: true });
         }
@@ -113,9 +116,7 @@ function LiveAnalysis({ url }: { url: string }) {
   }, [run, attempt]);
 
   if (view.kind === 'unavailable') return <><PostSummaryCard url={url}/><ServiceUnavailable/><p className="example-link">Want to see what a finished report looks like? <Link className="text-link" to="/example">View the synthetic example</Link></p></>;
-  if (view.kind === 'loading') return view.preview
-    ? <><AnalysisLoadingState status={view.status}/><ThreadPreviewCard preview={view.preview}/></>
-    : <><PostSummaryCard url={url}/><AnalysisLoadingState status={view.status}/></>;
+  if (view.kind === 'loading') return <><AnalysisProgress key={attempt} phase={view.phase} status={view.status} collectedCount={view.preview?.collectedCount}/>{view.preview ? <ThreadPreviewCard preview={view.preview}/> : <PostSummaryCard url={url}/>}</>;
   if (view.kind === 'error') {
     return <><PostSummaryCard url={url}/><AnalysisErrorState title={view.title} message={view.message} onRetry={view.retry ? () => { if (view.freshRequest) forgetIdempotencyKeyFor(url); setAttempt(a => a + 1); } : undefined}/>
       {view.showExample && <p className="example-link">Want to see what a finished report looks like? <Link className="text-link" to="/example">View the synthetic example</Link></p>}</>;
@@ -128,7 +129,7 @@ export function AnalysisPage({ url }: { url: string }) {
   let body;
   if (!valid.ok) body = <UnsupportedLinkState/>;
   else body = <LiveAnalysis key={valid.url.href} url={valid.url.href}/>;
-  return <main className="analysis-main"><Link className="back-link" to="/">{String.fromCharCode(8592)} Check another post</Link><p className="example-link">Reports expire 24 hours after the check starts.</p>{body}<div className="bottom-cta"><h2>Have another post to check?</h2><Link className="primary-button link-button" to="/">Analyze another post <ArrowRight size={18}/></Link></div></main>;
+  return <main className="analysis-main"><Link className="back-link" to="/">{String.fromCharCode(8592)} Check another post</Link><header className="analysis-page-heading"><h1>Your investigation.</h1><p>Reports expire 24 hours after the check starts.</p></header>{body}<div className="bottom-cta"><h2>Have another post to check?</h2><Link className="primary-button link-button" to="/">Analyze another post <ArrowRight size={18}/></Link></div></main>;
 }
 
 export function UnsupportedPrefixPage() {

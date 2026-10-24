@@ -304,6 +304,23 @@ The 3D code is loaded separately and animation stops offscreen or in hidden tabs
 
 `web/README.md` records commands and API configuration. The hosted site and API completed a permitted Reddit analysis through CREAO; the synthetic example remains labeled and does not submit its fabricated URL to the live scraper. The contract platform enum lists Reddit, X, YouTube, and TikTok; that is interface scope, not proof of integration.
 
+The homepage also offers an animated preview of the synthetic case and three
+steps explaining the workflow. `/example` now provides a guided five-scene
+walkthrough with Play, Pause, Replay, direct step selection and a complete-report
+option. Its persistent synthetic label distinguishes prepared example data from
+live collection. Reduced motion starts manually; evidence interaction and hidden
+tabs pause playback. Native view transitions animate the decorative globe between
+home and example where supported, with ordinary navigation as the fallback.
+
+Completed reports include selectable comment, literal-phrase, UTC timestamp and
+bounded history-sample views. Maps represent discussion membership or exact phrase
+matches; they do not infer account relationships. Visuals disclose their limit of
+12 displayed comments, prioritizing cited evidence when relevant. Missing times
+and unavailable histories remain explicit. Live waiting views follow actual
+backend states, show elapsed time in the view, and let readers browse a bounded
+preview of collected comments while analysis runs. They do not use the synthetic
+walkthrough's timing, invented percentages or an estimated completion countdown.
+
 ## 11. Security, privacy, and platform access
 
 ### 11.1 URL/network protections
