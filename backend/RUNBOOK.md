@@ -69,8 +69,10 @@ All four external credentials passed read-only authentication checks. Apify user
 access and Anthropic model listing returned 200. The CREAO key is recognized by
 its legacy `https://agent.creao.ai/api/v1` API (run listing 200), while the v2
 project-key endpoint rejected it. No billable Actor or model runs were started.
-These checks do not establish provider source permissions, Actor mappings,
-message-generation access/balance, or an implemented CREAO/Claude worker.
+These credential checks do not establish provider source permissions, Actor
+mappings or message-generation access/balance. A separate CREAO/Claude worker now
+exists in `inference/`; see its own verification limits. The later scoped Reddit
+Actor check is recorded below.
 
 The private `.env.server.local` setup inventory contains CLI access, backend
 configuration and reserved worker keys. **Do not bulk-import that entire file.**
@@ -88,9 +90,9 @@ npx convex env set --env-file .env.server.local --from-file <runtime-only-file>
 
 Live collection stays disabled: `PROVIDER_MODE=fixture`,
 `PROVIDER_AUTHORIZATION_APPROVED=false`, and all adapter runtime-verification flags
-remain false. Provider authorization/retention review and a real inference worker
-are separate remaining steps. The production checklist below still applies before
-changing that state.
+remain false. Broader provider authorization/retention review, author-history
+verification and connecting the separate inference deployment remain open. The
+production checklist below still applies before changing that state.
 
 ## Server configuration
 
@@ -168,10 +170,20 @@ Capabilities report the required contract support classes alongside the actual r
 classes describe operation intent, not live availability. Even setting an Apify
 token and authorization flags cannot enable an unverified adapter.
 
-Actor input pages were consulted during implementation, but no authenticated run,
-actual output/paging/cost validation or provider permission was available. This
-is **documentation inspection only**. Candidate field mappings are exercised with
-synthetic records; they may require correction against authorized provider output.
+On 2026-10-24, one user-permitted Reddit discussion was checked with Actor build
+`0.0.127`, capped at 20 comments and $0.25. It returned one post and 20 comments;
+the normalized graph passed canonical schema, topology and fingerprint checks.
+Apify reported $0.0235 after billing counters settled. The run, its default
+dataset/key-value store/request queue and local content were deleted after
+verification, with each remote resource subsequently returning 404. The
+[non-content verification record](verification/2026-10-24-reddit-discussion.md)
+documents counts, omissions and the remaining checks. No real content was written
+to Convex, inference or Git. This scoped discussion check does not verify author
+histories, multi-page collection or the hosted live workflow; all policy flags
+remain false.
+
+Other candidate field mappings remain documentation/synthetic checks only and
+may require correction against authorized provider output.
 Review sources: [Reddit discussion](https://apify.com/clearpath/reddit-post-comments-bulk-scraper/input-schema),
 [Reddit history](https://apify.com/clearpath/reddit-user-content-scraper/input-schema),
 [X authored search](https://apify.com/apidojo/tweet-scraper/input-schema),
@@ -203,8 +215,9 @@ Reddit profile metadata and authored-versus-received replies. Record permitted
 source, run/build IDs, output evidence, costs, timestamp findings, limitations and
 reviewer in a private verification record. Then change the implementation's
 verification entry and mappings in a reviewed commit with tests.
-Do not edit frozen contracts to match a provider's output. No smoke test was run
-as part of this change.
+Do not edit frozen contracts to match a provider's output. After smoke checks,
+follow the approved retention decision for the run, its separate default storages
+and local files; deleting an Actor run alone does not delete its storages.
 
 ## Failure recovery and deployment
 
