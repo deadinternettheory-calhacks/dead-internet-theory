@@ -40,18 +40,19 @@ Rules:
 6. Your entire reply must be one JSON object matching the format in the instructions. No prose, no markdown fences, no commentary before or after.
 ```
 
-## Connect it to Convex
+## Connect it to the inference service
 
-Use either key type. Set values with `npx convex env set NAME value`; never
-commit them or put them in a `VITE_*` variable.
+Use either key type. Set values on the inference Convex deployment with
+`npx convex env set NAME value` (from `inference/`); never commit them or put
+them in a `VITE_*` variable.
 
 | Key type | Where it comes from | Variables |
 | --- | --- | --- |
 | App-scoped API Trigger (`capi_…`) | The agent's detail page in agent.creao.ai | `CREAO_API_KEY`, `CREAO_APP_ID` (the agent's UUID) |
 | CREAO CLI account key (`cr_sk_…`) | Developer Console at developer.creao.ai | `CREAO_API_KEY`, `CREAO_AGENT_ID`, optional `CREAO_MODEL` |
 
-Without `CREAO_API_KEY`, the worker analyzes only the labeled synthetic
-fixture, using recorded responses.
+Without `CREAO_API_KEY`, the worker analyzes only labeled synthetic fixtures,
+using recorded responses.
 
 ## What the backend does with the reply
 

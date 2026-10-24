@@ -1,5 +1,5 @@
 {
-  "name": "dead-internet-theory-backend",
+  "name": "dead-internet-theory-inference",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "@cfworker/json-schema": "4.1.1",
-    "convex": "1.46.0"
+    "convex": "1.46.0",
+    "jose": "6.2.12"
   },
   "devDependencies": {
     "@types/node": "22.15.30",
