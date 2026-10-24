@@ -224,13 +224,19 @@ export class Apify {
     return result;
   }
 }
+export type RunAdmission =
+  | { status: "reserved" }
+  | { status: "resume"; runId: string }
+  | { status: "busy" }
+  | { status: "denied"; reason: string };
 export async function advance(args: {
   platform: Platform;
   kind: "discussion" | "history";
   url?: string;
   authors?: Model<"AuthorNode">[];
   state: PlanState;
-  reserve: (op: string) => Promise<boolean>;
+  reserve: (op: string) => Promise<RunAdmission>;
+  observe: (op: string, runId: string, status: string) => Promise<boolean>;
 }) {
   liveGate(args.platform);
   const state: Required<PlanState> = {
@@ -251,38 +257,78 @@ export async function advance(args: {
       "PROVIDER_TIMEOUT",
       "Provider workflow exceeded execution budget",
     );
+  const operation = `run:${state.index}`;
+  async function observed(run: any) {
+    if (
+      !run ||
+      typeof run.id !== "string" ||
+      !run.id ||
+      typeof run.status !== "string" ||
+      !run.status
+    )
+      throw new ApiFault(
+        500,
+        "PROVIDER_INVALID_DATA",
+        "Provider run metadata is invalid",
+      );
+    if (!(await args.observe(operation, run.id, run.status)))
+      throw new ApiFault(
+        500,
+        "JOB_LEASE_LOST",
+        "Job no longer holds the execution lease",
+      );
+    return run;
+  }
   if (task && !task.run) {
-    if (!(await args.reserve(`run:${state.index}`)))
+    const admission = await args.reserve(operation);
+    if (admission.status === "busy") return { done: false as const, state };
+    if (admission.status === "denied")
       throw new ApiFault(
         500,
-        "PROVIDER_BUDGET_LIMIT",
-        "Run budget exhausted or a previous start has an ambiguous outcome",
+        admission.reason === "ambiguous"
+          ? "PROVIDER_START_AMBIGUOUS"
+          : "PROVIDER_BUDGET_LIMIT",
+        "Provider admission denied; inspect execution capacity and reserved budget",
       );
-    // A failed start is never repeated automatically: provider may have accepted it.
-    try {
-      task.run = await provider.start(task.actor, task.input);
-    } catch {
-      throw new ApiFault(
-        500,
-        "PROVIDER_START_AMBIGUOUS",
-        "Provider start was not confirmed; reserved budget is retained",
-      );
+    if (admission.status === "resume")
+      task.run = await observed(await provider.poll(admission.runId));
+    else {
+      let run;
+      try {
+        run = await provider.start(task.actor, task.input);
+      } catch {
+        throw new ApiFault(
+          500,
+          "PROVIDER_START_AMBIGUOUS",
+          "Provider start was not confirmed; reserved budget and capacity are retained",
+        );
+      }
+      task.run = await observed(run);
     }
   } else if (task && !task.done) {
     if (
       !["SUCCEEDED", "FAILED", "ABORTED", "TIMED-OUT"].includes(task.run.status)
     )
-      task.run = await provider.poll(task.run.id);
+      task.run = await observed(await provider.poll(task.run.id));
     else {
       const budget =
         args.kind === "history"
-          ? 150 * (args.authors?.length ?? 1)
-          : limits().comments + 1;
+          ? 150 * (task.authorIds?.length ?? args.authors?.length ?? 1)
+          : task.role === "root"
+            ? 1
+            : limits().comments + 1;
+      const pageLimit = Math.min(100, budget - task.offset);
       const rows = await provider.items(
         task.run.defaultDatasetId,
         task.offset,
-        Math.min(100, budget - task.offset),
+        pageLimit,
       );
+      if (rows.length > pageLimit)
+        throw new ApiFault(
+          500,
+          "PROVIDER_INVALID_DATA",
+          "Provider exceeded the requested dataset page limit",
+        );
       task.rows.push(...rows);
       task.offset += rows.length;
       if (new TextEncoder().encode(stable(state)).length > 650_000)
@@ -291,10 +337,7 @@ export async function advance(args: {
           "PROVIDER_SIZE_LIMIT",
           "Raw dataset exceeds configured snapshot budget",
         );
-      if (
-        rows.length < Math.min(100, budget - (task.offset - rows.length)) ||
-        task.offset >= budget
-      ) {
+      if (rows.length < pageLimit || task.offset >= budget) {
         task.done = true;
         task.truncated = task.offset >= budget;
         state.index++;

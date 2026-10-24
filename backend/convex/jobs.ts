@@ -211,20 +211,70 @@ export const cached = mutation({
     return result;
   },
 });
-// Reserve the maximum run cost before starting a billable operation. Never refund
-// ambiguous starts: a lost provider response may still have created a charged run.
+// Capacity is held across scheduler ticks until an observed terminal Actor state.
+// Ambiguous starts hold capacity as well as spend; elapsed time is not evidence
+// that an externally queued Actor has stopped. Operators must reconcile those.
 export const reserve = mutation({
   args: { key: v.string(), token: v.string(), operation: v.string() },
   handler: async (ctx, a) => {
     const job = await get(ctx, "jobs", a.key);
-    if (!job || job.token !== a.token) return false;
-    const reservation = `reservation:${a.key}:${a.operation}`;
-    if (await get(ctx, "controls", reservation)) return false;
+    if (
+      !job ||
+      job.token !== a.token ||
+      job.status !== "running" ||
+      job.lease <= Date.now()
+    )
+      return { status: "denied", reason: "lease" };
+    const reservation = stable(["provider", a.key, a.operation]);
+    const previous = await get(ctx, "providerSlots", reservation);
+    if (previous)
+      return previous.runId
+        ? { status: "resume", runId: previous.runId }
+        : { status: "denied", reason: "ambiguous" };
+    const active = await (ctx as Ctx).db
+      .query("providerSlots")
+      .withIndex("status", (q) => q.eq("status", "active"))
+      .take(limits().providerActive);
+    if (active.length >= limits().providerActive) return { status: "busy" };
     const day = `budget:${iso().slice(0, 10)}`;
     const used = (await get(ctx, "controls", day)) ?? 0;
-    if (used + limits().cents > limits().dailyCents) return false;
+    if (used + limits().cents > limits().dailyCents)
+      return { status: "denied", reason: "budget" };
     await put(ctx, "controls", day, used + limits().cents);
-    await put(ctx, "controls", reservation, true);
+    await put(ctx, "providerSlots", reservation, {
+      status: "active",
+      jobKey: a.key,
+      operation: a.operation,
+      createdAt: iso(),
+    });
+    return { status: "reserved" };
+  },
+});
+export const observeRun = mutation({
+  args: {
+    key: v.string(),
+    token: v.string(),
+    operation: v.string(),
+    runId: v.string(),
+    status: v.string(),
+  },
+  handler: async (ctx, a) => {
+    const job = await get(ctx, "jobs", a.key);
+    if (
+      !job ||
+      job.token !== a.token ||
+      job.status !== "running" ||
+      job.lease <= Date.now()
+    )
+      return false;
+    const key = stable(["provider", a.key, a.operation]);
+    const slot = await get(ctx, "providerSlots", key);
+    if (!slot || (slot.runId && slot.runId !== a.runId)) return false;
+    slot.runId = a.runId;
+    slot.providerStatus = a.status;
+    if (["SUCCEEDED", "FAILED", "ABORTED", "TIMED-OUT"].includes(a.status))
+      slot.status = "released";
+    await put(ctx, "providerSlots", key, slot);
     return true;
   },
 });

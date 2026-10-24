@@ -22,7 +22,7 @@ Storage tables: investigations (owner + independent state machines), graphs
 (immutable revision 1), analyses (one final resource per investigation),
 enrichments (request + job/results), jobs (execution and outbox state), snapshots
 (protected raw records), cache (anchor-independent history candidates), idempotency
-(original request/response and expiry), controls (rate/spend reservations).
+(original request/response and expiry), controls (rate/spend reservations), providerSlots (Actor capacity reservations).
 No raw-snapshot public read route exists. Opaque snapshot references contain no
 provider token or unrestricted dataset URL. Enrichment profiles do not update graphs.
 
@@ -65,7 +65,8 @@ Copy `.env.example` to a private file, fill server-only values, and use
 | `MAX_GRAPH_BYTES`                 | 500000 UTF-8 uncompressed bytes; maximum accepted setting 700000            |
 | `MAX_COMMENTS`                    | 1000 retained comments; configurable 1–3000                                 |
 | `MAX_REQUEST_BYTES`               | 500000; configurable up to 700000                                           |
-| `MAX_ACTIVE_JOBS`                 | 4 leased external actions; maximum 16                                       |
+| `MAX_ACTIVE_JOBS`                 | 4 leased worker actions; maximum 16                                         |
+| `MAX_ACTIVE_PROVIDER_RUNS`        | 4 reserved/running Actors across polling ticks; maximum 16                  |
 | `MAX_QUEUED_JOBS`                 | 100 waiting jobs; maximum 1000                                              |
 | `POSTS_PER_HOUR`                  | 30 accepted POSTs per principal per UTC hour; successful replays exempt     |
 | `MAX_JOB_ATTEMPTS`                | 3 including the initial attempt; maximum 5                                  |
@@ -167,7 +168,9 @@ access. Public errors are sanitized and never include credentials or raw provide
 messages. Do not log raw source bodies or secret headers. The automatic retries
 cover known transient failures and expired leases. An ambiguous provider start
 retains its maximum spend reservation and fails closed instead of risking a
-second charge. Inspect Apify run history before an operator initiates another
+second charge. An Actor keeps its capacity slot until a terminal provider status is confirmed, including while the worker waits between polls. A confirmed run ID is recorded before the next payload update so recovery can resume it without another charge. An ambiguous start retains its slot indefinitely; a timeout or expired worker lease alone does not prove a queued remote Actor stopped. After inspecting Apify run history, an operator can mark the corresponding `providerSlots` record released in the dashboard only when the run is terminal or the start is confirmed not accepted.
+
+Inspect Apify run history before an operator initiates another
 investigation; no v1 recollect/restart route exists. Terminal job errors retain
 the graph if one was completed. Independent inference may still submit a valid
 final analysis after a delivery failure.

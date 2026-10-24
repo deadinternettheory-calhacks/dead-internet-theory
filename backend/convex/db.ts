@@ -15,7 +15,8 @@ export type Table =
   | "jobs"
   | "snapshots"
   | "cache"
-  | "controls";
+  | "controls"
+  | "providerSlots";
 export async function get(ctx: Ctx, table: Table, key: string) {
   return (
     await ctx.db
@@ -37,7 +38,9 @@ export async function put(ctx: Ctx, table: Table, key: string, data: any) {
           status: data.status,
           due: data.status === "running" ? (data.lease ?? data.due) : data.due,
         }
-      : { key, data };
+      : table === "providerSlots"
+        ? { key, data, status: data.status }
+        : { key, data };
   if (doc) await ctx.db.patch(doc._id, value);
   else await ctx.db.insert(table, value as never);
 }

@@ -66,6 +66,7 @@ export const limits = () => ({
   comments: integer("MAX_COMMENTS", 1000, 1, 3000),
   bodyBytes: integer("MAX_REQUEST_BYTES", 500_000, 1000, 700_000),
   active: integer("MAX_ACTIVE_JOBS", 4, 1, 16),
+  providerActive: integer("MAX_ACTIVE_PROVIDER_RUNS", 4, 1, 16),
   queued: integer("MAX_QUEUED_JOBS", 100, 1, 1000),
   rate: integer("POSTS_PER_HOUR", 30, 1, 10000),
   attempts: integer("MAX_JOB_ATTEMPTS", 3, 1, 5),

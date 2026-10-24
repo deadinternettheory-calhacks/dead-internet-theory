@@ -13,6 +13,14 @@ export const tick = action({
     const work = await ctx.runMutation(anyApi.jobs.claim, { key });
     if (!work) return;
     const { job } = work;
+    const observe = (operation: string, runId: string, status: string) =>
+      ctx.runMutation(anyApi.jobs.observeRun, {
+        key,
+        token: job.token,
+        operation,
+        runId,
+        status,
+      });
     try {
       let outcome: unknown;
       if (job.kind === "event") {
@@ -32,6 +40,7 @@ export const tick = action({
             url: inv.sourceUrl,
             kind: "discussion",
             state: job.payload as PlanState,
+            observe,
             reserve: (operation) =>
               ctx.runMutation(anyApi.jobs.reserve, {
                 key,
@@ -104,6 +113,7 @@ export const tick = action({
                     graph.nodes.find((n) => n.id === id) as Model<"AuthorNode">,
                 ),
                 state: job.payload as PlanState,
+                observe,
                 reserve: (operation) =>
                   ctx.runMutation(anyApi.jobs.reserve, {
                     key,
