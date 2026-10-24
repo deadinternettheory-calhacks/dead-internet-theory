@@ -30,6 +30,19 @@ No stack or provider is selected by this scaffold.
 
 ## 6. Interfaces and data contracts
 
+The top-level [contracts/](contracts/README.md) directory is the canonical home
+for shared schemas and interface contracts, including API requests/responses,
+events, and data exchanged between components. Keep concrete definitions there
+and link to them from this specification instead of duplicating their contents.
+
+Producers and consumers must use the same contract definitions. When changing a
+contract, review affected producers and consumers, document compatibility and
+migration needs, and update relevant validation and examples together. Follow the
+specification-change workflow for changes that contradict established requirements.
+
+Choose schema formats and validation tooling when the stack and interfaces are
+defined. No concrete schemas or tooling are selected by this scaffold.
+
 TBD: define APIs, events, schemas, error behavior, and compatibility requirements.
 
 ## 7. Data handling and security

@@ -9,6 +9,18 @@
   validation details as needed. Read additional sections when the change affects
   their assumptions or contracts.
 - Check for more specific `AGENTS.md` instructions in directories you work in.
+- Before changing an interface or exchanged data, read
+  [contracts/README.md](contracts/README.md) and the relevant contract definitions.
+
+## Schemas and contracts
+
+- Keep shared schemas and interface contracts in the top-level `contracts/`
+  directory. Link to canonical definitions rather than maintaining independent
+  copies in component directories or documentation.
+- Keep producers, consumers, examples, and relevant validation aligned when a
+  contract changes. Check compatibility and document any migration needed.
+- Follow `CONTRIBUTING.md` when a contract change contradicts established spec
+  requirements. Do not invent schemas or select tooling to fill placeholders.
 
 ## Working expectations
 
