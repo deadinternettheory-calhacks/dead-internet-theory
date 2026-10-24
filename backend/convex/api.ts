@@ -7,6 +7,7 @@ import {
   iso,
   limits,
   stable,
+  sha,
   validate,
   validateOutput,
 } from "../src/core";
@@ -106,20 +107,25 @@ async function dispatch(
     replayKey = stable([p.sub, op, a.key]);
     // Authorization precedes replay, so scoped service credentials cannot replay a foreign result.
   }
+  const replay = post ? await get(ctx, "idempotency", replayKey) : null;
   const inv = invId ? await get(ctx, "investigations", invId) : null;
   if (invId) {
-    if (!inv)
+    const owner =
+      inv?.owner ?? (replay?.expires > now ? replay.owner : undefined);
+    if (typeof owner !== "string")
       throw new ApiFault(
         404,
         "INVESTIGATION_NOT_FOUND",
         "Investigation not found",
       );
-    authorize(p, inv.owner, invId);
+    authorize(p, owner, invId);
   }
   if (post) {
-    const replay = await get(ctx, "idempotency", replayKey);
     if (replay && replay.expires > now) {
-      if (replay.body !== stable(a.body))
+      const matches = replay.bodyHash
+        ? replay.bodyHash === (await sha(a.body))
+        : replay.body === stable(a.body);
+      if (!matches)
         throw new ApiFault(
           409,
           "IDEMPOTENCY_CONFLICT",
@@ -282,7 +288,8 @@ async function dispatch(
     await put(ctx, "controls", bucket, count + 1);
     await put(ctx, "idempotency", replayKey, {
       expires: now + 86400000,
-      body: stable(a.body),
+      bodyHash: await sha(a.body),
+      owner: inv?.owner ?? p.sub,
       response: result,
     });
   }

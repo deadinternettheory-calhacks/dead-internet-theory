@@ -42,6 +42,10 @@ export const getGraph = (id: string) => call<GraphEnvelope>(`/v1/investigations/
 export const getAnalysis = (id: string) => call<AnalysisResource>(`/v1/investigations/${enc(id)}/analysis`);
 export const getEnrichment = (id: string, enrichmentId: string) => call<EnrichmentJob>(`/v1/investigations/${enc(id)}/enrichments/${enc(enrichmentId)}`);
 
+export function forgetIdempotencyKeyFor(sourceUrl: string): void {
+  try { sessionStorage.removeItem(`dit:idem:${sourceUrl}`); } catch { /* storage unavailable */ }
+}
+
 /** One key per submitted link per tab, so a refresh replays instead of creating a duplicate. */
 export function idempotencyKeyFor(sourceUrl: string): string {
   const storageKey = `dit:idem:${sourceUrl}`;
