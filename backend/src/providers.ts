@@ -108,7 +108,7 @@ export function plan(
               usernames: handles,
               contentType: "comments",
               sort: "new",
-              maxItemsPerUser: 150,
+              maxItemsPerUser: limits().historyCandidates,
             },
             "history",
           ),
@@ -123,7 +123,11 @@ export function plan(
     return handles.map((h, index) => ({
       ...task(
         actors.xHistory,
-        { searchTerms: [`from:${h}`], sort: "Latest", maxItems: 150 },
+        {
+          searchTerms: [`from:${h}`],
+          sort: "Latest",
+          maxItems: limits().historyCandidates,
+        },
         "history",
       ),
       authorIds: [authors[index].id],
@@ -273,6 +277,65 @@ export class Apify {
     return result;
   }
 }
+// Fields read by redditAuthor, redditRecord and history mapping.
+const REDDIT_HISTORY_FIELDS = [
+  "_status",
+  "_type",
+  "_content_type",
+  "_username",
+  "type",
+  "id",
+  "name",
+  "author",
+  "authorId",
+  "author_fullname",
+  "authorName",
+  "authorDisplayName",
+  "body",
+  "comment",
+  "text",
+  "createdAt",
+  "created_utc",
+  "isTimestampEstimated",
+  "timestampPrecision",
+  "permalink",
+  "url",
+  "link_id",
+  "postId",
+  "parent_id",
+  "parentId",
+  "sourceDiscussionNativeId",
+  "subreddit",
+  "score",
+  "score_hidden",
+  "isScoreHidden",
+  "hide_score",
+  "deleted",
+  "removed",
+  "isDeleted",
+  "isRemoved",
+];
+const MAX_HISTORY_BODY = 2000;
+export function slimRedditHistoryRow(row: any): any {
+  if (!row || typeof row !== "object") return row;
+  const slim: Record<string, unknown> = {};
+  for (const key of REDDIT_HISTORY_FIELDS) {
+    if (!(key in row)) continue;
+    const value = row[key];
+    if (key === "author" && value && typeof value === "object")
+      slim.author = { id: value.id, username: value.username };
+    else if (
+      typeof value === "string" &&
+      ["body", "comment", "text"].includes(key)
+    )
+      slim[key] =
+        value.length > MAX_HISTORY_BODY
+          ? value.slice(0, MAX_HISTORY_BODY)
+          : value;
+    else slim[key] = value;
+  }
+  return slim;
+}
 export type RunAdmission =
   | { status: "reserved" }
   | { status: "resume"; runId: string }
@@ -383,7 +446,8 @@ export async function advance(args: {
     else {
       const budget =
         args.kind === "history"
-          ? 150 * (task.authorIds?.length ?? args.authors?.length ?? 1)
+          ? limits().historyCandidates *
+            (task.authorIds?.length ?? args.authors?.length ?? 1)
           : task.role === "root"
             ? 1
             : limits().comments + 1;
@@ -399,7 +463,13 @@ export async function advance(args: {
           "PROVIDER_INVALID_DATA",
           "Provider exceeded the requested dataset page limit",
         );
-      task.rows.push(...rows);
+      // History rows are slimmed to the fields mapping uses: full provider rows
+      // (100+ fields) filled the snapshot budget after about two authors.
+      task.rows.push(
+        ...(args.kind === "history" && args.platform === "reddit"
+          ? rows.map(slimRedditHistoryRow)
+          : rows),
+      );
       task.offset += rows.length;
       if (new TextEncoder().encode(stable(state)).length > 650_000)
         throw new ApiFault(
@@ -667,7 +737,7 @@ export function historySets(
             (row._status == null || row._status === "found")
           : p !== "x" || row.inReplyToId || row.isReply === true,
       )
-      .slice(0, 150);
+      .slice(0, limits().historyCandidates);
     const comments = rows.map((row) => {
       const c = mapRecord(p, row);
       return {
@@ -722,7 +792,7 @@ export function historySets(
       coverage: {
         candidateFetchedCount: rows.length,
         providerTruncated:
-          rows.length >= 150 ||
+          rows.length >= limits().historyCandidates ||
           tasks.some((t) => t.truncated || t.done === false)
             ? true
             : null,
@@ -734,7 +804,7 @@ export function historySets(
           .filter((t) => typeof t.run?.id === "string")
           .map((t) => t.run.id),
         limitations: [
-          "Best-effort authored candidates, capped at 150; not a lifetime-history census.",
+          `Best-effort authored candidates, capped at ${limits().historyCandidates}; not a lifetime-history census.`,
           ...(p === "reddit" && !ownRows.length && !failed
             ? [
                 "Provider returned no rows identifying this requested author; availability and lifetime history are unknown.",

@@ -94,6 +94,8 @@ export const limits = () => ({
   attempts: integer("MAX_JOB_ATTEMPTS", 3, 1, 5),
   runSeconds: integer("APIFY_TIMEOUT_SECONDS", 180, 30, 600),
   cacheMs: integer("HISTORY_CACHE_SECONDS", 3600, 1, 86400) * 1000,
+  // Authored-comment candidates fetched per history author (10 are returned).
+  historyCandidates: integer("HISTORY_CANDIDATES_PER_AUTHOR", 40, 10, 150),
   cents: integer("APIFY_RUN_BUDGET_CENTS", 25, 1, 1000),
   dailyCents: integer("APIFY_DAILY_BUDGET_CENTS", 500, 0, 100000),
 });

@@ -1,9 +1,10 @@
-import { expect, it } from "vitest";
+import { afterEach, expect, it, vi } from "vitest";
 import { historySets, plan } from "../src/providers";
 import { sample } from "../src/history";
 import { normalize } from "../src/graph";
 import { fixtureDiscussion, fixtureUrls } from "../src/fixture";
 import type { Model } from "../src/core";
+afterEach(() => vi.unstubAllEnvs());
 
 const author: Model<"AuthorNode"> = {
   id: "reddit:author:t2_alex",
@@ -150,6 +151,7 @@ it("does not associate mismatched native authors or explicit post rows with comm
 });
 
 it("marks a capped author's candidate pool truncated independently of another author", () => {
+  vi.stubEnv("HISTORY_CANDIDATES_PER_AUTHOR", "150");
   const sets = collect(
     Array.from({ length: 151 }, (_, i) => row(`history${i}`)),
   );
@@ -172,4 +174,38 @@ it("omits hidden scores and still accepts untyped comments from older persisted 
   expect(set.comments[0].metrics).toEqual({});
   expect(set.comments[1].nativeId).toBe("legacy");
   expect(set.comments[1].sourceDiscussionNativeId).toBe("t3_other");
+});
+it("slims Reddit history rows so many authors fit in the snapshot budget", async () => {
+  const { slimRedditHistoryRow } = await import("../src/providers");
+  const row = {
+    _status: "found",
+    _content_type: "comment",
+    _username: "alice",
+    id: "abc",
+    name: "t1_abc",
+    author: "alice",
+    author_fullname: "t2_alice",
+    body: "x".repeat(5000),
+    created_utc: 1700000000,
+    permalink: "/r/test/comments/p/t/abc/",
+    link_id: "t3_p",
+    score: 3,
+    all_awardings: [{ big: "y".repeat(2000) }],
+    media_metadata: { huge: "z".repeat(3000) },
+  };
+  const slim = slimRedditHistoryRow(row);
+  expect(slim).not.toHaveProperty("all_awardings");
+  expect(slim).not.toHaveProperty("media_metadata");
+  expect(slim.body).toHaveLength(2000);
+  expect(slim).toMatchObject({
+    author: "alice",
+    author_fullname: "t2_alice",
+    link_id: "t3_p",
+    score: 3,
+  });
+  // 25 authors x 40 candidates of typical slimmed rows stay well under the 650 KB budget.
+  const typical = JSON.stringify(
+    slimRedditHistoryRow({ ...row, body: "y".repeat(300) }),
+  ).length;
+  expect(typical * 25 * 40).toBeLessThan(650_000);
 });
