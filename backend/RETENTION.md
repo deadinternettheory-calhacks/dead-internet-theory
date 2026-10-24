@@ -38,3 +38,14 @@ queued rather than being reported as deleted. For source corrections or earlier
 removal, use privileged dashboard access to remove the investigation's associated
 records and reconcile its owned provider artifacts. No new public deletion or
 refresh operation is added to the frozen v1 API.
+
+## Public example (exception)
+
+The owner approved one stored exception on 2026-10-24: the website's example
+(`inference/fixtures/example-reddit-knife/`, `web/src/demo/example-report.json`)
+is a real public r/BuyItForLife thread kept beyond 24 hours. Usernames, author
+IDs, comment IDs and per-comment links are replaced, `u/` mentions in text are
+masked, and only the link to the original thread is kept. Comment text,
+timestamps and scores are unchanged. Remove or replace it if the thread is
+deleted or its authors ask.
+
