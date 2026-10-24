@@ -65,6 +65,12 @@ export const tick = action({
                 token: job.token,
                 operation,
               }),
+            release: (operation) =>
+              ctx.runMutation(anyApi.jobs.releaseRejected, {
+                key,
+                token: job.token,
+                operation,
+              }),
           });
           if (!result.done) {
             await ctx.runMutation(anyApi.jobs.settle, {
@@ -151,6 +157,12 @@ export const tick = action({
               observe,
               reserve: (operation) =>
                 ctx.runMutation(anyApi.jobs.reserve, {
+                  key,
+                  token: job.token,
+                  operation,
+                }),
+              release: (operation) =>
+                ctx.runMutation(anyApi.jobs.releaseRejected, {
                   key,
                   token: job.token,
                   operation,

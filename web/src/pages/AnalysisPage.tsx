@@ -14,6 +14,8 @@ import { parsePostUrl } from '../url';
 const POLL_MS = 2500;
 /** Backend ingestion codes meaning live collection is not available for this link yet. */
 const NOT_CONNECTED = new Set(['INGESTION_NOT_CONNECTED', 'FIXTURE_SOURCE_NOT_FOUND', 'PROVIDER_NOT_AUTHORIZED', 'PROVIDER_NOT_CONFIGURED', 'PROVIDER_NOT_VERIFIED']);
+/** Codes meaning collection failed on our side (scraping service refused or unconfirmed), not because of the post. */
+const SERVICE_SIDE = new Set(['PROVIDER_REJECTED', 'PROVIDER_START_AMBIGUOUS', 'PROVIDER_BUDGET_LIMIT']);
 /** Two CREAO runs usually take 1-3 minutes; stop waiting well before the worker's own limits. */
 const MAX_WAIT_MS = 8 * 60_000;
 
@@ -21,7 +23,7 @@ type View =
   | { kind: 'loading'; status: string; preview?: ThreadPreview }
   | { kind: 'report'; report: Report }
   | { kind: 'unavailable' }
-  | { kind: 'error'; title: string; message: string; retry: boolean; showExample?: boolean };
+  | { kind: 'error'; title: string; message: string; retry: boolean; showExample?: boolean; freshRequest?: boolean };
 
 /** Progress text follows the real investigation states (SPEC REQ-STATE-1). */
 function statusText(inv: InvestigationResource): string {
@@ -35,6 +37,11 @@ function failureView(inv: InvestigationResource): View {
   if (inv.ingestionStatus === 'failed') {
     if (NOT_CONNECTED.has(inv.error?.code ?? '')) {
       return { kind: 'error', title: 'We can’t collect this post yet.', message: 'Live collection for this platform is not connected yet, so nothing was analyzed.', retry: false, showExample: true };
+    }
+    if (SERVICE_SIDE.has(inv.error?.code ?? '')) {
+      // Only a definite refusal created no run, so only then may a retry start a new request.
+      const refused = inv.error?.code === 'PROVIDER_REJECTED';
+      return { kind: 'error', title: 'Collection is temporarily unavailable.', message: 'Our comment-collection service couldn’t start, so nothing was analyzed. This is a problem on our side, not with the post. Please try again later.', retry: true, freshRequest: refused };
     }
     if (inv.error?.code === 'DISCUSSION_TOO_LARGE' || inv.error?.code === 'PROVIDER_SIZE_LIMIT') {
       return { kind: 'error', title: 'This discussion is too large to check.', message: 'It has more comments than we can analyze at once.', retry: false };
@@ -110,7 +117,7 @@ function LiveAnalysis({ url }: { url: string }) {
     ? <><AnalysisLoadingState status={view.status}/><ThreadPreviewCard preview={view.preview}/></>
     : <><PostSummaryCard url={url}/><AnalysisLoadingState status={view.status}/></>;
   if (view.kind === 'error') {
-    return <><PostSummaryCard url={url}/><AnalysisErrorState title={view.title} message={view.message} onRetry={view.retry ? () => setAttempt(a => a + 1) : undefined}/>
+    return <><PostSummaryCard url={url}/><AnalysisErrorState title={view.title} message={view.message} onRetry={view.retry ? () => { if (view.freshRequest) forgetIdempotencyKeyFor(url); setAttempt(a => a + 1); } : undefined}/>
       {view.showExample && <p className="example-link">Want to see what a finished report looks like? <Link className="text-link" to="/example">View the synthetic example</Link></p>}</>;
   }
   return <>{view.report.synthetic && <SyntheticBanner notice={syntheticDemo.notice}/>}<AnalysisReport report={view.report}/></>;
