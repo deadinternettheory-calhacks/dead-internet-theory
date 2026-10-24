@@ -8,7 +8,9 @@ export function BrandWordmark() {
   return <Link className="brand" to="/" aria-label="Dead Internet Theory, home"><span className="network-mark" aria-hidden="true"><i/><i/><i/></span><span>Dead Internet Theory</span></Link>;
 }
 export function SiteHeader() {
-  return <header className="header"><div className="header-inner"><BrandWordmark/><nav aria-label="Main navigation"><Link to="/about">How it works</Link></nav></div></header>;
+  const { pathname, hash } = useLocation();
+  const alreadyAtSection = pathname === '/' && hash === '#how-it-works';
+  return <header className="header"><div className="header-inner"><BrandWordmark/><nav aria-label="Main navigation"><Link to="/#how-it-works" replace={alreadyAtSection}>How it works</Link></nav></div></header>;
 }
 export function SiteFooter() {
   const pathname = useLocation().pathname;
@@ -24,10 +26,10 @@ export function PostUrlInput({ onSubmit }: { onSubmit: (url: string) => void }) 
     if (!result.ok) { setError(result.reason === 'empty' ? 'Paste a post link to get started.' : "We can't analyze this link yet. Try a supported Reddit or X post."); return; }
     setError(''); onSubmit(result.url.href);
   }
-  return <form className="search-form" onSubmit={submit} noValidate><label className="sr-only" htmlFor="post-url">Post link</label><div className="input-wrap"><Link2 size={20} aria-hidden="true"/><input id="post-url" type="url" value={value} onChange={event => { const nextValue = event.target.value; setValue(nextValue); if (error && parsePostUrl(nextValue).ok) setError(''); }} placeholder="Paste a Reddit, X, YouTube, or TikTok link..." aria-invalid={!!error} aria-describedby={error ? 'url-error' : undefined}/></div>{error && <div id="url-error"><InlineError>{error}</InlineError></div>}<Button type="submit">Analyze post <ArrowRight size={18} aria-hidden="true"/></Button></form>;
+  return <form className="search-form" onSubmit={submit} noValidate><label className="sr-only" htmlFor="post-url">Post link</label><div className="input-wrap"><Link2 size={20} aria-hidden="true"/><input id="post-url" type="url" value={value} onChange={event => { const nextValue = event.target.value; setValue(nextValue); if (error && parsePostUrl(nextValue).ok) setError(''); }} placeholder="Paste a Reddit, X, YouTube, or TikTok link..." aria-invalid={!!error} aria-describedby={error ? 'url-error' : undefined}/></div>{error && <div id="url-error" className="form-error"><InlineError>{error}</InlineError></div>}<Button type="submit">Analyze <ArrowRight size={18} aria-hidden="true"/></Button></form>;
 }
 export function ShortcutExplanation() {
-  return <p className="shortcut"><span>Tip:</span> Add <code>deadinternettheory.us/</code> before a post link to check it instantly.</p>;
+  return <p className="shortcut">Or add <code>deadinternettheory.us/</code> before a post link to check it instantly.</p>;
 }
 export function PostSummaryCard({ url }: { url: string }) {
   const parsed = parsePostUrl(url);
