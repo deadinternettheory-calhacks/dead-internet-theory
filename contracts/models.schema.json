@@ -1,0 +1,1701 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Discussion investigation API v1.0.0 \u2014 canonical models",
+  "$defs": {
+    "Timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$",
+      "description": "RFC3339 UTC timestamp ending Z (not an offset)."
+    },
+    "Platform": {
+      "type": "string",
+      "enum": [
+        "reddit",
+        "x",
+        "youtube",
+        "tiktok"
+      ]
+    },
+    "NodeId": {
+      "type": "string",
+      "pattern": "^(reddit|x|youtube|tiktok):(discussion|comment|author):.+$",
+      "minLength": 10
+    },
+    "SourceUrl": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "Sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "Engagement": {
+      "type": "object",
+      "properties": {
+        "score": {
+          "type": "integer"
+        },
+        "likeCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "replyCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "repostCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "viewCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "shareCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "upvoteRatio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": true,
+      "description": "Only provider-observed fields are present. Missing does not equal zero."
+    },
+    "AuthorProfile": {
+      "type": "object",
+      "properties": {
+        "accountCreatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "postKarma": {
+          "type": "integer"
+        },
+        "commentKarma": {
+          "type": "integer"
+        },
+        "fetchedAt": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [],
+      "additionalProperties": true,
+      "description": "Optional Reddit-only fields in v1; absent unless observed."
+    },
+    "DiscussionNode": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/NodeId"
+        },
+        "type": {
+          "const": "discussion"
+        },
+        "nativeId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "platform": {
+          "$ref": "#/$defs/Platform"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "post",
+            "tweet",
+            "video"
+          ]
+        },
+        "url": {
+          "$ref": "#/$defs/SourceUrl"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "text": {
+          "type": "string"
+        },
+        "contentScope": {
+          "type": "string",
+          "enum": [
+            "post_text",
+            "metadata_text_only",
+            "unknown"
+          ]
+        },
+        "authorId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/NodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "createdAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "timestampPrecision": {
+          "type": "string",
+          "enum": [
+            "exact",
+            "estimated",
+            "unknown"
+          ]
+        },
+        "metrics": {
+          "$ref": "#/$defs/Engagement"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "nativeId",
+        "platform",
+        "kind",
+        "url",
+        "text",
+        "contentScope",
+        "authorId",
+        "createdAt",
+        "timestampPrecision",
+        "metrics"
+      ],
+      "additionalProperties": true
+    },
+    "AuthorNode": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/NodeId"
+        },
+        "type": {
+          "const": "author"
+        },
+        "nativeId": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "platform": {
+          "$ref": "#/$defs/Platform"
+        },
+        "handle": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "displayName": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "identityQuality": {
+          "type": "string",
+          "enum": [
+            "provider_id",
+            "handle",
+            "synthetic"
+          ]
+        },
+        "profile": {
+          "$ref": "#/$defs/AuthorProfile"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "nativeId",
+        "platform",
+        "handle",
+        "displayName",
+        "identityQuality"
+      ],
+      "additionalProperties": true
+    },
+    "CommentNode": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/NodeId"
+        },
+        "type": {
+          "const": "comment"
+        },
+        "nativeId": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "idQuality": {
+          "type": "string",
+          "enum": [
+            "provider_id",
+            "synthetic"
+          ]
+        },
+        "platform": {
+          "$ref": "#/$defs/Platform"
+        },
+        "authorId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/NodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "parentId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/NodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "nativeParentId": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "text": {
+          "type": "string"
+        },
+        "createdAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "timestampPrecision": {
+          "type": "string",
+          "enum": [
+            "exact",
+            "estimated",
+            "unknown"
+          ]
+        },
+        "sourceTimestamp": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "url": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceUrl"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "metrics": {
+          "$ref": "#/$defs/Engagement"
+        },
+        "contentStatus": {
+          "type": "string",
+          "enum": [
+            "visible",
+            "deleted",
+            "removed",
+            "unknown"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "nativeId",
+        "idQuality",
+        "platform",
+        "authorId",
+        "parentId",
+        "nativeParentId",
+        "text",
+        "createdAt",
+        "timestampPrecision",
+        "sourceTimestamp",
+        "url",
+        "metrics",
+        "contentStatus"
+      ],
+      "additionalProperties": true
+    },
+    "GraphNode": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/DiscussionNode"
+        },
+        {
+          "$ref": "#/$defs/AuthorNode"
+        },
+        {
+          "$ref": "#/$defs/CommentNode"
+        }
+      ]
+    },
+    "GraphEdge": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "$ref": "#/$defs/NodeId"
+        },
+        "to": {
+          "$ref": "#/$defs/NodeId"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "REPLIES_TO",
+            "AUTHORED"
+          ]
+        }
+      },
+      "required": [
+        "from",
+        "to",
+        "type"
+      ],
+      "additionalProperties": true,
+      "description": "REPLIES_TO comment->comment/discussion; AUTHORED author->comment. No inferred edges."
+    },
+    "ActorRun": {
+      "type": "object",
+      "properties": {
+        "actorId": {
+          "type": "string"
+        },
+        "runId": {
+          "type": "string"
+        },
+        "datasetId": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "SUCCEEDED",
+            "FAILED",
+            "ABORTED",
+            "TIMED-OUT",
+            "PARTIAL",
+            "UNKNOWN"
+          ]
+        },
+        "startedAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "completedAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "actorId",
+        "runId",
+        "datasetId",
+        "status",
+        "startedAt",
+        "completedAt"
+      ],
+      "additionalProperties": true
+    },
+    "Coverage": {
+      "type": "object",
+      "properties": {
+        "retrievedCommentCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reportedCommentCount": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "truncated": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "completeness": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "partial",
+            "unknown"
+          ]
+        },
+        "sortOrder": {
+          "type": "string"
+        },
+        "collectedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "sourceSnapshotRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "actorRuns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ActorRun"
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "retrievedCommentCount",
+        "reportedCommentCount",
+        "truncated",
+        "completeness",
+        "sortOrder",
+        "collectedAt",
+        "sourceSnapshotRef",
+        "actorRuns",
+        "limitations"
+      ],
+      "additionalProperties": true
+    },
+    "GraphEnvelope": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "1.0.0"
+        },
+        "investigationId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "graphRevision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "graphFingerprint": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "platform": {
+          "$ref": "#/$defs/Platform"
+        },
+        "rootId": {
+          "$ref": "#/$defs/NodeId"
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GraphNode"
+          },
+          "minItems": 1
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GraphEdge"
+          }
+        },
+        "coverage": {
+          "$ref": "#/$defs/Coverage"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "investigationId",
+        "graphRevision",
+        "graphFingerprint",
+        "platform",
+        "rootId",
+        "nodes",
+        "edges",
+        "coverage"
+      ],
+      "additionalProperties": true
+    },
+    "InvestigationCreateRequest": {
+      "type": "object",
+      "properties": {
+        "sourceUrl": {
+          "$ref": "#/$defs/SourceUrl"
+        }
+      },
+      "required": [
+        "sourceUrl"
+      ],
+      "additionalProperties": false
+    },
+    "InvestigationResource": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "1.0.0"
+        },
+        "investigationId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceUrl": {
+          "$ref": "#/$defs/SourceUrl"
+        },
+        "platform": {
+          "$ref": "#/$defs/Platform"
+        },
+        "ingestionStatus": {
+          "type": "string",
+          "enum": [
+            "queued",
+            "running",
+            "completed",
+            "failed"
+          ]
+        },
+        "analysisStatus": {
+          "type": "string",
+          "enum": [
+            "waiting_for_graph",
+            "queued",
+            "running",
+            "completed",
+            "failed"
+          ]
+        },
+        "graphRevision": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "graphFingerprint": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "error": {
+          "$ref": "#/$defs/ErrorDetail"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "investigationId",
+        "sourceUrl",
+        "platform",
+        "ingestionStatus",
+        "analysisStatus",
+        "graphRevision",
+        "graphFingerprint",
+        "createdAt",
+        "updatedAt"
+      ],
+      "additionalProperties": true
+    },
+    "AuthorAnchor": {
+      "type": "object",
+      "properties": {
+        "authorId": {
+          "$ref": "#/$defs/NodeId"
+        },
+        "anchorCommentId": {
+          "$ref": "#/$defs/NodeId"
+        }
+      },
+      "required": [
+        "authorId",
+        "anchorCommentId"
+      ],
+      "additionalProperties": false
+    },
+    "EnrichmentRequest": {
+      "type": "object",
+      "properties": {
+        "authors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorAnchor"
+          },
+          "minItems": 1,
+          "maxItems": 25
+        },
+        "limit": {
+          "const": 10
+        },
+        "windowDays": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        },
+        "fallback": {
+          "const": "most_recent"
+        }
+      },
+      "required": [
+        "authors",
+        "limit",
+        "windowDays",
+        "fallback"
+      ],
+      "additionalProperties": false
+    },
+    "HistoryComment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/NodeId"
+        },
+        "nativeId": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "authorId": {
+          "$ref": "#/$defs/NodeId"
+        },
+        "text": {
+          "type": "string"
+        },
+        "createdAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "timestampPrecision": {
+          "type": "string",
+          "enum": [
+            "exact",
+            "estimated",
+            "unknown"
+          ]
+        },
+        "url": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceUrl"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sourceDiscussionNativeId": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "metrics": {
+          "$ref": "#/$defs/Engagement"
+        }
+      },
+      "required": [
+        "id",
+        "nativeId",
+        "authorId",
+        "text",
+        "createdAt",
+        "timestampPrecision",
+        "url",
+        "sourceDiscussionNativeId",
+        "metrics"
+      ],
+      "additionalProperties": true
+    },
+    "HistoryCoverage": {
+      "type": "object",
+      "properties": {
+        "requestedCount": {
+          "const": 10
+        },
+        "returnedCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "candidateFetchedCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "providerTruncated": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reachedAnchorWindow": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "oldestFetchedAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "newestFetchedAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "collectedAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sourceSnapshotRef": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "actorRunIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "requestedCount",
+        "returnedCount",
+        "candidateFetchedCount",
+        "providerTruncated",
+        "reachedAnchorWindow",
+        "oldestFetchedAt",
+        "newestFetchedAt",
+        "collectedAt",
+        "sourceSnapshotRef",
+        "actorRunIds",
+        "limitations"
+      ],
+      "additionalProperties": true
+    },
+    "ErrorDetail": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "retryable": {
+          "type": "boolean"
+        },
+        "details": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "retryable"
+      ],
+      "additionalProperties": true
+    },
+    "HistoryResult": {
+      "type": "object",
+      "properties": {
+        "authorId": {
+          "$ref": "#/$defs/NodeId"
+        },
+        "anchorCommentId": {
+          "$ref": "#/$defs/NodeId"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "partial",
+            "unavailable",
+            "unsupported",
+            "failed"
+          ]
+        },
+        "strategy": {
+          "type": "string",
+          "enum": [
+            "temporal_nearest",
+            "recent_fallback",
+            "none"
+          ]
+        },
+        "comments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/HistoryComment"
+          },
+          "maxItems": 10
+        },
+        "profile": {
+          "$ref": "#/$defs/AuthorProfile"
+        },
+        "coverage": {
+          "$ref": "#/$defs/HistoryCoverage"
+        },
+        "error": {
+          "$ref": "#/$defs/ErrorDetail"
+        }
+      },
+      "required": [
+        "authorId",
+        "anchorCommentId",
+        "status",
+        "strategy",
+        "comments",
+        "coverage"
+      ],
+      "additionalProperties": true
+    },
+    "EnrichmentJob": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "1.0.0"
+        },
+        "enrichmentId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "investigationId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "queued",
+            "running",
+            "completed",
+            "failed"
+          ]
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "startedAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "completedAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/HistoryResult"
+          }
+        },
+        "error": {
+          "$ref": "#/$defs/ErrorDetail"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "enrichmentId",
+        "investigationId",
+        "status",
+        "createdAt",
+        "startedAt",
+        "completedAt"
+      ],
+      "additionalProperties": true
+    },
+    "Subject": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "product",
+            "service",
+            "idea",
+            "brand",
+            "other",
+            "unknown"
+          ]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NodeId"
+          }
+        }
+      },
+      "required": [
+        "label",
+        "kind",
+        "confidence",
+        "evidenceRefs"
+      ],
+      "additionalProperties": true
+    },
+    "SentimentCounts": {
+      "type": "object",
+      "properties": {
+        "supportive": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "critical": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "neutral": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mixed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unclear": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "supportive",
+        "critical",
+        "neutral",
+        "mixed",
+        "unclear"
+      ],
+      "additionalProperties": true
+    },
+    "SentimentDistribution": {
+      "type": "object",
+      "properties": {
+        "population": {
+          "type": "string",
+          "enum": [
+            "retrieved_comments",
+            "analyzed_sample"
+          ]
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "census_of_retrieved",
+            "probability_sample",
+            "nonprobability_sample"
+          ]
+        },
+        "analyzedCommentCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "counts": {
+          "$ref": "#/$defs/SentimentCounts"
+        },
+        "weighted": {
+          "type": "boolean"
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "population",
+        "method",
+        "analyzedCommentCount",
+        "counts",
+        "weighted",
+        "limitations"
+      ],
+      "additionalProperties": true,
+      "description": "Counts partition analyzedCommentCount; do not claim representative if method != probability_sample or census coverage incomplete."
+    },
+    "Score": {
+      "type": "object",
+      "properties": {
+        "score": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "explanation": {
+          "type": "string"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NodeId"
+          }
+        }
+      },
+      "required": [
+        "score",
+        "confidence",
+        "explanation",
+        "evidenceRefs"
+      ],
+      "additionalProperties": true,
+      "description": "0-100 index, not a calibrated probability; null when unassessable."
+    },
+    "AxisAssessment": {
+      "type": "object",
+      "properties": {
+        "axis": {
+          "type": "string",
+          "enum": [
+            "promotional_intent",
+            "semantic_coordination",
+            "temporal_coordination",
+            "account_anomalies",
+            "engagement_anomalies",
+            "disclosure_concerns"
+          ]
+        },
+        "score": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "assessedCommentCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "explanation": {
+          "type": "string"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NodeId"
+          }
+        }
+      },
+      "required": [
+        "axis",
+        "score",
+        "confidence",
+        "assessedCommentCount",
+        "explanation",
+        "evidenceRefs"
+      ],
+      "additionalProperties": true
+    },
+    "CommentAssessment": {
+      "type": "object",
+      "properties": {
+        "commentId": {
+          "$ref": "#/$defs/NodeId"
+        },
+        "stance": {
+          "type": "string",
+          "enum": [
+            "supportive",
+            "critical",
+            "neutral",
+            "mixed",
+            "unclear"
+          ]
+        },
+        "promotionalIntentScore": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NodeId"
+          }
+        }
+      },
+      "required": [
+        "commentId",
+        "stance",
+        "promotionalIntentScore",
+        "rationale",
+        "evidenceRefs"
+      ],
+      "additionalProperties": true
+    },
+    "ClusterAssessment": {
+      "type": "object",
+      "properties": {
+        "clusterId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "commentIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NodeId"
+          },
+          "minItems": 2
+        },
+        "coordinationScore": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "explanation": {
+          "type": "string"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NodeId"
+          }
+        }
+      },
+      "required": [
+        "clusterId",
+        "commentIds",
+        "coordinationScore",
+        "explanation",
+        "evidenceRefs"
+      ],
+      "additionalProperties": true
+    },
+    "InferredEdge": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "$ref": "#/$defs/NodeId"
+        },
+        "to": {
+          "$ref": "#/$defs/NodeId"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "SEMANTICALLY_SIMILAR",
+            "POTENTIALLY_COORDINATED"
+          ]
+        },
+        "strength": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "explanation": {
+          "type": "string"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NodeId"
+          }
+        }
+      },
+      "required": [
+        "from",
+        "to",
+        "type",
+        "strength",
+        "explanation",
+        "evidenceRefs"
+      ],
+      "additionalProperties": true
+    },
+    "AnalysisSubmission": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "1.0.0"
+        },
+        "graphRevision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "graphFingerprint": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "inferenceVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "inferredAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "subject": {
+          "$ref": "#/$defs/Subject"
+        },
+        "sentiment": {
+          "$ref": "#/$defs/SentimentDistribution"
+        },
+        "overallCoordinationRisk": {
+          "$ref": "#/$defs/Score"
+        },
+        "axes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AxisAssessment"
+          }
+        },
+        "commentAssessments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CommentAssessment"
+          }
+        },
+        "clusters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ClusterAssessment"
+          }
+        },
+        "inferredEdges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InferredEdge"
+          }
+        },
+        "usedEnrichmentIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "graphRevision",
+        "graphFingerprint",
+        "inferenceVersion",
+        "inferredAt",
+        "subject",
+        "sentiment",
+        "overallCoordinationRisk",
+        "axes",
+        "commentAssessments",
+        "clusters",
+        "inferredEdges",
+        "usedEnrichmentIds",
+        "limitations"
+      ],
+      "additionalProperties": false
+    },
+    "AnalysisResource": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "1.0.0"
+        },
+        "analysisId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "investigationId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "storedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "result": {
+          "$ref": "#/$defs/AnalysisSubmission"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "analysisId",
+        "investigationId",
+        "storedAt",
+        "result"
+      ],
+      "additionalProperties": true
+    },
+    "AnalysisReceipt": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "1.0.0"
+        },
+        "analysisId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "investigationId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "storedAt": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "analysisId",
+        "investigationId",
+        "storedAt"
+      ],
+      "additionalProperties": true
+    },
+    "ApiError": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "minLength": 1
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1
+            },
+            "retryable": {
+              "type": "boolean"
+            },
+            "requestId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "details": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "required": [
+            "code",
+            "message",
+            "retryable",
+            "requestId"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "error"
+      ],
+      "additionalProperties": true
+    },
+    "Capability": {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "$ref": "#/$defs/Platform"
+        },
+        "discussion": {
+          "const": "supported_best_effort"
+        },
+        "authorHistory": {
+          "type": "string",
+          "enum": [
+            "supported_best_effort",
+            "unsupported"
+          ]
+        },
+        "profileEnrichment": {
+          "type": "string",
+          "enum": [
+            "reddit_only_optional",
+            "not_supported"
+          ]
+        },
+        "actorRuntimeVerified": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "platform",
+        "discussion",
+        "authorHistory",
+        "profileEnrichment",
+        "actorRuntimeVerified"
+      ],
+      "additionalProperties": true
+    },
+    "CapabilityResponse": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "1.0.0"
+        },
+        "platforms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Capability"
+          },
+          "minItems": 4,
+          "maxItems": 4
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "platforms"
+      ],
+      "additionalProperties": true
+    },
+    "InvestigationReadyEvent": {
+      "type": "object",
+      "properties": {
+        "eventVersion": {
+          "const": "1.0.0"
+        },
+        "eventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "eventType": {
+          "const": "investigation.ready"
+        },
+        "investigationId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "graphRevision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "graphFingerprint": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "occurredAt": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "eventVersion",
+        "eventId",
+        "eventType",
+        "investigationId",
+        "graphRevision",
+        "graphFingerprint",
+        "occurredAt"
+      ],
+      "additionalProperties": false,
+      "description": "At-least-once internal backend-to-inference event; dedupe by investigationId+graphRevision."
+    }
+  }
+}

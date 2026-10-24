@@ -2,7 +2,34 @@
 
 This directory holds canonical shared schemas and interface contracts for data
 exchanged between components: API requests and responses, events, and shared
-payloads. No concrete contracts or schema tooling have been defined yet.
+payloads. The supplied v1.0.0 design supersedes draft 0.1. Repository adoption
+does not attest to separate backend/inference owner acceptance or live readiness.
+
+## Contracts
+
+- [discussion-graph-api.md](discussion-graph-api.md): normative interface behavior.
+- [models.schema.json](models.schema.json): canonical JSON Schema Draft 2020-12
+  model definitions. Edit these rather than duplicating models in OpenAPI.
+- [openapi.yaml](openapi.yaml): OpenAPI 3.1 routes, auth, and HTTP status contracts;
+  references the canonical models.
+- [provider-adapters.md](provider-adapters.md): candidate Apify mappings and
+  remaining operational verification.
+- [examples/](examples/README.md): synthetic fixtures, never real investigations.
+
+## Validation
+
+With Python 3.10+ from the repository root:
+
+```sh
+python3 -m venv /tmp/dit-contracts-venv
+/tmp/dit-contracts-venv/bin/python -m pip install -r contracts/requirements.txt
+/tmp/dit-contracts-venv/bin/python scripts/validate_contracts.py
+```
+
+The validator checks JSON Schema definitions, fixture shapes, OpenAPI model
+references and operation names, and selected graph/enrichment/analysis invariants.
+It is not a complete OpenAPI linter, a history-sampling implementation test, or a
+live provider/backend integration test. Operational checks remain in the contract.
 
 ## Usage
 

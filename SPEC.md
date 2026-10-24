@@ -1,8 +1,8 @@
 # Dead Internet Theory - Master Specification
 
-Status: Product scope and frontend UX are specified. Architecture includes selected, planned, and proposed components whose implementation status is recorded separately. This is the project requirements baseline as of 2026-10-23; it does not certify external access, sponsor eligibility, production deployment, or analysis accuracy.
+Status: Product scope and frontend UX are specified. The v1.0.0 contract bundle is adopted for repository implementation; backend/inference owner acceptance, live-provider behavior, and deployment remain unverified. This specification preserves that distinction.
 
-This specification fills the repository's initial TBD scaffold. Those placeholders did not establish requirements. No existing requirement is superseded, so this initial completion does not require a delta under [CONTRIBUTING.md](CONTRIBUTING.md) and [deltas/README.md](deltas/README.md).
+The initial master specification filled TBD placeholders that did not establish requirements. The later v1.0.0 contract adoption supersedes draft 0.1 through the approved [contract delta](deltas/2026-10-24T05-47-50Z-astroturfing-contracts-v1.md); preserve that history and follow [CONTRIBUTING.md](CONTRIBUTING.md) and [deltas/README.md](deltas/README.md) for future changes.
 
 ## 1. Summary
 
@@ -14,7 +14,7 @@ A user submits a supported public post URL using the homepage or URL-prefix shor
 
 **Repository:** Git remote `origin` points to [deadinternettheory-calhacks/dead-internet-theory](https://github.com/deadinternettheory-calhacks/dead-internet-theory). This verifies the local remote configuration, not that a hosted deployment is connected.
 
-**Current verified state:** a React/TypeScript SPA in `web/` validates a limited set of Reddit and X/Twitter hostnames, supports homepage and URL-prefix navigation, and shows an honest unavailable state. No application backend, ingestion worker, analysis code, AI integration, search index, or production deployment is present. See [Section 10](#10-frontend-and-ux-requirements) and [Section 12](#12-testing-and-validation).
+**Current verified state:** a React/TypeScript SPA in `web/` validates a limited set of Reddit and X/Twitter hostnames, supports homepage and URL-prefix navigation, and shows an honest unavailable state. V1.0.0 wire contracts, synthetic protocol fixtures, candidate provider-adapter notes, and a validator are present. No application backend, inference worker, live provider calls, search index, or production deployment is present. See [Section 10](#10-frontend-and-ux-requirements) and [Section 12](#12-testing-and-validation).
 
 ## 2. Goals, scope, and non-goals
 
@@ -60,9 +60,9 @@ Reddit is the intended first provider, but it is not connected. No platform may 
 
 1. User pastes a post URL or opens `deadinternettheory.us/<post-url>`.
 2. Frontend trims and parses the URL, restricts protocol/host, and does not fetch the source in the browser.
-3. A future application boundary repeats validation and creates an investigation under a future shared contract.
+3. The future application API repeats validation and creates an investigation using the adopted v1 contract; no API implementation is present.
 4. Planned orchestration records a job and requests permitted post/thread data within configured limits.
-5. Ingestion preserves source links, retrieval times, and omissions, then returns normalized records under a future contract.
+5. Ingestion preserves source links, retrieval times, and omissions, then returns a normalized immutable graph under the adopted GraphEnvelope contract.
 6. Analysis computes deterministic signals and reproducible account samples, recording sample reasons and population.
 7. If access and budgets allow, ingestion retrieves limited public history. Missing/private/deleted/rate-limited data is marked unavailable, not inferred.
 8. Optional retrieval searches only permitted retained data; a match is a lead, not proof.
@@ -85,12 +85,17 @@ sequenceDiagram
     participant Store as Shared persistence (not implemented)
     User->>Web: Submit supported post URL
     Web->>Web: Parse and validate protocol/host
-    Web->>App: Create investigation (future contract)
-    App->>Store: Record job and state
+    Web->>App: POST /v1/investigations + Idempotency-Key
+    App->>Store: Queue idempotent job and record state
     App->>Ingest: Start bounded public-data collection
-    Ingest-->>App: Records, coverage, omissions
-    App->>Analyze: Calculate signals and sample
-    Analyze-->>App: Evidence packet and sampling manifest
+    Ingest-->>App: Validate/store immutable graph + coverage
+    App-->>Analyze: investigation.ready (at least once)
+    Analyze->>App: GET graph; select authors and anchors
+    Analyze->>App: POST enrichment job (optional)
+    App->>Ingest: Collect Reddit/X history candidates
+    Ingest-->>App: Ten-item samples and per-author outcomes
+    Analyze->>Analyze: Analyze graph and available enrichment
+    Analyze->>App: POST analysis with graph revision/fingerprint
     opt Search is available and permitted
       App->>Search: Retrieve related indexed evidence
       Search-->>App: Candidates with source references
@@ -99,13 +104,13 @@ sequenceDiagram
       App->>Agent: Explain evidence and alternatives
       Agent-->>App: Draft explanations with evidence IDs
     end
-    App->>App: Validate references, claims, and result state
+    App->>App: Validate contract references and state
     App->>Store: Persist permitted result
     App-->>Web: Validated state/result
     Web-->>User: Evidence-led report or honest partial/error state
 ```
 
-Only the SPA's URL parsing, local routes, static page components, and Vercel rewrite exist now. Other participants and arrows describe intended integration, not a verified runtime flow. APIs and event payloads are contract gaps (Section 6).
+Only the SPA's URL parsing, local routes, static page components, and Vercel rewrite exist now. Other participants and arrows describe intended integration, not a verified runtime flow. V1 routes and event models are defined in Section 6; runtime APIs, event delivery, authentication, and backend/inference integration remain unimplemented.
 
 ### 3.3 Outcomes
 
@@ -161,7 +166,7 @@ Naming a technology does not make it an integration.
 ```mermaid
 flowchart LR
     Person[Visitor] --> Web[React SPA on Vercel<br/>Implemented: UI and URL routes]
-    Web -->|future shared contract| Convex[Convex application backend<br/>Selected / pending]
+    Web -->|adopted v1 REST contract| Convex[Convex application backend<br/>Selected / pending]
     Convex -->|bounded job input| Apify[Apify Actor<br/>Selected / pending]
     Apify -->|authorized source data| Platform[Reddit first; other providers after access review]
     Apify -->|normalized records| Convex
@@ -185,7 +190,7 @@ No provider secret may be embedded in a Vite `VITE_*` variable. Provider calls/s
 | React 19, TypeScript 5.8, Vite 6, Tailwind CSS 4, React Router 7, Lucide React; shadcn-style source control | **Implemented and verified** in `web/`. Own presentation, URL validation/routing, keyboard interactions, and rendering supplied props. | Small static SPA fits the current UI. It cannot hold secrets or calculate authoritative results. A server-rendered/full-stack framework is not selected. Installed versions are in `web/package.json`. |
 | Vercel | **Selected / partly configured.** `web/vercel.json` rewrites all paths to the SPA entry. | Static hosting fits the client application; configuration alone does not prove a Vercel project, domain, or live deployment. `web/README.md` documents `web/` as the intended project root. Project setup, DNS, deployment, and rollback remain to verify. |
 | Convex | **Selected architectural direction; pending.** Intended to create jobs, persist permitted state/results, schedule async work, and expose validated state/results. | TypeScript backend and reactive queries may simplify job-state delivery to this SPA. Queries/mutations/actions have distinct transaction/external-I/O behavior; long provider work should be asynchronous. Custom API + queue/database gives more control/portability but adds infrastructure. Supabase/Postgres may suit SQL-first needs or existing expertise. Validate limits, costs, retention, security, and deployment fit. [Convex overview](https://docs.convex.dev/understanding/overview), [queries](https://docs.convex.dev/functions/query-functions). |
-| Apify | **Selected managed-ingestion direction; pending access review and implementation.** Prefer a project-owned Actor that validates input, uses permitted connectors, enforces limits, handles pagination/retries, normalizes records, and records omissions. | A custom Actor gives project control over collection and output. A third-party Actor may accelerate experiments but introduces variable quality, cost, maintenance, output, and retention. Publishing an Actor is a separate decision. Best Actor sponsor opportunity is only a potential benefit. Apify does not authorize bypassing source restrictions. [Actor input/output](https://docs.apify.com/actors/running/input-and-output), [running Actors](https://docs.apify.com/actors/running). |
+| Apify | **Selected managed-ingestion direction; pending access review and implementation.** Prefer a project-owned Actor that validates input, uses permitted connectors, enforces limits, handles pagination/retries, normalizes records, and records omissions. The merged provider-adapter document also lists third-party Actor candidates for discussion/history collection; choosing between those candidates and a custom Actor, and validating terms and actual behavior, remains open. | A custom Actor gives project control over collection and output. A third-party Actor may accelerate experiments but introduces variable quality, cost, maintenance, output, and retention. Publishing an Actor is a separate decision. Best Actor sponsor opportunity is only a potential benefit. Apify does not authorize bypassing source restrictions. [Actor input/output](https://docs.apify.com/actors/running/input-and-output), [running Actors](https://docs.apify.com/actors/running). |
 | Python; NumPy, scikit-learn, NetworkX | Python analysis direction selected; implementation absent. Candidate roles: numeric summaries; evaluated similarity/clustering; account/thread/claim graphs. | Deterministic features should be testable before model interpretation. Libraries are not currently dependencies and do not validate a signal. Methods, versions, thresholds, performance, and false positives remain research decisions. |
 | Elasticsearch / Agent Builder | **Planned.** Index permitted normalized records/evidence; retrieve related claims with filters and lexical/semantic/hybrid search if corpus is useful. Agent Builder may expose retrieval tools. | Adds cross-thread candidates beyond in-memory one-thread comparison. Quality depends on permitted corpus, normalization, cost, and evaluation. A match is a lead, not proof. Defer until a data basis and relevance evaluation exist. Check license/features and sponsor rules. [Agent Builder agents](https://www.elastic.co/docs/solutions/search/agent-builder/agent-builder-agents), [tools](https://www.elastic.co/docs/explore-analyze/ai-features/agent-builder/tools). |
 | CREAO | **Proposed.** Consider only if it meaningfully coordinates bounded evidence gathering and validation. | Not justified as a thin prompt relay. SDK/API, tool permissions, lifecycle, data handling, and failure behavior are unverified. A direct model call or small explicit workflow may be simpler. No redundant agent framework without demonstrated need. |
@@ -193,54 +198,46 @@ No provider secret may be embedded in a Vite `VITE_*` variable. Provider calls/s
 
 ### 5.4 Integration boundaries
 
-- Frontend handles presentation and URLs; it sends an accepted URL to a future API and makes no source fetch.
-- Orchestrator revalidates, creates job state, applies limits, invokes workers, and returns validated contract data.
+- Frontend handles presentation and URLs; it is intended to call the v1 REST API and makes no source fetch. That client integration is not implemented.
+- The ingestion backend implements the v1 REST boundary, revalidates, creates job state, invokes Apify, persists the graph, and emits investigation.ready. The inference worker consumes that event, reads the graph, selects authors/anchors, requests enrichment, and submits an evidence-backed analysis. Convex remains the selected backend direction, but how it hosts this REST/event boundary is unresolved.
 - Ingestion retrieves permitted sources and reports provenance/coverage; it does not interpret intent.
-- Deterministic analysis calculates reproducible features and sampling; it does not allege motive.
+- Inference owns author/anchor selection and interpretation; ingestion owns history candidate collection/sampling under the v1 algorithm. The rubric remains a proposal, not an implemented deterministic analysis. Neither role establishes motive.
 - Search returns candidates plus references, not proof.
 - AI drafts explanations from supplied data and cannot publish directly.
 - Result validator verifies state, contract, evidence IDs, sources, bounds, and safe claims.
 
 ## 6. Interfaces and data contracts
 
-[`contracts/README.md`](contracts/README.md) is canonical but currently contains only process guidance; there are no concrete contract definitions. The SPA's `UrlResult` is a local parser type, not an API schema. Do not copy it as a substitute for a shared contract.
+The v1.0.0 bundle is the canonical interface design, adopted for repository implementation but not yet accepted by separate backend/inference owners or verified against live providers. Read the definitions directly; this section summarizes requirements without duplicating schemas:
 
-| Interface | Expected producer -> consumer | Status |
-| --- | --- | --- |
-| Submitted/normalized URL | Web -> application | Parser exists; request/API absent. |
-| Create/idempotency key | Web -> application | Absent; behavior must be defined. |
-| Normalized post/thread/comments | Authorized ingestion -> analysis | Absent. |
-| Account profile/history | Authorized ingestion -> analysis | Absent. |
-| Sampling manifest | Analysis -> validator/report | Absent. |
-| Evidence packet/references | Analysis/retrieval -> reasoning/validator | Absent. |
-| Progress states | Orchestrator -> frontend | Absent; no live progress subscription. |
-| Result/finding | Validator -> frontend | Absent; view props are not canonical schema. |
-| Error/unavailable payload | Provider/orchestrator -> frontend | Absent. |
+- [Discussion Graph and Enrichment API](contracts/discussion-graph-api.md) defines lifecycle, ownership, sampling, graph invariants, errors, and compatibility.
+- [models.schema.json](contracts/models.schema.json) is the canonical JSON Schema Draft 2020-12 model source; [openapi.yaml](contracts/openapi.yaml) defines OpenAPI 3.1 HTTP routes.
+- [Provider adapter notes](contracts/provider-adapters.md) document candidate Apify Actor mappings only; no authenticated production Actor runs are verified.
+- [Synthetic fixtures](contracts/examples/README.md) are fabricated contract examples. [validate_contracts.py](scripts/validate_contracts.py) checks schemas, fixtures, OpenAPI references, and selected invariants; it is not a live integration test.
 
-Before integration, define and validate contracts in `contracts/` for versions, requests, states, results, evidence, errors, constraints, compatibility, and validation. Identifiers must be provider-scoped; do not infer identity across platforms. Define timestamp/timezone normalization while preserving source precision where useful. Preserve source URLs and post identifiers. Distinguish missing, unavailable, withheld, empty, and zero values. Preserve provenance: source reference, retrieval time, transform/calculation, and limitation.
+The contract covers one public discussion URL per investigation on Reddit, X/Twitter, YouTube, or TikTok. It specifies asynchronous REST operations: POST /v1/investigations returns 202; clients poll the investigation resource; graph reads wait for ingestion; enrichment POST returns 202; analysis POST returns 201 for a matching graph revision/fingerprint; GET retrieves persisted analysis; GET /v1/capabilities returns capability hints, not a guarantee of successful collection. The backend dispatches investigation.ready internally to inference. Apify callbacks/polling are internal details.
 
-Define idempotent creation: repeated use of the same explicit idempotency token should not accidentally start duplicate expensive work. Specify token scope/expiry in the shared contract. Decide separately whether the same URL without a token creates a new investigation or reuses an allowed prior result. Do not silently deduplicate across users or retain URLs beyond approved policy. Version schemas and document migration for active jobs and stored results. These are contract requirements, not payload schemas. Missing contracts are a dependency, not permission to invent them in `web/` or this file.
+The v1 graph has one discussion root, platform-scoped discussion/author/comment IDs, typed reply/authorship edges, coverage and provenance, and is immutable per graph revision. Enrichment is requested by inference using author/anchor pairs. V1 allows 1-25 pairs per request and requests exactly 10 returned history comments per pair, using the defined temporal-nearest or full most-recent fallback algorithm. Candidate collection targets up to 150 public authored comments per author. Only Reddit and X author histories are supported; YouTube and TikTok return unsupported without a provider request. Five per-author outcomes are explicit: complete, partial, unavailable, unsupported, failed. These are API semantics, not claims that any provider works.
+
+AnalysisSubmission requires the graph revision and fingerprint, inference version, typed subject/sentiment/axis/comment/cluster/evidence data, overallCoordinationRisk (0-100 heuristic index or null), analysis-only inferred edges, used enrichment IDs, and limitations. Scores are indices, not calibrated probabilities; model confidence is not statistical confidence. Evidence references must resolve to graph or referenced enrichment records. Missing values are not zero.
+
+All POST operations require Idempotency-Key (8-128 ASCII characters), scoped to authenticated principal and route for 24 hours; identical retries replay, changed bodies conflict. V1 uses schemaVersion 1.0.0, /v1 routes, stable error envelopes/statuses, optional response-field compatibility, and /v2 for breaking changes. Auth roles distinguish frontend create from inference enrichment/analysis; secrets remain server-side. See the canonical files for exact fields and behavior.
+
+Contract adoption supersedes draft 0.1, but does not establish runtime implementation, team-owner acceptance, provider authorization, Actor correctness, deployment size limits, or rubric-to-axis mapping. The local frontend UrlResult remains a parser type, not an API schema; the UI is not yet connected to these contracts.
 
 ## 7. Account selection and sampling
 
-### 7.1 Initial configurable budget
+### 7.1 Inference selection and v1 enrichment limits
 
-1. Scan accessible discussion items up to a source-specific collection cap.
-2. Find distinct eligible authors and compute preliminary thread signals.
-3. Select approximately 15 accounts for targeted follow-up based on recorded anomaly reasons.
-4. Select approximately 15 more by reproducible stratified random sampling from the eligible population.
-5. Retrieve up to approximately 50 accessible recent public history items per selected account, subject to provider terms and time/cost caps.
-6. Allow limited, budgeted expansion only when an identified evidence gap justifies it.
+The earlier research plan of approximately 15 targeted plus 15 stratified candidate accounts remains a configurable sampling proposal; it does not override the v1 wire limits. Inference chooses authors and anchor comments. A v1 EnrichmentRequest carries 1-25 author/anchor pairs, each requests exactly 10 history items, and only Reddit/X histories are supported. YouTube/TikTok author-history requests return unsupported without calling a provider.
 
-These are initial configurable engineering/research budgets, not API limits, guarantees of representativeness, or validated thresholds. Record configured and realized counts, owner, stop reasons, candidate pool size, eligibility, strata, seed, selected IDs, selection reasons, exclusions, and completion.
+For Reddit/X, ingestion may collect a best-effort candidate pool targeting up to 150 public authored comments per author. It excludes the focal discussion and anchor, deduplicates by provider comment ID, and uses the contract algorithm: return the 10 nearest items when at least 10 usable candidates fall within the configured anchor window; otherwise replace that sample with the 10 most recent available candidates. Per-author status is complete only when 10 items are returned, not when lifetime history is exhaustive; partial, unavailable, unsupported, and failed outcomes are explicit. Exact tie-breaking, timestamp handling, strategy values, and coverage definitions are in [discussion-graph-api.md](contracts/discussion-graph-api.md).
 
-### 7.2 Sampling limitations
-
-Targeted anomaly sampling deliberately enriches unusual cases and cannot estimate prevalence among all users. A random sample better describes only its eligible frame; it does not remove source-coverage bias or small-sample uncertainty. Use platform-scoped account IDs, not display names alone. If fewer than 30 accounts are eligible, examine the available set within budget and label it small/nonrepresentative rather than fabricating a target. Missing/private/deleted/rate-limited history is unavailable, not inferred. Bound history volume and age; define retention/deletion before storage.
+These are contract-defined collection/sampling budgets, not validated statistical guarantees. A selected anomaly-enriched sample is nonprobability sampling and cannot estimate prevalence. Record candidate-pool coverage, sample design, selection reasons, missingness, and limitations. Fewer than 30 eligible discussion authors remains a small, nonrepresentative set; missing histories are not zero or evidence of no activity. Any extension beyond the v1 ten-item result or 25-pair request requires a contract change.
 
 ## 8. Detection methodology
 
-All items below are proposed research signals, not implemented results. Owners must specify calculations, data requirements, benign comparisons, and evaluation before describing a signal as meaningful.
+These remain proposed research signals, not implemented or validated results. The repository now also contains v1 wire models, synthetic contract fixtures, and a contract validator; these do not implement inference or validate the signals.
 
 | Signal | Measurement examples | Interpretation limits |
 | --- | --- | --- |
@@ -254,9 +251,9 @@ All items below are proposed research signals, not implemented results. Owners m
 | Account participation | Posting intervals, diversity, bounded history patterns. | No one pattern proves automation; missing history creates bias. |
 | Cross-platform recurrence | Similar claims/links on separate permitted sources. | Similar usernames are not identity; coverage is incomplete. |
 
-Every finding needs real evidence references. Separate measurable facts from interpretation. Include denominators, coverage, missingness, time window, and source limitations when material. No accuracy, calibrated probability, universal cutoff, or score is established. Keep thresholds provisional until evaluated on a labeled corpus. Any eventual score needs documented direction, components, calibration, cutoffs, uncertainty, version, and meaning in the shared analysis contract. Higher values must have one consistent meaning; never label a post real/fake.
+Every finding needs real evidence references resolving to the graph or a history job referenced by usedEnrichmentIds. Separate measurements from interpretation and include population, sampling method, coverage, missingness, time window, and limitations. Contract scores are heuristic indices, not probabilities; axis score null means insufficient evidence/no measurement, and confidence is not statistical confidence. No calibration, validated cutoff, accuracy, or prevalence claim exists. The proposed [product astroturfing rubric](rubrics/product-astroturfing.md) is hand-weighted, unvalidated, and not the AnalysisSubmission wire payload; mapping its signal rules to contract axes remains unresolved. Do not expose its scores as operational findings until evaluated and explicitly mapped. Never label a post real/fake.
 
-Do not allege fraud, paid promotion, bots, or deliberate manipulation by a named user/organization from weak signals. Strong factual allegations need independently reviewed evidence and an explicit product/legal review path.
+Do not allege fraud, paid promotion, bots, or deliberate manipulation by a named user/organization from weak signals. Strong factual allegations need independently reviewed evidence and an explicit product/legal review path. Outstanding decisions include backend/inference owner acceptance, live provider verification, deployment graph-size limits, mapping the proposed rubric to contract axes, and runtime integration.
 
 **Benign cases to test:** brand enthusiasts; product launches; viral news; community events; similar technical specifications; copied public source text; moderation/deletion; ordinary organic activity bursts.
 
@@ -267,8 +264,8 @@ AI is an optional explanation layer behind deterministic analysis and validation
 1. Construct a bounded packet from validated source records and deterministic signals. Each item has a stable evidence ID and source reference.
 2. Treat social posts, comments, profiles, pages, and retrieved records as untrusted data, including possible prompt injection. Source text cannot change system instructions or grant tools.
 3. If CREAO is selected later, permit only bounded tools with allowlisted actions, validated arguments, budgets, timeouts, and recorded outputs. No unrestricted browser, shell, credential, or arbitrary network tool.
-4. If Claude is used, request observations vs interpretations, contrary evidence, plausible benign explanations, unavailable inputs, and citations to supplied evidence IDs.
-5. Treat model output as draft data. A deterministic validator checks the future contract, confirms every evidence ID exists, rejects invented metrics/sources, enforces limits, and prevents unsupported allegations. Invalid output becomes partial/unavailable, not a fabricated report.
+4. If Claude is used, request observations vs interpretations, contrary evidence, plausible benign explanations, unavailable inputs, and citations to supplied graph/history evidence IDs.
+5. Treat model output as draft data. A deterministic validator checks the AnalysisSubmission contract, confirms every evidence ID exists in the graph or referenced enrichment, rejects invented metrics/sources, enforces limits, and prevents unsupported allegations. Invalid output becomes partial/unavailable, not a fabricated report.
 6. Persist only permitted fields; retain prompts/provider output only as justified by an approved policy. Never expose credentials or hidden reasoning to the browser.
 7. Record provider/model and analysis/prompt version where permitted. Review report-semantic changes with regression tests.
 
@@ -294,7 +291,7 @@ Homepage submission routes to `/analysis?url=...` with the URL encoded as a quer
 
 `web/src/` contains shared header/footer/wordmark, URL input, shortcut and platform notices, Home/About/Analysis pages, unavailable/unsupported states, and typed presentation components for verdict, score, findings, evidence, empty/error states. Their props are local view types, not backend schemas. The current analysis route renders a submitted URL and honest “service not connected” state. Loading, insufficient-data, completed-result, findings, and score components are not connected to a backend and must not be represented as real outcomes.
 
-`web/README.md` records commands and the missing backend. No provider, API, analysis result, platform support, or production host is verified.
+`web/README.md` records commands and the missing backend. No provider, live API, analysis result, provider capability, or production host is verified. The contract platform enum lists Reddit, X, YouTube, and TikTok; that is interface scope, not proof of integration.
 
 ## 11. Security, privacy, and platform access
 
@@ -325,7 +322,7 @@ The `web/` project uses npm and exposes `npm run lint`, `npm test`, and `npm run
 - `npm run build`: passed with Vite 6.4.5.
 - `npm audit`: 0 vulnerabilities at check time.
 
-URL tests cover Reddit acceptance, unsupported host, invalid URL, unsafe protocol, query preservation, double-encoded rejection, raw nested prefix, encoded full URL, encoded fragment, malformed prefix, and Vercel rewrite configuration. They do not browser-test a deployed direct refresh. There are no backend/provider tests because those components/contracts do not exist. No screenshot/browser test at 375px, 768px, or 1440px is present. No benchmark, model evaluation, real labeled dataset, or field study has run.
+URL tests cover Reddit acceptance, unsupported host, invalid URL, unsafe protocol, query preservation, double-encoded rejection, raw nested prefix, encoded full URL, encoded fragment, malformed prefix, and Vercel rewrite configuration. They do not browser-test a deployed direct refresh. The repository contains contract fixtures and a structural contract validator, but no backend/provider runtime tests because those components are not implemented. No screenshot/browser test at 375px, 768px, or 1440px is present. No benchmark, model evaluation, real labeled dataset, or field study has run.
 
 ### 12.2 Required validation
 
@@ -370,7 +367,7 @@ The repository records no individual owners. Assign people during planning; work
 **P0 - honest end-to-end MVP**
 
 1. Choose and verify Reddit access approach, authorization, fields, and limits.
-2. Define create, progress, normalized data, evidence, result, and error contracts in `contracts/`.
+2. Implement backend and inference services against the adopted create, progress, normalized data, evidence, result, and error contracts in `contracts/`.
 3. Implement Convex job lifecycle and secure server-side configuration, or record a replacement decision if validation fails.
 4. Build bounded Apify ingestion with genuine unavailable/partial paths.
 5. Implement deterministic analysis and reproducible, documented sampling.
@@ -402,21 +399,24 @@ Do not add sponsor technology for name-checking. Demonstrate meaningful use and 
 
 ### 13.4 Architecture decision log
 
-These entries capture project direction from the implementation brief and repository evidence, not successful runtime integrations. Revisit if validation fails.
+These entries capture project direction and the adopted v1 interface delta; they are not proof of runtime integrations or separate owner acceptance.
 
 | ADR | Date | Status | Decision and consequence |
 | --- | --- | --- | --- |
-| ADR-001 | 2026-10-23 | Selected; implemented in `web/` | React, TypeScript, Vite, Tailwind, React Router, Lucide React, Vercel SPA. Keep secrets and authoritative analysis out of browser. Versions are in `web/package.json`; deployment is unverified. |
-| ADR-002 | 2026-10-23 | Selected direction; pending | Convex intended as MVP application/job backend. Validate execution limits, data retention, security, and cost before use; no code/config is present. Record a new decision before replacement. |
-| ADR-003 | 2026-10-23 | Selected direction; pending access/implementation | Apify is intended managed ingestion, preferring controlled custom Actor over unverified third-party Actor. It does not permit source-policy circumvention. |
-| ADR-004 | 2026-10-23 | Planned, not accepted for P0 | Consider Elastic/Agent Builder after permitted corpus and demonstrated retrieval value. A match is not proof. |
-| ADR-005 | 2026-10-23 | Proposed | Evaluate CREAO/Claude for controlled evidence reasoning; do not add until integration behavior and incremental value are verified. |
-| ADR-006 | 2026-10-23 | Analysis direction selected; pending | Use Python for deterministic analysis. NumPy, scikit-learn, NetworkX are candidates only, not current dependencies. |
+| ADR-001 | 2026-10-24 UTC | Adopted for repository implementation; owner acceptance pending | Adopt the v1.0.0 OpenAPI 3.1 / JSON Schema Draft 2020-12 bundle. Canonical models are in models.schema.json; routes are in openapi.yaml. Producers/consumers align to v1 IDs, async job/status semantics, immutable graph revisions, evidence references, and versioning. See the [approved delta](deltas/2026-10-24T05-47-50Z-astroturfing-contracts-v1.md). |
+| ADR-002 | 2026-10-23 | Selected; implemented in web/ | React, TypeScript, Vite, Tailwind, React Router, Lucide React, Vercel SPA. Keep secrets and authoritative analysis out of browser. Versions are in web/package.json; deployment is unverified. |
+| ADR-003 | 2026-10-23 | Selected direction; pending | Convex intended as MVP application/job backend. Validate execution limits, data retention, security, cost, and the v1 REST/event integration; no backend code/config is present. Record a new decision before replacement. |
+| ADR-004 | 2026-10-23 | Selected direction; pending access/implementation | Apify is intended managed ingestion. A project-owned Actor remains preferred, while provider-adapters.md lists third-party Actor candidates. Select and verify an adapter; availability is not authorization or successful collection. |
+| ADR-005 | 2026-10-23 | Planned, not accepted for P0 | Consider Elastic/Agent Builder after a permitted corpus and demonstrated retrieval value. A match is not proof. |
+| ADR-006 | 2026-10-23 | Proposed | Evaluate CREAO/Claude for controlled evidence reasoning; do not add until integration behavior and incremental value are verified. |
+| ADR-007 | 2026-10-23 | Analysis direction selected; pending | Use Python for deterministic analysis. NumPy, scikit-learn, NetworkX are candidates only, not current dependencies. |
+
 
 ### 13.5 Specification change history
 
 | Date | Change | Delta |
 | --- | --- | --- |
-| 2026-10-23 | Replaced the initial TBD-only scaffold with this baseline, incorporating DOC-001 direction while labeling absent code/contracts. | None required: scaffold explicitly said TBDs/placeholders were not requirements. |
+| 2026-10-23 | Replaced the initial TBD-only scaffold with the DOC-001 master product/architecture baseline; TBD placeholders were not established requirements. | No delta required for filling placeholders. |
+| 2026-10-24 UTC | Adopted the supplied v1.0.0 wire-contract bundle, superseding draft 0.1; documented contract limits, owner acceptance, provider verification, and rubric mapping as outstanding. | [Approved v1 contract delta](deltas/2026-10-24T05-47-50Z-astroturfing-contracts-v1.md). |
 
-Future changes that conflict with an established requirement follow [CONTRIBUTING.md](CONTRIBUTING.md): propose affected sections/rationale, obtain explicit approval, create the timestamped delta, update the spec and decision log together, and preserve the historical decision. Filling a TBD or correcting an evidence-based implementation status does not itself require a delta.
+Future changes that conflict with an established requirement follow [CONTRIBUTING.md](CONTRIBUTING.md): propose affected sections/rationale, obtain explicit approval, create the timestamped delta, update the spec and decision log together, and preserve the historical decision. Filling a TBD or correcting an evidence-based implementation status does not itself require a delta. The v1.0.0 contract adoption is recorded by its linked approved delta.

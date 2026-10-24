@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0.0",
+  "investigationId": "inv_demo_01",
+  "sourceUrl": "https://www.reddit.com/r/example/comments/demo",
+  "platform": "reddit",
+  "ingestionStatus": "completed",
+  "analysisStatus": "queued",
+  "graphRevision": 1,
+  "graphFingerprint": "5fd5f59d3206ee88e52720f33e0ae3b6fd48cf7558c98603980b03119c3fccc1",
+  "createdAt": "2026-10-23T22:13:00Z",
+  "updatedAt": "2026-10-23T22:20:00Z"
+}

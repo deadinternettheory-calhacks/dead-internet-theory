@@ -1,0 +1,9 @@
+{
+  "eventVersion": "1.0.0",
+  "eventId": "evt_demo_01",
+  "eventType": "investigation.ready",
+  "investigationId": "inv_demo_01",
+  "graphRevision": 1,
+  "graphFingerprint": "5fd5f59d3206ee88e52720f33e0ae3b6fd48cf7558c98603980b03119c3fccc1",
+  "occurredAt": "2026-10-23T22:20:01Z"
+}
