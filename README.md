@@ -11,6 +11,10 @@ defined. No runtime, dependencies, deployment, or application code is configured
   branches, pull requests, and specification changes.
 - [AGENTS.md](AGENTS.md): instructions for coding agents.
 - [deltas/](deltas/README.md): specification-change records and their template.
+- [rubrics/product-astroturfing.md](rubrics/product-astroturfing.md):
+  rules an AI agent follows to score a product recommendation in a Reddit, X,
+  YouTube or TikTok comment section for likely astroturfing (proposal, not yet
+  validated).
 
 ## Getting started
 
@@ -28,5 +32,6 @@ unfinished documentation, not established requirements.
 
 ## Current status
 
-Documentation and repository conventions only. This directory has not yet been
+Documentation, repository conventions, and a draft astroturfing scoring
+rubric only. This directory has not yet been
 initialized as a Git repository.

@@ -2,7 +2,13 @@
 
 This directory holds canonical shared schemas and interface contracts for data
 exchanged between components: API requests and responses, events, and shared
-payloads. No concrete contracts or schema tooling have been defined yet.
+payloads. No schema tooling has been selected yet.
+
+## Contracts
+
+- [discussion-graph-api.md](discussion-graph-api.md): discussion graph,
+  author-history enrichment and analysis-result interface between the
+  ingestion service and the inference engine (draft 0.1, not frozen).
 
 ## Usage
 

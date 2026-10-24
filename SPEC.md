@@ -43,7 +43,15 @@ specification-change workflow for changes that contradict established requiremen
 Choose schema formats and validation tooling when the stack and interfaces are
 defined. No concrete schemas or tooling are selected by this scaffold.
 
-TBD: define APIs, events, schemas, error behavior, and compatibility requirements.
+Contracts:
+
+- [Discussion graph and enrichment API](contracts/discussion-graph-api.md)
+  (draft 0.1): operations, identifiers, graph model, author-history
+  enrichment and analysis results between the ingestion service and the
+  inference engine. Its open decisions list what remains to be settled.
+
+TBD: error behavior and compatibility requirements (see the contract's open
+decisions).
 
 ## 7. Data handling and security
 
