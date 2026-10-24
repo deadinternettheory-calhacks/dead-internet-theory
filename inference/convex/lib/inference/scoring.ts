@@ -231,8 +231,11 @@ export function scoreAccount(proposal: ProposedAccount | undefined, facts: Accou
   }
   const fired = new Set(signals.map(s => s.id));
   // Without a model review, only the measured rules (B1, and B4 when the age is known) were checked.
-  const unchecked = proposal ? proposal.unknown : bRules.map(r => r.id).filter(id => id !== 'B1' && !(id === 'B4' && facts.accountAgeDays !== null));
-  const unknown = Array.from(new Set(unchecked.filter(id => RULES_BY_ID.get(id)?.family === 'B' && !fired.has(id))));
+  // B1 (brand focus) is always measured, and B4 when the profile gives the age, so the model can
+  // never mark them unknown: an account with history always gets a score.
+  const measured = new Set(['B1', ...(facts.accountAgeDays !== null ? ['B4'] : [])]);
+  const unchecked = proposal ? proposal.unknown : bRules.map(r => r.id);
+  const unknown = Array.from(new Set(unchecked.filter(id => RULES_BY_ID.get(id)?.family === 'B' && !fired.has(id) && !measured.has(id))));
   const evaluable = bRules.filter(r => !unknown.includes(r.id) || fired.has(r.id));
   const max = evaluable.reduce((t, r) => t + Math.max(...r.points), 0);
   const points = signals.reduce((t, s) => t + s.points, 0);

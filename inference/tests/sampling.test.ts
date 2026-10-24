@@ -172,6 +172,15 @@ describe('account automation signals', () => {
     expect(s.discarded.join(' ')).toMatch(/E3: not an account-level human signal/);
   });
 
+  it('still scores an account when the model marks every account rule as unknown', async () => {
+    const { scoreAccount } = await import('../convex/lib/inference/scoring');
+    const allUnknown = { authorId: 'a', signals: [], unknown: ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9'] };
+    const s = scoreAccount(allUnknown, facts, known);
+    expect(s.score).toBe(0);
+    expect(s.unknown).not.toContain('B1');
+    expect(scoreAccount(allUnknown, { ...facts, productMentionIds: facts.historyIds }, known).score).toBe(100);
+  });
+
   it('has no score without history', async () => {
     const { scoreAccount } = await import('../convex/lib/inference/scoring');
     expect(scoreAccount(undefined, { ...facts, historyCount: 0 }, known).score).toBeNull();
