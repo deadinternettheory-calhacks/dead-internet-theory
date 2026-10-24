@@ -19,6 +19,10 @@ flow through Apify, CREAO and persisted analysis. Other providers remain gated.
 See the [hosted verification record](verification/2026-10-24-hosted-live.md) for
 scope and operational limits; this is not a general provider or quality guarantee.
 
+The discussion build is pinned to `0.0.129`, verified after Apify removed the
+previous build. See the [build recovery record](verification/2026-10-24-reddit-build-recovery.md)
+for the scoped check and capacity reconciliation. The history pin is `0.0.78`.
+
 ## Setup and checks
 
 Use Node **22 or 24** (Node 26 does not run local Convex Node actions) and npm.
