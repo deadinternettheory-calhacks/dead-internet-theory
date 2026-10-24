@@ -176,17 +176,20 @@ the author having no history.
 
 ### Author profile fields
 
-Returned for each author in the enrichment response and stored on the author
-node, so later `getGraph` calls include them.
+Optional on every platform; collected for Reddit only, where they are easy
+to get. When present, they are returned for each author in the enrichment
+response and stored on the author node, so later `getGraph` calls include them.
 
-| Field | Meaning | Reddit | X | YouTube, TikTok |
-| --- | --- | --- | --- | --- |
-| `accountCreatedAt` | When the account was created | Yes | Yes (join date) | Not modelled |
-| `postKarma` | Karma earned from posts | Yes | Not applicable | Not modelled |
-| `commentKarma` | Karma earned from comments | Yes | Not applicable | Not modelled |
+| Field | Meaning | Reddit | X, YouTube, TikTok |
+| --- | --- | --- | --- |
+| `accountCreatedAt` | When the account was created | Collected | Omitted |
+| `postKarma` | Karma earned from posts | Collected | Omitted |
+| `commentKarma` | Karma earned from comments | Collected | Omitted |
 
-- A field the platform does not have, or that could not be retrieved, is
-  omitted. An omitted field never means zero or "new account".
+- Consumers must work without these fields. Every platform, Reddit included,
+  can return an author with none of them.
+- A field that is not collected, or could not be retrieved, is omitted. An
+  omitted field never means zero or "new account".
 - Profile fields can be returned even when the history status is `partial` or
   `unavailable`, and vice versa.
 - Values are as reported by the platform at collection time; the collection

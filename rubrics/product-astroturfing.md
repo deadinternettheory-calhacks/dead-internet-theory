@@ -72,7 +72,7 @@ Evidence comes in three levels:
 | Level | Contents | Source in the contract |
 | --- | --- | --- |
 | **T — Discussion** | Target comment, its parent chain, the root, all sibling comments, visible metadata (author, timestamps, engagement, flair or badges, deleted/removed markers) | `getGraph` |
-| **A — Author history** | The target author's recent comments (up to 10, the contract's `limit`) with community and timestamp, plus profile fields (`accountCreatedAt`, `postKarma`, `commentKarma`) where the platform has them | `getAuthorHistories` |
+| **A — Author history** | The target author's recent comments (up to 10, the contract's `limit`) with community and timestamp, plus, on Reddit only, optional profile fields (`accountCreatedAt`, `postKarma`, `commentKarma`) | `getAuthorHistories` |
 | **C — Co-recommender history** | The same for the root author and every other account in the discussion recommending the same product | `getAuthorHistories` |
 
 ## 3. Platform profiles
@@ -99,6 +99,13 @@ missing posts in a partial history as evidence for an exculpatory rule (E2's
 "brand mentions rare", E7).
 
 **Reddit.** All levels are available, subject to Reddit's current API access.
+
+**Profile fields** (`accountCreatedAt`, `postKarma`, `commentKarma`) are
+collected for Reddit only, and may be missing there too. The rubric never
+requires them. When they are missing, the parts of C3, B3, B4 and E2 that
+depend on them are `unknown`; the rest of each rule still applies (for
+example, B4's dormancy check from history gaps, or C3's handle patterns). Do
+not lower confidence for missing profile fields.
 
 Platform translations of individual rules are listed in each rule's
 **Platform notes** column.
@@ -135,7 +142,7 @@ C1 and C4 need only level T; the rest need level C (Reddit and X only).
 | --- | --- | --- | --- | --- |
 | C1 | Two or more accounts recommend the product with near-identical wording, structure, or the same unusual details (same feature list, same anecdote, same typo) | +25 | Lexical redundancy across accounts; pairs beat individuals (Kumar et al. 2017; Weerasinghe et al. 2022) | All platforms. The main signal on YouTube and TikTok |
 | C2 | Co-recommenders interact with each other: reply to, agree with or defend each other's recommendation, or appear together in other discussions more than chance would explain | +20 | IRA accounts replied to and boosted each other (TrollMagnifier, 2022); co-action networks (Weber & Neumann) | Reddit, X. The in-discussion part (replying to each other here) is visible everywhere, but score it as T5 on YouTube and TikTok |
-| C3 | Co-recommenders share account traits: created within a few days of each other, matching handle patterns, or similar profile statistics | +15 | Same-day creation used as corroboration (TrollMagnifier) | Reddit, X. Creation dates from `accountCreatedAt`; karma from `postKarma` and `commentKarma` on Reddit |
+| C3 | Co-recommenders share account traits: created within a few days of each other, matching handle patterns, or similar profile statistics | +15 | Same-day creation used as corroboration (TrollMagnifier) | Reddit, X. Creation dates and karma from profile fields on Reddit when present; handle patterns on both |
 | C4 | Several recommendations of the product arrive in a tight burst (for example within 30 minutes of each other or of the root) while other comments trickle in | +10 | Co-action time windows (Iannucci et al. 2025). Results depend on the window chosen, so treat as supporting evidence | All platforms. On fast-moving videos and viral posts, compare against the overall comment rate, not a fixed window |
 | C5 | Root author and recommender look paired: the root asks a question tailored to the product's selling points, and the root author has little other history or has appeared with the recommender before | +15 | **Heuristic** (ask-and-answer seeding), consistent with sockpuppet findings | Reddit, X |
 | C6 | Distinctive writing quirks shared between the author and another co-recommender (punctuation, formatting, misspellings, phrasing) across their histories | +15 | Stylometric linking (Weerasinghe et al. 2022). Lead only: style clusters in r/wallstreetbets showed no excess suspensions | Reddit, X |
@@ -148,8 +155,8 @@ Needs level A: Reddit and X only.
 | --- | --- | --- | --- | --- |
 | B1 | Brand concentration: the brand or its product line appears in a large share of the author's recent comments (3 or more of the last 10, or most of the non-generic ones), especially across unrelated communities | +20 | Behavioral policy and posting-pattern work (Schneider et al. 2026); commercial equivalent of topic focus | Communities are subreddits on Reddit, unrelated conversations or topics on X |
 | B2 | The author has posted the same or near-identical recommendation in other discussions | +20 | Lexical redundancy as an indicator | Reddit, X |
-| B3 | Engagement farming: history is mostly generic, low-effort posts aimed at high-traffic spaces, followed by a switch to product talk. On Reddit, also a large post-karma vs comment-karma imbalance | +10 | Karma asymmetry (Pilaud & McCulloh 2025) | Karma part is Reddit only, from `postKarma` and `commentKarma` |
-| B4 | Account age: under 30 days old (+8), or dormant for 6+ months and reactivated mainly to discuss products (+12) | +8 / +12 | Account age as a flag (Pilaud & McCulloh 2025); reactivation is **heuristic** (aged-account resale) | Reddit, X. Age from `accountCreatedAt`; dormancy from history gaps. If `accountCreatedAt` is omitted, the age part is `unknown` |
+| B3 | Engagement farming: history is mostly generic, low-effort posts aimed at high-traffic spaces, followed by a switch to product talk. On Reddit, also a large post-karma vs comment-karma imbalance | +10 | Karma asymmetry (Pilaud & McCulloh 2025) | Reddit, X. Karma part only on Reddit when `postKarma` and `commentKarma` are present |
+| B4 | Account age: under 30 days old (+8), or dormant for 6+ months and reactivated mainly to discuss products (+12) | +8 / +12 | Account age as a flag (Pilaud & McCulloh 2025); reactivation is **heuristic** (aged-account resale) | Reddit, X. Age part only on Reddit when `accountCreatedAt` is present, otherwise `unknown`; dormancy from history gaps on both |
 | B5 | Abrupt style shift within the account: casual, typo-filled writing turns into polished marketing prose, or the language changes | +10 | IRA accounts showed inconsistent style within accounts, suggesting shared operators (Weerasinghe et al. 2022) | Reddit, X |
 | B6 | Schedule looks like a work shift: activity confined to weekday business hours of one time zone, or at machine-regular intervals, in an account that is not about work topics | +8 | Work-schedule metadata (Miller 2016); temporal regularity | Reddit, X |
 | B7 | Consistently positive about the brand where the community's view is mixed, and consistently negative about its competitors | +8 | Topic-level sentiment deviation (Pilaud & McCulloh 2025) | Reddit, X |
@@ -187,7 +194,7 @@ Needs level T. The family total is capped at 20 (cap K1).
 | ID | Signal | Points | Platforms |
 | --- | --- | --- | --- |
 | E1 | **Disclosed tie.** The author states a commercial relationship with the brand (employee, founder, affiliate, sponsored, `#ad`). This is disclosed promotion, not astroturfing: set the label to `disclosed_promotion` and cap the score at 15 | cap 15 | All |
-| E2 | Established account: over a year old, broad participation across unrelated communities, consistent style, brand mentions rare | −15 | Reddit, X (not from `partial` history) |
+| E2 | Established account: over a year old, broad participation across unrelated communities, consistent style, brand mentions rare | −15 | Reddit, X (not from `partial` history). Age from `accountCreatedAt` or, without it, from the span of the history |
 | E3 | Specific, balanced experience: names drawbacks, compares fairly, gives costly-to-fake detail (troubleshooting, long-term use, photos) that matches earlier history where history is available | −10 | All (history check on Reddit and X only) |
 | E4 | Recognized community member: trusted flair, moderator, or long-time regular in this subreddit. Paid verification badges never count | −10 | Reddit |
 | E5 | Popular product: many unrelated accounts recommend it across many discussions over a long period. Frequent recommendation alone is not suspicious | −10 | All. On YouTube and TikTok, judge from the discussion and general knowledge of the product only |
