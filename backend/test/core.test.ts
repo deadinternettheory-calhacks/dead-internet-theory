@@ -51,7 +51,7 @@ describe("canonical validation and safe URL boundary", () => {
     ["https://youtu.be/abcdefghijk", "youtube"],
     ["https://www.tiktok.com/@test/video/123", "tiktok"],
   ])("canonicalizes %s", (url, p) => expect(source(url).platform).toBe(p));
-  it("sorts object keys and reports the reviewed Reddit and YouTube providers", () => {
+  it("sorts object keys and reports all four reviewed providers", () => {
     expect(stable({ b: 1, a: 2 })).toBe(stable({ a: 2, b: 1 }));
     const entries = capabilities().platforms;
     expect(
@@ -59,6 +59,6 @@ describe("canonical validation and safe URL boundary", () => {
     ).toBe(true);
     expect(
       entries.filter((p) => p.actorRuntimeVerified).map((p) => p.platform),
-    ).toEqual(["reddit", "youtube"]);
+    ).toEqual(["reddit", "x", "youtube", "tiktok"]);
   });
 });

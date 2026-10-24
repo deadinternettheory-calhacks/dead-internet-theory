@@ -82,6 +82,24 @@ describe('API proxy', () => {
     expect(res.headers.get('Retry-After')).toBe('3');
   });
 
+  it('resolves TikTok shares server-side before sending the canonical video to the backend', async () => {
+    const { calls, fetch } = upstream(202);
+    const original = { schemaVersion: '1.0.0', sourceUrl: 'https://www.tiktok.com/t/SHARED/' };
+    const resolved = 'https://www.tiktok.com/@example/video/1234567890123456789';
+    const res = await handleProxy(new Request('https://site.test/api/v1/investigations', { method: 'POST', body: JSON.stringify(original), headers: { 'Idempotency-Key': 'stable-key-123' } }), env, { fetch, resolveTikTokShare: async () => resolved });
+    expect(res.status).toBe(202);
+    expect(JSON.parse(calls[0].init.body as string)).toEqual({ ...original, sourceUrl: resolved });
+    expect((calls[0].init.headers as Record<string, string>)['Idempotency-Key']).toBe('stable-key-123');
+  });
+
+  it('does not create an investigation when a TikTok share cannot be resolved', async () => {
+    const { calls, fetch } = upstream();
+    const res = await handleProxy(new Request('https://site.test/api/v1/investigations', { method: 'POST', body: JSON.stringify({ sourceUrl: 'https://www.tiktok.com/t/SHARED/' }) }), env, { fetch, resolveTikTokShare: async () => { throw Error('unavailable'); } });
+    expect(res.status).toBe(502);
+    expect((await res.json()).error.code).toBe('SOURCE_LINK_UNAVAILABLE');
+    expect(calls).toHaveLength(0);
+  });
+
   it('replaces a malformed session cookie', async () => {
     const { fetch } = upstream();
     const res = await handleProxy(new Request('https://site.test/api/v1/investigations/inv_1', { headers: { Cookie: 'dit_sid=bad;value' } }), env, { fetch });

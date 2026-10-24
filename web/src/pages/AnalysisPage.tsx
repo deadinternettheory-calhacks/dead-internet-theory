@@ -102,6 +102,7 @@ function LiveAnalysis({ url }: { url: string }) {
       if (cancelled.current) return;
       // The proxy answers SERVICE_NOT_CONFIGURED until the deployment has backend credentials.
       if (err instanceof ApiError && err.code === 'SERVICE_NOT_CONFIGURED') return setView({ kind: 'unavailable' });
+      if (err instanceof ApiError && err.code === 'SOURCE_LINK_UNAVAILABLE') return setView({ kind: 'error', title: 'We couldn’t open this share link.', message: 'Copy the full TikTok video URL from your browser and try that link.', retry: false });
       const unsupported = err instanceof ApiError && err.code === 'INVALID_URL';
       setView(unsupported
         ? { kind: 'error', title: 'We can’t check this link.', message: 'This site or link type is not supported.', retry: false }

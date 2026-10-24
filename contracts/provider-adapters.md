@@ -74,7 +74,13 @@ root; comment text and commenter identity are never used as the root's content
 or creator. Foreign video IDs fail validation. Date-only estimated YouTube ages
 remain unknown canonical timestamps. The YouTube adapter has a
 [single-video runtime check](../backend/verification/2026-10-24-youtube-discussion.md);
-X and TikTok remain unverified candidates.
+The [TikTok discussion](../backend/verification/2026-10-24-tiktok-discussion.md)
+and [X discussion/history](../backend/verification/2026-10-24-x-discussion-history.md)
+checks also passed. X's feed can include unrelated non-reply recommendation
+cards; these are excluded with a coverage limitation, while foreign actual
+replies fail validation. X/TikTok sort order reflects provider ranking. X remains
+demo-limited on the current Apify Free plan; successful smoke checks do not
+remove provider quotas or establish exhaustive collection.
 
 ## Source documentation checked October 23, 2026
 

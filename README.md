@@ -4,8 +4,8 @@ Investigates public discussion content for possible coordinated promotion.
 The repository contains a frontend app, a Convex ingestion backend with a verified
 synthetic workflow, a CREAO and Claude inference service, a proposed scoring rubric,
 and v1 wire contracts. The frontend accepts X, Reddit, TikTok and YouTube links.
-Reddit and YouTube discussion adapters have scoped runtime verification; X and
-TikTok remain gated pending their permitted checks. CREAO analysis and 24-hour
+All four discussion adapters have scoped runtime verification; X is limited by
+the current Apify Free-plan demo limits. CREAO analysis and 24-hour
 application retention are configured; the form shows live backend availability.
 
 ## Repository guide

@@ -4,7 +4,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { AnalysisPage } from './AnalysisPage';
-import { createInvestigation, getGraph, getInvestigation, idempotencyKeyFor } from '../api/client';
+import { ApiError, createInvestigation, getGraph, getInvestigation, idempotencyKeyFor } from '../api/client';
 import { exampleData } from '../demo';
 import type { InvestigationResource } from '../api/contract';
 vi.mock('../api/client', async original => ({
@@ -31,6 +31,14 @@ afterEach(async () => {
   vi.useRealTimers();
 });
 const render = async () => act(async () => { root.render(<MemoryRouter><AnalysisPage url={url}/></MemoryRouter>); });
+
+it('explains how to recover from an unavailable TikTok share without a duplicate create', async () => {
+  vi.mocked(createInvestigation).mockRejectedValue(new ApiError(502, 'SOURCE_LINK_UNAVAILABLE', 'Unavailable', true));
+  await render();
+  expect(container.textContent).toContain('We couldn’t open this share link.');
+  expect(container.textContent).toContain('full TikTok video URL');
+  expect(container.querySelector('.retry-button')).toBeNull();
+});
 
 it('explains an empty video collection without blaming the platform or offering a duplicate retry', async () => {
   vi.mocked(createInvestigation).mockResolvedValue(failed('PROVIDER_NO_COMMENTS'));

@@ -32,6 +32,12 @@ it('does not invent availability when the lookup fails', async () => {
   expect(container.querySelectorAll('.is-live')).toHaveLength(0);
   expect(container.textContent).toContain('Unknown');
 });
+it('labels the X free-plan demo and explains its limits', async () => {
+  vi.mocked(getCapabilities).mockResolvedValue({ platforms: [{ platform: 'x', actorRuntimeVerified: true, liveEnabled: true, demoLimited: true }] });
+  await render();
+  expect(container.querySelector('li')?.textContent).toBe('XDemo');
+  expect(container.textContent).toContain('10 items/run, 5 runs/month per collector');
+});
 it('cancels an outstanding capability read when the homepage unmounts', async () => {
   vi.mocked(getCapabilities).mockImplementation(() => new Promise(() => {}));
   await render();

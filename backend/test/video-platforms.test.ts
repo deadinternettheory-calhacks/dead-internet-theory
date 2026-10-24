@@ -188,6 +188,44 @@ it("uses a single-post capable X lookup, authored replies and pinned builds", as
   ).toEqual({ repostCount: 3 });
 });
 
+it("excludes unrelated X recommendations, records the omission and rejects foreign replies", () => {
+  const root = {
+    id: "100",
+    text: "SYNTHETIC root",
+    conversationId: "100",
+    isReply: false,
+    replyCount: 20,
+  };
+  const reply = {
+    id: "101",
+    text: "SYNTHETIC reply",
+    conversationId: "100",
+    isReply: true,
+    inReplyToId: "100",
+  };
+  const recommendation = {
+    id: "200",
+    text: "SYNTHETIC unrelated recommendation",
+    conversationId: "200",
+    isReply: false,
+  };
+  const tasks = [
+    { ...task([root]), role: "root" as const },
+    task([reply, recommendation]),
+  ];
+  const data = discussion("x", "https://x.com/synthetic/status/100", tasks);
+  expect(data.comments.map((comment) => comment.nativeId)).toEqual(["101"]);
+  expect(data.truncated).toBe(true);
+  expect(data.limitations.join(" ")).toContain("Excluded 1 unrelated");
+  expect(data.sortOrder).toBe("provider-ranked");
+  expect(() =>
+    discussion("x", "https://x.com/synthetic/status/100", [
+      tasks[0],
+      task([{ ...reply, conversationId: "foreign" }]),
+    ]),
+  ).toThrow("different X conversation");
+});
+
 it("queues concurrent runs of the same X Actor while allowing another platform", async () => {
   const t = convexTest(schema, modules);
   const now = Date.now();

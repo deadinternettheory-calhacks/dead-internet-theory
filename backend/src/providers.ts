@@ -656,10 +656,24 @@ export function discussion(
       "PROVIDER_INVALID_DATA",
       "Provider returned comments for a different discussion",
     );
+  // X's replies feed can contain recommendation cards. Exclude explicitly
+  // non-reply records from another conversation, and still reject foreign replies.
+  const unrelated = new Set(
+    p === "x"
+      ? all.filter(
+          (row) =>
+            row.isReply === false &&
+            row.conversationId != null &&
+            nativeString(row.conversationId) !==
+              nativeString(root.conversationId ?? root.id),
+        )
+      : [],
+  );
   if (
     p === "x" &&
     all.some(
       (row) =>
+        !unrelated.has(row) &&
         row.conversationId != null &&
         nativeString(row.conversationId) !==
           nativeString(root.conversationId ?? root.id),
@@ -684,6 +698,7 @@ export function discussion(
     .filter(
       (r) =>
         r !== root &&
+        !unrelated.has(r) &&
         !(p === "x" && nativeString(r.id ?? r.commentId) === native) &&
         kind(r) !== "post" &&
         kind(r) !== "video" &&
@@ -692,9 +707,9 @@ export function discussion(
     )
     .map((r) => mapRecord(p, r));
 
-  const limited = tasks.some(
-    (t) => t.truncated || t.run?.status !== "SUCCEEDED",
-  );
+  const limited =
+    unrelated.size > 0 ||
+    tasks.some((t) => t.truncated || t.run?.status !== "SUCCEEDED");
   const reportedValue =
     root.commentCount ??
     (p === "reddit"
@@ -720,6 +735,11 @@ export function discussion(
     exhaustive: false,
     limitations: [
       "Third-party provider results are best effort; successful execution is not proof of exhaustive retrieval.",
+      ...(unrelated.size
+        ? [
+            `Excluded ${unrelated.size} unrelated non-reply recommendation records from the X provider feed.`,
+          ]
+        : []),
       ...(p === "reddit" &&
       all.some((row) => row.isScoreHidden || row.score_hidden || row.hide_score)
         ? [
@@ -746,7 +766,7 @@ export function discussion(
           ]
         : []),
     ],
-    sortOrder: "new",
+    sortOrder: p === "tiktok" || p === "x" ? "provider-ranked" : "new",
     collectedAt: iso(),
     sourceSnapshotRef: "pending",
     actorRuns: tasks.map((t) => ({
