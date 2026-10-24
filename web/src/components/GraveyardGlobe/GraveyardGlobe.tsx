@@ -13,7 +13,7 @@ class SceneBoundary extends Component<{ children: ReactNode; onFailure: () => vo
   render() { return this.state.failed ? null : this.props.children; }
 }
 
-export function GraveyardGlobe() {
+export function GraveyardGlobe({ compact = false }: { compact?: boolean }) {
   const frame = useRef<HTMLElement>(null);
   const pointer = useRef({ x: 0, y: 0 });
   const [motionEnabled, setMotionEnabled] = useState(false);
@@ -59,7 +59,7 @@ export function GraveyardGlobe() {
     if (!motionEnabled || !inView || !tabVisible || failed) cancel();
   }, [motionEnabled, inView, tabVisible, failed, cancel]);
 
-  return <figure className="graveyard-globe" ref={frame} aria-label="Illustration of a wireframe globe with gravestones">
+  return <figure className={`graveyard-globe${compact ? ' graveyard-globe--compact' : ''}`} ref={frame} aria-label="Illustration of a wireframe globe with gravestones">
     <div className="globe-stage" ref={stage} role="group" aria-label="Spin the globe" aria-describedby={helpId}
       tabIndex={ready && !failed ? 0 : undefined} data-interactive={ready && !failed} data-dragging={dragging} {...handlers}>
       <div className="globe-artwork" aria-hidden="true">

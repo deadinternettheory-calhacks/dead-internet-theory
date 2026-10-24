@@ -69,10 +69,24 @@ it('shows the collected post and comments while the analysis runs', async () => 
   expect(getGraph).toHaveBeenCalledTimes(1);
   expect(container.textContent).toContain('Analyzing the discussion…');
   expect(container.textContent).toContain('Comments we collected');
+  expect(container.textContent).toContain('8 comments collected.');
+  expect(container.querySelector('[aria-current="step"]')?.textContent).toContain('Analyze the discussion');
   const firstComment = syntheticDemo.graph.nodes.find(n => n.type === 'comment')!;
   expect(container.textContent).toContain(firstComment.type === 'comment' ? firstComment.text : '');
   await act(async () => vi.advanceTimersByTimeAsync(2500));
   expect(getGraph).toHaveBeenCalledTimes(1);
+});
+
+it('does not show collection as complete or request a graph while it is queued', async () => {
+  vi.mocked(createInvestigation).mockResolvedValue(queued);
+  vi.mocked(getInvestigation).mockResolvedValue({ ...queued, ingestionStatus: 'running' });
+  await render();
+  expect(container.textContent).toContain('Waiting to collect public comments…');
+  expect(container.querySelector('[aria-current="step"]')?.textContent).toContain('Queued');
+  await act(async () => vi.advanceTimersByTimeAsync(2500));
+  expect(container.textContent).toContain('Collecting public comments…');
+  expect(container.querySelectorAll('.progress-stages .is-done')).toHaveLength(1);
+  expect(getGraph).not.toHaveBeenCalled();
 });
 it('blames the service, not the post, and retries a refused start with a fresh request', async () => {
   const key = idempotencyKeyFor(url);

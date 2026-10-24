@@ -37,7 +37,9 @@ export interface Report {
   verdict: { label: string; description: string; tone: Tone };
   index: { score: number; confidence: number | null; explanation: string } | null;
   findings: Finding[];
-  axes: { axis: AxisName; title: string; score: number | null; explanation: string }[];
+  axes: { axis: AxisName; title: string; score: number | null; explanation: string; evidence: EvidenceItem[] }[];
+  discussion: EvidenceItem[];
+  histories: { id: string; author: string | null; status: string; comments: EvidenceItem[] }[];
   comments: CommentRow[];
   clusters: { id: string; size: number; explanation: string }[];
   coverage: { analyzed: number; retrieved: number; reported: number | null; completeness: string; sentiment: Record<Stance, number>; histories: string | null };
@@ -147,7 +149,12 @@ export function buildReport(analysis: AnalysisResource, graph: GraphEnvelope, en
     verdict: verdictFor(score, a.subject.kind === 'unknown' ? '' : a.subject.label),
     index: score === null ? null : { score, confidence: a.overallCoordinationRisk.confidence, explanation: a.overallCoordinationRisk.explanation },
     findings,
-    axes: a.axes.map(x => ({ axis: x.axis, title: AXIS_TITLE[x.axis], score: x.score, explanation: x.explanation })),
+    axes: a.axes.map(x => ({ axis: x.axis, title: AXIS_TITLE[x.axis], score: x.score, explanation: x.explanation, evidence: evidenceFor(x.evidenceRefs) })),
+    discussion: [...comments.values()].filter(c => c.contentStatus === 'visible' && c.text.trim()).map(c => ({ id: c.id, author: handleFor(graph, c.authorId), text: c.text, url: c.url, createdAt: c.createdAt, source: 'discussion' as const })),
+    histories: enrichments.flatMap(j => (j.results ?? []).map(r => ({
+      id: `${j.enrichmentId}:${r.authorId}`, author: handleFor(graph, r.authorId), status: r.status,
+      comments: r.comments.map(c => ({ id: c.id, author: handleFor(graph, c.authorId), text: c.text, url: c.url, createdAt: c.createdAt, source: 'history' as const })),
+    }))),
     comments: rows.sort((x, y) => Number(y.isRecommendation) - Number(x.isRecommendation)),
     clusters: a.clusters.map(c => ({ id: c.clusterId, size: c.commentIds.length, explanation: c.explanation })),
     coverage: {
@@ -168,6 +175,7 @@ export interface ThreadPreview {
   comments: { id: string; author: string | null; text: string; isReply: boolean }[];
   /** Visible comments not shown in the preview. */
   moreCount: number;
+  collectedCount: number;
 }
 
 /**
@@ -182,5 +190,6 @@ export function buildThreadPreview(graph: GraphEnvelope, limit = 12): ThreadPrev
     post: { title: root.title ?? null, text: root.text, platform: root.platform, author: handleFor(graph, root.authorId) },
     comments: visible.slice(0, limit).map(c => ({ id: c.id, author: handleFor(graph, c.authorId), text: c.text, isReply: c.parentId !== null && c.parentId !== graph.rootId })),
     moreCount: Math.max(0, visible.length - limit),
+    collectedCount: graph.coverage.retrievedCommentCount,
   };
 }

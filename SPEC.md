@@ -300,9 +300,26 @@ direct turns. Reduced motion starts with a static SVG poster; graphics failure
 also retains the poster and working form.
 The 3D code is loaded separately and animation stops offscreen or in hidden tabs.
 
-`web/src/` contains shared header/footer/wordmark, URL input, shortcut and platform notices, Home/About/Analysis pages, unavailable/unsupported states, and typed presentation components for verdict, score, findings, evidence, empty/error states. Their props are local view types, not backend schemas. Until the proxy has backend credentials, the analysis route renders the submitted URL and an honest “service not connected” state. When the proxy has backend credentials (`BACKEND_BASE_URL`, `BACKEND_JWT_SECRET`), the route creates a v1 investigation, shows progress text that tracks the real `ingestionStatus`/`analysisStatus`, and renders the stored analysis via `src/analysis/report.ts` (post, cautious verdict, up to three findings with quoted evidence, detailed signals, coverage and limitations), or a specific failure state. The coordination index appears only inside the detailed analysis, labeled uncalibrated. `/example` renders the generated synthetic report with a banner; synthetic reports never link to their made-up source URLs.
+`web/src/` contains shared header/footer/wordmark, URL input, shortcut and platform notices, Home/About/Analysis pages, unavailable/unsupported states, and typed presentation components for verdict, score, findings, evidence, empty/error states. Their props are local view types, not backend schemas. Until the proxy has backend credentials, the analysis route renders the submitted URL and an honest “service not connected” state. When the proxy has backend credentials (`BACKEND_BASE_URL`, `BACKEND_JWT_SECRET`), the route creates a v1 investigation, shows progress text that tracks the real `ingestionStatus`/`analysisStatus`, and renders the stored analysis via `src/analysis/report.ts` (post, cautious verdict, up to three findings with quoted evidence, detailed signals, coverage and limitations), or a specific failure state. The comment-section astroturfing index appears prominently with documented bands and an uncalibrated-heuristic explanation (ADR-010); its rationale also appears in the detailed analysis. `/example` renders the generated synthetic report with a banner; synthetic reports never link to their made-up source URLs.
 
 `web/README.md` records commands and API configuration. The hosted site and API completed a permitted Reddit analysis through CREAO; the synthetic example remains labeled and does not submit its fabricated URL to the live scraper. The contract platform enum lists Reddit, X, YouTube, and TikTok; that is interface scope, not proof of integration.
+
+The homepage also offers an animated preview of the synthetic case and three
+steps explaining the workflow. `/example` now provides a guided five-scene
+walkthrough with Play, Pause, Replay, direct step selection and a complete-report
+option. Its persistent synthetic label distinguishes prepared example data from
+live collection. Reduced motion starts manually; evidence interaction and hidden
+tabs pause playback. Native view transitions animate the decorative globe between
+home and example where supported, with ordinary navigation as the fallback.
+
+Completed reports include selectable comment, literal-phrase, UTC timestamp and
+bounded history-sample views. Maps represent discussion membership or exact phrase
+matches; they do not infer account relationships. Visuals disclose their limit of
+12 displayed comments, prioritizing cited evidence when relevant. Missing times
+and unavailable histories remain explicit. Live waiting views follow actual
+backend states, show elapsed time in the view, and let readers browse a bounded
+preview of collected comments while analysis runs. They do not use the synthetic
+walkthrough's timing, invented percentages or an estimated completion countdown.
 
 ## 11. Security, privacy, and platform access
 

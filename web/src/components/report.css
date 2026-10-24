@@ -1,0 +1,90 @@
+.report-view { color: var(--text); }
+.analysis-page-heading { margin: 10px 0 26px; }
+.analysis-page-heading h1 { font-size: 36px; font-weight: 550; line-height: 1.2; letter-spacing: -.05em; margin: 0 0 12px; }
+.analysis-page-heading p { font-size: 12px; color: var(--muted); margin: 0; }
+.report-view .summary-card { padding: 24px 28px; border-radius: 12px; background: transparent; margin-bottom: 18px; }
+.report-view .platform-label { font-size: 10px; color: var(--muted); letter-spacing: .08em; }
+.report-view .url-title { font-size: 22px; font-weight: 550; letter-spacing: -.035em; margin: 12px 0; }
+.report-view .post-text { font-size: 14px; line-height: 1.8; }
+.report-view .url-display { font-size: 12px; }
+.report-view .verdict-card { padding: 30px 28px; border-left-width: 3px; margin-bottom: 0; border-radius: 12px; }
+.report-view .verdict-card h2 { font-size: clamp(23px,2.8vw,31px); line-height: 1.3; font-weight: 550; letter-spacing: -.04em; margin-top: 10px; }
+.report-view .verdict-card p { font-size: 14px; line-height: 1.8; }
+.report-view .verdict-card .section-kicker { font-size: 10px; letter-spacing: .09em; text-transform: uppercase; }
+.report-view .risk-score { padding: 24px 28px; border-radius: 12px; margin: 16px 0 0; }
+.report-view .risk-score > p:first-child { font-size: 14px; font-weight: 550; color: var(--brand); margin-bottom: 10px; }
+.report-view .risk-score .risk-note { margin-top: 18px; font-size: 12px; line-height: 1.8; }
+.report-coverage-summary { display: flex; flex-wrap: wrap; gap: 12px 26px; padding: 18px 0 36px; font-size: 12px; color: var(--muted); }
+.report-coverage-summary strong { color: var(--brand); font-weight: 550; }
+.report-eyebrow { font-size: 10px; letter-spacing: .11em; color: var(--muted); font-weight: 550; }
+.report-section-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin: 0 0 18px; }
+.report-section-heading h2 { font-size: 28px; font-weight: 550; line-height: 1.3; letter-spacing: -.04em; margin: 8px 0 0; }
+.report-section-heading > p { font-size: 12px; line-height: 1.6; max-width: 240px; margin: 0 0 2px; color: var(--muted); }
+.report-findings .finding-card { display: flex; padding: 26px; gap: 20px; margin-top: 12px; border-radius: 12px; }
+.finding-number { display: inline-grid; place-items: center; flex: none; width: 30px; height: 30px; border: 1px solid var(--border); border-radius: 50%; font: 10px ui-monospace,SFMono-Regular,Consolas,monospace; color: var(--brand); }
+.report-findings .finding-card h3 { font-size: 18px; line-height: 1.5; font-weight: 550; letter-spacing: -.025em; margin-bottom: 6px; }
+.report-findings .finding-card p { font-size: 13px; line-height: 1.8; }
+.report-findings .finding-card .evidence-list { margin-top: 16px; }
+.report-findings .evidence-quote { padding: 12px 14px; background: var(--bg); border-radius: 8px; }
+.report-findings .evidence-quote + .evidence-quote { margin-top: 8px; }
+.report-findings .quote-meta { font-size: 11px !important; margin-bottom: 8px !important; }
+.report-findings blockquote { font-size: 14px; line-height: 1.8; border: 0; padding-left: 0; margin: 0; }
+.report-findings .finding-more > summary { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 12px; margin: 0; list-style: none; }
+.report-findings .finding-more[open] > summary > svg { transform: rotate(180deg); }
+.finding-actions { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px; border-top: 1px solid var(--border); margin-top: 16px; padding-top: 6px; }
+.finding-actions > details { flex: 1; min-width: 180px; }
+.report-findings .finding-actions summary { display: inline-flex; align-items: center; min-height: 44px; font-size: 12px; margin: 0; }
+.finding-actions > button { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; border: 0; padding: 0; background: transparent; color: var(--brand); font-size: 12px; cursor: pointer; }
+.finding-actions > button:hover { text-decoration: underline; }
+.report-explorer { margin: 26px 0 20px; scroll-margin-top: 24px; }
+.report-explorer > summary { display: flex; justify-content: space-between; gap: 16px; align-items: center; min-height: 60px; border-top: 1px solid var(--border); cursor: pointer; color: var(--brand); font-size: 15px; font-weight: 550; list-style: none; }
+.report-explorer > summary > span { display: flex; align-items: center; gap: 10px; }
+.report-explorer[open] > summary > svg { transform: rotate(180deg); }
+.report-explorer-intro { font-size: 13px; color: var(--muted); margin: 0 0 16px; }
+.report-view .evidence { border-radius: 12px; }
+.report-view .evidence-content { padding-bottom: 16px; }
+.report-view .limitations { padding: 24px; margin-top: 22px; }
+.report-view .limitations h2 { font-weight: 550; letter-spacing: -.025em; margin-bottom: 12px; }
+.report-view .limitations p { font-size: 13px; line-height: 1.85; }
+.preview-heading { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin: 22px 0 4px; }
+.preview-heading h2 { font-size: 18px; font-weight: 550; margin: 0; letter-spacing: -.025em; }
+.preview-heading > span { font-size: 11px; color: var(--brand); white-space: nowrap; }
+.preview-hint { font-size: 12px; color: var(--muted); }
+.preview-more { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0; border: 0; background: transparent; color: var(--brand); font-size: 12px; cursor: pointer; }
+.preview-more:hover { text-decoration: underline; }
+.analysis-progress { margin-bottom: 20px; padding: 26px 28px; border-radius: 12px; }
+.progress-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.progress-elapsed { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.progress-status { display: flex; align-items: center; gap: 12px; margin: 24px 0 12px; }
+.progress-status .loading-indicator { width: 17px; height: 17px; }
+.progress-status h2 { font-size: 22px; font-weight: 550; line-height: 1.4; letter-spacing: -.035em; margin: 0; }
+.analysis-progress > p { font-size: 13px; line-height: 1.8; color: var(--muted); margin: 0 0 26px; }
+.progress-stages { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 22px; list-style: none; margin: 0; padding: 20px 0 0; border-top: 1px solid var(--border); }
+.progress-stages > li { display: flex; gap: 9px; align-items: flex-start; font-size: 12px; color: var(--muted); }
+.progress-stage-icon { display: inline-grid; place-items: center; width: 22px; height: 22px; border: 1px solid var(--border); border-radius: 50%; flex: none; font: 10px ui-monospace,SFMono-Regular,Consolas,monospace; }
+.progress-stages small { display: block; color: var(--muted); font-size: 10px; margin-top: 3px; }
+.progress-stages .is-done .progress-stage-icon { color: var(--brand); background: var(--light-brand); border-color: #D6E2D8; }
+.progress-stages .is-current { color: var(--brand); }
+.progress-stages .is-current .progress-stage-icon { color: var(--brand); border-color: #9EBAA9; }
+@media (max-width: 767px) {
+  .analysis-page-heading h1 { font-size: 30px; }
+  .report-view .summary-card, .report-view .verdict-card { padding: 22px 18px; }
+  .report-view .risk-score { padding: 22px 18px; }
+  .report-view .url-title { font-size: 20px; }
+  .report-coverage-summary { gap: 8px 16px; padding-bottom: 28px; font-size: 11px; }
+  .report-section-heading { display: block; }
+  .report-section-heading h2 { font-size: 26px; }
+  .report-section-heading > p { max-width: none; margin-top: 10px; }
+  .report-findings .finding-card { padding: 20px 16px; gap: 12px; }
+  .report-findings .finding-card h3 { font-size: 16px; }
+  .finding-number { width: 24px; height: 24px; font-size: 9px; }
+  .report-findings .evidence-quote { padding: 12px; margin-left: -36px; }
+  .report-findings .finding-actions { margin-left: -36px; }
+  .report-view .limitations { padding: 20px 18px; }
+  .analysis-progress { padding: 22px 18px; }
+  .progress-status h2 { font-size: 21px; }
+  .progress-stages { grid-template-columns: minmax(0,1fr); gap: 16px; }
+  .progress-stages small { display: inline; margin-left: 8px; }
+  .progress-heading { gap: 8px; }
+  .progress-elapsed { font-size: 10px; }
+}

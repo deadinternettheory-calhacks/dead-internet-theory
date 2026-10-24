@@ -1,4 +1,5 @@
 .graveyard-globe {
+  view-transition-name: graveyard-globe;
   width: min(100%, 480px);
   margin: 0 auto 24px;
   flex: none;
@@ -81,3 +82,10 @@
   .globe-stage { height: 220px; }
   .graveyard-globe { margin-bottom: 8px; }
 }
+
+.graveyard-globe--compact { width: 112px; margin: 0; }
+.graveyard-globe--compact .globe-stage { height: 104px; }
+.graveyard-globe--compact .globe-stage::after { width: 40px; left: calc(50% - 20px); height: 3px; }
+.graveyard-globe--compact .globe-caption > span { display: none; }
+::view-transition-group(graveyard-globe) { animation-duration: 650ms; animation-timing-function: cubic-bezier(.22,1,.36,1); }
+@media (prefers-reduced-motion: reduce) { ::view-transition-group(graveyard-globe) { animation-duration: 0s; } }

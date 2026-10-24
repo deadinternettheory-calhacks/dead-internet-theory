@@ -23,10 +23,10 @@ export function PostUrlInput({ onSubmit }: { onSubmit: (url: string) => void }) 
   const [value, setValue] = useState(''); const [error, setError] = useState('');
   function submit(event: React.FormEvent) {
     event.preventDefault(); const result = parsePostUrl(value);
-    if (!result.ok) { setError(result.reason === 'empty' ? 'Paste a post link to get started.' : "We can't analyze this link yet. Try a supported Reddit or X post."); return; }
+    if (!result.ok) { setError(result.reason === 'empty' ? 'Paste a post link to get started.' : "Check the link and try a public Reddit post."); return; }
     setError(''); onSubmit(result.url.href);
   }
-  return <form className="search-form" onSubmit={submit} noValidate><label className="sr-only" htmlFor="post-url">Post link</label><div className="input-wrap"><Link2 size={20} aria-hidden="true"/><input id="post-url" type="url" value={value} onChange={event => { const nextValue = event.target.value; setValue(nextValue); if (error && parsePostUrl(nextValue).ok) setError(''); }} placeholder="Paste a Reddit, X, YouTube, or TikTok link..." aria-invalid={!!error} aria-describedby={error ? 'url-error' : undefined}/></div>{error && <div id="url-error" className="form-error"><InlineError>{error}</InlineError></div>}<Button type="submit">Analyze <ArrowRight size={18} aria-hidden="true"/></Button></form>;
+  return <form className="search-form" onSubmit={submit} noValidate><label className="sr-only" htmlFor="post-url">Post link</label><div className="input-wrap"><Link2 size={20} aria-hidden="true"/><input id="post-url" type="url" value={value} onChange={event => { const nextValue = event.target.value; setValue(nextValue); if (error && parsePostUrl(nextValue).ok) setError(''); }} placeholder="Paste a public Reddit post link…" aria-invalid={!!error} aria-describedby={error ? 'url-error' : undefined}/></div>{error && <div id="url-error" className="form-error"><InlineError>{error}</InlineError></div>}<Button type="submit">Analyze post <ArrowRight size={18} aria-hidden="true"/></Button></form>;
 }
 export function ShortcutExplanation() {
   return <p className="shortcut">Or add <code>deadinternettheory.us/</code> before a post link to check it instantly.</p>;

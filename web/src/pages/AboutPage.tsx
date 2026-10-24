@@ -19,7 +19,7 @@ export function AboutPage() {
     </section>
     <section className="about-section">
       <h3>What platforms work?</h3>
-      <p>Reddit, X (Twitter), TikTok, and YouTube are supported.</p>
+      <p>Reddit is live. X (Twitter), TikTok, and YouTube are planned.</p>
     </section>
     <p className="about-disclaimer">Results are estimates based on public signals. They are not proof of coordinated activity.</p>
   </section>;
