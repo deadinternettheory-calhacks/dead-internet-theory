@@ -245,3 +245,74 @@ it("estimated anchor times force fallback and empty history is partial with miss
     "does not establish empty lifetime history",
   );
 });
+it("resolves Reddit parent fullnames against bare IDs without rewriting native evidence", async () => {
+  const data = base();
+  data.root.nativeId = "demo";
+  data.comments = [
+    { nativeId: "abc", text: "SYNTHETIC parent", parentNativeId: "t3_demo" },
+    { nativeId: "def", text: "SYNTHETIC reply", parentNativeId: "t1_abc" },
+  ];
+  data.reportedCount = 2;
+  const graph = await normalize("inv", "reddit", fixtureUrls.reddit, data, 100);
+  const root = graph.nodes.find(
+    (n) => n.id === graph.rootId,
+  ) as Model<"DiscussionNode">;
+  expect(root.nativeId).toBe("demo");
+  const reply = graph.nodes.find(
+    (n) => n.id === "reddit:comment:def",
+  ) as Model<"CommentNode">;
+  expect(reply.parentId).toBe("reddit:comment:abc");
+  expect(reply.nativeParentId).toBe("t1_abc");
+  expect(graph.edges).toContainEqual({
+    from: "reddit:comment:abc",
+    to: graph.rootId,
+    type: "REPLIES_TO",
+  });
+});
+it("excludes focal and anchor records across bare/fullname Reddit ID forms", async () => {
+  const { anchor, pair } = await context();
+  anchor.nativeId = "a";
+  const comments = [
+    {
+      ...history(pair.authorId, -1, "focal"),
+      sourceDiscussionNativeId: "demo",
+    },
+    {
+      ...history(pair.authorId, -1, "a"),
+      id: "reddit:comment:t1_a",
+      nativeId: "t1_a",
+    },
+    history(pair.authorId, -1, "valid"),
+  ];
+  const result = sample(
+    pair,
+    anchor,
+    "t3_demo",
+    { ...emptySet(), comments },
+    14,
+    Date.parse("2026-10-24T00:00:00Z"),
+  );
+  expect(result.comments.map((c) => c.nativeId)).toEqual(["valid"]);
+});
+it("does not compare Reddit fullname aliases across other platforms", async () => {
+  const data = base();
+  data.root.nativeId = "t3_demo";
+  data.comments = [
+    { nativeId: "abc", text: "SYNTHETIC comment", parentNativeId: "demo" },
+  ];
+  data.reportedCount = 1;
+  const graph = await normalize("inv", "x", fixtureUrls.x, data, 100);
+  const comment = graph.nodes.find(
+    (n) => n.type === "comment",
+  ) as Model<"CommentNode">;
+  expect(comment.parentId).toBeNull();
+});
+it("does not call collection complete when the retained count is below the reported count", async () => {
+  const data = base();
+  data.reportedCount = 10;
+  data.exhaustive = true;
+  const graph = await normalize("inv", "reddit", fixtureUrls.reddit, data, 100);
+  expect(graph.coverage.retrievedCommentCount).toBe(3);
+  expect(graph.coverage.reportedCommentCount).toBe(10);
+  expect(graph.coverage.completeness).toBe("partial");
+});

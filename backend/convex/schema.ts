@@ -17,6 +17,13 @@ export default defineSchema({
   })
     .index("key", ["key"])
     .index("status_due", ["status", "due"]),
+  providerSlots: defineTable({
+    key: v.string(),
+    data: v.any(),
+    status: v.string(),
+  })
+    .index("key", ["key"])
+    .index("status", ["status"]),
   snapshots: keyed(),
   cache: keyed(),
   controls: keyed(),

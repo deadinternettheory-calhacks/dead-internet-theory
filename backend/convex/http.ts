@@ -16,8 +16,10 @@ const handler = httpAction(async (ctx, req) => {
       if (
         !req.headers
           .get("content-type")
-          ?.toLowerCase()
-          .startsWith("application/json")
+          ?.split(";", 1)[0]
+          .trim()
+          .toLowerCase()
+          .match(/^application\/json$/)
       )
         throw new ApiFault(
           400,

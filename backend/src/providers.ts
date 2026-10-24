@@ -17,16 +17,10 @@ import {
 } from "./graph";
 import type { CandidateSet } from "./history";
 import { outbound } from "./outbound";
+import { sameNative } from "./identity";
 import { source } from "./url";
-export const verification: Record<
-  Platform,
-  { runtimeVerified: boolean; evidence: string | null }
-> = {
-  reddit: { runtimeVerified: false, evidence: null },
-  x: { runtimeVerified: false, evidence: null },
-  youtube: { runtimeVerified: false, evidence: null },
-  tiktok: { runtimeVerified: false, evidence: null },
-};
+import { verification } from "./provider-policy";
+export { verification } from "./provider-policy";
 export const actors = {
   reddit: "clearpath/reddit-post-comments-bulk-scraper",
   redditHistory: "clearpath/reddit-user-content-scraper",
@@ -39,7 +33,7 @@ export function liveGate(platform: Platform) {
   if (
     process.env.PROVIDER_MODE !== "live" ||
     process.env.PROVIDER_AUTHORIZATION_APPROVED !== "true" ||
-    !process.env.RETENTION_POLICY_REF
+    !process.env.RETENTION_POLICY_REF?.trim()
   )
     throw new ApiFault(
       500,
@@ -48,12 +42,18 @@ export function liveGate(platform: Platform) {
     );
   if (
     !verification[platform].runtimeVerified ||
-    !verification[platform].evidence
+    !verification[platform].evidence?.trim()
   )
     throw new ApiFault(
       500,
       "PROVIDER_NOT_VERIFIED",
       "Candidate adapter has no reviewed authorized runtime evidence",
+    );
+  if (!process.env.APIFY_TOKEN?.trim())
+    throw new ApiFault(
+      500,
+      "PROVIDER_NOT_CONFIGURED",
+      "Apify server credential is not configured",
     );
 }
 interface Task {
@@ -224,13 +224,19 @@ export class Apify {
     return result;
   }
 }
+export type RunAdmission =
+  | { status: "reserved" }
+  | { status: "resume"; runId: string }
+  | { status: "busy" }
+  | { status: "denied"; reason: string };
 export async function advance(args: {
   platform: Platform;
   kind: "discussion" | "history";
   url?: string;
   authors?: Model<"AuthorNode">[];
   state: PlanState;
-  reserve: (op: string) => Promise<boolean>;
+  reserve: (op: string) => Promise<RunAdmission>;
+  observe: (op: string, runId: string, status: string) => Promise<boolean>;
 }) {
   liveGate(args.platform);
   const state: Required<PlanState> = {
@@ -251,38 +257,78 @@ export async function advance(args: {
       "PROVIDER_TIMEOUT",
       "Provider workflow exceeded execution budget",
     );
+  const operation = `run:${state.index}`;
+  async function observed(run: any) {
+    if (
+      !run ||
+      typeof run.id !== "string" ||
+      !run.id ||
+      typeof run.status !== "string" ||
+      !run.status
+    )
+      throw new ApiFault(
+        500,
+        "PROVIDER_INVALID_DATA",
+        "Provider run metadata is invalid",
+      );
+    if (!(await args.observe(operation, run.id, run.status)))
+      throw new ApiFault(
+        500,
+        "JOB_LEASE_LOST",
+        "Job no longer holds the execution lease",
+      );
+    return run;
+  }
   if (task && !task.run) {
-    if (!(await args.reserve(`run:${state.index}`)))
+    const admission = await args.reserve(operation);
+    if (admission.status === "busy") return { done: false as const, state };
+    if (admission.status === "denied")
       throw new ApiFault(
         500,
-        "PROVIDER_BUDGET_LIMIT",
-        "Run budget exhausted or a previous start has an ambiguous outcome",
+        admission.reason === "ambiguous"
+          ? "PROVIDER_START_AMBIGUOUS"
+          : "PROVIDER_BUDGET_LIMIT",
+        "Provider admission denied; inspect execution capacity and reserved budget",
       );
-    // A failed start is never repeated automatically: provider may have accepted it.
-    try {
-      task.run = await provider.start(task.actor, task.input);
-    } catch {
-      throw new ApiFault(
-        500,
-        "PROVIDER_START_AMBIGUOUS",
-        "Provider start was not confirmed; reserved budget is retained",
-      );
+    if (admission.status === "resume")
+      task.run = await observed(await provider.poll(admission.runId));
+    else {
+      let run;
+      try {
+        run = await provider.start(task.actor, task.input);
+      } catch {
+        throw new ApiFault(
+          500,
+          "PROVIDER_START_AMBIGUOUS",
+          "Provider start was not confirmed; reserved budget and capacity are retained",
+        );
+      }
+      task.run = await observed(run);
     }
   } else if (task && !task.done) {
     if (
       !["SUCCEEDED", "FAILED", "ABORTED", "TIMED-OUT"].includes(task.run.status)
     )
-      task.run = await provider.poll(task.run.id);
+      task.run = await observed(await provider.poll(task.run.id));
     else {
       const budget =
         args.kind === "history"
-          ? 150 * (args.authors?.length ?? 1)
-          : limits().comments + 1;
+          ? 150 * (task.authorIds?.length ?? args.authors?.length ?? 1)
+          : task.role === "root"
+            ? 1
+            : limits().comments + 1;
+      const pageLimit = Math.min(100, budget - task.offset);
       const rows = await provider.items(
         task.run.defaultDatasetId,
         task.offset,
-        Math.min(100, budget - task.offset),
+        pageLimit,
       );
+      if (rows.length > pageLimit)
+        throw new ApiFault(
+          500,
+          "PROVIDER_INVALID_DATA",
+          "Provider exceeded the requested dataset page limit",
+        );
       task.rows.push(...rows);
       task.offset += rows.length;
       if (new TextEncoder().encode(stable(state)).length > 650_000)
@@ -291,12 +337,9 @@ export async function advance(args: {
           "PROVIDER_SIZE_LIMIT",
           "Raw dataset exceeds configured snapshot budget",
         );
-      if (
-        rows.length < Math.min(100, budget - (task.offset - rows.length)) ||
-        task.offset >= budget
-      ) {
+      if (rows.length < pageLimit || task.offset >= budget) {
         task.done = true;
-        task.truncated = task.offset >= budget;
+        task.truncated = task.role !== "root" && task.offset >= budget;
         state.index++;
       }
     }
@@ -415,7 +458,7 @@ export function discussion(
       "PROVIDER_INVALID_DATA",
       "Original discussion has no native ID",
     );
-  if (native.replace(/^t3_/, "") !== source(url).nativeId)
+  if (!sameNative(p, "discussion", native, source(url).nativeId))
     throw new ApiFault(
       500,
       "PROVIDER_INVALID_DATA",
@@ -435,6 +478,7 @@ export function discussion(
     .filter(
       (r) =>
         r !== root &&
+        !(p === "x" && nativeString(r.id ?? r.commentId) === native) &&
         r.type !== "post" &&
         r.type !== "video" &&
         r.type !== "discussion",
@@ -527,7 +571,7 @@ export function historySets(
       .filter((t): t is string => !!t)
       .sort();
     const failed =
-      tasks.length === 0 || tasks.every((t) => t.run.status !== "SUCCEEDED");
+      tasks.length === 0 || tasks.every((t) => t.run?.status !== "SUCCEEDED");
     result.set(authorId, {
       comments,
       ...(failed
@@ -546,8 +590,10 @@ export function historySets(
         oldestFetchedAt: times[0] ?? null,
         newestFetchedAt: times.at(-1) ?? null,
         collectedAt: iso(),
-        sourceSnapshotRef: `${snapshot}:${authorId}`,
-        actorRunIds: tasks.map((t) => t.run.id),
+        sourceSnapshotRef: snapshot,
+        actorRunIds: tasks
+          .filter((t) => typeof t.run?.id === "string")
+          .map((t) => t.run.id),
         limitations: [
           "Best-effort authored candidates, capped at 150; not a lifetime-history census.",
         ],

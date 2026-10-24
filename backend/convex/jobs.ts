@@ -2,7 +2,7 @@ import { internalMutationGeneric as mutation, anyApi } from "convex/server";
 import { v } from "convex/values";
 import { get, put, immutable, type Ctx } from "./db";
 import { queue } from "./api";
-import { iso, limits, stable, validate } from "../src/core";
+import { iso, limits, stable, validate, providerMode } from "../src/core";
 import { checkGraph } from "../src/invariants";
 export const claim = mutation({
   args: { key: v.string() },
@@ -44,22 +44,30 @@ export const claim = mutation({
     await ctx.scheduler.runAfter(61000, anyApi.worker.tick, { key });
     if (job.kind === "ingest") {
       const inv = await get(ctx, "investigations", job.target);
+      inv.providerMode ??= providerMode();
       inv.resource.ingestionStatus = "running";
       inv.resource.updatedAt = iso(now);
       await put(ctx, "investigations", job.target, inv);
-      return { key, job, investigation: inv.resource };
+      return {
+        key,
+        job,
+        investigation: inv.resource,
+        providerMode: inv.providerMode,
+      };
     }
     if (job.kind === "enrich") {
       const e = await get(ctx, "enrichments", job.target);
       e.resource.status = "running";
       e.resource.startedAt ??= iso(now);
       await put(ctx, "enrichments", job.target, e);
-      return {
-        key,
-        job,
-        enrichment: e,
-        graph: await get(ctx, "graphs", e.resource.investigationId),
-      };
+      const graph = await get(ctx, "graphs", e.resource.investigationId);
+      const inv = await get(ctx, "investigations", e.resource.investigationId);
+      const mode =
+        inv.providerMode ??
+        (graph.coverage.limitations.some((l: string) => l.includes("SYNTHETIC"))
+          ? "fixture"
+          : "live");
+      return { key, job, enrichment: e, graph, providerMode: mode };
     }
     return { key, job };
   },
@@ -119,6 +127,15 @@ export const settle = mutation({
       return;
     }
     if (o.state) {
+      if (new TextEncoder().encode(stable(o.state)).length > 700_000) {
+        await fail(ctx, job, key, {
+          code: "JOB_STATE_TOO_LARGE",
+          message:
+            "Persistent execution state exceeds the configured storage bound",
+          retryable: false,
+        });
+        return;
+      }
       job.payload = o.state;
       job.status = "queued";
       job.lease = null;
@@ -180,13 +197,24 @@ export const settle = mutation({
           set: cached.set,
           expires: Date.now() + limits().cacheMs,
         });
-        if (cached.set.coverage.sourceSnapshotRef)
-          await put(ctx, "snapshots", cached.set.coverage.sourceSnapshotRef, {
-            raw: cached.raw,
+      }
+      const snapshots = new Map<string, unknown>(
+        (o.snapshots ?? []).map((s: { key: string; raw: unknown }) => [
+          s.key,
+          s.raw,
+        ]),
+      );
+      // Permit an older in-flight action's internal result during rollout.
+      for (const cached of o.caches ?? [])
+        if (cached.raw !== undefined && cached.set.coverage.sourceSnapshotRef)
+          snapshots.set(cached.set.coverage.sourceSnapshotRef, cached.raw);
+      for (const [key, raw] of snapshots)
+        if (!(await get(ctx, "snapshots", key)))
+          await put(ctx, "snapshots", key, {
+            raw,
             createdAt: iso(),
             investigationId: enr.resource.investigationId,
           });
-      }
     } else if (job.kind === "event") {
       const inv = await get(ctx, "investigations", job.target);
       if (inv.resource.analysisStatus === "queued") {
@@ -211,20 +239,70 @@ export const cached = mutation({
     return result;
   },
 });
-// Reserve the maximum run cost before starting a billable operation. Never refund
-// ambiguous starts: a lost provider response may still have created a charged run.
+// Capacity is held across scheduler ticks until an observed terminal Actor state.
+// Ambiguous starts hold capacity as well as spend; elapsed time is not evidence
+// that an externally queued Actor has stopped. Operators must reconcile those.
 export const reserve = mutation({
   args: { key: v.string(), token: v.string(), operation: v.string() },
   handler: async (ctx, a) => {
     const job = await get(ctx, "jobs", a.key);
-    if (!job || job.token !== a.token) return false;
-    const reservation = `reservation:${a.key}:${a.operation}`;
-    if (await get(ctx, "controls", reservation)) return false;
+    if (
+      !job ||
+      job.token !== a.token ||
+      job.status !== "running" ||
+      job.lease <= Date.now()
+    )
+      return { status: "denied", reason: "lease" };
+    const reservation = stable(["provider", a.key, a.operation]);
+    const previous = await get(ctx, "providerSlots", reservation);
+    if (previous)
+      return previous.runId
+        ? { status: "resume", runId: previous.runId }
+        : { status: "denied", reason: "ambiguous" };
+    const active = await (ctx as Ctx).db
+      .query("providerSlots")
+      .withIndex("status", (q) => q.eq("status", "active"))
+      .take(limits().providerActive);
+    if (active.length >= limits().providerActive) return { status: "busy" };
     const day = `budget:${iso().slice(0, 10)}`;
     const used = (await get(ctx, "controls", day)) ?? 0;
-    if (used + limits().cents > limits().dailyCents) return false;
+    if (used + limits().cents > limits().dailyCents)
+      return { status: "denied", reason: "budget" };
     await put(ctx, "controls", day, used + limits().cents);
-    await put(ctx, "controls", reservation, true);
+    await put(ctx, "providerSlots", reservation, {
+      status: "active",
+      jobKey: a.key,
+      operation: a.operation,
+      createdAt: iso(),
+    });
+    return { status: "reserved" };
+  },
+});
+export const observeRun = mutation({
+  args: {
+    key: v.string(),
+    token: v.string(),
+    operation: v.string(),
+    runId: v.string(),
+    status: v.string(),
+  },
+  handler: async (ctx, a) => {
+    const job = await get(ctx, "jobs", a.key);
+    if (
+      !job ||
+      job.token !== a.token ||
+      job.status !== "running" ||
+      job.lease <= Date.now()
+    )
+      return false;
+    const key = stable(["provider", a.key, a.operation]);
+    const slot = await get(ctx, "providerSlots", key);
+    if (!slot || (slot.runId && slot.runId !== a.runId)) return false;
+    slot.runId = a.runId;
+    slot.providerStatus = a.status;
+    if (["SUCCEEDED", "FAILED", "ABORTED", "TIMED-OUT"].includes(a.status))
+      slot.status = "released";
+    await put(ctx, "providerSlots", key, slot);
     return true;
   },
 });

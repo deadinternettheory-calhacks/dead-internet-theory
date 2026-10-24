@@ -3,10 +3,12 @@ import { v } from "convex/values";
 import {
   ApiFault,
   capabilities,
+  providerMode,
   iso,
   limits,
   stable,
   validate,
+  validateOutput,
 } from "../src/core";
 import { authorize, type Principal } from "../src/auth";
 import { source } from "../src/url";
@@ -83,6 +85,12 @@ async function dispatch(
   if (!m)
     throw new ApiFault(404, "INVESTIGATION_NOT_FOUND", "Unknown resource");
   const [, invId, part, enrId] = m;
+  if (
+    (enrId && part !== "enrichments") ||
+    (post && invId && (enrId || !["enrichments", "analysis"].includes(part))) ||
+    (!post && part === "enrichments" && !enrId)
+  )
+    throw new ApiFault(400, "INVALID_REQUEST", "Unknown operation");
   const op = invId ? `${part ?? "investigation"}:${invId}` : "create";
   let replayKey = "";
   if (post) {
@@ -125,8 +133,9 @@ async function dispatch(
   if (!invId && post) {
     const req = validate("InvestigationCreateRequest", a.body);
     const resolved = source(req.sourceUrl);
+    const mode = providerMode();
     const investigationId = id("inv");
-    const resource = validate("InvestigationResource", {
+    const resource = validateOutput("InvestigationResource", {
       schemaVersion: "1.0.0",
       investigationId,
       sourceUrl: resolved.url,
@@ -142,6 +151,7 @@ async function dispatch(
     commit = async () => {
       await put(ctx, "investigations", investigationId, {
         owner: p.sub,
+        providerMode: mode,
         resource,
       });
       await queue(ctx, "ingest", investigationId);
@@ -149,7 +159,7 @@ async function dispatch(
   } else if (invId && !post && !part) {
     result = {
       status: 200,
-      body: validate("InvestigationResource", inv.resource),
+      body: validateOutput("InvestigationResource", inv.resource),
     };
   } else if (invId && part === "graph" && !enrId && !post) {
     const graph = await get(ctx, "graphs", invId);
@@ -160,14 +170,14 @@ async function dispatch(
         "DISCUSSION_TOO_LARGE",
         "Graph exceeds configured response limit",
       );
-    result = { status: 200, body: validate("GraphEnvelope", graph) };
+    result = { status: 200, body: validateOutput("GraphEnvelope", graph) };
   } else if (invId && part === "enrichments" && !enrId && post) {
     const req = validate("EnrichmentRequest", a.body);
     const graph = await get(ctx, "graphs", invId);
     if (!graph) throw new ApiFault(409, "NOT_READY", "Graph is not ready");
     checkAnchors(req, graph);
     const enrichmentId = id("enr");
-    const resource = validate("EnrichmentJob", {
+    const resource = validateOutput("EnrichmentJob", {
       schemaVersion: "1.0.0",
       enrichmentId,
       investigationId: invId,
@@ -185,7 +195,10 @@ async function dispatch(
     const enr = await get(ctx, "enrichments", enrId);
     if (!enr || enr.resource.investigationId !== invId)
       throw new ApiFault(404, "ENRICHMENT_NOT_FOUND", "Enrichment not found");
-    result = { status: 200, body: validate("EnrichmentJob", enr.resource) };
+    result = {
+      status: 200,
+      body: validateOutput("EnrichmentJob", enr.resource),
+    };
   } else if (invId && part === "analysis" && !enrId && post) {
     const req = validate("AnalysisSubmission", a.body, 422);
     const graph = await get(ctx, "graphs", invId);
@@ -221,7 +234,7 @@ async function dispatch(
       enrichments.push(job.resource);
     }
     checkAnalysis(req, graph, enrichments);
-    const resource = validate("AnalysisResource", {
+    const resource = validateOutput("AnalysisResource", {
       schemaVersion: "1.0.0",
       analysisId: id("ana"),
       investigationId: invId,
@@ -229,10 +242,11 @@ async function dispatch(
       result: req,
     });
     const { result: _, ...receipt } = resource;
-    result = { status: 201, body: validate("AnalysisReceipt", receipt) };
+    result = { status: 201, body: validateOutput("AnalysisReceipt", receipt) };
     commit = async () => {
       await immutable(ctx, "analyses", invId, resource);
       inv.resource.analysisStatus = "completed";
+      delete inv.resource.error;
       inv.resource.updatedAt = iso(now);
       await put(ctx, "investigations", invId, inv);
     };
@@ -240,7 +254,10 @@ async function dispatch(
     const analysis = await get(ctx, "analyses", invId);
     if (!analysis)
       throw new ApiFault(409, "ANALYSIS_NOT_READY", "Analysis is not ready");
-    result = { status: 200, body: validate("AnalysisResource", analysis) };
+    result = {
+      status: 200,
+      body: validateOutput("AnalysisResource", analysis),
+    };
   } else throw new ApiFault(400, "INVALID_REQUEST", "Unknown operation");
   if (post) {
     const bucket = stable([p.sub, Math.floor(now / 3600000)]);

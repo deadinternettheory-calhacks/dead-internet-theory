@@ -22,9 +22,11 @@ Storage tables: investigations (owner + independent state machines), graphs
 (immutable revision 1), analyses (one final resource per investigation),
 enrichments (request + job/results), jobs (execution and outbox state), snapshots
 (protected raw records), cache (anchor-independent history candidates), idempotency
-(original request/response and expiry), controls (rate/spend reservations).
+(original request/response and expiry), controls (rate/spend reservations), providerSlots (Actor capacity reservations).
 No raw-snapshot public read route exists. Opaque snapshot references contain no
 provider token or unrestricted dataset URL. Enrichment profiles do not update graphs.
+
+Batched history snapshots are stored once and shared through opaque references, rather than duplicated in every author result. Persistent job payloads are capped at 700000 bytes; an oversized plan fails explicitly with `JOB_STATE_TOO_LARGE` before reaching the document limit.
 
 Graph fingerprinting hashes UTF-8, recursively key-sorted JSON of the complete
 GraphEnvelope **excluding `graphFingerprint`**, with nodes sorted by ID and edges
@@ -65,7 +67,8 @@ Copy `.env.example` to a private file, fill server-only values, and use
 | `MAX_GRAPH_BYTES`                 | 500000 UTF-8 uncompressed bytes; maximum accepted setting 700000            |
 | `MAX_COMMENTS`                    | 1000 retained comments; configurable 1–3000                                 |
 | `MAX_REQUEST_BYTES`               | 500000; configurable up to 700000                                           |
-| `MAX_ACTIVE_JOBS`                 | 4 leased external actions; maximum 16                                       |
+| `MAX_ACTIVE_JOBS`                 | 4 leased worker actions; maximum 16                                         |
+| `MAX_ACTIVE_PROVIDER_RUNS`        | 4 reserved/running Actors across polling ticks; maximum 16                  |
 | `MAX_QUEUED_JOBS`                 | 100 waiting jobs; maximum 1000                                              |
 | `POSTS_PER_HOUR`                  | 30 accepted POSTs per principal per UTC hour; successful replays exempt     |
 | `MAX_JOB_ATTEMPTS`                | 3 including the initial attempt; maximum 5                                  |
@@ -93,11 +96,13 @@ lowered. Comment caps produce an explicit partial graph; an Actor's success is
 never proof of complete coverage. Raw provider state/snapshots are bounded to
 650000 bytes. Larger raw collections fail honestly instead of silently losing data.
 
+Each investigation pins its provider mode at creation; changing deployment mode cannot silently replace a running live collection with fixture data or turn a synthetic investigation into a live lookup. Enrichment jobs persist their initial cache hits and missing-author plan before external work, so cache fills and expiry in another job cannot change an in-flight plan.
+
 History candidates target 150 per author, with cache keys including mode,
 platform, author and collection policy. One batch deduplicates repeated authors;
 Reddit uses a single bulk run, X uses authored-search plans. Independent concurrent
 jobs can miss the same cache and make separate bounded runs. Final samples remain
-anchor-specific and are not cached as candidate pools. Cache TTL is freshness,
+anchor-specific and are not cached as candidate pools. If a later author task fails, already-collected candidate evidence and its run/snapshot provenance are preserved; only affected authors receive failures. Incomplete candidate paging is reported explicitly, and transient failures are not cached as empty history. Cache TTL is freshness,
 not a deletion policy. Future, invalid, unknown-time and focal-discussion records
 are excluded. Unknown source-discussion IDs are excluded because focal exclusion
 cannot be established. Estimated dates force recent fallback for temporal purposes.
@@ -116,9 +121,8 @@ YouTube dates are estimated unless explicitly attested exact; video roots are te
 metadata only. No account creation or karma value is fabricated; absent profile
 metadata remains absent.
 
-All four `verification` entries have `runtimeVerified:false` and no evidence.
-Capabilities report the required contract support classes alongside
-`actorRuntimeVerified:false`, `liveEnabled:false` and explicit limitations. These
+All four `verification` entries in `src/provider-policy.ts` have `runtimeVerified:false` and no evidence. The adapter gate and capabilities read this single policy source.
+Capabilities report the required contract support classes alongside the actual reviewed verification state and a computed `liveEnabled` flag. Initially both are false. Enabling live collection requires the reviewed flag/evidence, live mode, authorization, retention reference and a nonempty server credential. These
 classes describe operation intent, not live availability. Even setting an Apify
 token and authorization flags cannot enable an unverified adapter.
 
@@ -156,7 +160,7 @@ reply paging, null/deleted authors, timestamps and approximation, returned metri
 Reddit profile metadata and authored-versus-received replies. Record permitted
 source, run/build IDs, output evidence, costs, timestamp findings, limitations and
 reviewer in a private verification record. Then change the implementation's
-verification entry/mappings/capability state in a reviewed commit with tests.
+verification entry and mappings in a reviewed commit with tests.
 Do not edit frozen contracts to match a provider's output. No smoke test was run
 as part of this change.
 
@@ -167,7 +171,9 @@ access. Public errors are sanitized and never include credentials or raw provide
 messages. Do not log raw source bodies or secret headers. The automatic retries
 cover known transient failures and expired leases. An ambiguous provider start
 retains its maximum spend reservation and fails closed instead of risking a
-second charge. Inspect Apify run history before an operator initiates another
+second charge. An Actor keeps its capacity slot until a terminal provider status is confirmed, including while the worker waits between polls. A confirmed run ID is recorded before the next payload update so recovery can resume it without another charge. An ambiguous start retains its slot indefinitely; a timeout or expired worker lease alone does not prove a queued remote Actor stopped. After inspecting Apify run history, an operator can mark the corresponding `providerSlots` record released in the dashboard only when the run is terminal or the start is confirmed not accepted.
+
+Inspect Apify run history before an operator initiates another
 investigation; no v1 recollect/restart route exists. Terminal job errors retain
 the graph if one was completed. Independent inference may still submit a valid
 final analysis after a delivery failure.

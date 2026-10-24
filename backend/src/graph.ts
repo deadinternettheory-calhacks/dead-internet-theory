@@ -6,6 +6,7 @@ import {
   stable,
   validate,
 } from "./core";
+import { nativeKey, sameNative } from "./identity";
 import { checkGraph } from "./invariants";
 export interface Person {
   nativeId: string | null;
@@ -138,15 +139,23 @@ export async function normalize(
     .sort(([a], [b]) => compare(a, b))
     .slice(0, maxComments);
   const retainedIds = new Set(retained.map(([id]) => id));
+  const aliases = new Map<string, string | null>();
+  for (const [native] of retained) {
+    const alias = nativeKey(platform, "comment", native);
+    aliases.set(alias, aliases.has(alias) ? null : native);
+  }
   let missingParents = 0;
   for (const [native, c] of retained) {
     const id = `${platform}:comment:${native}`;
     const parent = c.parentNativeId ?? null;
     const parentId =
-      c.topLevel === true || parent === data.root.nativeId
+      c.topLevel === true ||
+      sameNative(platform, "discussion", parent, data.root.nativeId)
         ? rootId
-        : parent && retainedIds.has(parent)
-          ? `${platform}:comment:${parent}`
+        : parent &&
+            (retainedIds.has(parent) ||
+              aliases.get(nativeKey(platform, "comment", parent)))
+          ? `${platform}:comment:${retainedIds.has(parent) ? parent : aliases.get(nativeKey(platform, "comment", parent))}`
           : null;
     if (!parentId) missingParents++;
     const n: Model<"CommentNode"> = {
@@ -170,7 +179,13 @@ export async function normalize(
     if (parentId) edges.push({ from: id, to: parentId, type: "REPLIES_TO" });
   }
   const capped = records.size > retained.length;
+  const reportedMissing =
+    data.reportedCount !== null && data.reportedCount > retained.length;
   const limitations = [...data.limitations];
+  if (reportedMissing)
+    limitations.push(
+      `Platform reports ${data.reportedCount} comments; ${retained.length} were retained. Reported counts may include unavailable content.`,
+    );
   if (capped)
     limitations.push("Configured comment cap reached; graph is partial.");
   if (missingParents)
@@ -198,10 +213,14 @@ export async function normalize(
       completeness:
         data.exhaustive &&
         !capped &&
+        !reportedMissing &&
         !missingParents &&
         data.truncated === false
           ? ("complete" as const)
-          : capped || data.truncated === true || missingParents > 0
+          : capped ||
+              reportedMissing ||
+              data.truncated === true ||
+              missingParents > 0
             ? ("partial" as const)
             : ("unknown" as const),
       sortOrder: data.sortOrder,
