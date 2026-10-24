@@ -38,8 +38,16 @@ describe('analysis report', () => {
     expect(semantic.evidence).toHaveLength(3);
     expect(temporal.evidence.map(e => e.id)).toEqual(semantic.evidence.map(e => e.id));
     expect(report.discussion).toHaveLength(8);
-    expect(report.histories).toHaveLength(5);
-    expect(report.histories.find(h => h.status === 'unavailable')?.comments).toEqual([]);
+    expect(report.histories).toHaveLength(6);
+    expect(report.histories.find(h => h.status === 'partial')?.comments).toHaveLength(6);
+    expect(report.index?.explanation).toBe(syntheticDemo.analysis.result.overallCoordinationRisk.explanation);
+  });
+
+  it('preserves unavailable histories without inventing comments', () => {
+    const job = syntheticDemo.enrichments[0];
+    const reportWithGap = buildReport(syntheticDemo.analysis, syntheticDemo.graph, [{ ...job, results: [{ ...job.results![0], status: 'unavailable', comments: [] }] }]);
+    expect(reportWithGap.histories[0].status).toBe('unavailable');
+    expect(reportWithGap.histories[0].comments).toEqual([]);
   });
 
   it('does not treat a missing score as low risk', () => {

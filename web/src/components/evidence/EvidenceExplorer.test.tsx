@@ -30,8 +30,8 @@ it('lets readers select the actual evidence and suppresses invented source links
   expect(container.querySelectorAll('.timeline-point')).toHaveLength(8);
 });
 it('clears the previous quote when an unavailable history is selected', async () => {
-  await render(); await click('History');
-  const unavailable = exampleReport.histories.find(h => h.status === 'unavailable')!;
+  const unavailable = { id: 'missing-history', author: 'u/history_unavailable', status: 'unavailable', comments: [] };
+  await render({ ...exampleReport, histories: [...exampleReport.histories, unavailable] }); await click('History');
   const buttons = [...container.querySelectorAll<HTMLButtonElement>('.history-accounts button')];
   await act(async () => buttons.find(b => b.textContent === unavailable.author)!.click());
   expect(container.textContent).toContain('Missing history is not a negative signal.');
@@ -57,6 +57,11 @@ it('keeps cited evidence selectable in a large thread', async () => {
   expect(container.querySelectorAll('.map-node')).toHaveLength(12);
   expect(container.querySelector('.map-node.is-selected')).not.toBeNull();
   expect(container.textContent).toContain('Showing 12 of 28 comments.');
+  const picker = container.querySelector<HTMLSelectElement>('select')!;
+  expect(picker.options).toHaveLength(29);
+  await act(async () => { picker.value = 'extra-19'; picker.dispatchEvent(new Event('change', { bubbles: true })); });
+  expect(container.querySelector('.map-node.is-selected')?.getAttribute('aria-label')).toBe('Read comment 20 by u/slow_pour');
+  expect(container.querySelector('.inspector-comment')?.textContent).toContain(prefix[19].text);
   await click('Timing');
   expect(container.querySelector('.timeline-point.is-selected')).not.toBeNull();
 });

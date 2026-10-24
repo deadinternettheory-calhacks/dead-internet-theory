@@ -74,3 +74,19 @@ it('pauses in a hidden tab without resuming unexpectedly', async () => {
   expect(container.querySelector('[aria-label="Play walkthrough"]')).not.toBeNull();
   hidden.mockRestore();
 });
+it('holds autoplay until the evidence enters view and suspends it offscreen', async () => {
+  let observe: ((entries: { isIntersecting: boolean; intersectionRatio: number }[]) => void) | undefined;
+  vi.stubGlobal('IntersectionObserver', class {
+    constructor(callback: typeof observe) { observe = callback; }
+    observe() {} disconnect() {}
+  });
+  await render();
+  await act(async () => vi.advanceTimersByTimeAsync(20000));
+  expect(current()).toContain('The thread');
+  await act(async () => observe?.([{ isIntersecting: true, intersectionRatio: 1 }]));
+  await act(async () => vi.advanceTimersByTimeAsync(6500));
+  expect(current()).toContain('The wording');
+  await act(async () => observe?.([{ isIntersecting: false, intersectionRatio: 0 }]));
+  await act(async () => vi.advanceTimersByTimeAsync(20000));
+  expect(current()).toContain('The wording');
+});

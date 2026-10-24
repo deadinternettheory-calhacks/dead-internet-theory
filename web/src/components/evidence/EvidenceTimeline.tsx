@@ -11,7 +11,10 @@ export function EvidenceTimeline({ comments, citedIds, selectedId, onSelect }: {
   const range = Math.max(finish - start, 60000);
   const cited = dated.filter(c => citedIds.has(c.id));
   const span = cited.length > 1 ? Math.round((Date.parse(cited.at(-1)!.createdAt!) - Date.parse(cited[0].createdAt!)) / 60000) : null;
-  const visible = [...cited, ...dated.filter(c => !citedIds.has(c.id))].slice(0, 12).sort((a, b) => Date.parse(a.createdAt!) - Date.parse(b.createdAt!));
+  const visible = [...cited, ...dated.filter(c => !citedIds.has(c.id))].slice(0, 12);
+  const selected = dated.find(comment => comment.id === selectedId);
+  if (selected && !visible.some(comment => comment.id === selected.id)) visible[visible.length - 1] = selected;
+  visible.sort((a, b) => Date.parse(a.createdAt!) - Date.parse(b.createdAt!));
   return <div className="evidence-timeline">
     <div className="timeline-summary"><strong>{span === null ? `${dated.length} timestamps` : `${span} minute span`}</strong><span>{span === null ? 'Dates returned with the comments' : `Across ${cited.length} cited comments`}</span></div>
     <div className="timeline-scale"><span>{evidenceTime(dated[0].createdAt, true)}</span><span>{evidenceTime(dated.at(-1)!.createdAt, true)}</span></div>

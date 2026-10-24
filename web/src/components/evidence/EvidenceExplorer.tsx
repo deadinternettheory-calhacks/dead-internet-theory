@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { ArrowDown, ArrowUp, ArrowUpRight, Clock3, MessageSquare, Quote, History } from 'lucide-react';
 import type { Report } from '../../analysis/report';
 import { EvidenceMap } from './EvidenceMap';
@@ -17,6 +17,7 @@ export function EvidenceExplorer({ report, mode: controlledMode, onModeChange, o
   report: Report; mode?: EvidenceMode; onModeChange?: (mode: EvidenceMode) => void; onInteraction?: () => void;
 }) {
   const [ownMode, setOwnMode] = useState<EvidenceMode>('overview');
+  const chooserId = useId();
   const visual = useRef<HTMLDivElement>(null);
   const inspector = useRef<HTMLElement>(null);
   const mode = controlledMode ?? ownMode;
@@ -61,6 +62,9 @@ export function EvidenceExplorer({ report, mode: controlledMode, onModeChange, o
       </div>
       <aside className="evidence-inspector" aria-label="Selected comment" ref={inspector} tabIndex={-1}>
         <div className="inspector-heading"><span className="inspector-kicker">{selected?.source === 'history' ? 'PUBLIC-HISTORY SAMPLE' : 'COMMENT IN CONTEXT'}</span><span className="inspector-index">{selected ? String([...all.keys()].indexOf(selected.id) + 1).padStart(2, '0') : '—'}</span></div>
+        {mode !== 'history' && report.discussion.length > 0 && <div className="comment-picker"><label htmlFor={chooserId}>Read any discussion comment</label><select id={chooserId} value={selectedId ?? ''} onChange={event => select(event.target.value)}>
+          <option value="" disabled>Choose a comment</option>{report.discussion.map((comment, index) => <option key={comment.id} value={comment.id}>{index + 1} · {comment.author ?? 'Unknown author'} · {comment.text.slice(0, 72)}{comment.text.length > 72 ? '…' : ''}</option>)}
+        </select></div>}
         <div aria-live="polite" aria-atomic="true">{selected ? <div className="inspector-comment" key={selected.id}>
           <span className="inspector-author">{selected.author ?? 'Unknown author'}</span><time dateTime={selected.createdAt ?? undefined}>{evidenceTime(selected.createdAt, true)}</time>
           <blockquote><HighlightedText text={selected.text} phrase={phrase}/></blockquote>

@@ -49,7 +49,7 @@ it('lets readers expand already-collected comments without fetching more data', 
   expect(container.querySelectorAll('.comment-row')).toHaveLength(8);
   expect(container.querySelector('.preview-more')).toBeNull();
 });
-it('opens the relevant evidence view from a finding and keeps the index inside details', async () => {
+it('opens relevant evidence and preserves the visible uncalibrated section score', async () => {
   await render(<AnalysisReport report={exampleReport}/>);
   const finding = [...container.querySelectorAll('.finding-card')].find(article => article.querySelector('h3')?.textContent === 'Accounts used nearly identical wording')!;
   expect(container.querySelector<HTMLDetailsElement>('.finding-more')?.open).toBe(false);
@@ -58,8 +58,10 @@ it('opens the relevant evidence view from a finding and keeps the index inside d
   expect(container.querySelector<HTMLDetailsElement>('.report-explorer')?.open).toBe(true);
   expect(container.querySelector('.mode-wording')).not.toBeNull();
   expect(container.querySelector('.index-note')?.closest('details')?.open).toBe(false);
+  expect(container.querySelector('.risk-score')?.textContent).toContain('Astroturfing score for this comment section');
+  expect(container.querySelector('.risk-note')?.textContent).toContain('not a probability');
   expect(container.querySelector('a')).toBeNull();
-  expect(container.textContent).toContain('4 history samples with returned comments');
+  expect(container.textContent).toContain('6 history samples with returned comments');
   const sections = [...container.querySelectorAll('.summary-card, .verdict-card, .report-findings, .evidence, .limitations')].map(node => node.className);
   expect(sections).toEqual(['card summary-card', 'card verdict-card tone-high', 'findings report-findings', 'card evidence', 'limitations']);
 });
