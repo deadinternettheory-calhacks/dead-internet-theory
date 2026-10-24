@@ -20,6 +20,9 @@ also has a permitted, schema-checked runtime verification record, as do
 [TikTok discussion](verification/2026-10-24-tiktok-discussion.md) and
 [X discussion/history](verification/2026-10-24-x-discussion-history.md).
 X remains subject to the current Apify Free-plan demo limits, as the owner chose.
+All three newly enabled platforms also completed through the real website proxy,
+Apify, CREAO and saved-report validation; see the
+[four-platform hosted record](verification/2026-10-24-four-platform-hosted.md).
 See the [hosted verification record](verification/2026-10-24-hosted-live.md) for
 scope and operational limits; this is not a general provider or quality guarantee.
 
@@ -60,7 +63,8 @@ while `convex dev` runs.
 
 Hosted **development** API, deployed and checked on 2026-10-24:
 `https://impartial-sheep-516.convex.site`. It requires bearer authentication and
-runs in `live` mode for reviewed Reddit adapters. The existing Convex deployment
+runs in `live` mode for all four reviewed discussion adapters, with X demo-limited.
+The existing Convex deployment
 is still classified as development. The website at
 `https://www.deadinternettheory.us` uses its server proxy; ready events go to
 `https://grandiose-barracuda-22.convex.site/events`, the separate coordinator
