@@ -12,6 +12,8 @@ import { syntheticDemo } from '../demo';
 import { parsePostUrl } from '../url';
 
 const POLL_MS = 2500;
+/** Backend ingestion codes meaning live collection is not available for this link yet. */
+const NOT_CONNECTED = new Set(['INGESTION_NOT_CONNECTED', 'FIXTURE_SOURCE_NOT_FOUND', 'PROVIDER_NOT_AUTHORIZED', 'PROVIDER_NOT_CONFIGURED', 'PROVIDER_NOT_VERIFIED']);
 const MAX_WAIT_MS = 20 * 60_000;
 
 type View =
@@ -29,10 +31,10 @@ function statusText(inv: InvestigationResource): string {
 
 function failureView(inv: InvestigationResource): View {
   if (inv.ingestionStatus === 'failed') {
-    if (inv.error?.code === 'INGESTION_NOT_CONNECTED') {
+    if (NOT_CONNECTED.has(inv.error?.code ?? '')) {
       return { kind: 'error', title: 'We can’t collect this post yet.', message: 'Live collection for this platform is not connected yet, so nothing was analyzed.', retry: false, showExample: true };
     }
-    if (inv.error?.code === 'DISCUSSION_TOO_LARGE') {
+    if (inv.error?.code === 'DISCUSSION_TOO_LARGE' || inv.error?.code === 'PROVIDER_SIZE_LIMIT') {
       return { kind: 'error', title: 'This discussion is too large to check.', message: 'It has more comments than we can analyze at once.', retry: false };
     }
     return { kind: 'error', title: 'We couldn’t collect this post.', message: 'The post may be private, deleted, or unavailable right now.', retry: true };
