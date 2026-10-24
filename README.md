@@ -2,8 +2,8 @@
 
 Investigates public discussion content for possible coordinated promotion.
 The repository contains a frontend app, a Convex ingestion backend with a verified
-synthetic workflow, a proposed scoring rubric, and v1 wire contracts. Live providers,
-production deployment, and a real inference worker remain unverified.
+synthetic workflow, a CREAO and Claude inference service, a proposed scoring rubric,
+and v1 wire contracts. Live providers and production deployment remain unverified.
 
 ## Repository guide
 
@@ -15,7 +15,10 @@ production deployment, and a real inference worker remain unverified.
 - [contracts/](contracts/README.md): v1 schemas, OpenAPI definitions, synthetic
   examples, provider adapter notes, and validation instructions.
 - [web/](web/README.md): frontend setup, commands, and current behavior.
-- [backend/](backend/README.md): backend setup, synthetic demo, tests and integration.
+- [backend/](backend/README.md): ingestion backend setup, synthetic demo, tests and integration.
+- [inference/](inference/README.md): independent CREAO inference service, rubric
+  scoring, agent setup ([creao-agent.md](inference/creao-agent.md)), and the
+  synthetic example report.
 - [deltas/](deltas/README.md): specification-change records and their template.
 - [rubrics/product-astroturfing.md](rubrics/product-astroturfing.md):
   rules an AI agent follows to score a product recommendation in a Reddit, X,
@@ -25,8 +28,10 @@ production deployment, and a real inference worker remain unverified.
 ## Getting started
 
 Read the contribution guide and relevant specification sections before working.
-Use [web/README.md](web/README.md) for frontend commands and
-[contracts/README.md](contracts/README.md) for contract validation setup.
+Use [web/README.md](web/README.md) for frontend commands,
+[backend/README.md](backend/README.md) for the ingestion backend,
+[inference/README.md](inference/README.md) for the inference service and CREAO setup,
+and [contracts/README.md](contracts/README.md) for contract validation setup.
 
 ## Specification changes
 
@@ -41,8 +46,10 @@ unfinished documentation, not established requirements.
 The backend implements the v1 API and durable jobs with synthetic end-to-end
 verification on local Convex and authenticated REST checks on a hosted development
 deployment. Candidate Apify adapters remain disabled pending
-authorized runtime verification and retention review. No real inference model or
-public credential issuer is implemented. The rubric remains an uncalibrated proposal.
-The frontend is not connected; its behavior is documented in `web/README.md`.
-The frozen master spec records the implementation baseline; see `backend/README.md`
-for the newer backend implementation and its verification limits.
+authorized runtime verification and retention review. No public credential issuer
+is implemented. The inference service consumes the backend's ready events, uses a
+CREAO agent running Claude for triage and rubric scoring, and re-scores deterministically; it has
+run end to end locally with the live CREAO agent against synthetic fixtures. The rubric and its mapping to contract axes are uncalibrated proposals.
+The frontend renders v1 analyses through a configured API base and shows a labeled
+synthetic report at `/example`; see `web/README.md`. See `backend/README.md` and
+`inference/README.md` for implementation details and verification limits.

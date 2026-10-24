@@ -1,0 +1,371 @@
+{
+  "schemaVersion": "1.0.0",
+  "analysisId": "anl_synthetic_espresso",
+  "investigationId": "inv_synthetic_espresso",
+  "storedAt": "2026-10-24T06:03:05Z",
+  "result": {
+    "schemaVersion": "1.0.0",
+    "graphRevision": 1,
+    "graphFingerprint": "77f2bd8c21bcc034068d8d089c74f2e916881b7f6769f93bacf8307073be55a2",
+    "inferenceVersion": "dit-inference/0.1.0; rubric/0.3; prompts-2026-10-24; creao-mock",
+    "inferredAt": "2026-10-24T06:03:00Z",
+    "subject": {
+      "label": "BrewMaster Mini",
+      "kind": "product",
+      "confidence": 0.93,
+      "evidenceRefs": [
+        "reddit:comment:t1_syn01",
+        "reddit:comment:t1_syn02",
+        "reddit:comment:t1_syn03"
+      ]
+    },
+    "sentiment": {
+      "population": "retrieved_comments",
+      "method": "census_of_retrieved",
+      "analyzedCommentCount": 8,
+      "counts": {
+        "supportive": 5,
+        "critical": 1,
+        "neutral": 2,
+        "mixed": 0,
+        "unclear": 0
+      },
+      "weighted": false,
+      "limitations": [
+        "Counts describe analyzed comments, not unique people.",
+        "The retrieved comments may not be every comment in the discussion."
+      ]
+    },
+    "overallCoordinationRisk": {
+      "score": 76,
+      "confidence": 0.55,
+      "explanation": "Three accounts recommended the BrewMaster Mini with near-identical feature lists within 13 minutes, two of them defended it together against a critical reply, and all three mention the brand often in their recent histories. The pattern is consistent with coordinated promotion. The original poster's history was not available. The highest-scoring recommendation, by u/brewfan_22, scored 76/100 on the uncalibrated astroturfing rubric (Very high; medium evidence confidence). This is a lead for review, not proof of coordination.",
+      "evidenceRefs": [
+        "reddit:comment:t1_syn01",
+        "reddit:comment:t1_syn02",
+        "reddit:comment:t1_syn03",
+        "reddit:comment:t1_syn06",
+        "reddit:comment:t1_syn07",
+        "reddit:comment:t1_syn_b02",
+        "reddit:comment:t1_syn_a03",
+        "reddit:comment:t1_syn_a01",
+        "reddit:comment:t1_syn_a02",
+        "reddit:comment:t1_syn_a04",
+        "reddit:comment:t1_syn_a05"
+      ]
+    },
+    "axes": [
+      {
+        "axis": "promotional_intent",
+        "score": 39,
+        "confidence": 0.55,
+        "assessedCommentCount": 5,
+        "explanation": "Promotional intent: highest for the recommendation by u/brewfan_22. B1: The brand appears in 5 of the author's last 10 comments across r/Coffee, r/BuyItForLife, r/Frugal and r/Cooking. X2: Lists the product with a spec-sheet feature list. Index = share of this axis's rubric points that fired; not a probability.",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn_a01",
+          "reddit:comment:t1_syn_a02",
+          "reddit:comment:t1_syn_a03",
+          "reddit:comment:t1_syn_a04",
+          "reddit:comment:t1_syn_a05",
+          "reddit:comment:t1_syn01"
+        ]
+      },
+      {
+        "axis": "semantic_coordination",
+        "score": 42,
+        "confidence": 0.55,
+        "assessedCommentCount": 5,
+        "explanation": "Similar wording across accounts: highest for the recommendation by u/brewfan_22. C1: Near-identical wording across three accounts: the same three features (15-bar pump, steam wand, 30-second heat-up) and \"best budget machine\". Index = share of this axis's rubric points that fired; not a probability.",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn01",
+          "reddit:comment:t1_syn02",
+          "reddit:comment:t1_syn03"
+        ]
+      },
+      {
+        "axis": "temporal_coordination",
+        "score": 56,
+        "confidence": 0.55,
+        "assessedCommentCount": 5,
+        "explanation": "Timing: highest for the recommendation by u/brewfan_22. C4: All three recommendations arrived 6 to 19 minutes after the post; the next comment came 82 minutes later. Index = share of this axis's rubric points that fired; not a probability.",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn01",
+          "reddit:comment:t1_syn02",
+          "reddit:comment:t1_syn03"
+        ]
+      },
+      {
+        "axis": "account_anomalies",
+        "score": 0,
+        "confidence": 0.55,
+        "assessedCommentCount": 5,
+        "explanation": "Account patterns: assessed 5 recommendation(s); no rubric signals on this axis fired.",
+        "evidenceRefs": []
+      },
+      {
+        "axis": "engagement_anomalies",
+        "score": 42,
+        "confidence": 0.55,
+        "assessedCommentCount": 5,
+        "explanation": "Interaction patterns: highest for the recommendation by u/brewfan_22. C2: Two co-recommenders defended the product together against the critical reply, and crema_queen backed this author in another thread. Index = share of this axis's rubric points that fired; not a probability.",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn06",
+          "reddit:comment:t1_syn07",
+          "reddit:comment:t1_syn_b02",
+          "reddit:comment:t1_syn_a03"
+        ]
+      },
+      {
+        "axis": "disclosure_concerns",
+        "score": null,
+        "confidence": null,
+        "assessedCommentCount": 5,
+        "explanation": "Not scored: the rubric cannot measure undisclosed sponsorship directly. No recommendation disclosed a commercial tie.",
+        "evidenceRefs": []
+      }
+    ],
+    "commentAssessments": [
+      {
+        "commentId": "reddit:comment:t1_syn01",
+        "stance": "supportive",
+        "promotionalIntentScore": 39,
+        "rationale": "A feature-list recommendation that closely matches two others posted minutes apart, from an account that mentions the brand often across unrelated communities. Rubric 76/100 (Very high; medium evidence confidence). Signals: C1 +25: Near-identical wording across three accounts: the same three features (15-bar pump, steam wand, 30-second heat-up) and \"best budget machine\". C2 +20: Two co-recommenders defended the product together against the critical reply, and crema_queen backed this author in another thread. C4 +10: All three recommendations arrived 6 to 19 minutes after the post; the next comment came 82 minutes later. B1 +20: The brand appears in 5 of the author's last 10 comments across r/Coffee, r/BuyItForLife, r/Frugal and r/Cooking. X2 +6: Lists the product with a spec-sheet feature list. Exculpatory: E6 -5: The post asked for budget espresso machine recommendations. Unknown for lack of data: C5, T2.",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn01",
+          "reddit:comment:t1_syn02",
+          "reddit:comment:t1_syn03",
+          "reddit:comment:t1_syn06",
+          "reddit:comment:t1_syn07",
+          "reddit:comment:t1_syn_b02",
+          "reddit:comment:t1_syn_a03",
+          "reddit:comment:t1_syn_a01",
+          "reddit:comment:t1_syn_a02",
+          "reddit:comment:t1_syn_a04",
+          "reddit:comment:t1_syn_a05",
+          "reddit:discussion:t3_syn_espresso"
+        ]
+      },
+      {
+        "commentId": "reddit:comment:t1_syn02",
+        "stance": "supportive",
+        "promotionalIntentScore": 39,
+        "rationale": "Repeats the first recommendation almost word for word six minutes later. Rubric 76/100 (Very high; medium evidence confidence). Signals: C1 +25: Near-identical wording across three accounts: the same three features (15-bar pump, steam wand, 30-second heat-up) and \"best budget machine\". C2 +20: This account backed brewfan_22's BrewMaster recommendation in another thread and defended the product here. C4 +10: All three recommendations arrived 6 to 19 minutes after the post; the next comment came 82 minutes later. B1 +20: The brand appears in 4 of the author's last 10 comments. X2 +6: Lists the product with a spec-sheet feature list. Exculpatory: E6 -5: The post asked for budget espresso machine recommendations. Unknown for lack of data: C5, T2.",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn02",
+          "reddit:comment:t1_syn01",
+          "reddit:comment:t1_syn03",
+          "reddit:comment:t1_syn_b02",
+          "reddit:comment:t1_syn_a03",
+          "reddit:comment:t1_syn06",
+          "reddit:comment:t1_syn_b01",
+          "reddit:comment:t1_syn_b03",
+          "reddit:comment:t1_syn_b04",
+          "reddit:discussion:t3_syn_espresso"
+        ]
+      },
+      {
+        "commentId": "reddit:comment:t1_syn03",
+        "stance": "supportive",
+        "promotionalIntentScore": 39,
+        "rationale": "A third near-identical recommendation; only six history comments were available for this account. Rubric 76/100 (Very high; low evidence confidence). Signals: C1 +25: Near-identical wording across three accounts: the same three features (15-bar pump, steam wand, 30-second heat-up) and \"best budget machine\". C2 +20: This account and crema_queen both answered the critical reply within seven minutes. C4 +10: All three recommendations arrived 6 to 19 minutes after the post; the next comment came 82 minutes later. B1 +20: The brand appears in 3 of the 6 comments retrieved for this author, including the same feature list. X2 +6: Lists the product with a spec-sheet feature list. Exculpatory: E6 -5: The post asked for budget espresso machine recommendations. Unknown for lack of data: C5, T2, B6.",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn03",
+          "reddit:comment:t1_syn01",
+          "reddit:comment:t1_syn02",
+          "reddit:comment:t1_syn06",
+          "reddit:comment:t1_syn07",
+          "reddit:comment:t1_syn_c01",
+          "reddit:comment:t1_syn_c02",
+          "reddit:comment:t1_syn_c03",
+          "reddit:discussion:t3_syn_espresso"
+        ]
+      },
+      {
+        "commentId": "reddit:comment:t1_syn04",
+        "stance": "neutral",
+        "promotionalIntentScore": 0,
+        "rationale": "A specific, balanced recommendation from an established account. Rubric 0/100 (Minimal; medium evidence confidence). No rubric signals fired. Exculpatory: E2 -15: Account is over seven years old with broad activity in r/espresso, r/woodworking and r/cycling; the brand appears once in 10 comments. E3 -10: Names drawbacks (weak steam wand, replaced gasket) and gives long-term detail. E6 -5: The post asked for budget espresso machine recommendations. Unknown for lack of data: C5, T2.",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn04",
+          "reddit:comment:t1_syn_d03",
+          "reddit:comment:t1_syn_d04",
+          "reddit:comment:t1_syn_d05",
+          "reddit:comment:t1_syn_d07",
+          "reddit:discussion:t3_syn_espresso"
+        ]
+      },
+      {
+        "commentId": "reddit:comment:t1_syn05",
+        "stance": "critical",
+        "promotionalIntentScore": null,
+        "rationale": "Reports a leak and unresponsive support.",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn05"
+        ]
+      },
+      {
+        "commentId": "reddit:comment:t1_syn06",
+        "stance": "supportive",
+        "promotionalIntentScore": 36,
+        "rationale": "A quick defense of the product with no specific detail. Rubric 44/100 (Moderate; medium evidence confidence). Signals: C2 +20: Defends the product within four minutes of the critical reply, alongside daily_grind_dan. B1 +20: The brand appears in 4 of the author's last 10 comments. X5 +4: Dismisses the report without any specific detail of its own use. Unknown for lack of data: C5, T2.",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn06",
+          "reddit:comment:t1_syn05",
+          "reddit:comment:t1_syn07",
+          "reddit:comment:t1_syn_b01",
+          "reddit:comment:t1_syn_b02",
+          "reddit:comment:t1_syn_b03",
+          "reddit:comment:t1_syn_b04"
+        ]
+      },
+      {
+        "commentId": "reddit:comment:t1_syn07",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Dismisses the reported problem as user error.",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn07"
+        ]
+      },
+      {
+        "commentId": "reddit:comment:t1_syn08",
+        "stance": "neutral",
+        "promotionalIntentScore": null,
+        "rationale": "Asks about the grinder; no product stance.",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn08"
+        ]
+      }
+    ],
+    "clusters": [
+      {
+        "clusterId": "cluster_1",
+        "commentIds": [
+          "reddit:comment:t1_syn01",
+          "reddit:comment:t1_syn02",
+          "reddit:comment:t1_syn03",
+          "reddit:comment:t1_syn06"
+        ],
+        "coordinationScore": 55,
+        "explanation": "Three near-identical recommendations within 13 minutes, and two of the same accounts defending the product together. Linked by rubric rules C1, C2, C4. Being in a cluster does not show that the accounts share an operator.",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn01",
+          "reddit:comment:t1_syn02",
+          "reddit:comment:t1_syn03",
+          "reddit:comment:t1_syn06",
+          "reddit:comment:t1_syn07"
+        ]
+      }
+    ],
+    "inferredEdges": [
+      {
+        "from": "reddit:comment:t1_syn01",
+        "to": "reddit:comment:t1_syn02",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.8,
+        "explanation": "The two recommendations share 80% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn01",
+          "reddit:comment:t1_syn02"
+        ]
+      },
+      {
+        "from": "reddit:comment:t1_syn01",
+        "to": "reddit:comment:t1_syn03",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.52,
+        "explanation": "The two recommendations share 52% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn01",
+          "reddit:comment:t1_syn03"
+        ]
+      },
+      {
+        "from": "reddit:comment:t1_syn02",
+        "to": "reddit:comment:t1_syn03",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.57,
+        "explanation": "The two recommendations share 57% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn02",
+          "reddit:comment:t1_syn03"
+        ]
+      },
+      {
+        "from": "reddit:comment:t1_syn01",
+        "to": "reddit:comment:t1_syn02",
+        "type": "POTENTIALLY_COORDINATED",
+        "strength": 0.55,
+        "explanation": "Both comments are in cluster_1. This is a lead for review, not evidence of a shared operator.",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn01",
+          "reddit:comment:t1_syn02"
+        ]
+      },
+      {
+        "from": "reddit:comment:t1_syn01",
+        "to": "reddit:comment:t1_syn03",
+        "type": "POTENTIALLY_COORDINATED",
+        "strength": 0.55,
+        "explanation": "Both comments are in cluster_1. This is a lead for review, not evidence of a shared operator.",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn01",
+          "reddit:comment:t1_syn03"
+        ]
+      },
+      {
+        "from": "reddit:comment:t1_syn01",
+        "to": "reddit:comment:t1_syn06",
+        "type": "POTENTIALLY_COORDINATED",
+        "strength": 0.55,
+        "explanation": "Both comments are in cluster_1. This is a lead for review, not evidence of a shared operator.",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn01",
+          "reddit:comment:t1_syn06"
+        ]
+      },
+      {
+        "from": "reddit:comment:t1_syn02",
+        "to": "reddit:comment:t1_syn03",
+        "type": "POTENTIALLY_COORDINATED",
+        "strength": 0.55,
+        "explanation": "Both comments are in cluster_1. This is a lead for review, not evidence of a shared operator.",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn02",
+          "reddit:comment:t1_syn03"
+        ]
+      },
+      {
+        "from": "reddit:comment:t1_syn02",
+        "to": "reddit:comment:t1_syn06",
+        "type": "POTENTIALLY_COORDINATED",
+        "strength": 0.55,
+        "explanation": "Both comments are in cluster_1. This is a lead for review, not evidence of a shared operator.",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn02",
+          "reddit:comment:t1_syn06"
+        ]
+      },
+      {
+        "from": "reddit:comment:t1_syn03",
+        "to": "reddit:comment:t1_syn06",
+        "type": "POTENTIALLY_COORDINATED",
+        "strength": 0.55,
+        "explanation": "Both comments are in cluster_1. This is a lead for review, not evidence of a shared operator.",
+        "evidenceRefs": [
+          "reddit:comment:t1_syn03",
+          "reddit:comment:t1_syn06"
+        ]
+      }
+    ],
+    "usedEnrichmentIds": [
+      "enr_synthetic_espresso"
+    ],
+    "limitations": [
+      "Scores come from an uncalibrated, hand-weighted rubric (version 0.3) and a provisional rubric-to-axis mapping. They are heuristic indices, not probabilities, and not a finding of astroturfing.",
+      "History for u/daily_grind_dan was partial (6 of 10 items); missing history is not evidence either way.",
+      "The root author’s history was not available, so seeding checks that need it (T2, C5) are unknown.",
+      "Synthetic fixture: every account, comment and number is fabricated. No scraper ran."
+    ]
+  }
+}
