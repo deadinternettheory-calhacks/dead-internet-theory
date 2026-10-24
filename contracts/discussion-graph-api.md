@@ -81,7 +81,7 @@ be identified.
 **Author** must carry:
 
 - ID and provider-native ID
-- TBD: profile fields (see open decisions)
+- Profile fields (section 6), once fetched by an enrichment request
 
 ### Edges
 
@@ -168,10 +168,31 @@ For each requested author:
 - **Status:** `complete`, `partial` or `unavailable`.
 - **Strategy used:** time-adjacent sample or fallback.
 - **Comments:** each with timestamp and source (evidence URL).
+- **Profile:** author profile fields (below).
 - **Collection metadata** (section 5) and **errors**.
 
 `unavailable` means history could not be retrieved. It must never be treated as
 the author having no history.
+
+### Author profile fields
+
+Returned for each author in the enrichment response and stored on the author
+node, so later `getGraph` calls include them.
+
+| Field | Meaning | Reddit | X | YouTube, TikTok |
+| --- | --- | --- | --- | --- |
+| `accountCreatedAt` | When the account was created | Yes | Yes (join date) | Not modelled |
+| `postKarma` | Karma earned from posts | Yes | Not applicable | Not modelled |
+| `commentKarma` | Karma earned from comments | Yes | Not applicable | Not modelled |
+
+- A field the platform does not have, or that could not be retrieved, is
+  omitted. An omitted field never means zero or "new account".
+- Profile fields can be returned even when the history status is `partial` or
+  `unavailable`, and vice versa.
+- Values are as reported by the platform at collection time; the collection
+  timestamp in the author's collection metadata says when.
+- `accountCreatedAt` uses the contract's timestamp format (open decision 5).
+- Karma values are integers and can be negative.
 
 ## 7. Analysis results
 
@@ -219,17 +240,13 @@ To settle before freezing:
 1. Exact field names, types and nesting for nodes, edges and the `getGraph`
    response.
 2. How the discussion root (the post or video) is represented in the graph.
-3. Author profile fields. The scoring rubric in
-   [rubrics/product-astroturfing.md](../rubrics/product-astroturfing.md)
-   uses account age and post/comment karma, which this contract does not yet
-   include.
-4. Response shape of `getAuthorHistories`: field names for status, strategy
+3. Response shape of `getAuthorHistories`: field names for status, strategy
    and errors, and the allowed values of `fallback`.
-5. Asynchronous pattern for `createInvestigation` and `getAuthorHistories`
+4. Asynchronous pattern for `createInvestigation` and `getAuthorHistories`
    (polling, callback or webhook) and the transport.
-6. Timestamp format and time zone.
-7. `submitAnalysis` schema, including score scales, and whether similarity
+5. Timestamp format and time zone.
+6. `submitAnalysis` schema, including score scales, and whether similarity
    links are stored with results or merged into the graph.
-8. Who calls `createInvestigation`, and the frontend's read operations.
-9. Error behavior, versioning and compatibility rules for this contract.
-10. Schema format and validation tooling, chosen with the stack (SPEC section 6).
+7. Who calls `createInvestigation`, and the frontend's read operations.
+8. Error behavior, versioning and compatibility rules for this contract.
+9. Schema format and validation tooling, chosen with the stack (SPEC section 6).
