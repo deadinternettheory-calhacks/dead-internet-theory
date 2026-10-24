@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { syntheticDemo } from '../demo';
-import { buildReport, verdictFor } from './report';
+import { buildReport, buildThreadPreview, verdictFor } from './report';
 
 describe('analysis report', () => {
   const report = buildReport(syntheticDemo.analysis, syntheticDemo.graph, syntheticDemo.enrichments);
@@ -36,5 +36,13 @@ describe('analysis report', () => {
     expect(verdictFor(null, 'Thing').tone).toBe('neutral');
     expect(verdictFor(10, 'Thing').tone).toBe('low');
     expect(verdictFor(40, 'Thing').tone).toBe('medium');
+  });
+
+  it('previews the collected thread before the analysis finishes', () => {
+    const preview = buildThreadPreview(syntheticDemo.graph, 3);
+    expect(preview.post.text).toBe(report.post.text);
+    expect(preview.comments).toHaveLength(3);
+    expect(preview.moreCount).toBe(syntheticDemo.graph.coverage.retrievedCommentCount - 3);
+    expect(preview.comments[0].author).toMatch(/^u\//);
   });
 });

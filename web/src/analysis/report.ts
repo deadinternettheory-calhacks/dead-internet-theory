@@ -162,3 +162,25 @@ export function buildReport(analysis: AnalysisResource, graph: GraphEnvelope, en
     inferenceVersion: a.inferenceVersion,
   };
 }
+
+export interface ThreadPreview {
+  post: { title: string | null; text: string; platform: string; author: string | null };
+  comments: { id: string; author: string | null; text: string; isReply: boolean }[];
+  /** Visible comments not shown in the preview. */
+  moreCount: number;
+}
+
+/**
+ * The collected post and its first comments, shown while the analysis is still
+ * running so the page is useful before the result arrives. Plain text only.
+ */
+export function buildThreadPreview(graph: GraphEnvelope, limit = 12): ThreadPreview {
+  const root = graph.nodes.find(n => n.id === graph.rootId);
+  if (!root || root.type !== 'discussion') throw new Error('Graph has no discussion root.');
+  const visible = graph.nodes.filter((n): n is CommentNode => n.type === 'comment' && n.contentStatus === 'visible' && n.text.trim() !== '');
+  return {
+    post: { title: root.title ?? null, text: root.text, platform: root.platform, author: handleFor(graph, root.authorId) },
+    comments: visible.slice(0, limit).map(c => ({ id: c.id, author: handleFor(graph, c.authorId), text: c.text, isReply: c.parentId !== null && c.parentId !== graph.rootId })),
+    moreCount: Math.max(0, visible.length - limit),
+  };
+}

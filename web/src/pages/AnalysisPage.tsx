@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { buildReport, type Report } from '../analysis/report';
+import { buildReport, buildThreadPreview, type Report, type ThreadPreview } from '../analysis/report';
 import { ApiError, createInvestigation, getAnalysis, getEnrichment, getGraph, getInvestigation, idempotencyKeyFor } from '../api/client';
 import type { EnrichmentJob, InvestigationResource } from '../api/contract';
 import { AnalysisErrorState, AnalysisLoadingState } from '../components/AnalysisPresentation';
-import { AnalysisReport, SyntheticBanner } from '../components/AnalysisReport';
+import { AnalysisReport, SyntheticBanner, ThreadPreviewCard } from '../components/AnalysisReport';
 import { ServiceUnavailable, UnsupportedLinkState } from '../components/AnalysisStates';
 import { PostSummaryCard } from '../components/SiteLayout';
 import { syntheticDemo } from '../demo';
@@ -18,7 +18,7 @@ const NOT_CONNECTED = new Set(['INGESTION_NOT_CONNECTED', 'FIXTURE_SOURCE_NOT_FO
 const MAX_WAIT_MS = 8 * 60_000;
 
 type View =
-  | { kind: 'loading'; status: string }
+  | { kind: 'loading'; status: string; preview?: ThreadPreview }
   | { kind: 'report'; report: Report }
   | { kind: 'unavailable' }
   | { kind: 'error'; title: string; message: string; retry: boolean; showExample?: boolean };
@@ -51,12 +51,24 @@ function LiveAnalysis({ url }: { url: string }) {
 
   const run = useCallback(async () => {
     const started = Date.now();
+    let preview: ThreadPreview | undefined;
+    let previewTried = false;
     try {
       let inv = await createInvestigation(url, idempotencyKeyFor(url));
       while (!cancelled.current) {
         if (inv.ingestionStatus === 'failed' || inv.analysisStatus === 'failed') return setView(failureView(inv));
         if (inv.analysisStatus === 'completed') break;
-        setView({ kind: 'loading', status: statusText(inv) });
+        // The graph is ready before the analysis: show the post and comments meanwhile.
+        if (inv.ingestionStatus === 'completed' && !previewTried) {
+          previewTried = true;
+          try {
+            preview = buildThreadPreview(await getGraph(inv.investigationId));
+          } catch {
+            // The preview is optional; keep waiting for the analysis.
+          }
+          if (cancelled.current) return;
+        }
+        setView({ kind: 'loading', status: statusText(inv), preview });
         if (Date.now() - started > MAX_WAIT_MS) {
           return setView({ kind: 'error', title: 'This is taking longer than expected.', message: 'The analysis is still running. Try again in a few minutes.', retry: true });
         }
@@ -85,7 +97,9 @@ function LiveAnalysis({ url }: { url: string }) {
   }, [run, attempt]);
 
   if (view.kind === 'unavailable') return <><PostSummaryCard url={url}/><ServiceUnavailable/><p className="example-link">Want to see what a finished report looks like? <Link className="text-link" to="/example">View the synthetic example</Link></p></>;
-  if (view.kind === 'loading') return <><PostSummaryCard url={url}/><AnalysisLoadingState status={view.status}/></>;
+  if (view.kind === 'loading') return view.preview
+    ? <><AnalysisLoadingState status={view.status}/><ThreadPreviewCard preview={view.preview}/></>
+    : <><PostSummaryCard url={url}/><AnalysisLoadingState status={view.status}/></>;
   if (view.kind === 'error') {
     return <><PostSummaryCard url={url}/><AnalysisErrorState title={view.title} message={view.message} onRetry={view.retry ? () => setAttempt(a => a + 1) : undefined}/>
       {view.showExample && <p className="example-link">Want to see what a finished report looks like? <Link className="text-link" to="/example">View the synthetic example</Link></p>}</>;
