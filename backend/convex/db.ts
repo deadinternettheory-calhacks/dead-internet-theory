@@ -1,10 +1,14 @@
 import type {
   GenericMutationCtx,
+  GenericQueryCtx,
   DataModelFromSchemaDefinition,
 } from "convex/server";
 import type schema from "./schema";
 export const RETENTION_MS = 24 * 60 * 60 * 1000;
 export type Ctx = GenericMutationCtx<
+  DataModelFromSchemaDefinition<typeof schema>
+>;
+export type ReadCtx = GenericQueryCtx<
   DataModelFromSchemaDefinition<typeof schema>
 >;
 export type Table =
@@ -18,7 +22,7 @@ export type Table =
   | "cache"
   | "controls"
   | "providerSlots";
-export async function get(ctx: Ctx, table: Table, key: string) {
+export async function get(ctx: ReadCtx, table: Table, key: string) {
   const doc = await ctx.db
     .query(table)
     .withIndex("key", (q) => q.eq("key", key))
@@ -28,7 +32,7 @@ export async function get(ctx: Ctx, table: Table, key: string) {
     : undefined;
 }
 export async function deadline(
-  ctx: Ctx,
+  ctx: ReadCtx,
   table: Table,
   key: string,
 ): Promise<number | undefined> {
@@ -40,6 +44,8 @@ export async function deadline(
   )?.expiresAt;
 }
 async function parentDeadline(ctx: Ctx, table: Table, key: string, data: any) {
+  if (table === "investigations" && typeof data.reusedFrom === "string")
+    return deadline(ctx, "investigations", data.reusedFrom);
   let investigation = data.investigationId ?? data.resource?.investigationId;
   if (table === "graphs" || table === "analyses") investigation = key;
   if (table === "jobs") {
