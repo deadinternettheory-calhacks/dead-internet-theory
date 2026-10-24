@@ -3,7 +3,7 @@ import { syntheticDemo } from '../demo';
 import { buildReport, verdictFor } from './report';
 
 describe('analysis report', () => {
-  const report = buildReport(syntheticDemo.analysis, syntheticDemo.graph, [syntheticDemo.enrichment]);
+  const report = buildReport(syntheticDemo.analysis, syntheticDemo.graph, syntheticDemo.enrichments);
 
   it('flags the synthetic fixture so the UI labels it', () => {
     expect(report.synthetic).toBe(true);
@@ -29,7 +29,7 @@ describe('analysis report', () => {
 
   it('reports coverage and history outcomes', () => {
     expect(report.coverage.analyzed).toBe(8);
-    expect(report.coverage.histories).toBe('4 account histories requested: 3 complete, 1 partial.');
+    expect(report.coverage.histories).toBe('5 account histories requested: 3 complete, 1 partial, 1 unavailable.');
   });
 
   it('does not treat a missing score as low risk', () => {

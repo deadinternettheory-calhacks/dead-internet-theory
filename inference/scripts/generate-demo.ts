@@ -4,11 +4,10 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { AnalysisResource, EnrichmentJob, GraphEnvelope, InvestigationResource } from '../convex/lib/contract';
+import type { AnalysisResource, EnrichmentJob, EnrichmentRequest, GraphEnvelope, HistoryResult, InvestigationResource } from '../convex/lib/contract';
 import { MockCreaoClient } from '../convex/lib/inference/creao';
 import { runSequential } from '../convex/lib/inference/pipeline';
 import { assertModel } from '../convex/lib/schema';
-import { canonicalJson } from '../convex/lib/util';
 import { SYNTHETIC_SOURCE_URL } from '../convex/lib/fixtures';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -22,22 +21,35 @@ export const SYNTHETIC_NOTICE =
 
 export async function buildDemo() {
   const graph = read<GraphEnvelope>('graph.json');
-  const enrichment = read<EnrichmentJob>('enrichment-completed.json');
+  const fixtureHistories = read<EnrichmentJob>('enrichment-completed.json');
+  const jobs = new Map<string, EnrichmentJob>();
+  // Serves the fixture histories for whichever authors are requested, one job per request.
+  const fulfil = (request: EnrichmentRequest): EnrichmentJob => {
+    const enrichmentId = jobs.size === 0 ? fixtureHistories.enrichmentId : `${fixtureHistories.enrichmentId}_${jobs.size + 1}`;
+    const results: HistoryResult[] = request.authors.map(({ authorId, anchorCommentId }) => {
+      const known = fixtureHistories.results?.find(r => r.authorId === authorId);
+      if (known) return { ...known, anchorCommentId };
+      return {
+        authorId,
+        anchorCommentId,
+        status: 'unavailable',
+        strategy: 'none',
+        comments: [],
+        coverage: { requestedCount: 10, returnedCount: 0, candidateFetchedCount: 0, providerTruncated: null, reachedAnchorWindow: null, oldestFetchedAt: null, newestFetchedAt: null, collectedAt: null, sourceSnapshotRef: null, actorRunIds: [], limitations: ['Synthetic fixture has no history for this author.'] },
+      };
+    });
+    const job: EnrichmentJob = { ...fixtureHistories, enrichmentId, results };
+    jobs.set(enrichmentId, job);
+    return job;
+  };
   const creao = new MockCreaoClient({
     triage: readFileSync(resolve(fixtureDir, 'creao-triage-response.json'), 'utf8'),
     scoring: readFileSync(resolve(fixtureDir, 'creao-scoring-response.json'), 'utf8'),
   });
   const result = await runSequential(graph, {
     creao,
-    requestEnrichment: async request => {
-      const requested = request.authors.map(a => `${a.authorId}|${a.anchorCommentId}`).sort();
-      const available = (enrichment.results ?? []).map(r => `${r.authorId}|${r.anchorCommentId}`).sort();
-      if (canonicalJson(requested) !== canonicalJson(available)) {
-        throw new Error(`Author selection changed; regenerate the fixture histories. Requested: ${requested.join(', ')}`);
-      }
-      return enrichment;
-    },
-    getEnrichment: async () => enrichment,
+    requestEnrichment: async request => fulfil(request),
+    getEnrichment: async id => jobs.get(id)!,
     sleep: async () => {},
     inferredAt: '2026-10-24T06:03:00Z',
   });
@@ -64,8 +76,8 @@ export async function buildDemo() {
   assertModel('AnalysisResource', analysis);
   assertModel('InvestigationResource', investigation);
   assertModel('GraphEnvelope', graph);
-  assertModel('EnrichmentJob', enrichment);
-  return { analysis, investigation, graph, enrichment, scores: result.scores };
+  for (const job of result.enrichments) assertModel('EnrichmentJob', job);
+  return { analysis, investigation, graph, enrichments: result.enrichments, scores: result.scores };
 }
 
 function format(value: unknown): string {
@@ -78,7 +90,7 @@ async function main() {
   const outputs: [string, string][] = [
     [resolve(fixtureDir, 'analysis-resource.json'), format(demo.analysis)],
     [resolve(fixtureDir, 'investigation.json'), format(demo.investigation)],
-    [webFixture, format({ notice: SYNTHETIC_NOTICE, investigation: demo.investigation, graph: demo.graph, enrichment: demo.enrichment, analysis: demo.analysis })],
+    [webFixture, format({ notice: SYNTHETIC_NOTICE, investigation: demo.investigation, graph: demo.graph, enrichments: demo.enrichments, analysis: demo.analysis })],
   ];
   let stale = 0;
   for (const [path, text] of outputs) {

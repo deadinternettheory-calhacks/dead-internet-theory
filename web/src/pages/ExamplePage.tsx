@@ -8,7 +8,7 @@ import { syntheticDemo as fixture } from '../demo';
 const LIVE_TEST_THREAD = 'https://www.reddit.com/r/example/comments/demo/';
 
 export function ExamplePage() {
-  const report = buildReport(fixture.analysis, fixture.graph, [fixture.enrichment]);
+  const report = buildReport(fixture.analysis, fixture.graph, fixture.enrichments);
   return <main className="analysis-main">
     <Link className="back-link" to="/">{String.fromCharCode(8592)} Check a post</Link>
     <SyntheticBanner notice={fixture.notice}/>

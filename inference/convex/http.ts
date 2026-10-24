@@ -48,4 +48,35 @@ http.route({
   }),
 });
 
+/**
+ * CREAO terminal-result webhook (CREAO_WEBHOOK_URL). CREAO cannot send custom
+ * headers, so the secret travels in the URL query (`?token=`). The body is only
+ * a wake-up signal: the worker still fetches and validates the run itself.
+ * Deliveries repeat (X-Creao-Delivery-Id); waking an idle or finished job is harmless.
+ */
+http.route({
+  path: '/creao-webhook',
+  method: 'POST',
+  handler: httpAction(async (ctx, request) => {
+    const token = new URL(request.url).searchParams.get('token');
+    if (!bearerMatches(token ? `Bearer ${token}` : null, process.env.CREAO_WEBHOOK_SECRET)) {
+      return json(401, { error: { code: 'UNAUTHORIZED', message: 'Invalid webhook token.', retryable: false } });
+    }
+    const text = await request.text();
+    if (text.length > 1_000_000) return json(413, { error: { code: 'INVALID_REQUEST', message: 'Payload too large.', retryable: false } });
+    let runId: unknown;
+    try {
+      const body = JSON.parse(text) as { runId?: unknown; run_id?: unknown };
+      runId = body.runId ?? body.run_id;
+    } catch {
+      return json(400, { error: { code: 'INVALID_REQUEST', message: 'Payload must be JSON.', retryable: false } });
+    }
+    if (typeof runId !== 'string' || !/^[A-Za-z0-9-]{1,100}$/.test(runId)) {
+      return json(400, { error: { code: 'INVALID_REQUEST', message: 'Missing runId.', retryable: false } });
+    }
+    const woke = await ctx.runMutation(internal.worker.wakeForRun, { runId });
+    return json(200, { received: true, woke });
+  }),
+});
+
 export default http;
