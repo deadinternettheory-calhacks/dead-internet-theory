@@ -1,3 +1,4 @@
+import { sameNative } from "./identity";
 import { type Model, validate, stable } from "./core";
 export interface CandidateSet {
   comments: Model<"HistoryComment">[];
@@ -35,8 +36,14 @@ export function sample(
       const eligible =
         c.authorId === pair.authorId &&
         c.id !== anchor.id &&
+        !sameNative(anchor.platform, "comment", c.nativeId, anchor.nativeId) &&
         c.sourceDiscussionNativeId !== null &&
-        c.sourceDiscussionNativeId !== rootNativeId &&
+        !sameNative(
+          anchor.platform,
+          "discussion",
+          c.sourceDiscussionNativeId,
+          rootNativeId,
+        ) &&
         c.createdAt !== null &&
         c.timestampPrecision !== "unknown" &&
         Number.isFinite(Date.parse(c.createdAt)) &&

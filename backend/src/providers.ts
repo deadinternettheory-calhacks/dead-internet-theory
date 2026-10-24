@@ -17,6 +17,7 @@ import {
 } from "./graph";
 import type { CandidateSet } from "./history";
 import { outbound } from "./outbound";
+import { sameNative } from "./identity";
 import { source } from "./url";
 export const verification: Record<
   Platform,
@@ -458,7 +459,7 @@ export function discussion(
       "PROVIDER_INVALID_DATA",
       "Original discussion has no native ID",
     );
-  if (native.replace(/^t3_/, "") !== source(url).nativeId)
+  if (!sameNative(p, "discussion", native, source(url).nativeId))
     throw new ApiFault(
       500,
       "PROVIDER_INVALID_DATA",
