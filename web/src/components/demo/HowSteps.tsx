@@ -1,7 +1,7 @@
 import { Link2, ScanLine, Quote } from 'lucide-react';
 
 const STEPS = [
-  { icon: Link2, title: 'Start with a post', text: 'Paste a public Reddit link. We collect the available discussion within our limits.' },
+  { icon: Link2, title: 'Start with a post', text: 'Paste a public post or video link. We collect the available discussion within our limits.' },
   { icon: ScanLine, title: 'Look for patterns', text: 'Explore repeated wording, unusual timing, and the available account-history samples.' },
   { icon: Quote, title: 'Follow the evidence', text: 'Read the comments behind each finding, along with coverage and limitations.' },
 ];

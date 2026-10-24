@@ -36,6 +36,7 @@ function statusText(inv: InvestigationResource): string {
 
 function failureView(inv: InvestigationResource): View {
   if (inv.ingestionStatus === 'failed') {
+    if (inv.error?.code === 'PROVIDER_NO_COMMENTS') return { kind: 'error', title: 'No public comments were returned.', message: 'Comments may be disabled or unavailable for this video, so there is no discussion to analyze.', retry: false };
     if (NOT_CONNECTED.has(inv.error?.code ?? '')) {
       return { kind: 'error', title: 'We can’t collect this post yet.', message: 'Live collection for this platform is not connected yet, so nothing was analyzed.', retry: false, showExample: true };
     }
@@ -101,6 +102,7 @@ function LiveAnalysis({ url }: { url: string }) {
       if (cancelled.current) return;
       // The proxy answers SERVICE_NOT_CONFIGURED until the deployment has backend credentials.
       if (err instanceof ApiError && err.code === 'SERVICE_NOT_CONFIGURED') return setView({ kind: 'unavailable' });
+      if (err instanceof ApiError && err.code === 'SOURCE_LINK_UNAVAILABLE') return setView({ kind: 'error', title: 'We couldn’t open this share link.', message: 'Copy the full TikTok video URL from your browser and try that link.', retry: false });
       const unsupported = err instanceof ApiError && err.code === 'INVALID_URL';
       setView(unsupported
         ? { kind: 'error', title: 'We can’t check this link.', message: 'This site or link type is not supported.', retry: false }

@@ -15,7 +15,7 @@ import {
   startRejection,
 } from "../src/providers";
 import { publicAddress } from "../src/outbound";
-import { iso, limits } from "../src/core";
+import { iso, limits, capabilities } from "../src/core";
 const modules = {
   ...import.meta.glob("../convex/**/*.ts"),
   "../convex/_generated/marker.ts": async () => ({}),
@@ -92,13 +92,16 @@ it("fails closed without approved authorization, retention and runtime evidence"
   vi.stubEnv("APIFY_TOKEN", "SYNTHETIC-MOCK-CREDENTIAL");
   vi.stubEnv("PROVIDER_AUTHORIZATION_APPROVED", "true");
   vi.stubEnv("RETENTION_POLICY_REF", "review-required");
-  expect(() => liveGate("x")).toThrow("runtime evidence");
-  expect(verification.reddit.runtimeVerified).toBe(true);
   expect(
-    [verification.x, verification.youtube, verification.tiktok].every(
-      (v) => !v.runtimeVerified,
-    ),
+    Object.values(verification).every((v) => v.runtimeVerified && v.evidence),
   ).toBe(true);
+  const reviewed = verification.x;
+  try {
+    verification.x = { runtimeVerified: false, evidence: null };
+    expect(() => liveGate("x")).toThrow("runtime evidence");
+  } finally {
+    verification.x = reviewed;
+  }
 });
 it("batches Reddit repeated author lookup plans, separates X root and authored searches and never fetches video histories", () => {
   const authors = [
@@ -131,10 +134,30 @@ it("batches Reddit repeated author lookup plans, separates X root and authored s
   const x = plan("x", "discussion", "https://x.com/synthetic/status/100");
   expect(x.map((t) => t.role)).toEqual(["root", "discussion"]);
   expect(plan("x", "history", undefined, [...authors])[0].input).toMatchObject({
-    searchTerms: ["from:alice"],
+    searchTerms: ["from:alice filter:replies"],
   });
   expect(plan("youtube", "history")).toEqual([]);
   expect(plan("tiktok", "history")).toEqual([]);
+});
+
+it("reports X demo limits without disabling the verified collector or changing other platforms", () => {
+  vi.stubEnv("PROVIDER_MODE", "live");
+  vi.stubEnv("APIFY_TOKEN", "SYNTHETIC-MOCK-CREDENTIAL");
+  vi.stubEnv("PROVIDER_AUTHORIZATION_APPROVED", "true");
+  vi.stubEnv("RETENTION_POLICY_REF", "SYNTHETIC-TEST");
+  vi.stubEnv("APIFY_X_DEMO_ONLY", "true");
+  const entries = capabilities().platforms;
+  const x = entries.find((p) => p.platform === "x")!;
+  expect(x).toMatchObject({ liveEnabled: true, demoLimited: true });
+  expect(Array.isArray(x.limitations) && x.limitations.join(" ")).toContain(
+    "five runs",
+  );
+  expect(
+    entries
+      .filter((p) => p.platform !== "x")
+      .every((p) => p.demoLimited === false),
+  ).toBe(true);
+  expect(() => liveGate("x")).not.toThrow();
 });
 it("maps candidate platform fields without precision loss, fabricated metrics or audiovisual claims", () => {
   const youtube = mapRecord("youtube", {

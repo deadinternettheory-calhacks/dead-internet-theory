@@ -82,10 +82,41 @@ describe('API proxy', () => {
     expect(res.headers.get('Retry-After')).toBe('3');
   });
 
+  it('resolves TikTok shares server-side before sending the canonical video to the backend', async () => {
+    const { calls, fetch } = upstream(202);
+    const original = { schemaVersion: '1.0.0', sourceUrl: 'https://www.tiktok.com/t/SHARED/' };
+    const resolved = 'https://www.tiktok.com/@example/video/1234567890123456789';
+    const res = await handleProxy(new Request('https://site.test/api/v1/investigations', { method: 'POST', body: JSON.stringify(original), headers: { 'Idempotency-Key': 'stable-key-123' } }), env, { fetch, resolveTikTokShare: async () => resolved });
+    expect(res.status).toBe(202);
+    expect(JSON.parse(calls[0].init.body as string)).toEqual({ ...original, sourceUrl: resolved });
+    expect((calls[0].init.headers as Record<string, string>)['Idempotency-Key']).toBe('stable-key-123');
+  });
+
+  it('does not create an investigation when a TikTok share cannot be resolved', async () => {
+    const { calls, fetch } = upstream();
+    const res = await handleProxy(new Request('https://site.test/api/v1/investigations', { method: 'POST', body: JSON.stringify({ sourceUrl: 'https://www.tiktok.com/t/SHARED/' }) }), env, { fetch, resolveTikTokShare: async () => { throw Error('unavailable'); } });
+    expect(res.status).toBe(502);
+    expect((await res.json()).error.code).toBe('SOURCE_LINK_UNAVAILABLE');
+    expect(calls).toHaveLength(0);
+  });
+
   it('replaces a malformed session cookie', async () => {
     const { fetch } = upstream();
-    const res = await handleProxy(new Request('https://site.test/api/v1/capabilities', { headers: { Cookie: 'dit_sid=bad;value' } }), env, { fetch });
+    const res = await handleProxy(new Request('https://site.test/api/v1/investigations/inv_1', { headers: { Cookie: 'dit_sid=bad;value' } }), env, { fetch });
     expect(res.headers.get('Set-Cookie')).toMatch(/^dit_sid=/);
+  });
+
+  it('does not let a capability read overwrite the cookie of a concurrent create', async () => {
+    const { calls, fetch } = upstream();
+    const [capability, create] = await Promise.all([
+      handleProxy(new Request('https://site.test/api/v1/capabilities'), env, { fetch }),
+      handleProxy(new Request('https://site.test/api/v1/investigations', { method: 'POST', body: '{}' }), env, { fetch }),
+    ]);
+    expect(capability.status).toBe(200);
+    expect(capability.headers.get('Set-Cookie')).toBeNull();
+    const sid = create.headers.get('Set-Cookie')!.split(';')[0].split('=')[1];
+    const sent = calls.find(call => call.url.endsWith('/investigations'))!;
+    expect((await subjectOf(sent.init)).sub).toBe(`web:${sid}`);
   });
 
   it('never proxies inference routes or unknown paths', async () => {

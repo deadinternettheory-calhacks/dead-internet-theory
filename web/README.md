@@ -40,6 +40,9 @@ What the proxy does:
   It mints a five-minute `frontend` JWT with subject `web:<session>` for each
   request, so the backend's owner check lets visitors read only investigations
   they created.
+- Reads platform availability without setting or replacing the session cookie,
+  so a homepage capability request cannot race an investigation create and change
+  its owner.
 - Rejects cross-origin creates and bodies over 8 KB, and passes backend errors
   and `Retry-After` through. Submission rate limits are the backend's
   (`POSTS_PER_HOUR`); the proxy adds none.
@@ -52,6 +55,18 @@ BACKEND_BASE_URL=http://127.0.0.1:3211 BACKEND_JWT_SECRET=<secret> npm run dev
 ```
 
 `VITE_API_BASE_URL` can override the default `/api` base; it is a public URL.
+
+The form accepts X/Twitter, Reddit, TikTok and YouTube links, including `youtu.be`,
+YouTube Shorts and mobile YouTube URLs. TikTok accepts full `@user/video/id`
+URLs and `/t/`, `vm.tiktok.com` and `vt.tiktok.com` shares. Share resolution uses
+server-side HEAD requests only, validated/pinned public DNS, exact TikTok hosts,
+at most two constrained redirects and four-second DNS/request deadlines. It
+strips tracking and passes the full video URL to the independently validating
+backend; the browser never fetches the source.
+Platform labels use the backend's `/v1/capabilities` response, with distinct live,
+setup and unknown states. `demoLimited` labels X's Free-plan quotas when
+`APIFY_X_DEMO_ONLY=true` on the backend. URL recognition does not claim a provider is live or
+bypass its server-side gate. The browser does not fetch the submitted source URL.
 
 Submitting a link creates an investigation, polls its real `ingestionStatus` and
 `analysisStatus`, then fetches the stored analysis, graph and used enrichment

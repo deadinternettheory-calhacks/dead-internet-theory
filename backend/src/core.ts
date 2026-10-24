@@ -115,6 +115,11 @@ export function capabilities() {
       limitations: availability(platform).liveEnabled
         ? [
             "Authorized, reviewed provider configuration; individual collection remains best effort.",
+            ...(availability(platform).demoLimited
+              ? [
+                  "X Actors are in Apify Free-plan demo mode: at most five runs per Actor per month and ten items per run; histories and discussion coverage can be partial or unavailable.",
+                ]
+              : []),
           ]
         : [
             "Live collection is disabled until provider mode, authorization, retention, server credentials and reviewed runtime evidence are all configured.",

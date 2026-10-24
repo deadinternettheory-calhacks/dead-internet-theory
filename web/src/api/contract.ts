@@ -3,6 +3,10 @@
 // only the fields the UI reads. Unknown optional fields are ignored.
 
 export type Platform = 'reddit' | 'x' | 'youtube' | 'tiktok';
+/** Read-only subset of CapabilityResponse, including its backend availability extensions. */
+export interface CapabilityResponse {
+  platforms: { platform: Platform; actorRuntimeVerified: boolean; liveEnabled?: boolean; demoLimited?: boolean }[];
+}
 export type Stance = 'supportive' | 'critical' | 'neutral' | 'mixed' | 'unclear';
 export type AxisName = 'promotional_intent' | 'semantic_coordination' | 'temporal_coordination' | 'account_anomalies' | 'engagement_anomalies' | 'disclosure_concerns';
 
