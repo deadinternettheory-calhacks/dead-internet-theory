@@ -9,11 +9,14 @@ application is preserved.
 Synthetic ingestion and an independent mock inference consumer have been verified
 against a real local Convex deployment. The authenticated REST lifecycle has also
 been verified on the hosted development deployment described below. One authorized
-Reddit discussion smoke returned a valid partial graph from a live Apify Actor;
-the run and collected content were deleted after verification. See the
-[verification record](verification/2026-10-24-reddit-discussion.md) for its scope.
-Candidate provider adapters remain disabled: author histories and the hosted live
-workflow have not been verified. Do not describe this as production ready.
+Reddit discussion smoke returned a valid partial graph from a live Apify Actor.
+A follow-up history check produced a valid ten-comment sample for one of two
+authors; the other returned no content. Runs and collected content were deleted
+after verification. See the [discussion](verification/2026-10-24-reddit-discussion.md)
+and [history](verification/2026-10-24-reddit-history.md) verification records for
+their scope. Candidate provider adapters remain disabled: the hosted live
+workflow and broader provider coverage have not been verified. Do not describe
+this as production ready.
 
 ## Setup and checks
 

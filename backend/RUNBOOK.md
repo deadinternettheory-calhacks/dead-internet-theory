@@ -90,7 +90,7 @@ npx convex env set --env-file .env.server.local --from-file <runtime-only-file>
 
 Live collection stays disabled: `PROVIDER_MODE=fixture`,
 `PROVIDER_AUTHORIZATION_APPROVED=false`, and all adapter runtime-verification flags
-remain false. Broader provider authorization/retention review, author-history
+remain false. Broader provider authorization/retention review, hosted live-history
 verification and connecting the separate inference deployment remain open. The
 production checklist below still applies before changing that state.
 
@@ -181,6 +181,19 @@ documents counts, omissions and the remaining checks. No real content was writte
 to Convex, inference or Git. This scoped discussion check does not verify author
 histories, multi-page collection or the hosted live workflow; all policy flags
 remain false.
+
+The owner then authorized a two-author history follow-up with the same deletion
+policy. The history Actor build `0.0.78` returned 150 candidates for one author;
+after mapping `author_fullname`, `_content_type` and `link_id`, the backend
+returned ten valid items using `recent_fallback` and excluded the focal discussion.
+The second author returned no content in either the batch or an individual
+lookup, producing an explicit partial/empty result with unknown availability.
+The follow-up, including recollecting a small discussion seed, cost a reported
+$0.3245. All three runs, their default storages and local source content were
+deleted, with authenticated 404 checks for remote resources. See the
+[history verification record](verification/2026-10-24-reddit-history.md).
+No real content reached Convex or inference, and hosted live operation remains
+unverified. Optional Reddit account dates/karma were not fetched or invented.
 
 Other candidate field mappings remain documentation/synthetic checks only and
 may require correction against authorized provider output.
