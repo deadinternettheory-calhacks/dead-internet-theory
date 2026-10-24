@@ -14,9 +14,10 @@ A follow-up history check produced a valid ten-comment sample for one of two
 authors; the other returned no content. Runs and collected content were deleted
 after verification. See the [discussion](verification/2026-10-24-reddit-discussion.md)
 and [history](verification/2026-10-24-reddit-history.md) verification records for
-their scope. Candidate provider adapters remain disabled: the hosted live
-workflow and broader provider coverage have not been verified. Do not describe
-this as production ready.
+their scope. Reddit is now enabled on the hosted site, with a verified real-post
+flow through Apify, CREAO and persisted analysis. Other providers remain gated.
+See the [hosted verification record](verification/2026-10-24-hosted-live.md) for
+scope and operational limits; this is not a general provider or quality guarantee.
 
 ## Setup and checks
 
@@ -45,13 +46,14 @@ while `convex dev` runs.
 
 Hosted **development** API, deployed and checked on 2026-10-24:
 `https://impartial-sheep-516.convex.site`. It requires bearer authentication and
-runs in `fixture` mode. It is not a production deployment or a live-provider
-integration. Synthetic ingestion, graph retrieval, two history results, analysis
-submission/readback, idempotency, ownership checks and the persisted ready event
-were verified there. An external inference event receiver is not configured yet;
-the separate [CREAO/Claude inference service](../inference/README.md) is implemented
-and verified locally on synthetic data. Its connection to this hosted backend and
-the deployed website is not verified.
+runs in `live` mode for reviewed Reddit adapters. The existing Convex deployment
+is still classified as development. The website at
+`https://www.deadinternettheory.us` uses its server proxy; ready events go to
+`https://grandiose-barracuda-22.convex.site/events`, the separate coordinator
+that calls CREAO and submits validated analyses. Hosted synthetic and real-post
+flows completed successfully. Launch settings retain up to 100 comments,
+cap each Actor run at $1, and disable the daily reservation cap at the owner's
+request (`APIFY_DAILY_BUDGET_CENTS=0`). Reports expire after 24 hours.
 
 From the repository root, validate the unchanged contracts and client:
 
@@ -104,3 +106,5 @@ submits the supplied illustrative scores, without calculating any scores.
 See the [runbook](RUNBOOK.md) for configuration, storage decisions, provider
 verification, operational recovery and deployment prerequisites, and the
 [integration guide](INTEGRATION.md) for frontend/inference authentication.
+The owner's 24-hour live-data policy and automated deletion scope are documented
+in [RETENTION.md](RETENTION.md).

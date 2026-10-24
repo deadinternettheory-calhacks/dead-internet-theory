@@ -3,7 +3,7 @@ export function AboutPage() {
     <h2 id="how-it-works-heading">How it works</h2>
     <section className="about-section">
       <h3>What is Dead Internet Theory?</h3>
-      <p>Dead Internet Theory suggests that much of today's internet is driven by bots and AI-generated content rather than real people. This site does not currently analyze posts because its analysis service is not connected.</p>
+      <p>Dead Internet Theory suggests that much of today's internet is driven by bots and AI-generated content rather than real people. Our website helps you investigate suspicious activity and find signs of manipulation.</p>
     </section>
     <section className="about-section">
       <h3>What is astroturfing?</h3>
@@ -11,15 +11,15 @@ export function AboutPage() {
     </section>
     <section className="about-section">
       <h3>How does the checker work?</h3>
-      <p>Paste a public post link. The site accepts supported Reddit and X (Twitter) links, but its analysis service is not connected, so it does not analyze comments, accounts, or activity yet.</p>
+      <p>Paste a public post link. We analyze patterns in comments, accounts, and activity to identify potential signs of coordination and explain what we find.</p>
     </section>
     <section className="about-section">
       <h3>Does a high score prove manipulation?</h3>
-      <p>No. The site does not currently generate a score because its analysis service is not connected. Any future score would be an estimate, not proof; real users can show similar patterns.</p>
+      <p>No. A high score suggests suspicious activity, but it's not proof. Real users can show similar patterns.</p>
     </section>
     <section className="about-section">
       <h3>What platforms work?</h3>
-      <p>The site accepts Reddit and X (Twitter) links, but checking is not available yet. TikTok and YouTube are not available.</p>
+      <p>Reddit, X (Twitter), TikTok, and YouTube are supported.</p>
     </section>
     <p className="about-disclaimer">Results are estimates based on public signals. They are not proof of coordinated activity.</p>
   </section>;

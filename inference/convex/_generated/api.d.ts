@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as crons from "../crons.js";
 import type * as http from "../http.js";
 import type * as lib_backendClient from "../lib/backendClient.js";
 import type * as lib_contract from "../lib/contract.js";
@@ -24,6 +25,7 @@ import type * as lib_inference_prompts from "../lib/inference/prompts.js";
 import type * as lib_inference_rubric from "../lib/inference/rubric.js";
 import type * as lib_inference_scoring from "../lib/inference/scoring.js";
 import type * as lib_util from "../lib/util.js";
+import type * as retention from "../retention.js";
 import type * as worker from "../worker.js";
 
 import type {
@@ -33,6 +35,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  crons: typeof crons;
   http: typeof http;
   "lib/backendClient": typeof lib_backendClient;
   "lib/contract": typeof lib_contract;
@@ -49,6 +52,7 @@ declare const fullApi: ApiFromModules<{
   "lib/inference/rubric": typeof lib_inference_rubric;
   "lib/inference/scoring": typeof lib_inference_scoring;
   "lib/util": typeof lib_util;
+  retention: typeof retention;
   worker: typeof worker;
 }>;
 

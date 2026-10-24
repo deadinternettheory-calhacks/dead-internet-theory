@@ -17,7 +17,7 @@ Scope: `inference/` worker, prompts and docs; `web/` analysis page; SPEC 1,
 | 9 | One CREAO agent runs twice per analysis; runs are polled. | The worker may pass a webhook URL so CREAO reports finished runs; polling remains as a slower fallback. | Removes poll latency. |
 | 9 | Author histories are requested after triage. | Up to 10 likely recommenders' histories are requested before triage, chosen from the thread alone; triage then requests only the missing ones (25 pairs in total). | Histories are collected while triage runs. |
 | 9 | Scoring gets every comment. | Scoring gets recommendations and their context (parents, replies, the recommenders' other comments, the 15 most-engaged comments) and the count of omitted comments. | Smaller input, faster run. |
-| 9 | No reuse of model replies. | Validated replies are cached for 24 hours by stage, prompt version, model and exact evidence. | Re-analysis of unchanged content skips the model. |
+| 9 | No reuse of model replies. | Validated replies are cached for 24 hours by stage, prompt version, model and exact evidence, and deleted by the same retention sweep as job state. | Re-analysis of unchanged content skips the model without keeping data past the 24-hour limit. |
 | 10 | The analysis page shows only the submitted link until the report is ready. | Once collection finishes, it shows the post and the first comments while analysis runs. | The page is useful sooner. |
 
 ## Compatibility and migration
@@ -25,7 +25,7 @@ Scope: `inference/` worker, prompts and docs; `web/` analysis page; SPEC 1,
 No contract change. A submission may now cite more than one enrichment job in
 `usedEnrichmentIds`, which v1 already allows. The `jobs` table gains optional
 fields and a new index, and a `modelCache` table is added; existing rows stay
-valid. To use the new paths, set `ANTHROPIC_API_KEY`, `CREAO_WEBHOOK_SECRET`
+valid, and the hosted deployment (`grandiose-barracuda-22`) picks them up on its next deploy. To use the new paths, set `ANTHROPIC_API_KEY`, `CREAO_WEBHOOK_SECRET`
 and `CREAO_WEBHOOK_URL` on the inference deployment
 ([inference/README.md](../inference/README.md)), and edit the CREAO agent
 ([inference/creao-agent.md](../inference/creao-agent.md#edit-the-agent-for-speed)).

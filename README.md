@@ -3,7 +3,8 @@
 Investigates public discussion content for possible coordinated promotion.
 The repository contains a frontend app, a Convex ingestion backend with a verified
 synthetic workflow, a CREAO and Claude inference service, a proposed scoring rubric,
-and v1 wire contracts. Live providers and production deployment remain unverified.
+and v1 wire contracts. The hosted site supports reviewed Reddit collection and
+CREAO analysis with 24-hour application retention; other providers remain gated.
 
 ## Repository guide
 
@@ -45,11 +46,11 @@ unfinished documentation, not established requirements.
 
 The backend implements the v1 API and durable jobs with synthetic end-to-end
 verification on local Convex and authenticated REST checks on a hosted development
-deployment. Candidate Apify adapters remain disabled pending
-authorized runtime verification and retention review. No public credential issuer
-is implemented. The inference service consumes the backend's ready events, uses a
+deployment. The website's server proxy issues scoped frontend tokens, and reviewed
+Reddit adapters are enabled with pinned Actor builds. The inference service consumes the backend's ready events, uses a
 CREAO agent running Claude for triage and rubric scoring, and re-scores deterministically; it has
-run end to end locally with the live CREAO agent against synthetic fixtures. The rubric and its mapping to contract axes are uncalibrated proposals.
+run end to end locally and on the hosted site, including one permitted real post.
+The rubric and its mapping to contract axes are uncalibrated proposals.
 The frontend renders v1 analyses through a configured API base and shows a labeled
 synthetic report at `/example`; see `web/README.md`. See `backend/README.md` and
 `inference/README.md` for implementation details and verification limits.

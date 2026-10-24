@@ -64,6 +64,7 @@ it("starts Apify asynchronously with spend/time caps, polls persisted run IDs an
   expect(await api.items("data", 100, 50)).toEqual([{ id: "1" }]);
   expect(mock.mock.calls[0][0]).toContain("waitForFinish=0");
   expect(mock.mock.calls[0][0]).toContain("maxTotalChargeUsd=0.25");
+  expect(mock.mock.calls[0][0]).toContain("build=0.0.127");
   expect(mock.mock.calls[2][0]).toContain("offset=100&limit=50");
   expect(
     mock.mock.calls.every(([url]) => !url.includes("server-only-test-token")),
@@ -89,10 +90,13 @@ it("fails closed without approved authorization, retention and runtime evidence"
   vi.stubEnv("APIFY_TOKEN", "SYNTHETIC-MOCK-CREDENTIAL");
   vi.stubEnv("PROVIDER_AUTHORIZATION_APPROVED", "true");
   vi.stubEnv("RETENTION_POLICY_REF", "review-required");
-  expect(() => liveGate("reddit")).toThrow("runtime evidence");
-  expect(Object.values(verification).every((v) => !v.runtimeVerified)).toBe(
-    true,
-  );
+  expect(() => liveGate("x")).toThrow("runtime evidence");
+  expect(verification.reddit.runtimeVerified).toBe(true);
+  expect(
+    [verification.x, verification.youtube, verification.tiktok].every(
+      (v) => !v.runtimeVerified,
+    ),
+  ).toBe(true);
 });
 it("batches Reddit repeated author lookup plans, separates X root and authored searches and never fetches video histories", () => {
   const authors = [
@@ -242,6 +246,39 @@ it("reserves run budgets atomically and refuses ambiguous duplicate starts", asy
   expect(
     await t.mutation(anyApi.jobs.reserve, { ...args, operation: "run:1" }),
   ).toEqual({ status: "denied", reason: "budget" });
+});
+it("can disable the daily reservation cap while preserving the per-run charge cap", async () => {
+  vi.useFakeTimers();
+  vi.stubEnv("APIFY_DAILY_BUDGET_CENTS", "0");
+  vi.stubEnv("APIFY_RUN_BUDGET_CENTS", "100");
+  const t = convexTest(schema, modules);
+  const day = `budget:${new Date().toISOString().slice(0, 10)}`;
+  await t.run(async (ctx) => {
+    await ctx.db.insert("controls", { key: day, data: 999999 });
+    await ctx.db.insert("jobs", {
+      key: "uncapped",
+      status: "running",
+      due: Date.now(),
+      data: { status: "running", token: "token", lease: Date.now() + 60000 },
+    });
+  });
+  for (const operation of ["run:0", "run:1"])
+    expect(
+      await t.mutation(anyApi.jobs.reserve, {
+        key: "uncapped",
+        token: "token",
+        operation,
+      }),
+    ).toEqual({ status: "reserved" });
+  const request = vi.fn().mockResolvedValue({
+    status: 201,
+    body: { data: { id: "synthetic-run" } },
+  });
+  await new Apify("synthetic-token", request).start(
+    "clearpath/reddit-post-comments-bulk-scraper",
+    {},
+  );
+  expect(request.mock.calls[0][0]).toContain("maxTotalChargeUsd=1");
 });
 it("resumes provider run/pagination state without repeating a billable start and preserves partial output", async () => {
   vi.stubEnv("PROVIDER_MODE", "live");

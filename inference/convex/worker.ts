@@ -83,6 +83,7 @@ export const receive = internalMutation({
       stageStartedAt: now,
       stepToken: token,
       updatedAt: now,
+      expiresAt: now + 24 * 60 * 60_000,
     });
     await ctx.scheduler.runAfter(0, internal.worker.step, { jobId, token });
     return { duplicate: false };
@@ -109,7 +110,7 @@ export const claim = internalMutation({
   handler: async (ctx, { jobId, token }) => {
     const job = await ctx.db.get(jobId);
     const now = Date.now();
-    if (!job || job.stage === 'done' || job.stage === 'failed') return null;
+    if (!job || (job.expiresAt ?? Infinity) <= now || job.stage === 'done' || job.stage === 'failed') return null;
     if (job.stepToken !== token || (job.leaseUntil ?? 0) > now) return null;
     await ctx.db.patch(jobId, { leaseUntil: now + LEASE_MS });
     const { investigationId, graphRevision, graphFingerprint, stage, state, stageStartedAt } = job;
@@ -117,7 +118,7 @@ export const claim = internalMutation({
   },
 });
 
-/** Saves progress, releases the lease and returns the token the next step must carry. */
+/** Saves progress, releases the lease and returns the token the next step must carry (null once the job expired). */
 export const saveJob = internalMutation({
   args: {
     jobId: v.id('jobs'),
@@ -127,9 +128,11 @@ export const saveJob = internalMutation({
     activeRunId: v.optional(v.string()),
     error: v.optional(v.string()),
   },
-  returns: v.string(),
+  returns: v.union(v.null(), v.string()),
   handler: async (ctx, args) => {
     const now = Date.now();
+    const job = await ctx.db.get(args.jobId);
+    if (!job || (job.expiresAt ?? Infinity) <= now) return null;
     const token = newToken();
     await ctx.db.patch(args.jobId, {
       stage: args.stage,
@@ -151,7 +154,7 @@ export const wakeForRun = internalMutation({
   returns: v.boolean(),
   handler: async (ctx, { runId }) => {
     const job = await ctx.db.query('jobs').withIndex('by_active_run', q => q.eq('activeRunId', runId)).first();
-    if (!job || !job.stepToken || job.stage === 'done' || job.stage === 'failed') return false;
+    if (!job || !job.stepToken || (job.expiresAt ?? Infinity) <= Date.now() || job.stage === 'done' || job.stage === 'failed') return false;
     await ctx.scheduler.runAfter(0, internal.worker.step, { jobId: job._id, token: job.stepToken });
     return true;
   },
@@ -162,7 +165,7 @@ export const cacheGet = internalQuery({
   returns: v.union(v.null(), v.string()),
   handler: async (ctx, { key }) => {
     const row = await ctx.db.query('modelCache').withIndex('by_key', q => q.eq('key', key)).first();
-    return row && Date.now() - row.createdAt < CACHE_TTL_MS ? row.output : null;
+    return row && row.expiresAt > Date.now() ? row.output : null;
   },
 });
 
@@ -171,8 +174,10 @@ export const cachePut = internalMutation({
   returns: v.null(),
   handler: async (ctx, args) => {
     const existing = await ctx.db.query('modelCache').withIndex('by_key', q => q.eq('key', args.key)).first();
-    if (existing) await ctx.db.patch(existing._id, { output: args.output, createdAt: Date.now() });
-    else await ctx.db.insert('modelCache', { ...args, createdAt: Date.now() });
+    // Same 24-hour limit as job state (backend/RETENTION.md); the retention sweep deletes expired rows.
+    const now = Date.now();
+    if (existing) await ctx.db.patch(existing._id, { output: args.output, createdAt: now, expiresAt: now + CACHE_TTL_MS });
+    else await ctx.db.insert('modelCache', { ...args, createdAt: now, expiresAt: now + CACHE_TTL_MS });
     return null;
   },
 });
@@ -254,6 +259,7 @@ export const step = internalAction({
       });
     const next = async (stage: Stage, delayMs = 0, activeRunId?: string) => {
       const nextToken = await save(stage, { activeRunId });
+      if (nextToken === null) return; // expired: stop processing
       await ctx.scheduler.runAfter(delayMs, internal.worker.step, { jobId, token: nextToken });
     };
 
@@ -372,7 +378,7 @@ export const step = internalAction({
       if (retryable && elapsed < STAGE_DEADLINE_MS) {
         const after = (err instanceof CreaoError || err instanceof ClaudeError) && err.retryAfterSeconds ? err.retryAfterSeconds * 1000 : RETRY_MS;
         const nextToken = await save(job.stage as Stage);
-        await ctx.scheduler.runAfter(after, internal.worker.step, { jobId, token: nextToken });
+        if (nextToken !== null) await ctx.scheduler.runAfter(after, internal.worker.step, { jobId, token: nextToken });
         return null;
       }
       // The v1 API has no failure-report route; the backend keeps analysisStatus
@@ -405,7 +411,7 @@ async function submit(
   scoring: ScoringOutput | null,
   claude: ClaudeConfig | null,
   creao: CreaoClient,
-  save: (stage: Stage, opts?: { error?: string }) => Promise<string>,
+  save: (stage: Stage, opts?: { error?: string }) => Promise<string | null>,
 ): Promise<void> {
   state.scoring = scoring;
   const enrichments = await fetchCompleted(api, graph.investigationId, state.enrichmentIds ?? []);

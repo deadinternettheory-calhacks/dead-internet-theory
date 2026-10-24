@@ -51,10 +51,16 @@ describe("canonical validation and safe URL boundary", () => {
     ["https://youtu.be/abcdefghijk", "youtube"],
     ["https://www.tiktok.com/@test/video/123", "tiktok"],
   ])("canonicalizes %s", (url, p) => expect(source(url).platform).toBe(p));
-  it("sorts object keys and reports unverified providers", () => {
+  it("sorts object keys and reports only Reddit as runtime verified", () => {
     expect(stable({ b: 1, a: 2 })).toBe(stable({ a: 2, b: 1 }));
-    expect(capabilities().platforms.every((p) => !p.actorRuntimeVerified)).toBe(
-      true,
-    );
+    const entries = capabilities().platforms;
+    expect(
+      entries.find((p) => p.platform === "reddit")!.actorRuntimeVerified,
+    ).toBe(true);
+    expect(
+      entries
+        .filter((p) => p.platform !== "reddit")
+        .every((p) => !p.actorRuntimeVerified),
+    ).toBe(true);
   });
 });

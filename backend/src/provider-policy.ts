@@ -3,7 +3,11 @@ export const verification: Record<
   Platform,
   { runtimeVerified: boolean; evidence: string | null }
 > = {
-  reddit: { runtimeVerified: false, evidence: null },
+  reddit: {
+    runtimeVerified: true,
+    evidence:
+      "backend/verification/2026-10-24-reddit-history.md; backend/verification/2026-10-24-reddit-discussion.md",
+  },
   x: { runtimeVerified: false, evidence: null },
   youtube: { runtimeVerified: false, evidence: null },
   tiktok: { runtimeVerified: false, evidence: null },

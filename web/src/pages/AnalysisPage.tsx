@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { buildReport, buildThreadPreview, type Report, type ThreadPreview } from '../analysis/report';
-import { ApiError, createInvestigation, getAnalysis, getEnrichment, getGraph, getInvestigation, idempotencyKeyFor } from '../api/client';
+import { ApiError, createInvestigation, forgetIdempotencyKeyFor, getAnalysis, getEnrichment, getGraph, getInvestigation, idempotencyKeyFor } from '../api/client';
 import type { EnrichmentJob, InvestigationResource } from '../api/contract';
 import { AnalysisErrorState, AnalysisLoadingState } from '../components/AnalysisPresentation';
 import { AnalysisReport, SyntheticBanner, ThreadPreviewCard } from '../components/AnalysisReport';
@@ -55,7 +55,16 @@ function LiveAnalysis({ url }: { url: string }) {
     let previewTried = false;
     try {
       let inv = await createInvestigation(url, idempotencyKeyFor(url));
+      let replacedFixtureFailure = false;
       while (!cancelled.current) {
+        // A failed fixture lookup never started a provider run. Replace it once
+        // so an existing browser session can recover after live configuration.
+        if (inv.ingestionStatus === 'failed' && inv.error?.code === 'FIXTURE_SOURCE_NOT_FOUND' && !replacedFixtureFailure) {
+          replacedFixtureFailure = true;
+          forgetIdempotencyKeyFor(url);
+          inv = await createInvestigation(url, idempotencyKeyFor(url));
+          continue;
+        }
         if (inv.ingestionStatus === 'failed' || inv.analysisStatus === 'failed') return setView(failureView(inv));
         if (inv.analysisStatus === 'completed') break;
         // The graph is ready before the analysis: show the post and comments meanwhile.
@@ -112,7 +121,7 @@ export function AnalysisPage({ url }: { url: string }) {
   let body;
   if (!valid.ok) body = <UnsupportedLinkState/>;
   else body = <LiveAnalysis key={valid.url.href} url={valid.url.href}/>;
-  return <main className="analysis-main"><Link className="back-link" to="/">{String.fromCharCode(8592)} Check another post</Link>{body}<div className="bottom-cta"><h2>Have another post to check?</h2><Link className="primary-button link-button" to="/">Analyze another post <ArrowRight size={18}/></Link></div></main>;
+  return <main className="analysis-main"><Link className="back-link" to="/">{String.fromCharCode(8592)} Check another post</Link><p className="example-link">Reports expire 24 hours after the check starts.</p>{body}<div className="bottom-cta"><h2>Have another post to check?</h2><Link className="primary-button link-button" to="/">Analyze another post <ArrowRight size={18}/></Link></div></main>;
 }
 
 export function UnsupportedPrefixPage() {

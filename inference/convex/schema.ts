@@ -25,9 +25,11 @@ export default defineSchema({
     activeRunId: v.optional(v.string()),
     error: v.optional(v.string()),
     updatedAt: v.number(),
+    expiresAt: v.optional(v.number()),
   })
     .index('by_investigation_revision', ['investigationId', 'graphRevision'])
-    .index('by_active_run', ['activeRunId']),
+    .index('by_active_run', ['activeRunId'])
+    .index('expiry', ['expiresAt']),
 
   /**
    * Validated model replies keyed by stage + prompt version + exact evidence
@@ -38,5 +40,9 @@ export default defineSchema({
     stage: v.string(),
     output: v.string(),
     createdAt: v.number(),
-  }).index('by_key', ['key']),
+    /** Deleted by the retention sweep 24 hours after it was written. */
+    expiresAt: v.number(),
+  })
+    .index('by_key', ['key'])
+    .index('expiry', ['expiresAt']),
 });

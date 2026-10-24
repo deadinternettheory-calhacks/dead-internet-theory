@@ -74,6 +74,65 @@ afterEach(() => {
   vi.useRealTimers();
   vi.unstubAllEnvs();
 });
+it("preserves a scoped 24-hour receipt without retaining source payloads after investigation expiry", async () => {
+  const id = await ready();
+  const inv = (await call("GET", `/v1/investigations/${id}`)).value;
+  const graph = (await call("GET", `/v1/investigations/${id}/graph`)).value;
+  const anchor = graph.nodes.find(
+    (n: any) => n.type === "comment" && n.authorId,
+  );
+  const began = Date.parse(inv.createdAt);
+  vi.setSystemTime(began + 23 * 3600000);
+  inference = await token("worker", "inference", [id]);
+  const body = {
+    authors: [{ authorId: anchor.authorId, anchorCommentId: anchor.id }],
+    limit: 10,
+    windowDays: 14,
+    fallback: "most_recent",
+  };
+  const path = `/v1/investigations/${id}/enrichments`;
+  const receipt = await call(
+    "POST",
+    path,
+    body,
+    inference,
+    "late-history-request",
+  );
+  expect(receipt.status).toBe(202);
+  const stored = await t.run(async (ctx) =>
+    (await ctx.db.query("idempotency").collect()).find(
+      (r) => r.data.response.body.enrichmentId === receipt.value.enrichmentId,
+    ),
+  );
+  expect(stored!.data.body).toBeUndefined();
+  expect(stored!.data.bodyHash).toMatch(/^[a-f0-9]{64}$/);
+  vi.setSystemTime(began + 25 * 3600000);
+  await t.mutation(anyApi.retention.sweep, {});
+  inference = await token("worker", "inference", [id]);
+  expect(
+    await call("POST", path, body, inference, "late-history-request"),
+  ).toEqual(receipt);
+  expect(
+    (
+      await call(
+        "POST",
+        path,
+        { ...body, windowDays: 7 },
+        inference,
+        "late-history-request",
+      )
+    ).status,
+  ).toBe(409);
+  const wrongScope = await token("worker", "inference", ["different"]);
+  expect(
+    (await call("POST", path, body, wrongScope, "late-history-request")).status,
+  ).toBe(403);
+  expect(
+    (await call("GET", `/v1/investigations/${id}/graph`, undefined, inference))
+      .status,
+  ).toBe(404);
+  await drain();
+});
 it("mock consumer completes all eight REST operations and validates every model", async () => {
   const c = await create();
   expect(c.status).toBe(202);
