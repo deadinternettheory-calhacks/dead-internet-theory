@@ -9,6 +9,12 @@ Existing rows receive deadlines based on their original creation time during
 rollout. Cached history pools are removed at their configured cache expiry,
 which is one hour by default and never longer than 24 hours.
 
+Idempotency receipts keep their contractual 24-hour lifetime after each POST,
+including when the investigation expires sooner. They store a request hash and
+authorization/receipt metadata, not the original request body or report text.
+An authorized identical retry can replay the receipt; expired reports remain
+unavailable. Changed payloads and mismatched investigation scopes are rejected.
+
 Each observed Apify run is added to a separate durable cleanup queue, with its
 default storage IDs and the investigation deadline. At expiry, the worker checks
 the run, aborts it if still active, waits for terminal confirmation, deletes its

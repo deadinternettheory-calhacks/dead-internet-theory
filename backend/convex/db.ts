@@ -42,8 +42,6 @@ export async function deadline(
 async function parentDeadline(ctx: Ctx, table: Table, key: string, data: any) {
   let investigation = data.investigationId ?? data.resource?.investigationId;
   if (table === "graphs" || table === "analyses") investigation = key;
-  if (table === "idempotency")
-    investigation = data.response?.body?.investigationId;
   if (table === "jobs") {
     if (["ingest", "event"].includes(data.kind)) investigation = data.target;
     if (data.kind === "enrich")
