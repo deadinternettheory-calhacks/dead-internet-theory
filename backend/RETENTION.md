@@ -48,4 +48,3 @@ IDs, comment IDs and per-comment links are replaced, `u/` mentions in text are
 masked, and only the link to the original thread is kept. Comment text,
 timestamps and scores are unchanged. Remove or replace it if the thread is
 deleted or its authors ask.
-
