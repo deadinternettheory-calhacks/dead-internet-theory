@@ -29,8 +29,12 @@ frontend calls.
 Node 22. `.npmrc` sets `legacy-peer-deps` because npm 10.9 crashes resolving
 Convex's optional React/Clerk peer dependencies.
 
+This service and the ingestion backend both pin the Convex SDK/CLI to **1.48.0**.
+After pulling an update, run `npm ci` in each service directory. Check
+`npx convex --version` from the service directory to use its project-local CLI.
+
 ```sh
-npm install
+npm ci
 npx convex dev          # or CONVEX_AGENT_MODE=anonymous for a local deployment
 npm test                # unit tests, including the rubric's worked examples
 npm run lint            # TypeScript check

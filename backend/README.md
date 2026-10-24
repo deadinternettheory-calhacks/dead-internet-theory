@@ -36,6 +36,11 @@ npm audit
 CONVEX_AGENT_MODE=anonymous npm run dev
 ```
 
+The backend and inference service both pin the Convex SDK/CLI to **1.48.0**.
+After pulling an update, run `npm ci` in each service directory and check
+`npx convex --version` there. Use the project-local CLI so an older global
+installation does not select a different version.
+
 `dev`, `test`, `typecheck` and `deploy` generate TypeScript declarations and
 standalone AJV Draft 2020-12 validators from `../contracts/models.schema.json`.
 Formats are checked. Generated files are ignored build outputs; the canonical

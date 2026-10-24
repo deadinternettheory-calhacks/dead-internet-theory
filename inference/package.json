@@ -14,7 +14,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "0.133.0",
     "@cfworker/json-schema": "4.1.1",
-    "convex": "1.46.0",
+    "convex": "1.48.0",
     "jose": "6.2.12"
   },
   "devDependencies": {
