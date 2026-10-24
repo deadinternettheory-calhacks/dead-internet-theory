@@ -1,8 +1,9 @@
-// Client for the v1 REST API (contracts/openapi.yaml), served by the Convex
-// backend. VITE_API_BASE_URL is a public base URL, never a secret.
+// Client for the v1 REST API (contracts/openapi.yaml). By default it calls the
+// site's own /api proxy (web/server/proxy.ts), which adds backend credentials.
+// VITE_API_BASE_URL can point elsewhere; it is a public URL, never a secret.
 import type { AnalysisResource, ApiErrorBody, EnrichmentJob, GraphEnvelope, InvestigationResource } from './contract';
 
-export const apiBaseUrl: string | null = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/+$/, '') || null;
+export const apiBaseUrl: string = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/+$/, '') || '/api';
 
 export class ApiError extends Error {
   constructor(readonly status: number, readonly code: string, message: string, readonly retryable: boolean) {
@@ -11,7 +12,6 @@ export class ApiError extends Error {
 }
 
 async function call<T>(path: string, init?: RequestInit): Promise<T> {
-  if (!apiBaseUrl) throw new ApiError(0, 'NOT_CONFIGURED', 'The analysis service is not connected.', false);
   let response: Response;
   try {
     response = await fetch(`${apiBaseUrl}${path}`, init);
@@ -19,6 +19,8 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
     throw new ApiError(0, 'NETWORK', 'Could not reach the analysis service.', true);
   }
   const body = await response.json().catch(() => null);
+  // No JSON at all means no API is deployed at this base (for example, the SPA page came back instead).
+  if (body === null) throw new ApiError(response.status, 'SERVICE_NOT_CONFIGURED', 'The analysis service is not connected.', false);
   if (!response.ok) {
     const error = (body as ApiErrorBody | null)?.error;
     throw new ApiError(response.status, error?.code ?? `HTTP_${response.status}`, error?.message ?? 'Request failed.', error?.retryable ?? response.status >= 500);

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { buildReport, type Report } from '../analysis/report';
-import { ApiError, apiBaseUrl, createInvestigation, getAnalysis, getEnrichment, getGraph, getInvestigation, idempotencyKeyFor } from '../api/client';
+import { ApiError, createInvestigation, getAnalysis, getEnrichment, getGraph, getInvestigation, idempotencyKeyFor } from '../api/client';
 import type { EnrichmentJob, InvestigationResource } from '../api/contract';
 import { AnalysisErrorState, AnalysisLoadingState } from '../components/AnalysisPresentation';
 import { AnalysisReport, SyntheticBanner } from '../components/AnalysisReport';
@@ -14,11 +14,13 @@ import { parsePostUrl } from '../url';
 const POLL_MS = 2500;
 /** Backend ingestion codes meaning live collection is not available for this link yet. */
 const NOT_CONNECTED = new Set(['INGESTION_NOT_CONNECTED', 'FIXTURE_SOURCE_NOT_FOUND', 'PROVIDER_NOT_AUTHORIZED', 'PROVIDER_NOT_CONFIGURED', 'PROVIDER_NOT_VERIFIED']);
-const MAX_WAIT_MS = 20 * 60_000;
+/** Two CREAO runs usually take 1-3 minutes; stop waiting well before the worker's own limits. */
+const MAX_WAIT_MS = 8 * 60_000;
 
 type View =
   | { kind: 'loading'; status: string }
   | { kind: 'report'; report: Report }
+  | { kind: 'unavailable' }
   | { kind: 'error'; title: string; message: string; retry: boolean; showExample?: boolean };
 
 /** Progress text follows the real investigation states (SPEC REQ-STATE-1). */
@@ -67,6 +69,8 @@ function LiveAnalysis({ url }: { url: string }) {
       if (!cancelled.current) setView({ kind: 'report', report: buildReport(analysis, graph, enrichments) });
     } catch (err) {
       if (cancelled.current) return;
+      // The proxy answers SERVICE_NOT_CONFIGURED until the deployment has backend credentials.
+      if (err instanceof ApiError && err.code === 'SERVICE_NOT_CONFIGURED') return setView({ kind: 'unavailable' });
       const unsupported = err instanceof ApiError && err.code === 'INVALID_URL';
       setView(unsupported
         ? { kind: 'error', title: 'We can’t check this link.', message: 'This site or link type is not supported.', retry: false }
@@ -80,6 +84,7 @@ function LiveAnalysis({ url }: { url: string }) {
     return () => { cancelled.current = true; };
   }, [run, attempt]);
 
+  if (view.kind === 'unavailable') return <><PostSummaryCard url={url}/><ServiceUnavailable/><p className="example-link">Want to see what a finished report looks like? <Link className="text-link" to="/example">View the synthetic example</Link></p></>;
   if (view.kind === 'loading') return <><PostSummaryCard url={url}/><AnalysisLoadingState status={view.status}/></>;
   if (view.kind === 'error') {
     return <><PostSummaryCard url={url}/><AnalysisErrorState title={view.title} message={view.message} onRetry={view.retry ? () => setAttempt(a => a + 1) : undefined}/>
@@ -92,7 +97,6 @@ export function AnalysisPage({ url }: { url: string }) {
   const valid = parsePostUrl(url);
   let body;
   if (!valid.ok) body = <UnsupportedLinkState/>;
-  else if (!apiBaseUrl) body = <><PostSummaryCard url={url}/><ServiceUnavailable/><p className="example-link">Want to see what a finished report looks like? <Link className="text-link" to="/example">View the synthetic example</Link></p></>;
   else body = <LiveAnalysis key={valid.url.href} url={valid.url.href}/>;
   return <main className="analysis-main"><Link className="back-link" to="/">{String.fromCharCode(8592)} Check another post</Link>{body}<div className="bottom-cta"><h2>Have another post to check?</h2><Link className="primary-button link-button" to="/">Analyze another post <ArrowRight size={18}/></Link></div></main>;
 }

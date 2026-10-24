@@ -14,22 +14,54 @@ npm run build
 
 ## Connecting the analysis API
 
-`VITE_API_BASE_URL` sets the public base URL that the analysis page calls for
-the v1 routes. It is a URL, not a secret; never put tokens or API keys in a
-`VITE_*` variable.
+The analysis page calls the site's own `/api/v1/*` routes. A same-origin proxy
+(`server/proxy.ts`, deployed as the Vercel Function `api/proxy.ts`) forwards
+them to the ingestion backend
+([../backend/INTEGRATION.md](../backend/INTEGRATION.md)). The backend requires a
+bearer JWT on every route and allows no browser cross-origin calls.
 
-The ingestion backend ([../backend/INTEGRATION.md](../backend/INTEGRATION.md))
-requires a bearer JWT on every route and does not allow cross-origin browser
-calls. `VITE_API_BASE_URL` must therefore point at a trusted same-origin
-proxy/BFF that attaches a frontend token and forwards to the backend. That
-proxy and its token issuance are an open team decision and are not built yet.
+Set these **server-side** environment variables in the Vercel project. Never
+use `VITE_*` names for them, because those are bundled into the browser.
 
-- **Not set:** the analysis page shows the honest "service not connected" state.
-- **Set:** submitting a link creates an investigation (`POST /v1/investigations`),
-  polls its real `ingestionStatus` and `analysisStatus`, then fetches the stored
-  analysis, graph and used enrichment jobs and renders the report. Ingestion
-  failures, analysis failures and unsupported links each get their own message;
-  no result is shown for a failed analysis.
+| Name | Value |
+| --- | --- |
+| `BACKEND_BASE_URL` | Backend HTTP base, e.g. `https://impartial-sheep-516.convex.site` |
+| `BACKEND_JWT_SECRET` | The backend's `AUTH_JWT_SECRET` |
+
+Until both are set, the proxy answers `SERVICE_NOT_CONFIGURED` and the page shows
+the "service not connected" state.
+
+What the proxy does:
+
+- Forwards only the frontend routes: create an investigation, read an
+  investigation, graph, analysis or enrichment, and capabilities. Inference
+  routes are never proxied.
+- Gives each browser an anonymous session ID in an HttpOnly, SameSite=Lax cookie.
+  It mints a five-minute `frontend` JWT with subject `web:<session>` for each
+  request, so the backend's owner check lets visitors read only investigations
+  they created.
+- Rejects cross-origin creates and bodies over 8 KB, and passes backend errors
+  and `Retry-After` through. Submission rate limits are the backend's
+  (`POSTS_PER_HOUR`); the proxy adds none.
+
+Locally, `npm run dev` and `npm run preview` serve `/api` through the same handler
+when the two variables are set in the shell:
+
+```sh
+BACKEND_BASE_URL=http://127.0.0.1:3211 BACKEND_JWT_SECRET=<secret> npm run dev
+```
+
+`VITE_API_BASE_URL` can override the default `/api` base; it is a public URL.
+
+Submitting a link creates an investigation, polls its real `ingestionStatus` and
+`analysisStatus`, then fetches the stored analysis, graph and used enrichment
+jobs and renders the report. Ingestion failures, analysis failures and
+unsupported links each get their own message; no result is shown for a failed
+analysis. The v1 API has no inference-failure route, so if inference fails after
+accepting an event, the page stops waiting after 8 minutes. While the backend
+runs in fixture mode, only its synthetic test threads (for example
+`https://www.reddit.com/r/example/comments/demo/`) can be collected. `/example`
+links to that thread.
 
 ## Synthetic example
 
