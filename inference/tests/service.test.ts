@@ -85,7 +85,11 @@ describe('backend fixture thread', () => {
     const result = await runSequential(fixtureGraph, {
       creao,
       requestEnrichment: async request => {
-        expect(request.authors).toEqual([{ authorId: 'reddit:author:t2_alex', anchorCommentId: 'reddit:comment:t1_a' }]);
+        // One supportive and one unsupportive user: the whole (tiny) population of each side.
+        expect(request.authors).toEqual([
+          { authorId: 'reddit:author:t2_alex', anchorCommentId: 'reddit:comment:t1_a' },
+          { authorId: 'reddit:author:t2_ben', anchorCommentId: 'reddit:comment:t1_b' },
+        ]);
         return enrichment;
       },
       getEnrichment: async () => enrichment,

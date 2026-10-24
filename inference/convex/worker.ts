@@ -2,8 +2,8 @@
 // through persisted stages, each run by a separately scheduled action:
 //   triage_start -> [triage_wait] -> enrich_start -> enrich_wait
 //   -> scoring_start -> scoring_wait -> done | failed
-// Speed: likely recommenders' histories are requested before triage and
-// collected while it runs; triage is one direct Claude call when
+// Histories are requested for a seeded random sample of supportive and
+// unsupportive users after triage; triage is one direct Claude call when
 // ANTHROPIC_API_KEY is set (otherwise a CREAO run); validated model replies are
 // cached by their exact input; CREAO can wake the job by webhook instead of
 // waiting for the next poll.
@@ -20,7 +20,7 @@ import { ClaudeError, claudeTriage, DEFAULT_CLAUDE_MODEL, type ClaudeConfig } fr
 import { createCreaoClient, CreaoError, MockCreaoClient, type CreaoClient } from './lib/inference/creao';
 import { checkSubmission } from './lib/inference/evidence';
 import { ModelOutputError, parseScoring, parseTriage, type ScoringOutput, type TriageOutput } from './lib/inference/outputs';
-import { followupRequestFor, MAX_STAGE_ATTEMPTS, needsScoring, scoringInputs, speculativeRequestFor, triageInputs } from './lib/inference/pipeline';
+import { enrichmentRequestFor, MAX_STAGE_ATTEMPTS, needsScoring, scoringInputs, triageInputs } from './lib/inference/pipeline';
 import { PROMPT_VERSION } from './lib/inference/prompts';
 import { validateModel } from './lib/schema';
 import { sha256Hex } from './lib/util';
@@ -40,9 +40,6 @@ interface JobState {
   triageRunId?: string;
   triageCacheKey?: string;
   triage?: TriageOutput;
-  /** Author IDs already requested (speculatively or as follow-up). */
-  requestedAuthors?: string[];
-  speculativeRequested?: boolean;
   enrichmentIds?: string[];
   enrichmentNote?: string;
   scoringRunId?: string;
@@ -276,21 +273,6 @@ export const step = internalAction({
 
       switch (job.stage as Stage) {
         case 'triage_start': {
-          // Request likely recommenders' histories first so they are collected while triage runs.
-          if (!state.speculativeRequested) {
-            const request = speculativeRequestFor(graph);
-            if (request) {
-              try {
-                const created = await api.requestEnrichment(id, request, `dit-inference:enrich:spec:${id}:${graph.graphRevision}`);
-                state.enrichmentIds = [created.enrichmentId];
-                state.requestedAuthors = request.authors.map(a => a.authorId);
-              } catch (err) {
-                if (err instanceof BackendError && err.retryable) throw err;
-                // Not fatal: triage's follow-up request still asks for what is needed.
-              }
-            }
-            state.speculativeRequested = true;
-          }
           const { inputs, analyzedCommentIds } = triageInputs(graph);
           state.analyzedCommentIds = analyzedCommentIds;
           state.triageCacheKey = await cacheKey('triage', claude ? `claude:${claude.model}` : creao.label, inputs.evidence);
@@ -323,12 +305,12 @@ export const step = internalAction({
           return void (await next('enrich_start'));
         }
         case 'enrich_start': {
-          const request = followupRequestFor(graph, state.triage!, new Set(state.requestedAuthors ?? []));
+          // One request for a seeded random sample of supportive and unsupportive users.
+          const request = enrichmentRequestFor(graph, state.triage!);
           if (request) {
             try {
-              const created = await api.requestEnrichment(id, request, `dit-inference:enrich:followup:${id}:${graph.graphRevision}`);
-              state.enrichmentIds = [...(state.enrichmentIds ?? []), created.enrichmentId];
-              state.requestedAuthors = [...(state.requestedAuthors ?? []), ...request.authors.map(a => a.authorId)];
+              const created = await api.requestEnrichment(id, request, `dit-inference:enrich:sample:${id}:${graph.graphRevision}`);
+              state.enrichmentIds = [created.enrichmentId];
             } catch (err) {
               if (err instanceof BackendError && err.retryable) throw err;
               state.enrichmentNote = `Some author histories could not be requested (${err instanceof BackendError ? err.code : 'error'}); rules that need them are unknown.`;

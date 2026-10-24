@@ -7,7 +7,7 @@
     "schemaVersion": "1.0.0",
     "graphRevision": 1,
     "graphFingerprint": "77f2bd8c21bcc034068d8d089c74f2e916881b7f6769f93bacf8307073be55a2",
-    "inferenceVersion": "dit-inference/0.1.0; rubric/0.3; prompts-2026-10-24b; creao-mock",
+    "inferenceVersion": "dit-inference/0.2.0; rubric/0.3; prompts-2026-10-24b; creao-mock",
     "inferredAt": "2026-10-24T06:03:00Z",
     "subject": {
       "label": "BrewMaster Mini",
@@ -37,21 +37,24 @@
       ]
     },
     "overallCoordinationRisk": {
-      "score": 76,
-      "confidence": 0.55,
-      "explanation": "Three accounts recommended the BrewMaster Mini with near-identical feature lists within 13 minutes, two of them defended it together against a critical reply, and all three mention the brand often in their recent histories. The pattern is consistent with coordinated promotion. The original poster's history was not available. The highest-scoring recommendation, by u/brewfan_22, scored 76/100 on the uncalibrated astroturfing rubric (Very high; medium evidence confidence). This is a lead for review, not proof of coordination.",
+      "score": 63,
+      "confidence": 0.7,
+      "explanation": "Comment-section astroturfing index: 63/100 (High). Rubric strength 76: the top 3 recommendation(s) scored 76 (u/brewfan_22), 76 (u/crema_queen), 76 (u/daily_grind_dan) on the rubric. Coordination 55: 4 recommendations form the strongest cluster. History contrast 50: sampled supportive users mention BrewMaster Mini in 47% of their recent comments, unsupportive users in 0%; 0% of supportive and 0% of unsupportive sampled accounts were under 90 days old. One-sided support 67: 83% of comments taking a side were supportive. Weights: rubric 40%, coordination 25%, history contrast 25%, one-sided support 10%, spread over the parts that could be measured. Histories came from a random sample of 3 of 3 supportive and 3 of 3 unsupportive users. This is an uncalibrated, hand-weighted index for prioritizing review, not a probability or a finding that the discussion was astroturfed.",
       "evidenceRefs": [
         "reddit:comment:t1_syn01",
         "reddit:comment:t1_syn02",
         "reddit:comment:t1_syn03",
         "reddit:comment:t1_syn06",
-        "reddit:comment:t1_syn07",
-        "reddit:comment:t1_syn_b02",
-        "reddit:comment:t1_syn_a03",
         "reddit:comment:t1_syn_a01",
         "reddit:comment:t1_syn_a02",
+        "reddit:comment:t1_syn_a03",
         "reddit:comment:t1_syn_a04",
-        "reddit:comment:t1_syn_a05"
+        "reddit:comment:t1_syn_a05",
+        "reddit:comment:t1_syn_c01",
+        "reddit:comment:t1_syn_c02",
+        "reddit:comment:t1_syn_c03",
+        "reddit:comment:t1_syn_b01",
+        "reddit:comment:t1_syn_b02"
       ]
     },
     "axes": [
@@ -359,11 +362,11 @@
       }
     ],
     "usedEnrichmentIds": [
-      "enr_synthetic_espresso",
-      "enr_synthetic_espresso_2"
+      "enr_synthetic_espresso"
     ],
     "limitations": [
       "Scores come from an uncalibrated, hand-weighted rubric (version 0.3) and a provisional rubric-to-axis mapping. They are heuristic indices, not probabilities, and not a finding of astroturfing.",
+      "Account histories were requested for a seeded random sample of users, not everyone: 3 of 3 supportive and 3 of 3 unsupportive users. Rules that need an unsampled user's history are unknown, and a small sample can miss patterns.",
       "History for u/daily_grind_dan was partial (6 of 10 items); missing history is not evidence either way.",
       "The root author’s history was not available, so seeding checks that need it (T2, C5) are unknown.",
       "Synthetic fixture: every account, comment and number is fabricated. No scraper ran."
