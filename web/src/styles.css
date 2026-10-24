@@ -12,5 +12,41 @@
 .evidence-list,.axis-list,.comment-list,.limitation-list{list-style:none;padding:0;margin:12px 0 0}.evidence-quote,.comment-row{padding:10px 0;border-top:1px solid var(--border)}.evidence-quote:first-child,.comment-row:first-child{border-top:0}.quote-meta{font-size:13px!important;color:var(--muted);margin:0 0 4px!important}blockquote{margin:0 0 4px;padding-left:12px;border-left:3px solid #cfd8d2;font-size:15px;color:var(--text);overflow-wrap:anywhere}.finding-card details p{margin-top:6px}
 .axis-list li{padding:8px 0;border-top:1px solid var(--border)}.axis-list li:first-child{border-top:0}.axis-list strong{font-size:14px}.axis-list p,.comment-row p{font-size:14px;color:var(--muted);margin:2px 0 6px}.detail-heading{font-size:15px;margin:18px 0 4px}.index-note p{color:var(--text)!important}.version-note{font-size:12px!important;margin-top:16px!important}
 .stance{font-weight:600}.stance-supportive{color:var(--success)}.stance-critical{color:var(--danger)}.limitation-list li{font-size:13px;color:#4e5b54;padding-left:14px;position:relative;margin-top:4px}.limitation-list li:before{content:"";position:absolute;left:2px;top:9px;width:4px;height:4px;border-radius:50%;background:#7d8f85}
-.platforms .text-link{margin-top:6px}
 .finding-card>div{flex:1;min-width:0}.repeat-note{font-size:13px!important;margin-top:8px!important}
+
+/* FE-002 homepage search experience */
+.header nav a{font-size:14px}
+.home-main{display:flex;flex-direction:column}
+.hero{flex:1;max-width:none;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px 76px}
+.hero h1{width:100%;max-width:880px;color:#202322;font-size:56px;line-height:1.12;letter-spacing:-1.6px;margin:0 auto 36px;font-weight:700}
+.search-form{width:100%;max-width:680px;margin:0 auto}
+.input-wrap{height:60px;border-color:#D7DDD7;padding:0 18px}
+.input-wrap input{flex:1;min-width:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:16px}
+.input-wrap input::placeholder{font-size:16px}
+.search-form>.primary-button{display:flex;width:190px;height:50px;min-height:50px;margin:18px auto 0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:16px;font-weight:600}
+.search-form>.primary-button:focus-visible{outline:3px solid #284D43;outline-offset:3px}
+.shortcut{width:100%;max-width:680px;margin:22px auto 0;color:#626864;font-size:14px;line-height:1.5;text-align:center}
+.shortcut>span{font-weight:600}
+.shortcut code{color:#284D43;font-weight:600}
+.home-footer{border-top:0;padding-top:14px;padding-bottom:20px}
+.home-footer .footer-main{justify-content:center}
+@media(max-width:767px){
+  .hero{min-height:calc(100svh - 122px);padding:20px 20px 58px}
+  .hero h1{font-size:36px;line-height:1.15;letter-spacing:-.8px;margin-bottom:36px}
+  .search-form>.primary-button{width:100%}
+  .shortcut{line-height:1.5}
+  .home-footer{padding:12px 20px 16px}
+}
+
+/* FE-003 informational page */
+.about-main{width:100%;max-width:760px;margin:0 auto;padding:42px 24px 48px;color:#202322}
+.about-main>h1{font-size:40px;line-height:1.2;letter-spacing:-.8px;margin:0 0 30px;color:#202322}
+.about-section{padding:0;margin:0 0 25px;border:0}
+.about-section h2{font-size:20px;line-height:1.35;font-weight:650;margin:0 0 7px;color:#202322}
+.about-section p{font-size:16px;line-height:1.7;color:#626864;margin:0}
+.about-disclaimer{border-top:1px solid #D7DDD7;padding-top:16px;margin:31px 0 0;color:#626864;font-size:14px;line-height:1.6}
+@media(max-width:767px){
+  .about-main{padding:32px 20px 36px}
+  .about-main>h1{font-size:36px;margin-bottom:26px}
+  .about-section{margin-bottom:23px}
+}
