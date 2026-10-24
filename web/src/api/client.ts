@@ -1,7 +1,7 @@
 // Client for the v1 REST API (contracts/openapi.yaml). By default it calls the
 // site's own /api proxy (web/server/proxy.ts), which adds backend credentials.
 // VITE_API_BASE_URL can point elsewhere; it is a public URL, never a secret.
-import type { AnalysisResource, ApiErrorBody, EnrichmentJob, GraphEnvelope, InvestigationResource } from './contract';
+import type { AnalysisResource, ApiErrorBody, CapabilityResponse, EnrichmentJob, GraphEnvelope, InvestigationResource } from './contract';
 
 export const apiBaseUrl: string = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/+$/, '') || '/api';
 
@@ -29,6 +29,7 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 const enc = encodeURIComponent;
+export const getCapabilities = (signal?: AbortSignal) => call<CapabilityResponse>('/v1/capabilities', { signal });
 
 export function createInvestigation(sourceUrl: string, idempotencyKey: string) {
   return call<InvestigationResource>('/v1/investigations', {

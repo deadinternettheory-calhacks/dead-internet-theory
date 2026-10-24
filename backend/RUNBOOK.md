@@ -93,36 +93,38 @@ connected to the CREAO coordinator at `grandiose-barracuda-22`. The real-post
 pipeline completed on the hosted website. Launch settings are 100 comments,
 $1 per Actor run and no daily reservation cap (0), as requested by the owner.
 See the [hosted verification record](verification/2026-10-24-hosted-live.md)
-and [retention policy](RETENTION.md). X, YouTube and TikTok remain unverified and
-disabled; broader provider coverage and hosted live history cases remain open.
+and [retention policy](RETENTION.md). Subsequent permitted checks verified YouTube,
+TikTok and X discussion adapters plus a bounded X authored-history lookup; see
+the records below. X is demo-limited on the owner's current Apify Free plan.
 
 ## Server configuration
 
 Copy `.env.example` to a private file, fill server-only values, and use
 `npx convex env set --from-file <private-file>`. Do not commit real env files.
 
-| Variable                          | Purpose/default                                                             |
-| --------------------------------- | --------------------------------------------------------------------------- |
-| `AUTH_JWT_SECRET`                 | Required, at least 32 characters of high-entropy secret; HS256 verification |
-| `PROVIDER_MODE`                   | `fixture` by default; `live` additionally requires review gates             |
-| `INFERENCE_EVENT_URL`             | Public HTTPS event receiver; none by default                                |
-| `INFERENCE_EVENT_TOKEN`           | Server-only bearer credential to receiver                                   |
-| `APIFY_TOKEN`                     | Server-only Apify credential; unnecessary in fixture mode                   |
-| `PROVIDER_AUTHORIZATION_APPROVED` | Must equal `true` before live work                                          |
-| `RETENTION_POLICY_REF`            | Required documented retention/deletion approval reference for live work     |
-| `MAX_GRAPH_BYTES`                 | 500000 UTF-8 uncompressed bytes; maximum accepted setting 700000            |
-| `MAX_COMMENTS`                    | 1000 retained comments; configurable 1–3000                                 |
-| `MAX_REQUEST_BYTES`               | 500000; configurable up to 700000                                           |
-| `MAX_ACTIVE_JOBS`                 | 4 leased worker actions; maximum 16                                         |
-| `MAX_ACTIVE_PROVIDER_RUNS`        | 4 reserved/running Actors across polling ticks; maximum 16                  |
-| `MAX_QUEUED_JOBS`                 | 100 waiting jobs; maximum 1000                                              |
-| `POSTS_PER_HOUR`                  | 30 accepted POSTs per principal per UTC hour; successful replays exempt     |
-| `MAX_JOB_ATTEMPTS`                | 3 including the initial attempt; maximum 5                                  |
-| `APIFY_TIMEOUT_SECONDS`           | 180 per run; 30–600 supported                                               |
-| `HISTORY_CACHE_SECONDS`           | 3600, maximum 86400; expiry checked before reuse                            |
-| `APIFY_RUN_BUDGET_CENTS`          | 25 maximum charged USD cents per Actor run                                  |
-| `APIFY_DAILY_BUDGET_CENTS`        | 500 maximum reserved USD cents per UTC day; 0 disables the daily cap        |
-| `LOCAL_SYNTHETIC_EVENT_DELIVERY`  | `false`; exact local-only test exception above                              |
+| Variable                          | Purpose/default                                                                                                                       |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `AUTH_JWT_SECRET`                 | Required, at least 32 characters of high-entropy secret; HS256 verification                                                           |
+| `PROVIDER_MODE`                   | `fixture` by default; `live` additionally requires review gates                                                                       |
+| `INFERENCE_EVENT_URL`             | Public HTTPS event receiver; none by default                                                                                          |
+| `INFERENCE_EVENT_TOKEN`           | Server-only bearer credential to receiver                                                                                             |
+| `APIFY_TOKEN`                     | Server-only Apify credential; unnecessary in fixture mode                                                                             |
+| `APIFY_X_DEMO_ONLY`               | Set `true` for Apify Free; exposes X's five-runs/month, ten-items/run demo limits in capabilities and the UI without changing billing |
+| `PROVIDER_AUTHORIZATION_APPROVED` | Must equal `true` before live work                                                                                                    |
+| `RETENTION_POLICY_REF`            | Required documented retention/deletion approval reference for live work                                                               |
+| `MAX_GRAPH_BYTES`                 | 500000 UTF-8 uncompressed bytes; maximum accepted setting 700000                                                                      |
+| `MAX_COMMENTS`                    | 1000 retained comments; configurable 1–3000                                                                                           |
+| `MAX_REQUEST_BYTES`               | 500000; configurable up to 700000                                                                                                     |
+| `MAX_ACTIVE_JOBS`                 | 4 leased worker actions; maximum 16                                                                                                   |
+| `MAX_ACTIVE_PROVIDER_RUNS`        | 4 reserved/running Actors across polling ticks; maximum 16                                                                            |
+| `MAX_QUEUED_JOBS`                 | 100 waiting jobs; maximum 1000                                                                                                        |
+| `POSTS_PER_HOUR`                  | 30 accepted POSTs per principal per UTC hour; successful replays exempt                                                               |
+| `MAX_JOB_ATTEMPTS`                | 3 including the initial attempt; maximum 5                                                                                            |
+| `APIFY_TIMEOUT_SECONDS`           | 180 per run; 30–600 supported                                                                                                         |
+| `HISTORY_CACHE_SECONDS`           | 3600, maximum 86400; expiry checked before reuse                                                                                      |
+| `APIFY_RUN_BUDGET_CENTS`          | 25 maximum charged USD cents per Actor run                                                                                            |
+| `APIFY_DAILY_BUDGET_CENTS`        | 500 maximum reserved USD cents per UTC day; 0 disables the daily cap                                                                  |
+| `LOCAL_SYNTHETIC_EVENT_DELIVERY`  | `false`; exact local-only test exception above                                                                                        |
 
 Convex CLI sets `CONVEX_DEPLOYMENT`, `CONVEX_URL`, `CONVEX_SITE_URL` in its ignored
 local file; runtime supplies `CONVEX_CLOUD_URL`. Production CLI deploy credentials
@@ -167,10 +169,13 @@ YouTube dates are estimated unless explicitly attested exact; video roots are te
 metadata only. No account creation or karma value is fabricated; absent profile
 metadata remains absent.
 
-The Reddit `verification` entry in `src/provider-policy.ts` references the
-reviewed discussion/history evidence; the other three entries remain false.
+All four `verification` entries in `src/provider-policy.ts` reference reviewed
+runtime evidence. See the scoped checks for
+[YouTube](verification/2026-10-24-youtube-discussion.md),
+[TikTok](verification/2026-10-24-tiktok-discussion.md) and
+[X discussion/history](verification/2026-10-24-x-discussion-history.md).
 The adapter gate and capabilities read this single policy source.
-Capabilities report the required contract support classes alongside the actual reviewed verification state and a computed `liveEnabled` flag. Initially both are false. Enabling live collection requires the reviewed flag/evidence, live mode, authorization, retention reference and a nonempty server credential. These
+Capabilities report the required contract support classes alongside the actual reviewed verification state and a computed `liveEnabled` flag and a `demoLimited` extension. Enabling live collection requires the reviewed flag/evidence, live mode, authorization, retention reference and a nonempty server credential. These
 classes describe operation intent, not live availability. Even setting an Apify
 token and authorization flags cannot enable an unverified adapter.
 
@@ -199,8 +204,13 @@ deleted, with authenticated 404 checks for remote resources. See the
 During that standalone smoke, no real content reached Convex or inference.
 Optional Reddit account dates/karma were not fetched or invented.
 
-Other candidate field mappings remain documentation/synthetic checks only and
-may require correction against authorized provider output.
+YouTube and TikTok video roots are built from observed video IDs and metadata
+carried on comment rows, with unavailable creator identity/time left unknown.
+Date-only YouTube comment ages are not turned into exact midnight timestamps.
+X root and authored-reply queries use the single-post-capable
+`apidojo/twitter-scraper-lite` Actor. X Actor runs are conservatively serialized
+before reserving spend. All selected builds are pinned in `src/actors.ts`.
+The X and TikTok mappings still require their permitted runtime checks.
 Review sources: [Reddit discussion](https://apify.com/clearpath/reddit-post-comments-bulk-scraper/input-schema),
 [Reddit history](https://apify.com/clearpath/reddit-user-content-scraper/input-schema),
 [X authored search](https://apify.com/apidojo/tweet-scraper/input-schema),

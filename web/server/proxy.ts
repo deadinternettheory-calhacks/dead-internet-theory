@@ -7,6 +7,7 @@
 // `web:<session>` as the subject, so the backend's owner check lets a visitor
 // read only investigations they created. The signing secret stays server-side.
 import { SignJWT } from 'jose';
+import { isTikTokShareUrl, resolveTikTokShareUrl } from './tiktokShare.js';
 
 export interface ProxyEnv {
   /** Backend HTTP base, e.g. https://<deployment>.convex.site */
@@ -18,6 +19,7 @@ export interface ProxyEnv {
 export interface ProxyDeps {
   fetch?: typeof fetch;
   nowSeconds?: () => number;
+  resolveTikTokShare?: typeof resolveTikTokShareUrl;
 }
 
 const COOKIE = 'dit_sid';
@@ -98,6 +100,14 @@ export async function handleProxy(request: Request, env: ProxyEnv, deps: ProxyDe
     if (origin && origin !== url.origin) return json(403, 'FORBIDDEN', 'Cross-origin requests are not allowed.');
     body = await request.text();
     if (new TextEncoder().encode(body).length > MAX_BODY_BYTES) return json(413, 'INVALID_REQUEST', 'Request body too large.');
+    let value: unknown;
+    try { value = JSON.parse(body); } catch { return json(400, 'INVALID_REQUEST', 'Invalid JSON.'); }
+    if (value && typeof value === 'object' && 'sourceUrl' in value && typeof value.sourceUrl === 'string' && isTikTokShareUrl(value.sourceUrl)) {
+      try {
+        value.sourceUrl = await (deps.resolveTikTokShare ?? resolveTikTokShareUrl)(value.sourceUrl);
+        body = JSON.stringify(value);
+      } catch { return json(502, 'SOURCE_LINK_UNAVAILABLE', 'Could not open the TikTok share link. Try its full video URL.'); }
+    }
   }
 
   let session = sessionFrom(request);
@@ -127,7 +137,8 @@ export async function handleProxy(request: Request, env: ProxyEnv, deps: ProxyDe
   const responseHeaders = new Headers({ 'Content-Type': upstream.headers.get('Content-Type') ?? 'application/json', 'Cache-Control': 'no-store' });
   const retryAfter = upstream.headers.get('Retry-After');
   if (retryAfter) responseHeaders.set('Retry-After', retryAfter);
-  if (isNewSession) {
+  // A homepage capability read must not race a create and overwrite its owner cookie.
+  if (isNewSession && path !== 'v1/capabilities') {
     const secure = url.protocol === 'https:' ? '; Secure' : '';
     responseHeaders.append('Set-Cookie', `${COOKIE}=${session}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000${secure}`);
   }

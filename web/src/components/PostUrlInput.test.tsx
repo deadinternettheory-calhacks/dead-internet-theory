@@ -13,17 +13,28 @@ describe('homepage URL input errors', () => {
     container.remove();
   });
 
-  function renderInput() {
+  function renderInput(onSubmit = vi.fn()) {
     container = document.createElement('div');
     document.body.append(container);
     root = createRoot(container);
-    act(() => root.render(<PostUrlInput onSubmit={vi.fn()} />));
+    act(() => root.render(<PostUrlInput onSubmit={onSubmit} />));
     return container;
   }
 
+  it.each(['https://x.com/example/status/123456789','https://www.reddit.com/r/example/comments/abc123/','https://www.tiktok.com/@example/video/7653941272524115231','https://youtu.be/jDtG_pwIIv0?si=share'])('submits a supported platform link without a Reddit-only error: %s', url => {
+    const onSubmit = vi.fn();
+    const page = renderInput(onSubmit);
+    const input = page.querySelector('input')!;
+    const setValue = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!;
+    act(() => { setValue.call(input, url); input.dispatchEvent(new Event('input', { bubbles: true })); });
+    act(() => page.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+    expect(onSubmit).toHaveBeenCalledWith(url);
+    expect(page.querySelector('[role="alert"]')).toBeNull();
+  });
+
   it('shows the empty-link alert only after an empty submission', () => {
     const page = renderInput();
-    expect(page.querySelector('input')?.getAttribute('placeholder')).toBe('Paste a Reddit, TikTok, or YouTube link…');
+    expect(page.querySelector('input')?.getAttribute('placeholder')).toBe('Paste a post or video link…');
     expect(page.querySelector('[role="alert"]')).toBeNull();
 
     act(() => page.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));

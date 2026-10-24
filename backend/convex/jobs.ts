@@ -4,6 +4,7 @@ import { get, put, immutable, deadline, RETENTION_MS, type Ctx } from "./db";
 import { queue } from "./api";
 import { iso, limits, stable, validate, providerMode } from "../src/core";
 import { checkGraph } from "../src/invariants";
+import { serializedActorGroup } from "../src/actors";
 export const claim = mutation({
   args: { key: v.string() },
   handler: async (ctx, { key }) => {
@@ -243,7 +244,12 @@ export const cached = mutation({
 // Ambiguous starts hold capacity as well as spend; elapsed time is not evidence
 // that an externally queued Actor has stopped. Operators must reconcile those.
 export const reserve = mutation({
-  args: { key: v.string(), token: v.string(), operation: v.string() },
+  args: {
+    key: v.string(),
+    token: v.string(),
+    operation: v.string(),
+    actor: v.optional(v.string()),
+  },
   handler: async (ctx, a) => {
     const job = await get(ctx, "jobs", a.key);
     if (
@@ -271,6 +277,14 @@ export const reserve = mutation({
       .withIndex("status", (q) => q.eq("status", "active"))
       .take(limits().providerActive);
     if (active.length >= limits().providerActive) return { status: "busy" };
+    const actorGroup = a.actor ? serializedActorGroup[a.actor] : undefined;
+    if (
+      actorGroup &&
+      active.some(
+        (slot) => serializedActorGroup[slot.data.actor] === actorGroup,
+      )
+    )
+      return { status: "busy" };
     const day = `budget:${iso().slice(0, 10)}`;
     const used = (await get(ctx, "controls", day)) ?? 0;
     if (limits().dailyCents > 0 && used + limits().cents > limits().dailyCents)
@@ -281,6 +295,7 @@ export const reserve = mutation({
       jobKey: a.key,
       operation: a.operation,
       createdAt: iso(),
+      ...(a.actor ? { actor: a.actor } : {}),
     });
     return { status: "reserved" };
   },

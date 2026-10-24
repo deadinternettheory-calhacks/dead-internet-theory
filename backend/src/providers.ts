@@ -22,15 +22,10 @@ import { source } from "./url";
 import { redditAuthor, redditRecord, redditRowType } from "./reddit";
 import type { ProviderResources } from "./provider-cleanup";
 import { verification } from "./provider-policy";
+import { actors, actorBuilds } from "./actors";
+import { slimSocialRow, videoMetadataRoot } from "./video";
 export { verification } from "./provider-policy";
-export const actors = {
-  reddit: "clearpath/reddit-post-comments-bulk-scraper",
-  redditHistory: "clearpath/reddit-user-content-scraper",
-  x: "apidojo/twitter-replies-scraper",
-  xHistory: "apidojo/tweet-scraper",
-  youtube: "datagleaner/youtube-comments-scraper",
-  tiktok: "deepmine/tiktok-comments-scraper",
-};
+export { actors } from "./actors";
 export function liveGate(platform: Platform) {
   if (
     process.env.PROVIDER_MODE !== "live" ||
@@ -124,7 +119,7 @@ export function plan(
       ...task(
         actors.xHistory,
         {
-          searchTerms: [`from:${h}`],
+          searchTerms: [`from:${h} filter:replies`],
           sort: "Latest",
           maxItems: limits().historyCandidates,
         },
@@ -148,7 +143,7 @@ export function plan(
     ];
   if (platform === "x")
     return [
-      task(actors.xHistory, { startUrls: [url], maxItems: 1 }, "root"),
+      task(actors.xRoot, { startUrls: [url], maxItems: 1 }, "root"),
       task(
         actors.x,
         { startUrls: [url], maxItems: limits().comments, useSearch: false },
@@ -164,7 +159,7 @@ export function plan(
           sortBy: "newest",
           includeReplies: true,
           maxCommentsPerVideo: limits().comments,
-          maxRepliesPerComment: 50,
+          maxRepliesPerComment: 2,
         },
         "discussion",
       ),
@@ -176,7 +171,8 @@ export function plan(
         videos: [url],
         includeReplies: true,
         maxCommentsPerVideo: limits().comments,
-        maxRepliesPerComment: 50,
+        maxRepliesPerComment: 2,
+        commenterProfiles: false,
       },
       "discussion",
     ),
@@ -248,12 +244,7 @@ export class Apify {
     return response.body;
   }
   async start(actor: string, input: unknown) {
-    const build =
-      actor === actors.reddit
-        ? "0.0.129"
-        : actor === actors.redditHistory
-          ? "0.0.78"
-          : null;
+    const build = actorBuilds[actor];
     const response = await this.api(
       `acts/${encodeURIComponent(actor.replace("/", "~"))}/runs?waitForFinish=0&timeout=${limits().runSeconds}&memory=256&maxTotalChargeUsd=${limits().cents / 100}${build ? `&build=${build}` : ""}`,
       "POST",
@@ -347,7 +338,7 @@ export async function advance(args: {
   url?: string;
   authors?: Model<"AuthorNode">[];
   state: PlanState;
-  reserve: (op: string) => Promise<RunAdmission>;
+  reserve: (op: string, actor?: string) => Promise<RunAdmission>;
   /** Frees a reservation whose start Apify definitely refused. */
   release?: (op: string) => Promise<unknown>;
   observe: (
@@ -406,7 +397,7 @@ export async function advance(args: {
     return run;
   }
   if (task && !task.run) {
-    const admission = await args.reserve(operation);
+    const admission = await args.reserve(operation, task.actor);
     if (admission.status === "busy") return { done: false as const, state };
     if (admission.status === "denied")
       throw new ApiFault(
@@ -468,7 +459,9 @@ export async function advance(args: {
       task.rows.push(
         ...(args.kind === "history" && args.platform === "reddit"
           ? rows.map(slimRedditHistoryRow)
-          : rows),
+          : args.platform !== "reddit"
+            ? rows.map(slimSocialRow)
+            : rows),
       );
       task.offset += rows.length;
       if (new TextEncoder().encode(stable(state)).length > 650_000)
@@ -510,6 +503,24 @@ function metrics(row: any): Model<"Engagement"> {
   ])
     if (typeof row[k] === "number" && Number.isFinite(row[k]))
       result[k] = row[k];
+  if (
+    result.likeCount === undefined &&
+    typeof row.likes === "number" &&
+    Number.isFinite(row.likes)
+  )
+    result.likeCount = row.likes;
+  if (
+    result.replyCount === undefined &&
+    typeof row.replies === "number" &&
+    Number.isFinite(row.replies)
+  )
+    result.replyCount = row.replies;
+  if (
+    result.repostCount === undefined &&
+    typeof row.retweetCount === "number" &&
+    Number.isFinite(row.retweetCount)
+  )
+    result.repostCount = row.retweetCount;
   return result;
 }
 function person(row: any, p: Platform): Person | null {
@@ -523,7 +534,12 @@ function person(row: any, p: Platform): Person | null {
           : a.id),
   );
   const handle = text(
-    row.authorName ??
+    (p === "tiktok"
+      ? row.commenterUsername
+      : p === "youtube"
+        ? row.authorHandle
+        : undefined) ??
+      row.authorName ??
       (typeof row.author === "string"
         ? row.author
         : (a.userName ?? a.username ?? row.username)),
@@ -532,7 +548,10 @@ function person(row: any, p: Platform): Person | null {
   return {
     nativeId: id,
     handle: handle || null,
-    displayName: text(a.name ?? row.authorDisplayName) || null,
+    displayName:
+      text(
+        a.name ?? row.authorDisplayName ?? row.commenterName ?? row.authorName,
+      ) || null,
   };
 }
 export function mapRecord(p: Platform, row: any): RecordItem {
@@ -549,26 +568,28 @@ export function mapRecord(p: Platform, row: any): RecordItem {
   );
   return {
     nativeId,
-    text: text(row.text ?? row.body ?? row.comment),
+    text: text(row.text ?? row.fullText ?? row.body ?? row.comment),
     author: person(row, p),
     parentNativeId: parent,
-    topLevel: row.depth === 0 || row.isTopLevel === true,
+    topLevel:
+      row.depth === 0 || row.isTopLevel === true || row.isReply === false,
     timestamp: rawTime,
     estimated:
       row.timestampPrecision === "estimated" ||
       row.isTimestampEstimated === true ||
       (p === "youtube" && row.timestampPrecision !== "exact"),
     url:
-      typeof (row.url ?? row.permalink) === "string" &&
-      String(row.url ?? row.permalink).startsWith("https://")
-        ? (row.url ?? row.permalink)
+      typeof (row.url ?? row.permalink ?? row.commentUrl) === "string" &&
+      String(row.url ?? row.permalink ?? row.commentUrl).startsWith("https://")
+        ? (row.url ?? row.permalink ?? row.commentUrl)
         : null,
     metrics: metrics(row),
     contentStatus: row.deleted
       ? "deleted"
       : row.removed
         ? "removed"
-        : typeof (row.text ?? row.body ?? row.comment) === "string"
+        : typeof (row.text ?? row.fullText ?? row.body ?? row.comment) ===
+            "string"
           ? "visible"
           : "unknown",
   };
@@ -579,14 +600,22 @@ export function discussion(
   tasks: Task[],
 ): DiscussionData {
   const all = tasks.flatMap((t) => t.rows);
+  if ((p === "youtube" || p === "tiktok") && !all.length)
+    throw new ApiFault(
+      500,
+      "PROVIDER_NO_COMMENTS",
+      "No accessible public video comments were returned",
+    );
   const kind = (row: any) => (p === "reddit" ? redditRowType(row) : row.type);
+  const metadataRoot = videoMetadataRoot(p, source(url).nativeId, all);
   // Fail closed if original root is missing. Replies are never promoted to root.
   const root =
     tasks.find((t) => t.role === "root")?.rows[0] ??
     all.find(
       (r) =>
         kind(r) === "post" || kind(r) === "video" || kind(r) === "discussion",
-    );
+    ) ??
+    metadataRoot;
   if (!root)
     throw new ApiFault(
       500,
@@ -627,6 +656,34 @@ export function discussion(
       "PROVIDER_INVALID_DATA",
       "Provider returned comments for a different discussion",
     );
+  // X's replies feed can contain recommendation cards. Exclude explicitly
+  // non-reply records from another conversation, and still reject foreign replies.
+  const unrelated = new Set(
+    p === "x"
+      ? all.filter(
+          (row) =>
+            row.isReply === false &&
+            row.conversationId != null &&
+            nativeString(row.conversationId) !==
+              nativeString(root.conversationId ?? root.id),
+        )
+      : [],
+  );
+  if (
+    p === "x" &&
+    all.some(
+      (row) =>
+        !unrelated.has(row) &&
+        row.conversationId != null &&
+        nativeString(row.conversationId) !==
+          nativeString(root.conversationId ?? root.id),
+    )
+  )
+    throw new ApiFault(
+      500,
+      "PROVIDER_INVALID_DATA",
+      "Provider returned replies for a different X conversation",
+    );
   r.text = text(
     root.text ??
       root.body ??
@@ -641,6 +698,7 @@ export function discussion(
     .filter(
       (r) =>
         r !== root &&
+        !unrelated.has(r) &&
         !(p === "x" && nativeString(r.id ?? r.commentId) === native) &&
         kind(r) !== "post" &&
         kind(r) !== "video" &&
@@ -649,11 +707,16 @@ export function discussion(
     )
     .map((r) => mapRecord(p, r));
 
-  const limited = tasks.some(
-    (t) => t.truncated || t.run?.status !== "SUCCEEDED",
-  );
+  const limited =
+    unrelated.size > 0 ||
+    tasks.some((t) => t.truncated || t.run?.status !== "SUCCEEDED");
   const reportedValue =
-    root.commentCount ?? (p === "reddit" ? root.num_comments : undefined);
+    root.commentCount ??
+    (p === "reddit"
+      ? root.num_comments
+      : p === "x"
+        ? root.replyCount
+        : undefined);
   const reported =
     typeof reportedValue === "number" &&
     Number.isSafeInteger(reportedValue) &&
@@ -672,6 +735,11 @@ export function discussion(
     exhaustive: false,
     limitations: [
       "Third-party provider results are best effort; successful execution is not proof of exhaustive retrieval.",
+      ...(unrelated.size
+        ? [
+            `Excluded ${unrelated.size} unrelated non-reply recommendation records from the X provider feed.`,
+          ]
+        : []),
       ...(p === "reddit" &&
       all.some((row) => row.isScoreHidden || row.score_hidden || row.hide_score)
         ? [
@@ -688,11 +756,17 @@ export function discussion(
         : []),
       ...(p === "youtube"
         ? [
-            "Video metadata and estimated comment dates only; no audiovisual analysis.",
+            "Video title metadata only; no audiovisual analysis. Rounded or date-only comment ages are retained as source metadata without inventing exact timestamps.",
+            "YouTube public engagement counts may be rounded by the platform.",
+          ]
+        : []),
+      ...(p === "tiktok"
+        ? [
+            "Video caption metadata only; no audiovisual analysis or cross-video commenter histories.",
           ]
         : []),
     ],
-    sortOrder: "new",
+    sortOrder: p === "tiktok" || p === "x" ? "provider-ranked" : "new",
     collectedAt: iso(),
     sourceSnapshotRef: "pending",
     actorRuns: tasks.map((t) => ({

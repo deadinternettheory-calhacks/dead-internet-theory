@@ -26,7 +26,7 @@ describe('How it works page', () => {
     expect(text).toContain('Dead Internet Theory suggests that much of today\'s internet is driven by bots and AI-generated content rather than real people. Our website helps you investigate suspicious activity and find signs of manipulation.');
     expect(text).toContain('Paste a public post link. We analyze patterns in comments, accounts, and activity to identify potential signs of coordination and explain what we find.');
     expect(text).toContain('No. A high score suggests suspicious activity, but it\'s not proof. Real users can show similar patterns.');
-    expect(text).toContain('Reddit is live. X (Twitter), TikTok, and YouTube are planned.');
+    expect(text).toContain('Use a public post or video link from X (Twitter), Reddit, TikTok, or YouTube. Current availability is shown with the post form.');
     expect(markup).toContain('<p class="about-disclaimer">Results are estimates based on public signals. They are not proof of coordinated activity.</p>');
     expect(markup.indexOf('about-disclaimer')).toBeGreaterThan(markup.lastIndexOf('</h3>'));
   });
