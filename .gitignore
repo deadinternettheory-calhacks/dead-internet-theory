@@ -1,6 +1,9 @@
 # macOS metadata
 .DS_Store
 
+# Local packages and verification artifacts
+/output/
+
 # Local credentials and environment files
 .env
 .env.*

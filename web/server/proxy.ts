@@ -8,6 +8,7 @@
 // read only investigations they created. The signing secret stays server-side.
 import { SignJWT } from 'jose';
 import { isTikTokShareUrl, resolveTikTokShareUrl } from './tiktokShare.js';
+import { extensionCors, extensionPreflightAllowed, extensionSession, extensionSubject } from './extensionSession.js';
 
 export interface ProxyEnv {
   /** Backend HTTP base, e.g. https://<deployment>.convex.site */
@@ -81,6 +82,19 @@ export async function mintFrontendToken(secret: string, subject: string, nowSeco
 }
 
 export async function handleProxy(request: Request, env: ProxyEnv, deps: ProxyDeps = {}): Promise<Response> {
+  const origin = request.headers.get('Origin');
+  if (request.method === 'OPTIONS') {
+    const method = request.headers.get('Access-Control-Request-Method');
+    const path = requestedPath(new URL(request.url));
+    const allowed = extensionPreflightAllowed(request) && ROUTES.some(route => route.method === method && route.pattern.test(path));
+    return extensionCors(allowed ? new Response(null, { status: 204, headers: { 'Cache-Control': 'no-store' } }) : json(403, 'FORBIDDEN', 'Extension request is not allowed.'), origin);
+  }
+  const extension = extensionSession(request);
+  if (extension === false) return extensionCors(json(403, 'FORBIDDEN', 'Extension session is not valid.'), origin);
+  return extensionCors(await proxyRequest(request, env, deps, extension), origin);
+}
+
+async function proxyRequest(request: Request, env: ProxyEnv, deps: ProxyDeps, extension: string | null): Promise<Response> {
   const url = new URL(request.url);
   const path = requestedPath(url);
   const route = ROUTES.find(r => r.pattern.test(path));
@@ -97,7 +111,7 @@ export async function handleProxy(request: Request, env: ProxyEnv, deps: ProxyDe
   if (route.method === 'POST') {
     // Same-origin only: a cross-site page must not create investigations with a visitor's session.
     const origin = request.headers.get('Origin');
-    if (origin && origin !== url.origin) return json(403, 'FORBIDDEN', 'Cross-origin requests are not allowed.');
+    if (!extension && origin && origin !== url.origin) return json(403, 'FORBIDDEN', 'Cross-origin requests are not allowed.');
     body = await request.text();
     if (new TextEncoder().encode(body).length > MAX_BODY_BYTES) return json(413, 'INVALID_REQUEST', 'Request body too large.');
     let value: unknown;
@@ -114,7 +128,7 @@ export async function handleProxy(request: Request, env: ProxyEnv, deps: ProxyDe
   const isNewSession = !session;
   session ??= newSession();
   const now = deps.nowSeconds?.() ?? Math.floor(Date.now() / 1000);
-  const token = await mintFrontendToken(secret, `web:${session}`, now);
+  const token = await mintFrontendToken(secret, extension ? await extensionSubject(extension) : `web:${session}`, now);
 
   const headers: Record<string, string> = { Authorization: `Bearer ${token}`, Accept: 'application/json' };
   if (body !== undefined) headers['Content-Type'] = 'application/json';
@@ -138,7 +152,7 @@ export async function handleProxy(request: Request, env: ProxyEnv, deps: ProxyDe
   const retryAfter = upstream.headers.get('Retry-After');
   if (retryAfter) responseHeaders.set('Retry-After', retryAfter);
   // A homepage capability read must not race a create and overwrite its owner cookie.
-  if (isNewSession && path !== 'v1/capabilities') {
+  if (!extension && isNewSession && path !== 'v1/capabilities') {
     const secure = url.protocol === 'https:' ? '; Secure' : '';
     responseHeaders.append('Set-Cookie', `${COOKIE}=${session}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000${secure}`);
   }

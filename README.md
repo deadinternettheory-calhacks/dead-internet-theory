@@ -67,6 +67,7 @@ See the [integration guide](backend/INTEGRATION.md),
 | Component | Responsibility | Setup and checks |
 | --- | --- | --- |
 | `web/` | React/TypeScript/Vite frontend and Vercel server proxy. | [Frontend guide](web/README.md) |
+| `extension/` | Chrome side panel, selected-post actions, resumable investigations and packaged report tab. | [Install/build guide](extension/README.md) |
 | `backend/` | Convex API, Apify adapters, durable collection/enrichment jobs, graph and analysis storage, reuse, and retention. | [Backend guide](backend/README.md) |
 | `inference/` | Separate TypeScript/Convex coordinator, direct Claude triage, CREAO scoring agent, deterministic scoring, and evidence validation. | [Inference guide](inference/README.md), [agent setup](inference/creao-agent.md) |
 | `contracts/` | Canonical shared models, HTTP operations, and synthetic contract examples. | [Contract validation](contracts/README.md) |

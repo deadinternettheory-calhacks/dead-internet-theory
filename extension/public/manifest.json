@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "Dead Internet Theory",
+  "version": "1.0.0",
+  "description": "Inspect public social discussions for coordinated promotion, beside the original post.",
+  "minimum_chrome_version": "123",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxC5yBTdaqrjMquqV70K3BCJ6bgm0wzvOl8RX8stfw8aTZHlBMysZLkcncjbd7dI8kXauTXT7GQiKvPya7prYwQVdnMynC1iMiJBW5zFvBI7DcV7igKUHJ4gk/N8R4O0K6ETgyLGHampOZ6ZzSYpTawmrusRb7pgyjrEqzS4VRuidAPNMbhrMm0Hx8fVMQN8fn0XAWNH0QNu0hoik0qsK0v39WIZj1Or+y2U/zQK1dx+MdUAHpUmcfYKCmuzgLii/duGixMXxgeGhjoPp6few+xem42VXBwPWAm42jpJF/XlFcDkuZp8DBXt29xA5ddFwAwLREODc7Vwp3EbOQ0hhBwIDAQAB",
+  "permissions": [
+    "activeTab",
+    "sidePanel",
+    "contextMenus",
+    "storage",
+    "alarms"
+  ],
+  "host_permissions": [
+    "https://www.deadinternettheory.us/*"
+  ],
+  "action": {
+    "default_title": "Analyze this post with Dead Internet Theory"
+  },
+  "background": {
+    "service_worker": "service-worker.js",
+    "type": "module"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "icons": {
+    "16": "icons/ghost-16.png",
+    "48": "icons/ghost-48.png",
+    "128": "icons/ghost-128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; base-uri 'none'"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Y",
+        "mac": "Command+Shift+Y"
+      },
+      "description": "Open Dead Internet Theory for the current post"
+    }
+  }
+}

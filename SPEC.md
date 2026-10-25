@@ -348,6 +348,29 @@ Illustrations never represent collected evidence or invented progress, and
 scrolling or a backend phase change never suspends motion. See
 [web/README.md](web/README.md#interactive-analysis-playground).
 
+### 10.4 Chrome extension
+
+The Manifest V3 client in `extension/` opens a side panel from the toolbar action,
+keyboard shortcut or supported-link context menu. It reads the selected URL only
+when invoked; analysis requires pressing Analyze post. It uses the existing v1
+pipeline and shared report/evidence presentation. The ghost follows actual
+phases, respects reduced motion and hidden documents, and makes only local reactions.
+
+A private anonymous extension credential establishes a separate owner through
+the website proxy; provider keys and signing secrets remain server-side. The
+canonical transport is [browser-extension.md](contracts/browser-extension.md).
+The package requests activeTab, sidePanel, contextMenus, storage and alarms, plus
+host permission for the website origin. It has no social-site content scripts.
+
+Closing the panel does not cancel server work. Pending intent and idempotency
+keys are stored before creating an investigation; known IDs resume using GET.
+Open full report uses an extension tab and the same owner/ID, with no new create.
+At most ten expiring investigation metadata records are saved locally; source
+graphs and report contents are not persisted in extension storage. Alarms and
+startup purge expired links. Server retention, reuse and provider limits remain
+unchanged. See the [extension guide](extension/README.md) for unpacked installation,
+packaging, public client identity and separate Chrome Web Store publication.
+
 ## 11. Security, privacy, and platform access
 
 ### 11.1 URL/network protections

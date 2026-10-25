@@ -54,9 +54,15 @@ What the proxy does:
 - Reads platform availability without setting or replacing the session cookie,
   so a homepage capability request cannot race an investigation create and change
   its owner.
-- Rejects cross-origin creates and bodies over 8 KB, and passes backend errors
+- Rejects ordinary cross-origin creates and bodies over 8 KB, and passes backend errors
   and `Retry-After` through. Submission rate limits are the backend's
   (`POSTS_PER_HOUR`); the proxy adds none.
+
+The Chrome extension uses a separate anonymous nonce session with the exact
+client/origin allowlist in [the extension transport](../contracts/browser-extension.md).
+Its credential is hashed into a distinct owner; the backend signing secret stays
+server-side. It uses the same frontend route allowlist, provider limits and
+retention. No provider key or backend token is packaged in the extension.
 
 Locally, `npm run dev` and `npm run preview` serve `/api` through the same handler
 when the two variables are set in the shell:

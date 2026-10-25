@@ -14,6 +14,9 @@ does not attest to separate backend/inference owner acceptance or live readiness
   references the canonical models.
 - [provider-adapters.md](provider-adapters.md): candidate Apify mappings and
   remaining operational verification.
+- [browser-extension.md](browser-extension.md): website proxy transport and
+  anonymous sessions for the packaged Chrome client; existing v1 payloads remain
+  canonical.
 - [examples/](examples/README.md): synthetic fixtures, never real investigations.
 
 ## Validation
