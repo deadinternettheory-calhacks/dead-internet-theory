@@ -161,6 +161,31 @@ preview lets readers browse up to 100 returned visible comments, six at a time,
 without fetching the graph again on each poll. The walkthrough's illustrative
 scene timing is never used as live progress.
 
+## Interactive analysis playground
+
+While a live investigation is waiting, collecting or analyzing, a separate 3D
+playground shows a floating ghost investigator, the graveyard globe, gyroscope
+rings and fourteen modeled comment tiles. Drag and flick to rotate with momentum;
+tap the scene or **Send a pulse** to launch ripples and sparks. **Remix** changes
+between Orbit, Vortex and Wave arrangements. Arrow keys rotate, Enter/Space sends
+a pulse, and Home resets the view. Horizontal touch gestures leave vertical
+scrolling and pinch zoom available. **Pause** stops automatic motion and inertia,
+while direct rotation remains available.
+
+This is an illustration with local controls, separate from the evidence. The
+real backend status, elapsed-view clock, milestones, collected count and comment
+preview remain authoritative. The toy does not initiate requests, alter polling,
+change scores or simulate completion. Finishing the report unmounts the scene.
+
+The scene shares the homepage's lazy Three.js chunk; its own code loads only if
+the wait lasts at least 400 ms. Reduced motion starts with a static SVG and an
+explicit Play option, reacts to preference changes, and keeps a poster on graphics
+failure. Offscreen and background-tab animation suspends. Simple shared geometry,
+instanced sparks, a 1.5 pixel-ratio cap and no shadow maps, post-processing or
+external models keep rendering bounded; resources are disposed on unmount.
+This feature deploys with the website and requires no ingestion or inference
+Convex redeployment.
+
 ## Routing
 
 Vercel `web/vercel.json` rewrites paths to the SPA entry point for refresh and shortcut links. Prefix URLs preserve nested path and query strings. A browser does not send an unencoded `#fragment` to the server; to preserve one, encode the complete source URL as the shortcut path segment first. Hash fragments are not needed to identify an ordinary post and the raw form cannot preserve them.
