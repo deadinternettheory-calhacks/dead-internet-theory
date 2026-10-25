@@ -325,8 +325,12 @@ preview of collected comments while analysis runs. They do not use the synthetic
 walkthrough's timing, invented percentages or an estimated completion countdown.
 
 Live analyses use a fixed full-viewport globe behind the reading column,
-illustrative comment models above the column, and a rounded, expressive ghost
-above the comments. The companion also appears on the landing page and remains
+illustrative comment models, and a rounded, expressive ghost above the comments.
+Comments start behind the column and move fully in front after three seconds
+without activity. Pointer movement/presses, scrolling, typing or focus changes
+immediately return them behind the column; returning from a hidden tab restarts
+the delay. Layer changes preserve the running animation and real backend phase.
+The companion also appears on the landing page and remains
 with the scene after a report resolves; completion triggers a greeting. Actual
 backend phases drive comment formations: spawning and gathering during
 collection, then a rotating double helix with a traveling scan highlight during

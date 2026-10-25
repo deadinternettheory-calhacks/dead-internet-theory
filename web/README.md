@@ -135,8 +135,12 @@ scene timing is never used as live progress.
 ## Interactive analysis playground
 
 The analysis view uses three layers: the passive graveyard globe behind the
-centered reading column, eighteen comment models in a pointer-transparent layer
-above the column, and the expressive ghost above the comments. The column keeps
+centered reading column, eighteen comment models in a pointer-transparent layer,
+and the expressive ghost above the comments. Comments start behind the column,
+then move fully in front after three seconds without activity. Pointer movement,
+presses, scrolling, typing or focus changes immediately put them behind the column
+again, without restarting or pausing their animation. Returning from a hidden tab
+restarts the idle delay. The ghost always stays on top. The column keeps
 its 94%-opacity backdrop. There are no separate visible scene-control buttons.
 The same ghost appears on the landing page and stays mounted across navigation,
 phase changes and report completion. The world, comments and ghost remain after

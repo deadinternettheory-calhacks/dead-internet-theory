@@ -101,7 +101,8 @@ body:has(.analysis-playground[data-background="true"]) .analysis-main .finding-c
   .progress-copy .progress-wait-invitation { font-size: 11px; }
 }
 
-.comment-overlay { position: fixed; inset: 0; height: 100dvh; z-index: 4; pointer-events: none; overflow: hidden; }
+.comment-overlay { position: fixed; inset: 0; height: 100dvh; z-index: 0; pointer-events: none; overflow: hidden; }
+.comment-overlay[data-idle="true"] { z-index: 4; }
 .comment-overlay * { pointer-events: none !important; }
 .comment-canvas { position: absolute !important; inset: 0; width: 100%; height: 100%; }
 .comment-canvas canvas { display: block; }
