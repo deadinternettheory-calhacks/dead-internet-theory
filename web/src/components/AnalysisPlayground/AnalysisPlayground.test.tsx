@@ -123,7 +123,7 @@ it('has only a ghost interaction target and changes formation only when the real
   await advance(180000);
   expect(container.textContent).toContain('3:00 in this view');
   expect(container.querySelector('[role="status"]')?.textContent).toContain('Waiting to collect public comments…');
-  expect(container.querySelector('[aria-current="step"]')?.textContent).toContain('Collect public comments');
+  expect(container.querySelector('[aria-current="step"]')?.textContent).toContain('Fetch comments');
   expect(container.textContent).not.toMatch(/\d+%/);
   expect(container.querySelector('.analysis-playground')?.getAttribute('data-formation')).toBe('rest');
   await render('collecting');

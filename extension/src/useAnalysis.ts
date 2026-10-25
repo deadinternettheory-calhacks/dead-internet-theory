@@ -14,7 +14,7 @@ export type AnalysisView =
 
 function progress(inv: InvestigationResource): { phase: ProgressPhase; status: string } {
   if (inv.ingestionStatus === 'queued') return { phase: 'queued', status: 'Waiting to collect public comments…' };
-  if (inv.ingestionStatus === 'running') return { phase: 'collecting', status: 'Collecting public comments…' };
+  if (inv.ingestionStatus === 'running') return { phase: 'collecting', status: 'Fetching comments…' };
   if (inv.analysisStatus === 'running') return { phase: 'analyzing', status: 'Analyzing the discussion…' };
   return { phase: 'analysis-queued', status: 'Waiting to analyze the discussion…' };
 }
@@ -93,12 +93,12 @@ export function useAnalysis(job: SavedJob, client: ApiClient, readOnly = false) 
           presentation.current = replay;
           const collectionRemaining = replay.startedAt + SAVED_STAGE_MS - Date.now();
           if (collectionRemaining > 0) {
-            setView({ kind: 'loading', phase: 'collecting', status: 'Loading saved comments…', savedResult: true });
+            setView({ kind: 'loading', phase: 'collecting', status: 'Fetching comments…', savedResult: true });
             await wait(collectionRemaining, signal);
           }
           const analysisRemaining = replay.startedAt + SAVED_STAGE_MS * 2 - Date.now();
           if (analysisRemaining > 0) {
-            setView({ kind: 'loading', phase: 'analyzing', status: 'Preparing saved analysis…', savedResult: true, preview: buildThreadPreview(completeGraph, 100) });
+            setView({ kind: 'loading', phase: 'analyzing', status: 'Analyzing the discussion…', savedResult: true, preview: buildThreadPreview(completeGraph, 100) });
             await wait(analysisRemaining, signal);
           }
         }

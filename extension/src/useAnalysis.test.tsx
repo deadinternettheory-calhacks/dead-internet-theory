@@ -95,12 +95,12 @@ it('never creates an investigation for an invalid full-report link', async () =>
 it('presents saved comments for five seconds and saved analysis for five seconds with one submission', async () => {
   vi.mocked(client.createInvestigation).mockResolvedValue(complete);
   await render();
-  expect(latest.view).toMatchObject({ kind: 'loading', phase: 'collecting', savedResult: true, status: 'Loading saved comments…' });
+  expect(latest.view).toMatchObject({ kind: 'loading', phase: 'collecting', savedResult: true, status: 'Fetching comments…' });
   if (latest.view.kind === 'loading') expect(latest.view.preview).toBeUndefined();
   await act(async () => vi.advanceTimersByTimeAsync(4999));
   expect(latest.view).toMatchObject({ kind: 'loading', phase: 'collecting' });
   await act(async () => vi.advanceTimersByTimeAsync(1));
-  expect(latest.view).toMatchObject({ kind: 'loading', phase: 'analyzing', savedResult: true, status: 'Preparing saved analysis…' });
+  expect(latest.view).toMatchObject({ kind: 'loading', phase: 'analyzing', savedResult: true, status: 'Analyzing the discussion…' });
   if (latest.view.kind === 'loading') expect(latest.view.preview?.collectedCount).toBe(testDemo.graph.coverage.retrievedCommentCount);
   await act(async () => vi.advanceTimersByTimeAsync(4999));
   expect(latest.view.kind).toBe('loading');

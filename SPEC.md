@@ -136,7 +136,7 @@ The SPA, the Convex ingestion backend (v1 routes, jobs, `investigation.ready` de
 - **REQ-DATA-2:** distinguish source observations from interpretations; each finding needs evidence references.
 - **REQ-DATA-3:** report incomplete collection and missing history explicitly. Missing data is not a negative signal.
 - **REQ-DATA-4:** do not claim intent, sponsorship, bot identity, or organizational attribution based only on similarity, timing, or model output.
-- **REQ-STATE-1:** support pending, partial, completed, insufficient, unsupported, inaccessible, and failure states. Live progress labels track real backend states, without simulated completion, countdowns or synthetic scores. Already-completed website and extension results use the explicitly labeled five-second saved-comments and five-second saved-analysis presentations in sections 10.3/10.4 (ADR-022, ADR-023).
+- **REQ-STATE-1:** support pending, partial, completed, insufficient, unsupported, inaccessible, and failure states. Live progress labels track real backend states, without simulated completion, countdowns or synthetic scores. Already-completed website and extension results use the five-second fetching and five-second analyzing presentations in sections 10.3/10.4, with generic progress copy shared with live work (ADR-022, ADR-023, ADR-024).
 - **REQ-UX-1:** homepage has centered headline, labeled URL field, **Analyze Post**, visible prefix guidance/example, and a concise three-step explanation.
 - **REQ-UX-2:** completed analysis views order score and plain-language result, findings and analytics, coverage/limitations, original post and source, and return action (ADR-021).
 - **REQ-UX-3:** source links open a validated URL in a new tab with safe link attributes.
@@ -325,9 +325,9 @@ preview of collected comments while analysis runs. They do not use the synthetic
 walkthrough's timing, invented percentages or an estimated completion countdown.
 Already-completed initial website lookups, including finished idempotent replays,
 use a saved-result presentation after all report reads succeed: five seconds
-loading saved comments, then five seconds preparing saved analysis, then the
-report. Copy identifies the retained result; the second stage shows its comment
-preview. The same collection/analysis illustration phases run during this
+**Fetching comments**, then five seconds **Analyzing the discussion**, then the
+report. Generic headings, milestones and supporting copy match live work; the
+second stage shows the comment preview (ADR-024). The same collection/analysis illustration phases run during this
 sequence. Live work observed in progress retains its actual timing; partial
 cache reuse or joining unfinished work does not trigger the sequence. Timers
 are cleared when leaving the view. API states, provider runs, scores and the
@@ -387,8 +387,9 @@ keys are stored before creating an investigation; known IDs resume using GET.
 Open full report uses an extension tab and the same owner/ID, with no new create.
 Already-completed initial extension lookups, including cached submissions and
 resumed/report-tab investigations, load the full report before showing five
-seconds loading saved comments and five seconds preparing saved analysis. Copy
-identifies saved data, and the comment preview appears during the second stage.
+seconds **Fetching comments** and five seconds **Analyzing the discussion**.
+Headings, milestones and supporting copy match live work, and the comment preview
+appears during the second stage (ADR-024).
 Each mounted view keeps its original deadlines across hidden-tab cancellation
 and resumes with GET using its known receipt. Returning to a report already
 shown in that view does not replay the sequence. Work observed in progress keeps
@@ -555,8 +556,9 @@ These entries capture project direction and the adopted v1 interface delta; they
 | ADR-019 | 2026-10-25 UTC | Requested by the owner | Keep the ghost roaming during mouse hover and clicks; hold its flight only for keyboard focus. Supersedes section 10.3's hover hold. See the [ghost flight delta](deltas/2026-10-25T04-14-58Z-ghost-hover-flight.md). |
 | ADR-020 | 2026-10-25 UTC | Requested by the owner | Keep illustrative comments behind the reading column indefinitely, removing the three-second idle foreground behavior from section 10.3. The ghost remains in front. See the [comment layering delta](deltas/2026-10-25T04-56-38Z-comments-behind-column.md). |
 | ADR-021 | 2026-10-25 UTC | Requested by the owner | Keep the score first and move the original post and source to the bottom of the completed report, after findings, account signals, detailed evidence and coverage. Loading previews retain the collected post. Supersedes ADR-017’s placement of the post immediately after the score. See the [analytics-first delta](deltas/2026-10-25T06-56-46Z-original-post-after-analytics.md). |
-| ADR-022 | 2026-10-25 UTC | Requested by the owner | Already-completed initial website lookups show five seconds loading saved comments and five seconds preparing saved analysis before revealing the loaded report. Copy identifies saved data; the existing collection/analysis illustrations follow those display phases. Live work, provider calls and API states retain their real behavior. This is a scoped exception to REQ-STATE-1 and section 10.3’s live-status-only progress rule. See the [saved-result timing delta](deltas/2026-10-25T13-08-56Z-cached-result-stage-timing.md). |
-| ADR-023 | 2026-10-25 UTC | Requested by the owner | Extend ADR-022’s five-second saved-comments and five-second saved-analysis presentation to cached/resumed results in the extension panel and report tab. Keep the original deadlines across hidden-tab suspension and avoid replay after the same view has shown its report. Publish v1.0.3 unpacked and Web Store ZIPs. See the [extension timing delta](deltas/2026-10-25T13-24-08Z-extension-saved-result-timing.md). |
+| ADR-022 | 2026-10-25 UTC | Requested by the owner; cache-specific copy superseded by ADR-024 | Already-completed initial website lookups show five seconds loading saved comments and five seconds preparing saved analysis before revealing the loaded report. Copy identifies saved data; the existing collection/analysis illustrations follow those display phases. Live work, provider calls and API states retain their real behavior. This is a scoped exception to REQ-STATE-1 and section 10.3’s live-status-only progress rule. See the [saved-result timing delta](deltas/2026-10-25T13-08-56Z-cached-result-stage-timing.md). |
+| ADR-023 | 2026-10-25 UTC | Requested by the owner; cache-specific copy superseded by ADR-024 | Extend ADR-022’s five-second saved-comments and five-second saved-analysis presentation to cached/resumed results in the extension panel and report tab. Keep the original deadlines across hidden-tab suspension and avoid replay after the same view has shown its report. Publish v1.0.3 unpacked and Web Store ZIPs. See the [extension timing delta](deltas/2026-10-25T13-24-08Z-extension-saved-result-timing.md). |
+| ADR-024 | 2026-10-25 UTC | Requested by the owner | Use generic fetching/analyzing progress in both clients, including their headings, milestones and supporting text. Remove cache-specific progress wording from ADR-022/ADR-023 while keeping the five-second stages, animations, backend reuse and report coverage/retention disclosures. Publish extension v1.0.4. See the [generic progress delta](deltas/2026-10-25T13-55-50Z-generic-progress-copy.md). |
 
 
 ### 13.5 Specification change history
@@ -581,5 +583,6 @@ These entries capture project direction and the adopted v1 interface delta; they
 | 2026-10-25 UTC | Original post and source move below all analytics and coverage in completed reports (ADR-021). | [Analytics-first report delta](deltas/2026-10-25T06-56-46Z-original-post-after-analytics.md). |
 | 2026-10-25 UTC | Saved website results show five seconds of comment loading and five seconds preparing analysis before the report (ADR-022). | [Saved-result timing delta](deltas/2026-10-25T13-08-56Z-cached-result-stage-timing.md). |
 | 2026-10-25 UTC | Extend saved-result presentation to the extension and publish v1.0.3 packages (ADR-023). | [Extension timing delta](deltas/2026-10-25T13-24-08Z-extension-saved-result-timing.md). |
+| 2026-10-25 UTC | Generic fetching/analyzing copy in website and extension progress; original pacing remains (ADR-024). | [Generic progress delta](deltas/2026-10-25T13-55-50Z-generic-progress-copy.md). |
 
 Future changes that conflict with an established requirement follow [CONTRIBUTING.md](CONTRIBUTING.md): propose affected sections/rationale, obtain explicit approval, create the timestamped delta, update the spec and decision log together, and preserve the historical decision. Filling a TBD or correcting an evidence-based implementation status does not itself require a delta. The v1.0.0 contract adoption is recorded by its linked approved delta.

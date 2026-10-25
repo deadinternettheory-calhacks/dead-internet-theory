@@ -6,7 +6,7 @@ ghost. Analysis still runs on the configured Convex/Apify/Claude/CREAO pipeline.
 
 ## Install the ZIP
 
-1. Extract `dead-internet-theory-chrome-1.0.3.zip` into a folder.
+1. Extract `dead-internet-theory-chrome-1.0.4.zip` into a folder.
 2. Open `chrome://extensions` in Chrome 123 or newer and enable **Developer mode**.
 3. Choose **Load unpacked**, then select the folder containing `manifest.json`.
 4. Pin the ghost icon in Chrome's extensions menu.
@@ -17,7 +17,7 @@ It is an unpacked package, not a Chrome Web Store publication.
 
 ## Upload to Chrome Web Store
 
-Use **`dead-internet-theory-chrome-webstore-1.0.3.zip`** for the developer dashboard.
+Use **`dead-internet-theory-chrome-webstore-1.0.4.zip`** for the developer dashboard.
 This ZIP has `manifest.json` at its root and omits the development-only `key`
 field. The ordinary Chrome ZIP retains that key for stable Load unpacked installs.
 
@@ -54,10 +54,9 @@ clicks; reduced motion starts with static art, P pauses/resumes, Escape pauses,
 and hidden documents suspend motion and polling.
 
 Already-completed initial lookups use the website's saved-result presentation:
-five seconds **Loading saved comments**, then five seconds **Preparing saved
-analysis**, then the report. This applies to cached submissions and completed
-investigations opened or resumed in the panel/report tab. Copy identifies saved
-data, the comment preview appears in the second stage, and the ghost follows
+five seconds **Fetching comments**, then five seconds **Analyzing the discussion**, then the report. This applies to cached submissions and completed
+investigations opened or resumed in the panel/report tab. Progress uses the same
+generic copy as live work, the comment preview appears in the second stage, and the ghost follows
 both phases. Each mounted view keeps its original presentation deadlines across
 background-tab suspension; returning to an already displayed report does not
 replay the sequence. Live work observed in progress keeps its real timing.

@@ -4,8 +4,8 @@ import './report.css';
 
 export type ProgressPhase = 'starting' | 'queued' | 'collecting' | 'analysis-queued' | 'analyzing';
 
-/** Live milestones follow backend states; saved results have a labeled presentation sequence. */
-export function AnalysisProgress({ phase, status, collectedCount, savedResult = false }: { phase: ProgressPhase; status: string; collectedCount?: number; savedResult?: boolean }) {
+/** One progress presentation for live work and retained-result transitions. */
+export function AnalysisProgress({ phase, status, collectedCount }: { phase: ProgressPhase; status: string; collectedCount?: number }) {
   const [started] = useState(Date.now);
   const [elapsed, setElapsed] = useState(0);
   useEffect(() => {
@@ -13,18 +13,14 @@ export function AnalysisProgress({ phase, status, collectedCount, savedResult = 
     return () => window.clearInterval(timer);
   }, [started]);
   const active = phase === 'starting' ? 0 : phase === 'analyzing' || phase === 'analysis-queued' ? 2 : 1;
-  const stages = savedResult ? ['Find saved result', 'Load saved comments', 'Prepare saved analysis'] : ['Submit request', 'Collect public comments', 'Analyze the discussion'];
+  const stages = ['Submit request', 'Fetch comments', 'Analyze the discussion'];
   let description = 'Connecting to the analysis service.';
-  if (savedResult) {
-    description = phase === 'collecting'
-      ? 'This post has a saved result. We’re bringing its collected discussion back into view.'
-      : `${collectedCount === undefined ? 'The saved discussion is ready.' : `${collectedCount} saved comments ready.`} Preparing the existing analysis and supporting evidence.`;
-  } else if (phase === 'analyzing' || phase === 'analysis-queued') {
-    description = `${collectedCount === undefined ? 'The collected discussion is ready.' : `${collectedCount} comments collected.`} ${phase === 'analysis-queued' ? 'The discussion is waiting for analysis to begin.' : 'We’re checking the evidence for patterns. This can take a few minutes.'}`;
+  if (phase === 'analyzing' || phase === 'analysis-queued') {
+    description = `${collectedCount === undefined ? 'The discussion is ready.' : `${collectedCount} comments collected.`} ${phase === 'analysis-queued' ? 'The discussion is waiting for analysis to begin.' : 'Preparing the analysis and supporting evidence.'}`;
   } else if (phase === 'queued') {
     description = 'Your request is queued for collection. This page will update when collection begins.';
   } else if (phase === 'collecting') {
-    description = 'We’re retrieving public comments. The discussion will appear here when collection finishes.';
+    description = 'Preparing the discussion and available comments.';
   }
   return <section className="analysis-progress analysis-progress--immersive" aria-label="Analysis progress">
     <div className="progress-heading"><span className="report-eyebrow">YOUR INVESTIGATION</span><span className="progress-elapsed"><Clock3 size={12} aria-hidden="true"/>{Math.floor(elapsed / 60)}:{String(elapsed % 60).padStart(2, '0')} in this view</span></div>

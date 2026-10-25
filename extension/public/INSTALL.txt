@@ -20,8 +20,8 @@ You can close the panel while the server works. Reopen it to resume.
 Open full report displays the same investigation in an extension tab; it does
 not submit the post again. No API keys or other settings are needed.
 
-Cached results show five seconds loading saved comments, then five seconds
-preparing saved analysis before the report. Live work keeps its actual timing.
+Cached results show five seconds fetching comments, then five seconds analyzing
+the discussion before the report. Live work keeps its actual timing.
 
 Read privacy.html for data handling. This ZIP is for unpacked installation;
 it has not been published to the Chrome Web Store.
