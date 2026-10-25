@@ -32,6 +32,7 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
   const tilt = useRef<Group>(null);
   const core = useRef<Group>(null);
   const halo = useRef<Group>(null);
+  const commentField = useRef<Group>(null);
   const cards = useRef<Group[]>([]);
   const ripples = useRef<Group[]>([]);
   const sparks = useRef<InstancedMesh>(null);
@@ -56,13 +57,14 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
     paper: new MeshStandardMaterial({ color: COLORS.paper, roughness: 0.36, metalness: 0.08 }),
     green: new MeshStandardMaterial({ color: COLORS.green, roughness: 0.4, metalness: 0.12 }),
     sage: new MeshStandardMaterial({ color: COLORS.sage, roughness: 0.45 }),
-    core: new MeshStandardMaterial({ color: COLORS.core, roughness: 0.45, metalness: 0.05, transparent: true, opacity: 0.18 }),
+    // An opaque surface hides the graves and grid on the far side.
+    core: new MeshBasicMaterial({ color: '#FAFAF8', toneMapped: false }),
     trim: new MeshStandardMaterial({ color: COLORS.trim, metalness: 0.4, roughness: 0.35 }),
     ink: new MeshBasicMaterial({ color: COLORS.ink }),
     lightInk: new MeshBasicMaterial({ color: COLORS.core }),
     gold: new MeshStandardMaterial({ color: COLORS.gold, metalness: 0.45, roughness: 0.3 }),
     sparkle: new MeshBasicMaterial({ color: COLORS.gold }),
-    wireInk: new LineBasicMaterial({ color: COLORS.ink, transparent: true, opacity: 0.45 }),
+    wireInk: new LineBasicMaterial({ color: '#648575', transparent: true, opacity: 0.9, depthWrite: false }),
   }), []);
   const rippleMaterials = useMemo(() => Array.from({ length: 3 }, () => new MeshBasicMaterial({ color: COLORS.green, transparent: true, opacity: 0, depthWrite: false })), []);
 
@@ -91,13 +93,15 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
     }
     const t = time.current;
     const age = pulseAge.current;
-    const analyzing = phase === 'analyzing';
     const shock = age < 1.6 ? Math.sin(Math.min(1, age / 1.6) * Math.PI) * Math.exp(-age * 1.5) : 0;
     const { width, height } = state.viewport;
     // The globe fills the background; comment positions use viewport dimensions
     // independently so portrait and landscape both reach all four edges.
-    tilt.current.scale.setScalar(Math.max(width, height) * 0.30);
+    const globeScale = Math.max(width, height) * 0.30;
+    tilt.current.scale.setScalar(globeScale);
     tilt.current.position.set(-width * 0.14, -height * 0.10, -3);
+    // Keep the floating comment animation in front of the now-solid globe.
+    if (commentField.current) commentField.current.position.z = globeScale * 0.65 * 1.44 - 1;
     world.current.rotation.set(motion.current.pitch, motion.current.yaw, 0, 'YXZ');
     // Demand frames can still occur on resize or React commits. A paused scene
     // keeps its exact pose; direct turns and backend phase changes remain available.
@@ -108,7 +112,6 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
     tilt.current.rotation.z = MathUtils.damp(tilt.current.rotation.z, -0.07 - pointer.current.x * 0.08, 4, dt);
     if (core.current) { core.current.rotation.y = t * 0.16; core.current.position.y = Math.sin(t * 0.8) * 0.07; }
     if (halo.current) { halo.current.rotation.y = t * -0.13; halo.current.rotation.z = Math.sin(t * 0.3) * 0.1; }
-    resources.wireInk.opacity = analyzing ? 0.32 : 0.22;
     for (let i = 0; i < COUNT; i++) {
       const card = cards.current[i];
       if (!card) continue;
@@ -167,7 +170,7 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
       </group>
     </group>
     </group>
-    <group name="viewport-comment-field">
+    <group ref={commentField} name="viewport-comment-field">
       {Array.from({ length: COUNT }, (_,i) => <group key={i} name={`illustrative-comment-${i}`} ref={g => { if (g) cards.current[i] = g; }}>
         <mesh geometry={resources.card} material={i % 4 === 0 ? resources.green : resources.paper}/>
         <group>
