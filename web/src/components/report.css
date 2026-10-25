@@ -164,6 +164,7 @@
 
 .score-breakdown { margin: 0; }
 .score-breakdown > div { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.score-breakdown > div:first-child { border-bottom: 0; }
 .score-breakdown dt { font-weight: 550; }
 .score-breakdown dd { margin: 0; }
 .score-breakdown dd > strong { color: var(--result-color); font-variant-numeric: tabular-nums; }
