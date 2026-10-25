@@ -18,8 +18,7 @@ export function ReportFindings({ report }: { report: Report }) {
     explorer.current.querySelector('summary')?.focus({ preventScroll: true });
   }
   return <>
-    <section className="findings report-findings" aria-labelledby="findings-heading">
-      <div className="report-section-heading"><h2 id="findings-heading">What stood out</h2></div>
+    <section className="findings report-findings" aria-label="Findings">
       {report.findings.length === 0 && <p className="empty-note">Nothing stood out.</p>}
       {report.findings.map((finding, index) => <article className="card finding-card" key={finding.axis}>
         <span className="finding-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
