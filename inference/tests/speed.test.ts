@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import type Anthropic from '@anthropic-ai/sdk';
 import { describe, expect, it } from 'vitest';
 import type { EnrichmentJob, GraphEnvelope } from '../convex/lib/contract';
-import { claudeTriage, ClaudeError, CLAUDE_TRIAGE_SCHEMA } from '../convex/lib/inference/claude';
+import { claudeTriage, ClaudeError, CLAUDE_SCORING_SCHEMA, CLAUDE_TRIAGE_SCHEMA, scoringProviderFrom } from '../convex/lib/inference/claude';
 import { createCreaoClient, MockCreaoClient } from '../convex/lib/inference/creao';
 import type { TriageOutput } from '../convex/lib/inference/outputs';
 import { buildScoringPacket } from '../convex/lib/inference/packet';
@@ -17,14 +17,15 @@ const graph = JSON.parse(read('graph.json')) as GraphEnvelope;
 const enrichment = JSON.parse(read('enrichment-completed.json')) as EnrichmentJob;
 const triage = JSON.parse(read('creao-triage-response.json')) as TriageOutput;
 
-function fakeAnthropic(reply: { stop_reason: string; text?: string; stop_details?: unknown }, accountReply?: string) {
+function fakeAnthropic(reply: { stop_reason: string; text?: string; stop_details?: unknown }, accountReply?: string, scoringReply?: string) {
   const calls: Record<string, unknown>[] = [];
   const client = {
     beta: {
       messages: {
         stream: (params: Record<string, unknown>) => {
           calls.push(params);
-          const text = (params.output_config as { format: { schema: unknown } }).format.schema === ACCOUNT_REVIEW_SCHEMA ? accountReply ?? reply.text : reply.text;
+          const schema = (params.output_config as { format: { schema: unknown } }).format.schema;
+          const text = schema === ACCOUNT_REVIEW_SCHEMA ? accountReply ?? reply.text : schema === CLAUDE_SCORING_SCHEMA ? scoringReply ?? reply.text : reply.text;
           return { finalMessage: async () => ({ stop_reason: reply.stop_reason, stop_details: reply.stop_details ?? null, content: text ? [{ type: 'text', text }] : [] }) };
         },
       },
@@ -77,8 +78,10 @@ describe('direct Claude triage', () => {
       if (s.type === 'object') expect(s.additionalProperties, JSON.stringify(Object.keys(s.properties as object))).toBe(false);
       for (const v of Object.values(s)) if (v && typeof v === 'object') walk(v as Record<string, unknown>);
     };
-    walk(CLAUDE_TRIAGE_SCHEMA);
-    expect(JSON.stringify(CLAUDE_TRIAGE_SCHEMA)).not.toMatch(/minimum|maximum|minLength/);
+    for (const schema of [CLAUDE_TRIAGE_SCHEMA, CLAUDE_SCORING_SCHEMA]) {
+      walk(schema);
+      expect(JSON.stringify(schema)).not.toMatch(/minimum|maximum|minLength|pattern/);
+    }
   });
 
   it('reports refusals as non-retryable', async () => {
@@ -95,11 +98,34 @@ describe('direct Claude triage', () => {
     const creao = new MockCreaoClient({ triage: 'must not be used', scoring: read('creao-scoring-response.json') });
     const started: string[] = [];
     const tracked = { label: creao.label, startRun: async (i: { stage: 'triage' | 'scoring'; instructions: string; evidence: string }) => { started.push(i.stage); return creao.startRun(i); }, getRun: (r: string) => creao.getRun(r) };
-    const result = await runSequential(graph, { creao: tracked, claude: { apiKey: 'k', client }, requestEnrichment: async () => enrichment, getEnrichment: async () => enrichment, sleep: async () => {} });
+    const result = await runSequential(graph, { creao: tracked, claude: { apiKey: 'k', client }, scoringProvider: 'creao', requestEnrichment: async () => enrichment, getEnrichment: async () => enrichment, sleep: async () => {} });
     expect(started).toEqual(['scoring']);
     expect(calls).toHaveLength(2);
     expect(result.submission.inferenceVersion).toContain('account-history-2026-10-25a');
     expect(result.submission.inferenceVersion).toContain('claude:claude-opus-5-5');
+  });
+});
+
+describe('scoring provider switch', () => {
+  it('defaults to Claude when a key is set and switches to CREAO on request', () => {
+    expect(scoringProviderFrom(undefined, true)).toBe('claude');
+    expect(scoringProviderFrom('claude', true)).toBe('claude');
+    expect(scoringProviderFrom(' CREAO ', true)).toBe('creao');
+    expect(scoringProviderFrom('claude', false)).toBe('creao');
+  });
+
+  it('scores on Claude by default without starting any CREAO run', async () => {
+    const accounts = accountReviewInputs(graph, triage, [enrichment])!.authorIds.map(authorId => ({ authorId, signals: [], exculpatory: [], unknown: [] }));
+    const { client, calls } = fakeAnthropic({ stop_reason: 'end_turn', text: read('creao-triage-response.json') }, JSON.stringify({ accounts }), read('creao-scoring-response.json'));
+    const creao = new MockCreaoClient({ triage: 'must not be used', scoring: 'must not be used' });
+    const started: string[] = [];
+    const tracked = { label: creao.label, startRun: async (i: { stage: 'triage' | 'scoring'; instructions: string; evidence: string }) => { started.push(i.stage); return creao.startRun(i); }, getRun: (r: string) => creao.getRun(r) };
+    const result = await runSequential(graph, { creao: tracked, claude: { apiKey: 'k', client }, requestEnrichment: async () => enrichment, getEnrichment: async () => enrichment, sleep: async () => {} });
+    expect(started).toEqual([]);
+    expect(calls).toHaveLength(3);
+    expect((calls[2] as { output_config: { format: { schema: unknown } } }).output_config.format.schema).toBe(CLAUDE_SCORING_SCHEMA);
+    expect(result.scoring?.assessments.length).toBeGreaterThan(0);
+    expect(result.submission.inferenceVersion).toContain('claude-scoring:claude-opus-5-5');
   });
 });
 

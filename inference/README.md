@@ -61,7 +61,8 @@ or settings; never commit them or put them in `VITE_*`.
 | `CREAO_AGENT_ID` | With `cr_sk_` | The agent ID for `developer.creao.ai/v1/runs`. |
 | `CREAO_MODEL` | No | Model ID for `cr_sk_` runs. |
 | `ANTHROPIC_API_KEY` | Hosted production | Runs triage and focused account-history review directly through the Anthropic Messages API. Without it, the worker falls back to CREAO triage; local fixtures may omit it. Timings depend on input size and provider latency. |
-| `ANTHROPIC_MODEL` | No | Claude model for triage and account review. Default `claude-opus-5-5` at low effort; production selects tested `claude-haiku-5-5`. See the [hosted performance record](../backend/verification/2026-10-25-url-performance.md). |
+| `ANTHROPIC_MODEL` | No | Claude model for triage, scoring and account review. Default `claude-opus-5-5` at low effort; production selects tested `claude-haiku-5-5`. See the [hosted performance record](../backend/verification/2026-10-25-url-performance.md). |
+| `SCORING_PROVIDER` | No | Internal switch for the scoring stage: `claude` (default when `ANTHROPIC_API_KEY` is set) runs it as one direct Claude call, about 30 s; `creao` runs it on the CREAO agent, 1.5–5 min. Takes effect for the next job without a deploy. |
 | `CREAO_WEBHOOK_SECRET` | With a webhook | Random secret that authenticates CREAO's callbacks. |
 | `CREAO_WEBHOOK_URL` | Recommended | `<this deployment's .convex.site URL>/creao-webhook?token=<CREAO_WEBHOOK_SECRET>`. CREAO calls it when a run finishes, so the worker continues at once instead of at the next poll. |
 
@@ -161,7 +162,7 @@ for application, Apify and upstream-provider retention boundaries.
    brand focus unknown; missing profile fields and bounded activity remain explicit.
    The broad CREAO task then skips duplicate account reviews. Without direct
    Claude configuration, the existing CREAO account-review path remains available.
-5. **Scoring (CREAO run).** The agent gets the recommendations and their
+5. **Scoring (Claude call by default, or a CREAO run with `SCORING_PROVIDER=creao`).** The model gets the recommendations and their
    context (parents, replies, the recommenders' other comments and the 15
    most-engaged comments) rather than every comment, plus deterministic
    measurements (timing, burst size, word overlap, tracking links, brand

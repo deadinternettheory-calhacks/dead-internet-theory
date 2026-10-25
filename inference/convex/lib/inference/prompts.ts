@@ -1,4 +1,4 @@
-// Stage instructions sent to the CREAO agent with every run. The agent's own
+// Stage instructions sent with every triage and scoring request, to Claude or the CREAO agent. The agent's own
 // prompt (backend/creao-agent.md) only sets ground rules; the task, rubric and
 // output format live here so they are versioned with the code that checks them.
 import { RUBRIC_VERSION, RULES } from './rubric';
