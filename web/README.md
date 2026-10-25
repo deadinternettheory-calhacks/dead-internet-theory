@@ -174,6 +174,7 @@ Vercel `web/vercel.json` rewrites paths to the SPA entry point for refresh and s
 
 Repeated links can return a stored report immediately or join an existing run. Each browser retains private investigation access. Reports show the original comment-collection time and explain that reuse ends at the original 24-hour expiry.
 
-The How it works FAQ reuses the ghost illustration in its empty desktop gutter.
+The How it works FAQ reuses the actual 3D ghost model in its empty desktop gutter.
 The decoration is absolutely positioned, hides below 1024px, and disables its
-hover and blink animation for reduced-motion preferences. It adds no layout height.
+hover and blink animation for reduced-motion preferences. It loads only when visible
+and pauses in background tabs. It adds no layout height.
