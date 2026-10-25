@@ -151,7 +151,7 @@
 /* One shared surface for the post, findings, accounts and detailed evidence. */
 .report-middle { padding: 28px; border-radius: 12px; background: var(--surface); }
 .report-middle > .summary-card { padding: 0 0 28px; margin: 0 0 28px; border: 0; border-bottom: 1px solid var(--border); border-radius: 0; box-shadow: none; }
-.report-middle .report-findings .finding-card { padding: 24px 0 8px; margin: 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; background: transparent; box-shadow: none; }
+.report-middle .report-findings .finding-card { padding: 24px 0 16px; margin: 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; background: transparent; box-shadow: none; }
 .report-middle .report-findings .finding-card:first-child { border-top: 0; }
 .report-middle > .evidence { padding: 0; margin: 24px 0 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; box-shadow: none; }
 .result-card { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 28px; row-gap: 18px; padding-bottom: 0; }
@@ -160,7 +160,7 @@
 .score-explanation > summary::marker { font-size: 10px; }
 .score-explanation-content { padding: 12px 0 24px; font-size: 14px; line-height: 1.8; }
 .score-explanation .axis-list { margin-bottom: 0; }
-@media (max-width: 767px) { .report-middle { padding: 20px 18px; } .report-middle > .summary-card { padding: 0 0 24px; } .report-middle .report-findings .finding-card { padding: 20px 0 8px; } .result-card { column-gap: 18px; } }
+@media (max-width: 767px) { .report-middle { padding: 20px 18px; } .report-middle > .summary-card { padding: 0 0 24px; } .report-middle .report-findings .finding-card { padding: 20px 0 16px; } .result-card { column-gap: 18px; } }
 
 .score-breakdown { margin: 0; }
 .score-breakdown > div { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border); }
