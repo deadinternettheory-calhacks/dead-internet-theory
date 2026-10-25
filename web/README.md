@@ -223,3 +223,7 @@ Completed reports retain the score card, white report panel and 960px reading
 width when background animations are active. Animation styling only flattens
 direct loading/error cards, not cards inside the finished report. The local
 `/dev/report` preview uses the same completed-state animated background.
+
+The discussion explorer is always visible directly after the original post and
+before the findings. Finding Explore actions select its relevant view and scroll
+back to it; no disclosure button is required.

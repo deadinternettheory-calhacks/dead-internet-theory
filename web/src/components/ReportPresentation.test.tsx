@@ -56,7 +56,10 @@ it('opens relevant evidence and shows the section score without per-item caveats
   expect(container.querySelector<HTMLDetailsElement>('.finding-more')?.open).toBe(false);
   expect(container.querySelectorAll('.evidence-quote').length).toBeGreaterThan(0);
   await act(async () => finding.querySelector<HTMLButtonElement>('.finding-actions button')!.click());
-  expect(container.querySelector<HTMLDetailsElement>('.report-explorer')?.open).toBe(true);
+  expect(container.querySelector('.report-explorer')?.tagName).toBe('SECTION');
+  expect(container.querySelector('.report-explorer > summary')).toBeNull();
+  expect(container.querySelector('.summary-card')?.nextElementSibling?.classList.contains('report-explorer')).toBe(true);
+  expect(container.querySelector('.report-explorer')?.nextElementSibling?.classList.contains('report-findings')).toBe(true);
   expect(container.querySelector('.mode-timing')).not.toBeNull();
   expect(container.querySelector('.index-note')?.closest('details')?.open).toBe(false);
   // Score and verdict share one card; the signals link their research.

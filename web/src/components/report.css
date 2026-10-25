@@ -36,10 +36,7 @@
 .report-findings .finding-actions summary { display: flex; align-items: center; min-height: 0; padding: 0; font-size: 11px; line-height: 1.5; margin: 0; }
 .finding-actions > button { display: inline-flex; align-items: center; gap: 6px; min-height: 0; line-height: 1.5; border: 0; padding: 0; background: transparent; color: var(--brand); font-size: 12px; cursor: pointer; }
 .finding-actions > button:hover { text-decoration: underline; }
-.report-explorer { margin: 26px 0 20px; scroll-margin-top: 24px; }
-.report-explorer > summary { display: flex; justify-content: space-between; gap: 16px; align-items: center; min-height: 60px; border-top: 1px solid var(--border); cursor: pointer; color: var(--brand); font-size: 15px; font-weight: 550; list-style: none; }
-.report-explorer > summary > span { display: flex; align-items: center; gap: 10px; }
-.report-explorer[open] > summary > svg { transform: rotate(180deg); }
+.report-explorer { margin: 0 0 24px; scroll-margin-top: 24px; }
 .report-explorer-intro { font-size: 13px; color: var(--muted); margin: 0 0 16px; }
 .report-view .evidence { border-radius: 12px; }
 .report-view .evidence-content { padding-bottom: 16px; }
