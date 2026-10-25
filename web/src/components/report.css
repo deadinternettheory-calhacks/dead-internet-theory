@@ -14,8 +14,6 @@
 .report-view .risk-score { padding: 24px 28px; border-radius: 12px; margin: 16px 0 0; }
 .report-view .risk-score > p:first-child { font-size: 14px; font-weight: 550; color: var(--brand); margin-bottom: 10px; }
 .report-view .risk-score .risk-note { margin-top: 18px; font-size: 12px; line-height: 1.8; }
-.report-coverage-summary { display: flex; flex-wrap: wrap; gap: 12px 26px; padding: 18px 0 36px; font-size: 12px; color: var(--muted); }
-.report-coverage-summary strong { color: var(--brand); font-weight: 550; }
 .report-eyebrow { font-size: 10px; letter-spacing: .11em; color: var(--muted); font-weight: 550; }
 .report-section-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin: 0 0 18px; }
 .report-section-heading h2 { font-size: 28px; font-weight: 550; line-height: 1.3; letter-spacing: -.04em; margin: 8px 0 0; }
@@ -71,7 +69,6 @@
   .report-view .summary-card, .report-view .verdict-card { padding: 22px 18px; }
   .report-view .risk-score { padding: 22px 18px; }
   .report-view .url-title { font-size: 20px; }
-  .report-coverage-summary { gap: 8px 16px; padding-bottom: 28px; font-size: 11px; }
   .report-section-heading { display: block; }
   .report-section-heading h2 { font-size: 26px; }
   .report-section-heading > p { max-width: none; margin-top: 10px; }
@@ -150,3 +147,15 @@
 @media (max-width: 767px) { .account-history-meta { grid-column: 1 / -1; } }
 
 .report-expiry { font-size: 12px; color: var(--muted); margin: 24px 0 0; }
+
+/* One shared surface for the post, findings, accounts and detailed evidence. */
+.report-middle { padding: 28px; border-radius: 12px; background: var(--surface); }
+.report-middle > .summary-card { padding: 0 0 28px; margin: 0 0 28px; border: 0; border-bottom: 1px solid var(--border); border-radius: 0; box-shadow: none; }
+.report-middle .report-findings .finding-card { padding: 24px 0; margin: 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; background: transparent; box-shadow: none; }
+.report-middle > .evidence { padding: 0; margin: 24px 0 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; box-shadow: none; }
+.result-card { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 28px; row-gap: 18px; }
+.score-explanation { grid-column: 1 / -1; min-width: 0; border-top: 1px solid var(--border); }
+.score-explanation > summary { min-height: 44px; padding-top: 12px; cursor: pointer; color: var(--brand); font-size: 14px; font-weight: 550; }
+.score-explanation-content { padding: 12px 0 0; font-size: 14px; line-height: 1.8; }
+.score-explanation .axis-list { margin-bottom: 0; }
+@media (max-width: 767px) { .report-middle { padding: 20px 18px; } .report-middle > .summary-card { padding: 0 0 24px; } .report-middle .report-findings .finding-card { padding: 20px 0; } .result-card { column-gap: 18px; } }

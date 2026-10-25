@@ -66,7 +66,15 @@ it('opens relevant evidence and shows the section score without per-item caveats
   expect([...container.querySelectorAll('.signal-sources a')].map(a => a.getAttribute('href'))).toContain('https://arxiv.org/abs/2112.00443');
   // Synthetic reports never link to their made-up sources; only research links remain.
   expect([...container.querySelectorAll('a')].every(a => a.closest('.signal-sources'))).toBe(true);
-  expect(container.querySelector('.report-coverage-summary')?.textContent).toMatch(/6\/\d+ histories/);
+  expect(container.querySelector('.report-coverage-summary')).toBeNull();
+  expect(container.querySelector('.summary-card')?.parentElement?.classList.contains('report-middle')).toBe(true);
+  expect(container.querySelector('.report-findings')?.parentElement?.classList.contains('report-middle')).toBe(true);
+  const explanation = container.querySelector<HTMLDetailsElement>('.score-explanation')!;
+  expect(explanation.open).toBe(false);
+  expect(explanation.querySelector('summary')?.textContent).toBe('Score explanation');
+  expect(explanation.textContent).toContain(exampleReport.index!.explanation);
+  await act(async () => explanation.querySelector('summary')!.click());
+  expect(explanation.open).toBe(true);
   expect(container.querySelector('.report-view')?.firstElementChild?.classList.contains('result-card')).toBe(true);
   const sections = [...container.querySelectorAll('.summary-card, .result-card, .report-findings, .evidence, .limitations')].map(node => node.className);
   expect(sections).toEqual(['card result-card tone-high', 'card summary-card', 'findings report-findings', 'card evidence', 'limitations']);

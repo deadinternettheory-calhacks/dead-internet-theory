@@ -204,3 +204,7 @@ instead of “0 / None found.” A completed review can genuinely score zero and
 logic. Supported signals and ordinary-participation evidence keep their existing
 presentation. This display change also works with retained reports; the separate
 inference update adds focused Claude history reviews for new analyses.
+
+The score card includes a collapsed **Score explanation** with the stored section
+score rationale and signal breakdown. The post, findings, account signals and
+detailed evidence share one white panel; coverage details remain below it.

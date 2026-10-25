@@ -32,6 +32,18 @@ function ResultCard({ report }: { report: Report }) {
         <i style={{ left: `${Math.max(0, Math.min(100, score))}%` }}/>
       </div>}
     </div>
+    <details className="score-explanation">
+      <summary>Score explanation</summary>
+      <div className="score-explanation-content">
+      {report.index && <div className="index-note">
+        <p><strong>Astroturfing score: {report.index.score} / 100.</strong> {report.index.explanation}</p>
+        <Sources sources={HISTORY_CONTRAST_SOURCES}/>
+      </div>}
+      <h3 className="detail-heading">Each signal we checked</h3>
+      <ul className="axis-list">{report.axes.map(x => <li key={x.axis}><strong>{x.title}: {x.score === null ? 'not measured' : `${x.score} / 100`}</strong><p>{x.explanation}</p><Sources sources={SIGNAL_SOURCES[x.axis]}/></li>)}</ul>
+      {!report.index && <p>Not enough evidence to calculate a score.</p>}
+      </div>
+    </details>
   </section>;
 }
 
@@ -46,6 +58,7 @@ export function AnalysisReport({ report }: { report: Report }) {
   const s = coverage.sentiment;
   return <div className="report-view">
     <ResultCard report={report}/>
+    <div className="card report-middle">
     <article className="card summary-card">
       <span className="platform-label">{PLATFORM_LABEL[post.platform] ?? 'POST'}</span>
       {post.title && <h2 className="url-title">{post.title}</h2>}
@@ -54,17 +67,10 @@ export function AnalysisReport({ report }: { report: Report }) {
       <SourceLink synthetic={report.synthetic} url={post.url}>View original post</SourceLink>
     </article>
 
-    <div className="report-coverage-summary"><span><strong>{coverage.analyzed}</strong> comments</span><span><strong>{coverage.completeness}</strong> coverage</span><span><strong>{historiesReturned}/{report.histories.length}</strong> histories</span></div>
     <ReportFindings report={report}/>
     <AccountSignals report={report}/>
 
     <EvidenceDetails>
-      {report.index && <div className="index-note">
-        <p><strong>Astroturfing score: {report.index.score} / 100.</strong> {report.index.explanation}</p>
-        <Sources sources={HISTORY_CONTRAST_SOURCES}/>
-      </div>}
-      <h3 className="detail-heading">Each signal we checked</h3>
-      <ul className="axis-list">{report.axes.map(x => <li key={x.axis}><strong>{x.title}: {x.score === null ? 'not measured' : `${x.score} / 100`}</strong><p>{x.explanation}</p><Sources sources={SIGNAL_SOURCES[x.axis]}/></li>)}</ul>
       {report.clusters.length > 0 && <>
         <h3 className="detail-heading">Groups of related comments</h3>
         <ul className="axis-list">{report.clusters.map(c => <li key={c.id}><strong>{c.size} comments</strong><p>{c.explanation}</p></li>)}</ul>
@@ -87,6 +93,7 @@ export function AnalysisReport({ report }: { report: Report }) {
       </>}
       <p className="version-note">Analysis version: {report.inferenceVersion}</p>
     </EvidenceDetails>
+    </div>
 
     <aside className="limitations">
       <h2>Coverage</h2>
