@@ -9,6 +9,7 @@ import type { TriageOutput } from '../convex/lib/inference/outputs';
 import { buildScoringPacket } from '../convex/lib/inference/packet';
 import { runSequential, triageInputs } from '../convex/lib/inference/pipeline';
 import { parseTriage } from '../convex/lib/inference/outputs';
+import { ACCOUNT_REVIEW_SCHEMA, accountReviewInputs } from '../convex/lib/inference/accounts';
 
 const dir = resolve(__dirname, '../fixtures/synthetic-espresso');
 const read = (name: string) => readFileSync(resolve(dir, name), 'utf8');
@@ -16,14 +17,15 @@ const graph = JSON.parse(read('graph.json')) as GraphEnvelope;
 const enrichment = JSON.parse(read('enrichment-completed.json')) as EnrichmentJob;
 const triage = JSON.parse(read('creao-triage-response.json')) as TriageOutput;
 
-function fakeAnthropic(reply: { stop_reason: string; text?: string; stop_details?: unknown }) {
+function fakeAnthropic(reply: { stop_reason: string; text?: string; stop_details?: unknown }, accountReply?: string) {
   const calls: Record<string, unknown>[] = [];
   const client = {
     beta: {
       messages: {
         stream: (params: Record<string, unknown>) => {
           calls.push(params);
-          return { finalMessage: async () => ({ stop_reason: reply.stop_reason, stop_details: reply.stop_details ?? null, content: reply.text ? [{ type: 'text', text: reply.text }] : [] }) };
+          const text = (params.output_config as { format: { schema: unknown } }).format.schema === ACCOUNT_REVIEW_SCHEMA ? accountReply ?? reply.text : reply.text;
+          return { finalMessage: async () => ({ stop_reason: reply.stop_reason, stop_details: reply.stop_details ?? null, content: text ? [{ type: 'text', text }] : [] }) };
         },
       },
     },
@@ -88,12 +90,15 @@ describe('direct Claude triage', () => {
   });
 
   it('replaces the CREAO triage run in the pipeline', async () => {
-    const { client } = fakeAnthropic({ stop_reason: 'end_turn', text: read('creao-triage-response.json') });
+    const accounts = accountReviewInputs(graph, triage, [enrichment])!.authorIds.map(authorId => ({ authorId, signals: [], exculpatory: [], unknown: [] }));
+    const { client, calls } = fakeAnthropic({ stop_reason: 'end_turn', text: read('creao-triage-response.json') }, JSON.stringify({ accounts }));
     const creao = new MockCreaoClient({ triage: 'must not be used', scoring: read('creao-scoring-response.json') });
     const started: string[] = [];
     const tracked = { label: creao.label, startRun: async (i: { stage: 'triage' | 'scoring'; instructions: string; evidence: string }) => { started.push(i.stage); return creao.startRun(i); }, getRun: (r: string) => creao.getRun(r) };
     const result = await runSequential(graph, { creao: tracked, claude: { apiKey: 'k', client }, requestEnrichment: async () => enrichment, getEnrichment: async () => enrichment, sleep: async () => {} });
     expect(started).toEqual(['scoring']);
+    expect(calls).toHaveLength(2);
+    expect(result.submission.inferenceVersion).toContain('account-history-2026-10-25a');
     expect(result.submission.inferenceVersion).toContain('claude:claude-opus-5-5');
   });
 });

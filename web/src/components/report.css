@@ -126,7 +126,7 @@
 .report-accounts { margin: 22px 0 16px; }
 .report-accounts h2 { font-size: 20px; margin: 0 0 8px; }
 .report-accounts ul { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--border); }
-.report-accounts li { display: grid; grid-template-columns: minmax(120px, 180px) 64px 1fr; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+.report-accounts li { display: grid; grid-template-columns: minmax(120px, 180px) 92px 1fr; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
 .account-name { font-weight: 550; overflow-wrap: anywhere; }
 .account-score { font-weight: 650; font-variant-numeric: tabular-nums; }
 .account-score small { font-weight: 400; color: var(--muted); margin-left: 1px; }
@@ -144,3 +144,7 @@
 .comment-estimate.is-medium { color: #9a6b1f; }
 .comment-estimate.is-high { color: #a3473d; }
 .comment-estimate-reasons { font-weight: 400; }
+
+.account-history-meta { grid-column: 2 / -1; color: var(--muted); font-size: 11px; }
+.account-limited { font-size: 12px; font-weight: 500; color: var(--muted); }
+@media (max-width: 767px) { .account-history-meta { grid-column: 1 / -1; } }

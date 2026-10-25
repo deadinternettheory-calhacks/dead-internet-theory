@@ -1,3 +1,4 @@
+import { accountReviewLimited } from '../../analysis/report';
 import { useState } from 'react';
 import { ArrowUpRight, Check, Minus } from 'lucide-react';
 import type { Report } from '../../analysis/report';
@@ -15,7 +16,7 @@ export function HistoryPanel({ histories, selectedId, onSelect }: { histories: R
         <span>{h.author ?? 'Unknown author'}</span>{h.comments.length ? <Check size={13} aria-hidden="true"/> : <Minus size={13} aria-hidden="true"/>}
       </button>)}
     </div>
-    <div className="history-sample-meta"><span className={`history-status status-${sample.status}`}>{STATUS[sample.status] ?? sample.status}</span><span>{sample.comments.length} comments</span>{sample.account && sample.account.score !== null && <span className="history-account-score">Signals {sample.account.score}/100</span>}</div>
+    <div className="history-sample-meta"><span className={`history-status status-${sample.status}`}>{STATUS[sample.status] ?? sample.status}</span><span>{sample.comments.length} comments</span>{sample.account && <span className="history-account-score">{accountReviewLimited(sample.account) ? 'Limited account assessment' : `Signals ${sample.account.score}/100`}</span>}</div>
     <div className="history-snippets">{sample.comments.slice(0, expanded ? undefined : 3).map(c => <button key={c.id} type="button" className={selectedId === c.id ? 'is-selected' : ''} onClick={() => onSelect(c.id)}>
       <span>{c.text}</span><ArrowUpRight size={14} aria-hidden="true"/>
     </button>)}</div>
