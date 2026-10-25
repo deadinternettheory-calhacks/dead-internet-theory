@@ -50,12 +50,14 @@ it('lets readers expand already-collected comments without fetching more data', 
 });
 it('opens relevant evidence and shows the section score without per-item caveats', async () => {
   await render(<AnalysisReport report={exampleReport}/>);
-  const finding = [...container.querySelectorAll('.finding-card')].find(article => article.querySelector('h3')?.textContent === 'Accounts used nearly identical wording')!;
+  // Promotional findings come first, then the rest by score: here timing follows the two promotion findings.
+  expect([...container.querySelectorAll('.finding-card h3')].map(h => h.textContent)).toEqual(['Comments read like promotion', 'Recommendations read like promotion', 'Recommendations arrived close together']);
+  const finding = [...container.querySelectorAll('.finding-card')].find(article => article.querySelector('h3')?.textContent === 'Recommendations arrived close together')!;
   expect(container.querySelector<HTMLDetailsElement>('.finding-more')?.open).toBe(false);
   expect(container.querySelectorAll('.evidence-quote').length).toBeGreaterThan(0);
   await act(async () => finding.querySelector<HTMLButtonElement>('.finding-actions button')!.click());
   expect(container.querySelector<HTMLDetailsElement>('.report-explorer')?.open).toBe(true);
-  expect(container.querySelector('.mode-wording')).not.toBeNull();
+  expect(container.querySelector('.mode-timing')).not.toBeNull();
   expect(container.querySelector('.index-note')?.closest('details')?.open).toBe(false);
   // Score and verdict share one card; the signals link their research.
   expect(container.querySelector('.result-card')?.textContent).toMatch(/^\d+\/ 100Strong signs of coordinated promotion/);

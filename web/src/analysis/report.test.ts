@@ -82,4 +82,12 @@ describe('real example', () => {
     expect(report.index!.score).toBeGreaterThanOrEqual(70);
     expect(report.histories).toEqual([]);
   });
+
+  it('lists promotional language first, then shop-style usernames, then the rest', () => {
+    expect(report.findings.map(f => f.axis)).toEqual(['comment_realism', 'shop_names', 'semantic_coordination']);
+    const shops = report.findings[1];
+    expect(shops.title).toBe('Shop-style usernames');
+    expect(shops.evidence.length).toBeGreaterThan(0);
+    expect(shops.evidence.every(e => /^example[a-z]+\d+$/.test(e.author ?? ''))).toBe(true);
+  });
 });

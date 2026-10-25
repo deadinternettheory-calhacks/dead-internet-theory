@@ -4008,31 +4008,11 @@
       "axes": [
         {
           "axis": "promotional_intent",
-          "score": 51,
+          "score": 17,
           "confidence": 0.3,
           "assessedCommentCount": 25,
-          "explanation": "Promotional intent: measured in the thread: 20 of 74 accounts praising or asking about the product have shop-style names; 1 comment(s) fish for the store owner.",
+          "explanation": "Promotional intent: measured in the thread: 1 comment(s) fish for the store owner.",
           "evidenceRefs": [
-            "tiktok:comment:example_c007",
-            "tiktok:comment:example_c019",
-            "tiktok:comment:example_c023",
-            "tiktok:comment:example_c031",
-            "tiktok:comment:example_c036",
-            "tiktok:comment:example_c044",
-            "tiktok:comment:example_c046",
-            "tiktok:comment:example_c047",
-            "tiktok:comment:example_c048",
-            "tiktok:comment:example_c049",
-            "tiktok:comment:example_c051",
-            "tiktok:comment:example_c059",
-            "tiktok:comment:example_c062",
-            "tiktok:comment:example_c076",
-            "tiktok:comment:example_c078",
-            "tiktok:comment:example_c080",
-            "tiktok:comment:example_c083",
-            "tiktok:comment:example_c089",
-            "tiktok:comment:example_c094",
-            "tiktok:comment:example_c096",
             "tiktok:comment:example_c024"
           ]
         },
