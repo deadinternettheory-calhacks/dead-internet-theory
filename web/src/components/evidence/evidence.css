@@ -1,4 +1,4 @@
-.evidence-explorer { border: 1px solid var(--border); border-radius: 16px; overflow: hidden; background: var(--surface); color: var(--text); }
+.evidence-explorer { container-type: inline-size; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; background: var(--surface); color: var(--text); }
 .explorer-toolbar { display: flex; align-items: center; gap: 4px; padding: 8px 14px; border-bottom: 1px solid var(--border); background: var(--bg); }
 .explorer-toolbar > button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; padding: 0 14px; border: 0; border-radius: 8px; color: var(--muted); background: transparent; cursor: pointer; font-size: 13px; font-weight: 550; transition: color 160ms, background 160ms; }
 .explorer-toolbar > button[aria-pressed="true"] { color: var(--brand); background: var(--light-brand); }
@@ -78,7 +78,7 @@
 .evidence-empty { padding: 32px 4px; color: var(--muted); font-size: 13px; line-height: 1.6; }
 @keyframes evidence-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes connection-enter { from { opacity: 0; } to { opacity: 1; } }
-@media (max-width: 767px) {
+@container (max-width: 640px) {
   .mobile-evidence-jump { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 44px; margin-top: 14px; padding: 0; border: 1px solid var(--border); border-radius: 7px; background: var(--surface); color: var(--brand); font-size: 12px; cursor: pointer; }
   .explorer-toolbar { padding: 7px 8px; gap: 0; }
   .explorer-toolbar > button { flex: 1; padding: 0 7px; font-size: 12px; gap: 5px; }
@@ -98,4 +98,7 @@
   .phrase-controls > button, .history-accounts > button { min-height: 44px; }
   .timeline-row { height: 44px; }
   .timeline-point { height: 44px; }
+}
+@container (max-width: 360px) {
+  .explorer-toolbar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

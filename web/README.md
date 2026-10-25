@@ -147,12 +147,13 @@ scene timing is never used as live progress.
 
 The analysis view uses three layers: the passive graveyard globe behind the
 centered reading column, eighteen comment models in a pointer-transparent layer,
-and the expressive ghost above the comments. Comments start behind the column,
-then move fully in front after three seconds without activity. Pointer movement,
-presses, scrolling, typing or focus changes immediately put them behind the column
-again, without restarting or pausing their animation. Returning from a hidden tab
-restarts the idle delay. The ghost always stays on top. The column keeps
-its 94%-opacity backdrop. There are no separate visible scene-control buttons.
+and the expressive ghost above the comments. Comments always stay behind the
+reading column, including during inactivity and after report completion; the
+ghost stays on top. The column keeps
+its 94%-opacity backdrop. Loading and completed reports share a centered 640px
+maximum column, with responsive gutters, so prose stays at a comfortable reading
+width and results do not widen the layout. There are no separate visible
+scene-control buttons.
 The same ghost appears on the landing page and stays mounted across navigation,
 phase changes and report completion. The world, comments and ghost remain after
 completion, with a celebratory greeting; a failed request retains a calm scene.
@@ -184,7 +185,7 @@ Optional 3D code loads after 400 ms. Reduced motion starts with static SVGs;
 activating the ghost opts in. Hidden tabs suspend all scene clocks and resume on
 return; phase/layout changes do not stop the visible scenes. Graphics failure
 keeps static art and the functioning report. Shared bounded geometry, a small
-224px ghost renderer, native-resolution foreground comments, a 1.25 pixel-ratio
+224px ghost renderer, native-resolution comments, a 1.25 pixel-ratio
 cap on the other scenes, no shadows/post-processing/external models, and disposal
 on unmount keep rendering bounded. The scene shares the homepage's Three.js code.
 This feature deploys with the website; neither ingestion nor inference requires
@@ -219,8 +220,10 @@ including a selected comment added to the visible sample. Hidden timestamps do
 not stretch the axis; identical timestamps are centered. The chart labels when
 its range covers only the displayed sample.
 
-Completed reports retain the score card, white report panel and 960px reading
-width when background animations are active. Animation styling only flattens
+Completed reports retain the score card and white report panel within the shared
+640px reading column when background animations are active. The evidence explorer
+uses its container width to stack the visualization and selected comment when
+space is limited, including on desktop. Animation styling only flattens
 direct loading/error cards, not cards inside the finished report. The local
 `/dev/report` preview uses the same completed-state animated background.
 

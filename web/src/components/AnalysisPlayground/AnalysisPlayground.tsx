@@ -4,7 +4,6 @@ import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { createGlobeMotion, stopGlobe } from '../GraveyardGlobe/globe-motion';
 import { GhostPoster, PlaygroundPoster } from './PlaygroundPoster';
 import { formationFor, type PlaygroundPhase } from './playground-types';
-import { useIdleComments } from './useIdleComments';
 import './playground.css';
 
 const PlaygroundScene = lazy(() => import('./PlaygroundScene'));
@@ -22,7 +21,6 @@ class SceneBoundary extends Component<{ children: ReactNode; onFailure: () => vo
 export const AnalysisPlayground = memo(function AnalysisPlayground({ phase, background = true }: { phase: PlaygroundPhase; background?: boolean }) {
   const pointer = useRef({ x: 0, y: 0 });
   const reduced = useReducedMotion();
-  const commentsIdle = useIdleComments(background);
   const [playing, setPlaying] = useState(!reduced);
   const [visible, setVisible] = useState(true);
   const [requested, setRequested] = useState(false);
@@ -99,7 +97,7 @@ export const AnalysisPlayground = memo(function AnalysisPlayground({ phase, back
     <span className="sr-only" id={helpId}>Click the ghost, or focus it and press Enter or Space, to make it react. Press P to pause or resume illustration motion; Escape pauses. Click a paused ghost to resume. The background is decorative and follows the real investigation stage.</span>
   </div>
   {createPortal(<>
-    {background && <div className="comment-overlay" aria-hidden="true" data-idle={commentsIdle} data-ready={commentsReady && !failed}>
+    {background && <div className="comment-overlay" aria-hidden="true" data-ready={commentsReady && !failed}>
       {requested && !failed && <SceneBoundary onFailure={handleFailure}><Suspense fallback={null}>
         <CommentScene animate={animate} phase={phase} onReady={handleCommentsReady} onFailure={handleFailure}/>
       </Suspense></SceneBoundary>}
