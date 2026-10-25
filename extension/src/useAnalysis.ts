@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ApiError, type ApiClient } from '../../web/src/api/client';
 import type { GraphEnvelope, InvestigationResource } from '../../web/src/api/contract';
 import { buildReport, buildThreadPreview, type Report, type ThreadPreview } from '../../web/src/analysis/report';
 import type { ProgressPhase } from '../../web/src/components/AnalysisProgress';
 import { requestWorker, type SavedJob } from './state';
 
+const SAVED_STAGE_MS = 5000;
+
 export type AnalysisView =
-  | { kind: 'loading'; phase: ProgressPhase; status: string; preview?: ThreadPreview }
+  | { kind: 'loading'; phase: ProgressPhase; status: string; preview?: ThreadPreview; savedResult?: boolean }
   | { kind: 'report'; report: Report }
   | { kind: 'error'; title: string; message: string; retryable: boolean; restartAllowed: boolean };
 
@@ -31,6 +33,8 @@ export function useAnalysis(job: SavedJob, client: ApiClient, readOnly = false) 
   const [attempt, setAttempt] = useState(0);
   const [visible, setVisible] = useState(!document.hidden);
   const [investigationId, setInvestigationId] = useState(job.investigationId);
+  const receipt = useRef<{ key: string; id: string } | null>(null);
+  const presentation = useRef<{ key: string; startedAt: number; completed: boolean } | null>(null);
   useEffect(() => {
     const update = () => setVisible(!document.hidden);
     document.addEventListener('visibilitychange', update);
@@ -44,14 +48,18 @@ export function useAnalysis(job: SavedJob, client: ApiClient, readOnly = false) 
       setView({ kind: 'loading', phase: 'starting', status: 'Connecting to your investigation…' });
       try {
         if (readOnly && !job.investigationId) throw new Error('This report link is not valid.');
-        let inv = job.investigationId
-          ? await client.getInvestigation(job.investigationId, signal)
+        const knownId = job.investigationId ?? (receipt.current?.key === job.key ? receipt.current.id : undefined);
+        let inv = knownId
+          ? await client.getInvestigation(knownId, signal)
           : await client.createInvestigation(job.sourceUrl, job.key, signal);
         // Save the receipt before any polling, so closing the panel can resume
         // with a GET. An unconfirmed create retains its original idempotency key.
+        if (signal.aborted) return;
+        receipt.current = { key: job.key, id: inv.investigationId };
         setInvestigationId(inv.investigationId);
         if (!readOnly) await requestWorker({ type: 'RECORD_JOB', key: job.key, investigationId: inv.investigationId });
-        if (!job.investigationId && inv.ingestionStatus !== 'failed' && inv.analysisStatus !== 'failed' && inv.analysisStatus !== 'completed') inv = await client.getInvestigation(inv.investigationId, signal);
+        if (!knownId && inv.ingestionStatus !== 'failed' && inv.analysisStatus !== 'failed' && inv.analysisStatus !== 'completed') inv = await client.getInvestigation(inv.investigationId, signal);
+        const savedResult = inv.ingestionStatus === 'completed' && inv.analysisStatus === 'completed';
         let graph: GraphEnvelope | undefined;
         let preview: ThreadPreview | undefined;
         const started = Date.now();
@@ -77,7 +85,26 @@ export function useAnalysis(job: SavedJob, client: ApiClient, readOnly = false) 
           sameGraph ? Promise.resolve(graph!) : client.getGraph(inv.investigationId, signal),
         ]);
         const enrichments = await Promise.all(analysis.result.usedEnrichmentIds.map(id => client.getEnrichment(inv.investigationId, id, signal)));
-        if (!signal.aborted) setView({ kind: 'report', report: buildReport(analysis, completeGraph, enrichments) });
+        if (signal.aborted) return;
+        const report = buildReport(analysis, completeGraph, enrichments);
+        if (savedResult && (presentation.current?.key !== job.key || !presentation.current.completed)) {
+          // Keep the original deadlines across hidden-tab cancellation/resume.
+          const replay = presentation.current?.key === job.key ? presentation.current : { key: job.key, startedAt: Date.now(), completed: false };
+          presentation.current = replay;
+          const collectionRemaining = replay.startedAt + SAVED_STAGE_MS - Date.now();
+          if (collectionRemaining > 0) {
+            setView({ kind: 'loading', phase: 'collecting', status: 'Loading saved comments…', savedResult: true });
+            await wait(collectionRemaining, signal);
+          }
+          const analysisRemaining = replay.startedAt + SAVED_STAGE_MS * 2 - Date.now();
+          if (analysisRemaining > 0) {
+            setView({ kind: 'loading', phase: 'analyzing', status: 'Preparing saved analysis…', savedResult: true, preview: buildThreadPreview(completeGraph, 100) });
+            await wait(analysisRemaining, signal);
+          }
+        }
+        if (signal.aborted) return;
+        presentation.current = { key: job.key, startedAt: presentation.current?.startedAt ?? Date.now(), completed: true };
+        setView({ kind: 'report', report });
       } catch (error) {
         if (signal.aborted) return;
         const expired = error instanceof ApiError && (error.status === 404 || error.status === 410);
