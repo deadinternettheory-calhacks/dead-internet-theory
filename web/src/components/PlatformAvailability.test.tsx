@@ -24,6 +24,8 @@ it('shows all four platforms and uses the backend enablement flags', async () =>
   ] });
   await render();
   expect([...container.querySelectorAll('li')].map(item => item.textContent)).toEqual(['XIn setup', 'RedditLive', 'TikTokIn setup', 'YouTubeLive']);
+  expect(container.querySelectorAll('.platform-logo')).toHaveLength(4);
+  expect(container.querySelectorAll('.is-live small')).toHaveLength(2);
 });
 it('does not invent availability when the lookup fails', async () => {
   vi.mocked(getCapabilities).mockRejectedValue(new Error('offline'));
@@ -32,11 +34,12 @@ it('does not invent availability when the lookup fails', async () => {
   expect(container.querySelectorAll('.is-live')).toHaveLength(0);
   expect(container.textContent).toContain('Unknown');
 });
-it('labels the X free-plan demo and explains its limits', async () => {
+it('labels the X free-plan demo without calling it live', async () => {
   vi.mocked(getCapabilities).mockResolvedValue({ platforms: [{ platform: 'x', actorRuntimeVerified: true, liveEnabled: true, demoLimited: true }] });
   await render();
   expect(container.querySelector('li')?.textContent).toBe('XDemo');
-  expect(container.textContent).toContain('10 items/run, 5 runs/month per collector');
+  expect(container.querySelector('.is-demo small')?.textContent).toBe('Demo');
+  expect(container.textContent).not.toContain('10 items/run, 5 runs/month per collector');
 });
 it('cancels an outstanding capability read when the homepage unmounts', async () => {
   vi.mocked(getCapabilities).mockImplementation(() => new Promise(() => {}));

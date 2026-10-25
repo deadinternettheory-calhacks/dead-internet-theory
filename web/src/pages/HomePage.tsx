@@ -4,7 +4,6 @@ import { ArrowDown } from 'lucide-react';
 import { PostUrlInput, ShortcutExplanation } from '../components/SiteLayout';
 import { AboutPage } from './AboutPage';
 import { GraveyardGlobe } from '../components/GraveyardGlobe/GraveyardGlobe';
-import { DemoTeaser } from '../components/demo/DemoTeaser';
 import { HowSteps } from '../components/demo/HowSteps';
 import './home.css';
 import { PlatformAvailability } from '../components/PlatformAvailability';
@@ -13,19 +12,19 @@ export function HomePage() {
   const [showExplanation, setShowExplanation] = useState(false);
 
   useEffect(() => {
-    let hasScrolled = false;
-    const timeout = window.setTimeout(() => {
-      if (!hasScrolled) setShowExplanation(true);
-    }, 3000);
-    const hideOnScroll = () => {
-      hasScrolled = true;
+    let timeout = 0;
+    const canShowCue = () => window.scrollY === 0 && document.documentElement.scrollHeight > window.innerHeight;
+    const scheduleCue = () => {
       window.clearTimeout(timeout);
       setShowExplanation(false);
+      timeout = window.setTimeout(() => setShowExplanation(canShowCue()), 5000);
     };
-    window.addEventListener('scroll', hideOnScroll, { passive: true });
+    const activityEvents: Array<keyof WindowEventMap> = ['scroll', 'mousemove', 'pointerdown', 'touchstart', 'keydown', 'focusin', 'click'];
+    activityEvents.forEach(event => window.addEventListener(event, scheduleCue, { passive: event !== 'keydown' }));
+    scheduleCue();
     return () => {
       window.clearTimeout(timeout);
-      window.removeEventListener('scroll', hideOnScroll);
+      activityEvents.forEach(event => window.removeEventListener(event, scheduleCue));
     };
   }, []);
 
@@ -33,5 +32,5 @@ export function HomePage() {
     <h1>Is this conversation being <span data-text="manipulated?">manipulated?</span></h1>
     <PostUrlInput onSubmit={url => navigate(`/analysis?url=${encodeURIComponent(url)}`)}/>
     <ShortcutExplanation/>
-  </div></div><div className="home-hero-secondary"><PlatformAvailability/></div>{showExplanation && <Link className="explanation-cue" to="/#how-it-works"><span>How it works</span><ArrowDown size={18} aria-hidden="true"/></Link>}</section><DemoTeaser/><HowSteps/><AboutPage/></main>;
+  </div></div><div className="home-hero-secondary"><PlatformAvailability/></div>{showExplanation && <Link className="explanation-cue" to="/#how-it-works"><span>Scroll for more</span><ArrowDown size={18} aria-hidden="true"/></Link>}</section><HowSteps/><AboutPage/></main>;
 }
