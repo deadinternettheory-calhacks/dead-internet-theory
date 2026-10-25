@@ -57,7 +57,7 @@ describe('thread commercial signals', () => {
 describe('per-comment estimate', () => {
   it('adds realism, username, phrase and duplicate points, and keeps the rubric score when higher', () => {
     const e = commentEstimate({ realism: 'unnatural', handle: 'guangzhou.sourcing', endorses: true, template: '"winning product"', outreach: false, duplicate: false, rubricScore: 8 });
-    expect(e.score).toBe(95);
+    expect(e.score).toBe(100);
     expect(e.reasons).toEqual(['Unnatural or ad-like text', 'Seller-style username', 'Template phrase "winning product"']);
     expect(commentEstimate({ realism: 'natural', handle: 'anna_r', endorses: true, template: null, outreach: false, duplicate: false, rubricScore: 76 })).toEqual({ score: 76, reasons: ['Rubric 76/100'] });
   });

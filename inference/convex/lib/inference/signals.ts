@@ -126,7 +126,7 @@ export interface CommentEstimate {
 export const ESTIMATE_POINTS = {
   unnatural: 35,
   generic: 10,
-  sellerHandle: 30,
+  sellerHandle: 40,
   randomHandle: 15,
   defaultHandle: 10,
   template: 30,
