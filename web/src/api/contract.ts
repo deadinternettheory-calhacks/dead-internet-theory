@@ -31,6 +31,7 @@ export interface InvestigationResource {
   ingestionStatus: 'queued' | 'running' | 'completed' | 'failed';
   analysisStatus: 'waiting_for_graph' | 'queued' | 'running' | 'completed' | 'failed';
   graphRevision: number | null;
+  graphFingerprint?: string | null;
   error?: ErrorDetail;
 }
 
@@ -49,6 +50,9 @@ export type GraphNode = DiscussionNode | AuthorNode | CommentNode;
 
 export interface GraphEnvelope {
   investigationId: string;
+  /** Canonical identity fields used when reusing a previously read graph. */
+  graphRevision?: number;
+  graphFingerprint?: string;
   platform: Platform;
   rootId: string;
   nodes: GraphNode[];

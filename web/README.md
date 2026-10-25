@@ -70,12 +70,18 @@ bypass its server-side gate. The browser does not fetch the submitted source URL
 
 Submitting a link creates an investigation, polls its real `ingestionStatus` and
 `analysisStatus`, then fetches the stored analysis, graph and used enrichment
-jobs and renders the report. Ingestion failures, analysis failures and
+jobs and renders the report.
+The page reads current status immediately when create returns an unfinished
+receipt, so refreshing a finished investigation does not wait for the next poll.
+It reuses the preview graph for the final report only when investigation ID,
+revision and fingerprint still match; otherwise it fetches the current graph.
+Ingestion failures, analysis failures and
 unsupported links each get their own message; no result is shown for a failed
 analysis. The v1 API has no inference-failure route, so if inference fails after
 accepting an event, the page stops waiting after 8 minutes. While the backend
 runs in fixture mode, only its documented synthetic test threads can be collected.
-The hosted site now enables reviewed Reddit collection and CREAO analysis.
+The hosted site enables reviewed Reddit, X, TikTok and YouTube collection,
+direct Claude triage and CREAO scoring; X retains the Free-plan demo limits.
 Reports expire 24 hours after creation. A cached failure from the earlier fixture
 deployment is replaced once, so refreshing can start a real investigation;
 ambiguous live requests retain their idempotency key to avoid duplicate starts.
