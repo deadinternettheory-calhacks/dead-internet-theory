@@ -131,6 +131,16 @@ it('shows a completed report immediately when an idempotent create replays its o
   expect(getAnalysis).toHaveBeenCalledTimes(1);
 });
 
+it('drops the replay key once the report is complete so a later check asks the backend again', async () => {
+  const key = idempotencyKeyFor(url);
+  vi.mocked(createInvestigation).mockResolvedValue(exampleData.investigation);
+  vi.mocked(getGraph).mockResolvedValue(exampleData.graph);
+  await render();
+  expect(container.querySelector('.report-view')).not.toBeNull();
+  expect(vi.mocked(createInvestigation).mock.calls[0][1]).toBe(key);
+  expect(idempotencyKeyFor(url)).not.toBe(key);
+});
+
 it('uses the already displayed immutable graph when the same revision and fingerprint completes', async () => {
   vi.mocked(createInvestigation).mockResolvedValue({ ...exampleData.investigation, analysisStatus: 'running' });
   vi.mocked(getInvestigation).mockResolvedValueOnce({ ...exampleData.investigation, analysisStatus: 'running' }).mockResolvedValue(exampleData.investigation);

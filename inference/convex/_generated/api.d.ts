@@ -24,6 +24,8 @@ import type * as lib_inference_pipeline from "../lib/inference/pipeline.js";
 import type * as lib_inference_prompts from "../lib/inference/prompts.js";
 import type * as lib_inference_rubric from "../lib/inference/rubric.js";
 import type * as lib_inference_scoring from "../lib/inference/scoring.js";
+import type * as lib_inference_section from "../lib/inference/section.js";
+import type * as lib_inference_signals from "../lib/inference/signals.js";
 import type * as lib_util from "../lib/util.js";
 import type * as retention from "../retention.js";
 import type * as worker from "../worker.js";
@@ -51,6 +53,8 @@ declare const fullApi: ApiFromModules<{
   "lib/inference/prompts": typeof lib_inference_prompts;
   "lib/inference/rubric": typeof lib_inference_rubric;
   "lib/inference/scoring": typeof lib_inference_scoring;
+  "lib/inference/section": typeof lib_inference_section;
+  "lib/inference/signals": typeof lib_inference_signals;
   "lib/util": typeof lib_util;
   retention: typeof retention;
   worker: typeof worker;
