@@ -15,9 +15,7 @@ export function SiteHeader() {
   return <header className="header"><div className="header-inner"><BrandWordmark/><nav aria-label="Main navigation"><Link to="/#how-it-works" replace={alreadyAtSection}>How it works</Link><TransitionLink className="header-play-demo" to="/example?play=1" ariaLabel="Play demo"><Play size={13} fill="currentColor" aria-hidden="true"/><span>Play demo</span></TransitionLink></nav></div></header>;
 }
 export function SiteFooter() {
-  const pathname = useLocation().pathname;
-  const isHome = pathname === '/';
-  return <footer className={`footer${isHome ? ' home-footer' : ''}`}><div className="footer-main"><span>© 2026 Dead Internet Theory</span></div><p className="footer-warning">Warning: Dead Internet can make mistakes.</p></footer>;
+  return null;
 }
 function InlineError({ children }: { children: string }) { return <p className="inline-error" role="alert">{children}</p>; }
 export function PostUrlInput({ onSubmit }: { onSubmit: (url: string) => void }) {
