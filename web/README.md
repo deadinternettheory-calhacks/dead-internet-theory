@@ -137,7 +137,7 @@ Inter is self-hosted through the pinned Fontsource variable-font package.
 
 `src/analysis/report.ts` turns the v1 `AnalysisResource` and graph into the
 page's sections, in the SPEC 4.2 order: score and plain-language result, up to three
-findings with quoted evidence, score signals, detailed analysis (including account signals), coverage and
+findings with quoted evidence, score signals, account signals, detailed analysis, coverage and
 limitations, then the original post and source. Completed reports put the post
 below all analytics; the collected-thread preview remains available while waiting.
 The comment-section astroturfing index appears prominently with its bands and an
@@ -238,7 +238,7 @@ inference update adds focused Claude history reviews for new analyses.
 
 The score card includes a collapsed **Score explanation** with the stored section
 score components, cited usernames, supporting reasons, weights and sampling note. Score signal assessments are visible
-in the main column; sampled account signals stay under the collapsed detailed analysis. Formatting uses stored values and never recalculates scores. Findings, score signals and
+in the main column, with sampled account signals visible directly beneath them. Formatting uses stored values and never recalculates scores. Findings, score signals, account signals and
 detailed evidence share one white panel; coverage details and the original post
 follow below it, in that order.
 

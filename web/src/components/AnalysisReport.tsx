@@ -69,10 +69,9 @@ export function AnalysisReport({ report }: { report: Report }) {
       <h2 id="score-signals-heading">Score signals</h2>
       <ul className="axis-list">{report.axes.map(x => <li key={x.axis}><strong>{x.title}: {x.score === null ? 'not measured' : `${x.score} / 100`}</strong><p>{x.explanation}</p><Sources sources={SIGNAL_SOURCES[x.axis]}/></li>)}</ul>
     </section>
+    <AccountSignals report={report}/>
 
     <EvidenceDetails>
-      <AccountSignals report={report}/>
-
       {report.clusters.length > 0 && <>
         <h3 className="detail-heading">Groups of related comments</h3>
         <ul className="axis-list">{report.clusters.map(c => <li key={c.id}><strong>{c.size} comments</strong><p>{c.explanation}</p></li>)}</ul>
