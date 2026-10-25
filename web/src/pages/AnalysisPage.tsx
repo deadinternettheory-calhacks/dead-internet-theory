@@ -103,6 +103,10 @@ function LiveAnalysis({ url }: { url: string }) {
         inv = await getInvestigation(inv.investigationId);
       }
       if (cancelled.current) return;
+      // Finished work no longer needs replay protection. Dropping the key means the
+      // next check of this link asks the backend again, which reuses a stored report
+      // when it is still valid and starts fresh after the result cache is invalidated.
+      forgetIdempotencyKeyFor(url);
       const sameGraph = previewGraph?.investigationId === inv.investigationId
         && previewGraph.graphRevision === inv.graphRevision
         && typeof inv.graphFingerprint === 'string'
