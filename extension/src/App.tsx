@@ -23,8 +23,8 @@ function Investigation({ job, onRestartAllowed }: { job: SavedJob; onRestartAllo
     {investigationId && !fullReport && <button className="panel-full-report" type="button" onClick={() => { void chrome.tabs.create({ url: chrome.runtime.getURL(`report.html?investigationId=${encodeURIComponent(investigationId)}`) }); }}>Open full report <ArrowUpRight size={15} aria-hidden="true"/></button>}
     {view.kind === 'loading' && <div className="panel-waiting">
       <PanelGhost phase={phase}/>
-      <AnalysisProgress phase={view.phase} status={view.status} collectedCount={view.preview?.collectedCount} savedResult={view.savedResult}/>
-      <p className="panel-resume-note">{view.savedResult ? 'Showing a saved result from this post’s existing investigation.' : 'You can close this panel. Your investigation continues, and reopening it picks up where you left off.'}</p>
+      <AnalysisProgress phase={view.phase} status={view.status} collectedCount={view.preview?.collectedCount}/>
+      <p className="panel-resume-note">Your report will appear here when it’s ready. You can close this panel and return to the investigation later.</p>
       {view.preview && <ThreadPreviewCard preview={view.preview}/>}
     </div>}
     {view.kind === 'error' && <section className="panel-error" role="alert"><h2>{view.title}</h2><p>{view.message}</p>{view.retryable && <button className="secondary-button" onClick={retry}><RotateCcw size={15} aria-hidden="true"/>Try again</button>}</section>}

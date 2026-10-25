@@ -214,10 +214,10 @@ Vercel `web/vercel.json` rewrites paths to the SPA entry point for refresh and s
 
 Repeated links can reuse a stored report or join an existing run. When the initial
 create/current-status lookup is already completed, the website first loads the
-full report and then shows **Loading saved comments** for five seconds and
-**Preparing saved analysis** for five seconds. The comment preview appears during
+full report and then shows **Fetching comments** for five seconds and
+**Analyzing the discussion** for five seconds. The comment preview appears during
 the second stage, and the existing gathering/analysis illustrations follow both
-stages. Copy identifies the saved data. Navigating away clears the presentation
+stages. Progress uses the same generic copy as live work. Navigating away clears the presentation
 timers and aborts pending reads. Failed reads show an error immediately.
 
 Work observed in progress keeps its real backend timing, including partial cache

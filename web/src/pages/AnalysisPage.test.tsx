@@ -106,7 +106,7 @@ it('does not show collection as complete or request a graph while it is queued',
   expect(container.textContent).toContain('Waiting to collect public comments…');
   expect(container.querySelector('[aria-current="step"]')?.textContent).toContain('Queued');
   await act(async () => vi.advanceTimersByTimeAsync(2500));
-  expect(container.textContent).toContain('Collecting public comments…');
+  expect(container.textContent).toContain('Fetching comments…');
   expect(container.querySelectorAll('.progress-stages .is-done')).toHaveLength(1);
   expect(getGraph).not.toHaveBeenCalled();
 });
@@ -128,16 +128,16 @@ it('shows saved comments for five seconds and saved analysis for five seconds af
   await render();
   expect(container.querySelector('.result-card')).toBeNull();
   expect(container.querySelector('.analysis-playground')?.getAttribute('data-phase')).toBe('collecting');
-  expect(container.textContent).toContain('Loading saved comments…');
-  expect(container.textContent).toContain('This post has a saved result.');
+  expect(container.textContent).toContain('Fetching comments…');
+  expect(container.querySelector('.analysis-progress')?.textContent).not.toMatch(/saved|cached|existing result/i);
   expect(container.querySelector('.thread-preview')).toBeNull();
   await act(async () => vi.advanceTimersByTimeAsync(4999));
   expect(container.querySelector('.analysis-playground')?.getAttribute('data-phase')).toBe('collecting');
   await act(async () => vi.advanceTimersByTimeAsync(1));
   expect(container.querySelector('.analysis-playground')?.getAttribute('data-phase')).toBe('analyzing');
-  expect(container.textContent).toContain('Preparing saved analysis…');
+  expect(container.textContent).toContain('Analyzing the discussion…');
   expect(container.textContent).toContain('Comments we collected');
-  expect(container.textContent).not.toContain('This can take a few minutes.');
+  expect(container.querySelector('.analysis-progress')?.textContent).not.toMatch(/saved|cached|existing result/i);
   expect(container.querySelector('.result-card')).toBeNull();
   await act(async () => vi.advanceTimersByTimeAsync(4999));
   expect(container.querySelector('.result-card')).toBeNull();
@@ -156,7 +156,7 @@ it('drops the replay key once the report is complete so a later check asks the b
   vi.mocked(createInvestigation).mockResolvedValue(exampleData.investigation);
   vi.mocked(getGraph).mockResolvedValue(exampleData.graph);
   await render();
-  expect(container.textContent).toContain('Loading saved comments…');
+  expect(container.textContent).toContain('Fetching comments…');
   await act(async () => vi.advanceTimersByTimeAsync(10000));
   expect(container.querySelector('.report-view')).not.toBeNull();
   expect(container.querySelector('.analysis-playground')?.getAttribute('data-phase')).toBe('complete');
@@ -188,7 +188,7 @@ it('shows failed saved-report reads immediately instead of playing a successful 
   vi.mocked(getGraph).mockRejectedValue(new ApiError(404, 'GRAPH_NOT_FOUND', 'Expired', false));
   await render();
   expect(container.textContent).toContain('Something went wrong.');
-  expect(container.textContent).not.toContain('Loading saved comments…');
+  expect(container.textContent).not.toContain('Fetching comments…');
   await act(async () => vi.advanceTimersByTimeAsync(10000));
   expect(container.querySelector('.report-view')).toBeNull();
   expect(container.querySelector('.analysis-playground')?.getAttribute('data-phase')).toBe('failed');

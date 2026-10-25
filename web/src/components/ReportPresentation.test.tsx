@@ -22,14 +22,14 @@ it('keeps queued milestones unchanged as elapsed time increases', async () => {
   await render(<AnalysisProgress phase="queued" status="Waiting to collect public comments…"/>);
   await act(async () => vi.advanceTimersByTimeAsync(70000));
   expect(container.textContent).toContain('1:10 in this view');
-  expect(container.querySelector('[aria-current="step"]')?.textContent).toContain('Collect public commentsQueued');
+  expect(container.querySelector('[aria-current="step"]')?.textContent).toContain('Fetch commentsQueued');
   expect(container.querySelectorAll('.is-done')).toHaveLength(1);
   expect(container.textContent).not.toContain('%');
   expect(container.textContent).not.toContain('comments collected.');
 });
 it('marks collection complete only after the backend says so and uses returned counts', async () => {
-  await render(<AnalysisProgress phase="collecting" status="Collecting public comments…"/>);
-  expect(container.querySelector('[aria-current="step"]')?.textContent).toContain('Collect public comments');
+  await render(<AnalysisProgress phase="collecting" status="Fetching comments…"/>);
+  expect(container.querySelector('[aria-current="step"]')?.textContent).toContain('Fetch comments');
   await render(<AnalysisProgress phase="analyzing" status="Analyzing the discussion…" collectedCount={8}/>);
   expect(container.querySelector('[aria-current="step"]')?.textContent).toContain('Analyze the discussion');
   expect(container.querySelectorAll('.is-done')).toHaveLength(2);

@@ -32,7 +32,7 @@ type View =
 /** Progress text follows the real investigation states (SPEC REQ-STATE-1). */
 function statusText(inv: InvestigationResource): string {
   if (inv.ingestionStatus === 'queued') return 'Waiting to collect public comments…';
-  if (inv.ingestionStatus === 'running') return 'Collecting public comments…';
+  if (inv.ingestionStatus === 'running') return 'Fetching comments…';
   if (inv.analysisStatus === 'running') return 'Analyzing the discussion…';
   return 'Waiting to analyze the discussion…';
 }
@@ -159,8 +159,8 @@ function LiveAnalysis({ url }: { url: string }) {
   if (view.kind === 'loading' || view.kind === 'saved') {
     const savedResult = view.kind === 'saved';
     const preview = savedResult && view.phase === 'collecting' ? undefined : view.preview;
-    const status = view.kind === 'saved' ? view.phase === 'collecting' ? 'Loading saved comments…' : 'Preparing saved analysis…' : view.status;
-    return <><AnalysisProgress key={`${attempt}:${savedResult}`} phase={view.phase} status={status} collectedCount={preview?.collectedCount} savedResult={savedResult}/>{preview ? <ThreadPreviewCard preview={preview}/> : <PostSummaryCard url={url}/>}</>;
+    const status = view.kind === 'saved' ? view.phase === 'collecting' ? 'Fetching comments…' : 'Analyzing the discussion…' : view.status;
+    return <><AnalysisProgress key={`${attempt}:${savedResult}`} phase={view.phase} status={status} collectedCount={preview?.collectedCount}/>{preview ? <ThreadPreviewCard preview={preview}/> : <PostSummaryCard url={url}/>}</>;
   }
   if (view.kind === 'error') {
     return <><PostSummaryCard url={url}/><AnalysisErrorState title={view.title} message={view.message} onRetry={view.retry ? () => { if (view.freshRequest) forgetIdempotencyKeyFor(url); setAttempt(a => a + 1); } : undefined}/>
