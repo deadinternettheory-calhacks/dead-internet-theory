@@ -88,11 +88,11 @@
 
 /* Result: score and verdict in one card. */
 .result-card { display: flex; align-items: center; gap: 28px; padding: 24px 28px; margin-bottom: 14px; border-left: 4px solid #8a9c91; }
-.result-card.tone-low { border-left-color: #76a58c; }
-.result-card.tone-medium { border-left-color: #d3a85a; }
-.result-card.tone-high { border-left-color: #c8756c; }
+.result-card.tone-low { --result-color: #76a58c; border-left-color: var(--result-color); }
+.result-card.tone-medium { --result-color: #d3a85a; border-left-color: var(--result-color); }
+.result-card.tone-high { --result-color: #c8756c; border-left-color: var(--result-color); }
 .result-score { display: flex; flex-direction: column; align-items: center; min-width: 76px; }
-.result-score strong { font-size: 48px; line-height: 1; font-weight: 600; letter-spacing: -.04em; }
+.result-score strong { color: var(--result-color, var(--text)); font-size: 48px; line-height: 1; font-weight: 600; letter-spacing: -.04em; }
 .result-score span { font-size: 12px; color: var(--muted); margin-top: 4px; }
 .result-text { flex: 1; min-width: 0; }
 .result-text h2 { font-size: 21px; line-height: 1.3; letter-spacing: -.02em; margin: 0 0 4px; }
