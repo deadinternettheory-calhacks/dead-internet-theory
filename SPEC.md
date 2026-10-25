@@ -339,8 +339,9 @@ twirls. Reactions finish before accepting another; rapid clicks never toggle pau
 The analysis globe is passive: it has no drag, flick, hover-tilt or keyboard-turn
 controls. Only the ghost is an interactive illustration target. Click it or use
 Enter/Space to react; P pauses/resumes scene motion, Escape pauses, and clicking
-a paused ghost resumes it. Its flight holds while hovered/focused for reliable
-activation. Comment models ignore pointer events so report controls remain usable.
+a paused ghost resumes it. Its flight continues during mouse hover and clicks;
+only keyboard focus holds its position for accessible activation (ADR-019).
+Comment models ignore pointer events so report controls remain usable.
 The centered translucent column, reduced-motion posters, graphics fallback,
 hidden-tab suspension and lazy loading keep the actual investigation usable.
 Illustrations never represent collected evidence or invented progress, and
@@ -498,6 +499,7 @@ These entries capture project direction and the adopted v1 interface delta; they
 | ADR-016 | 2026-10-25 UTC | Requested by the owner ("The knife one is bad. get rid of it"; chose replacing it with the TikTok thread) | The public example becomes the @goodstuffdiary night-light TikTok video's 100 comments, with usernames replaced by made-up names of the same kind so username evidence stays meaningful; the r/BuyItForLife knife thread is removed. The walkthrough and evidence explorer skip the history view when a report has no histories. Supersedes ADR-011's choice of thread. |
 | ADR-017 | 2026-10-25 UTC | Requested by the owner | Lead the report with its score and verdict, then post identity and evidence. Remove the visible page title so the score leads without a Summary heading. Supersedes the post-first display order in REQ-UX-2 and section 4.2. See the [score-first delta](deltas/2026-10-25T03-37-18Z-score-first-report.md). |
 | ADR-018 | 2026-10-25 UTC | Requested by the owner after slow analyses ("add an internal switch to go between claude and creao at this stage. Turn it to claude … by default") | Rubric scoring runs as one direct Claude call with structured outputs by default (about 30 s instead of 1.5–5 min on the CREAO agent); `SCORING_PROVIDER=creao` on the inference deployment switches it back without a deploy. Supersedes the CREAO-only scoring default in ADR-008/ADR-009 and section 9; prompts, re-scoring and validation are unchanged; the analysis label records `claude-scoring:<model>`. |
+| ADR-019 | 2026-10-25 UTC | Requested by the owner | Keep the ghost roaming during mouse hover and clicks; hold its flight only for keyboard focus. Supersedes section 10.3's hover hold. See the [ghost flight delta](deltas/2026-10-25T04-14-58Z-ghost-hover-flight.md). |
 
 
 ### 13.5 Specification change history
@@ -517,5 +519,6 @@ These entries capture project direction and the adopted v1 interface delta; they
 | 2026-10-25 UTC | Public example replaced: TikTok night-light video instead of the r/BuyItForLife knife thread (ADR-016). | No delta: a content choice within ADR-011's approved public-example exception. |
 | 2026-10-25 UTC | Score and verdict lead the report before post identity and evidence; no visible Summary heading (ADR-017). | [Score-first report delta](deltas/2026-10-25T03-37-18Z-score-first-report.md). |
 | 2026-10-25 UTC | Scoring on Claude by default with a `SCORING_PROVIDER` switch back to CREAO (ADR-018). | No delta: a provider switch within the selected Claude/CREAO inference design. |
+| 2026-10-25 UTC | Ghost flight continues during mouse hover and clicks; keyboard focus retains a stable target (ADR-019). | [Ghost flight delta](deltas/2026-10-25T04-14-58Z-ghost-hover-flight.md). |
 
 Future changes that conflict with an established requirement follow [CONTRIBUTING.md](CONTRIBUTING.md): propose affected sections/rationale, obtain explicit approval, create the timestamped delta, update the spec and decision log together, and preserve the historical decision. Filling a TBD or correcting an evidence-based implementation status does not itself require a delta. The v1.0.0 contract adoption is recorded by its linked approved delta.
