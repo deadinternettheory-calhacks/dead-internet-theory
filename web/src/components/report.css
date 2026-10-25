@@ -87,7 +87,7 @@
 }
 
 /* Result: score and verdict in one card. */
-.result-card { display: flex; align-items: center; gap: 28px; padding: 24px 28px; margin-bottom: 14px; border-left: 4px solid #8a9c91; }
+.result-card { display: flex; align-items: center; gap: 28px; padding: 24px 28px; margin-bottom: 14px; border-left: 6px solid #8a9c91; }
 .result-card.tone-low, .score-breakdown strong.tone-low { --result-color: #76a58c; border-left-color: var(--result-color); }
 .result-card.tone-medium, .score-breakdown strong.tone-medium { --result-color: #d3a85a; border-left-color: var(--result-color); }
 .result-card.tone-high, .score-breakdown strong.tone-high { --result-color: #c8756c; border-left-color: var(--result-color); }
