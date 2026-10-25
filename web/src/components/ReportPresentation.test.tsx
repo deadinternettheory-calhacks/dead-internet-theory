@@ -88,8 +88,13 @@ it('opens relevant evidence and shows the section score without per-item caveats
   await act(async () => explanation.querySelector('summary')!.click());
   expect(explanation.open).toBe(true);
   expect(container.querySelector('.report-view')?.firstElementChild?.classList.contains('result-card')).toBe(true);
-  const sections = [...container.querySelectorAll('.result-card, .report-explorer, .report-findings, .report-accounts, .evidence, .limitations, .summary-card')].map(node => node.className);
-  expect(sections).toEqual(['card result-card tone-high', 'report-explorer', 'findings report-findings', 'report-accounts', 'card evidence', 'limitations', 'card summary-card']);
+  const sections = [...container.querySelectorAll('.result-card, .report-explorer, .report-findings, .report-score-signals, .report-accounts, .evidence, .limitations, .summary-card')].map(node => node.className);
+  expect(sections).toEqual(['card result-card tone-high', 'report-explorer', 'findings report-findings', 'report-score-signals', 'card evidence', 'report-accounts', 'limitations', 'card summary-card']);
+  expect(container.querySelector('.report-score-signals')?.closest('details')).toBeNull();
+  expect(container.querySelector('.report-score-signals h2')?.textContent).toBe('Score signals');
+  expect(container.querySelector('.report-score-signals .axis-list')).not.toBeNull();
+  expect(container.querySelector('.report-accounts')?.closest('details')).toBe(container.querySelector('.evidence'));
+  expect(container.querySelector<HTMLDetailsElement>('.evidence')?.open).toBe(false);
 });
 it('lists each sampled account with its automation-signal score, never a bot label', async () => {
   await render(<AnalysisReport report={exampleReport}/>);
