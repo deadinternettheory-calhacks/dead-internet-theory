@@ -179,6 +179,8 @@ export interface AccountFacts {
   historyPartial: boolean;
   /** History items mentioning the recommended products, with their IDs. */
   productMentionIds: string[];
+  /** A product/brand was actually identified; otherwise brand focus is unknown. */
+  hasProductContext: boolean;
   /** Account age at the anchor comment, when the profile gives it. */
   accountAgeDays: number | null;
   /** Any comment ID of this author, for evidence on profile-based signals. */
@@ -207,15 +209,17 @@ export function scoreAccount(proposal: ProposedAccount | undefined, facts: Accou
     discarded.push(`${s.id}: not an account rule`);
     return false;
   });
-  const signals = acceptSignals(proposed, false, availability, knownIds, discarded);
+  // A real ID from another account is not evidence about this account.
+  const accountIds = new Set([facts.anchorCommentId, ...facts.historyIds].filter(id => knownIds.has(id)));
+  const signals = acceptSignals(proposed, false, availability, accountIds, discarded);
   // Signs of an ordinary human user override automation signals entirely.
   const humanProposed = (proposal?.exculpatory ?? []).filter(s => {
     if (HUMAN_RULES.has(s.id)) return true;
     discarded.push(`${s.id}: not an account-level human signal`);
     return false;
   });
-  const humanSignals = acceptSignals(humanProposed, true, availability, knownIds, discarded);
-  const established = facts.accountAgeDays !== null && facts.accountAgeDays > 365 && facts.communityCount >= 3 && facts.productMentionIds.length <= 1 && !facts.historyPartial;
+  const humanSignals = acceptSignals(humanProposed, true, availability, accountIds, discarded);
+  const established = facts.hasProductContext && facts.accountAgeDays !== null && facts.accountAgeDays > 365 && facts.communityCount >= 3 && facts.productMentionIds.length <= 1 && !facts.historyPartial;
   if (established && !humanSignals.some(s => s.id === 'E2')) {
     humanSignals.push({ id: 'E2', family: 'E', points: -15, evidence: `Account over a year old (${facts.accountAgeDays} days), active in ${facts.communityCount} communities, rarely mentions the recommended products.`, evidenceRefs: facts.historyIds.filter(id => knownIds.has(id)).slice(0, 3) });
   }
@@ -224,7 +228,7 @@ export function scoreAccount(proposal: ProposedAccount | undefined, facts: Accou
   }
   const has = (id: string) => signals.some(s => s.id === id);
   // Deterministic floor: brand concentration (3+ of 10 recent comments) and a new account.
-  if (!has('B1') && facts.productMentionIds.length >= 3) {
+  if (!has('B1') && facts.hasProductContext && facts.productMentionIds.length >= 3) {
     signals.push({ id: 'B1', family: 'B', points: 20, evidence: `${facts.productMentionIds.length} of ${facts.historyCount} recent comments mention the recommended products.`, evidenceRefs: facts.productMentionIds.slice(0, 5) });
   }
   if (!has('B4') && facts.accountAgeDays !== null && facts.accountAgeDays < 30) {
@@ -232,11 +236,12 @@ export function scoreAccount(proposal: ProposedAccount | undefined, facts: Accou
   }
   const fired = new Set(signals.map(s => s.id));
   // Without a model review, only the measured rules (B1, and B4 when the age is known) were checked.
-  // B1 (brand focus) is always measured, and B4 when the profile gives the age, so the model can
-  // never mark them unknown: an account with history always gets a score.
-  const measured = new Set(['B1', ...(facts.accountAgeDays !== null ? ['B4'] : [])]);
+  // Brand focus needs an identified product; age needs a profile. An account
+  // without either and without a model review has no measured score.
+  const measured = new Set([...(facts.hasProductContext ? ['B1'] : []), ...(facts.accountAgeDays !== null ? ['B4'] : [])]);
   const unchecked = proposal ? proposal.unknown : bRules.map(r => r.id);
-  const unknown = Array.from(new Set(unchecked.filter(id => RULES_BY_ID.get(id)?.family === 'B' && !fired.has(id) && !measured.has(id))));
+  const rejected = proposed.filter(s => !fired.has(s.id)).map(s => s.id);
+  const unknown = Array.from(new Set([...unchecked, ...rejected, ...(!facts.hasProductContext ? ['B1'] : [])].filter(id => RULES_BY_ID.get(id)?.family === 'B' && !fired.has(id) && !measured.has(id))));
   const evaluable = bRules.filter(r => !unknown.includes(r.id) || fired.has(r.id));
   const max = evaluable.reduce((t, r) => t + Math.max(...r.points), 0);
   const points = signals.reduce((t, s) => t + s.points, 0);

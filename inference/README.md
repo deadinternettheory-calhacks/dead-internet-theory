@@ -60,8 +60,8 @@ or settings; never commit them or put them in `VITE_*`.
 | `CREAO_APP_ID` | With `capi_` | The CREAO agent's ID. |
 | `CREAO_AGENT_ID` | With `cr_sk_` | The agent ID for `developer.creao.ai/v1/runs`. |
 | `CREAO_MODEL` | No | Model ID for `cr_sk_` runs. |
-| `ANTHROPIC_API_KEY` | Hosted production | Runs triage directly through the Anthropic Messages API. Without it, the worker falls back to CREAO triage; local fixtures may omit it. Timings depend on input size and provider latency. |
-| `ANTHROPIC_MODEL` | No | Claude model for triage. Default `claude-opus-5-5` at low effort; production selects tested `claude-haiku-5-5`. See the [hosted performance record](../backend/verification/2026-10-25-url-performance.md). |
+| `ANTHROPIC_API_KEY` | Hosted production | Runs triage and focused account-history review directly through the Anthropic Messages API. Without it, the worker falls back to CREAO triage; local fixtures may omit it. Timings depend on input size and provider latency. |
+| `ANTHROPIC_MODEL` | No | Claude model for triage and account review. Default `claude-opus-5-5` at low effort; production selects tested `claude-haiku-5-5`. See the [hosted performance record](../backend/verification/2026-10-25-url-performance.md). |
 | `CREAO_WEBHOOK_SECRET` | With a webhook | Random secret that authenticates CREAO's callbacks. |
 | `CREAO_WEBHOOK_URL` | Recommended | `<this deployment's .convex.site URL>/creao-webhook?token=<CREAO_WEBHOOK_SECRET>`. CREAO calls it when a run finishes, so the worker continues at once instead of at the next poll. |
 
@@ -152,6 +152,15 @@ for application, Apify and upstream-provider retention boundaries.
    Reddit and X only, anchored on each user's own comment. The worker
    continues without histories after 5 minutes or a failed job. The
    unsupportive group is the baseline for the comparison in step 7.
+   When `ANTHROPIC_API_KEY` is configured, a separate schema-constrained Claude
+   task reviews **every** returned history (including on discussions with no
+   product recommendations), requiring complete, unique author coverage. It uses
+   the same bounded history samples, makes no additional Apify requests, and is
+   cached for 24 hours by model, exact evidence and `ACCOUNT_REVIEW_VERSION`.
+   Account evidence must belong to that author. Missing product context leaves
+   brand focus unknown; missing profile fields and bounded activity remain explicit.
+   The broad CREAO task then skips duplicate account reviews. Without direct
+   Claude configuration, the existing CREAO account-review path remains available.
 5. **Scoring (CREAO run).** The agent gets the recommendations and their
    context (parents, replies, the recommenders' other comments and the 15
    most-engaged comments) rather than every comment, plus deterministic
@@ -265,3 +274,21 @@ end-to-end run works without a CREAO key.
 - Rubric calibration, and review of the axis mapping.
 - Scoped credential issuance from the backend instead of a shared signing secret.
 - A contract route for reporting inference failure, if the team wants one.
+
+### Account-history review coverage
+
+`convex/lib/inference/accounts.ts` isolates account review from the larger
+recommendation task. This prevents omitted accounts from silently inheriting a
+zero from the deterministic brand/age checks. The focused task uses the configured
+Anthropic model at low effort and retries incomplete or duplicate author coverage
+at most three times. Normal worker provider-error and lease handling still apply.
+Rubric/evidence validation recomputes scores and rejects cross-account citations.
+
+The website preserves `accountSignals.unknown` and history counts. Incomplete
+zeroes are labeled **Limited**; unavailable scores and genuine completed zeroes
+stay distinct. Existing stored reports gain the availability display without a
+rewrite; new submissions receive the focused review after the inference rollout
+and backend result-cache epoch change. No contract/schema migration is needed.
+Deploy `inference/` and update ingestion's `RESULT_CACHE_VERSION`; the ingestion
+code itself does not require deployment. See the
+[verification record](verification/2026-10-25-account-review.md).

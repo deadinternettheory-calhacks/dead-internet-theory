@@ -11,6 +11,7 @@ import { AnalysisProgress, type ProgressPhase } from '../components/AnalysisProg
 import { ServiceUnavailable, UnsupportedLinkState } from '../components/AnalysisStates';
 import { PostSummaryCard } from '../components/SiteLayout';
 import { parsePostUrl } from '../url';
+import { useInvestigationPhase } from '../components/AnalysisPlayground/InvestigationAtmosphere';
 
 const POLL_MS = 2500;
 /** Backend ingestion codes meaning live collection is not available for this link yet. */
@@ -57,6 +58,7 @@ function LiveAnalysis({ url }: { url: string }) {
   const [view, setView] = useState<View>({ kind: 'loading', status: 'Starting…', phase: 'starting' });
   const [attempt, setAttempt] = useState(0);
   const cancelled = useRef(false);
+  useInvestigationPhase(view.kind === 'loading' ? view.phase : view.kind === 'report' ? 'complete' : 'failed');
 
   const run = useCallback(async () => {
     const started = Date.now();

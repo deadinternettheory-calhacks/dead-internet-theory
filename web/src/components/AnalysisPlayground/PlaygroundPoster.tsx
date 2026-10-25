@@ -1,8 +1,7 @@
-import type { ProgressPhase } from '../AnalysisProgress';
-import { formationFor } from './playground-types';
+import { formationFor, type PlaygroundPhase } from './playground-types';
 
 /** First paint and reduced-motion/WebGL fallback, following real phases. */
-export function PlaygroundPoster({ phase }: { phase: ProgressPhase }) {
+export function PlaygroundPoster({ phase }: { phase: PlaygroundPhase }) {
   const formation = formationFor(phase);
   const cards = formation === 'inspect'
     ? [[110,72,0],[220,72,0],[330,72,0],[440,72,0],[110,294,0],[220,294,0],[330,294,0],[440,294,0]]
@@ -32,7 +31,14 @@ export function PlaygroundPoster({ phase }: { phase: ProgressPhase }) {
       <circle cx="-16" cy="-5" r="4" fill={i===1?'#D4DFD5':'#8AA895'}/>
       <path d="M-6-6h24M-6 1h17M-19 9h36" stroke={i===1?'#EAF1ED':'#B0C4B6'} strokeWidth="2.5" strokeLinecap="round"/>
     </g>)}
-    <g transform="translate(280 176) scale(1.8)">
+  </svg>;
+}
+
+/** Static first paint and reduced-motion companion, kept above the page. */
+export function GhostPoster({ phase }: { phase: PlaygroundPhase }) {
+  const formation = formationFor(phase);
+  return <svg viewBox="0 0 160 160" fill="none" aria-hidden="true">
+    <g transform="translate(80 80) scale(1.65)">
       <ellipse cx="-32" cy="4" rx="7" ry="14" transform={`rotate(${formation === 'rest' ? 135 : 35} -32 4)`} fill="#FFFFFF" stroke="#D4DFD5"/>
       <ellipse cx="32" cy="4" rx="7" ry="14" transform="rotate(-35 32 4)" fill="#FFFFFF" stroke="#D4DFD5"/>
       <path d="M-29 25V-9a29 29 0 0 1 58 0v34q0 10-10 0t-10 1Q0 42-9 26q-5-9-10-1t-10 0Z" fill="#FFFFFF" stroke="#D4DFD5" strokeWidth="1.5"/>

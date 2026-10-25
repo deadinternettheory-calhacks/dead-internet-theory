@@ -4,6 +4,8 @@ import { createRoot, type Root } from 'react-dom/client';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { AnalysisPage } from './AnalysisPage';
+import { InvestigationAtmosphere } from '../components/AnalysisPlayground/InvestigationAtmosphere';
+vi.mock('../components/AnalysisPlayground/AnalysisPlayground', () => ({ AnalysisPlayground: ({ phase }: { phase: string }) => <div className="analysis-playground" data-phase={phase}/> }));
 import { ApiError, createInvestigation, getAnalysis, getEnrichment, getGraph, getInvestigation, idempotencyKeyFor } from '../api/client';
 import { exampleData } from '../demo';
 import type { InvestigationResource } from '../api/contract';
@@ -34,7 +36,7 @@ afterEach(async () => {
   await act(async () => root.unmount());
   vi.useRealTimers();
 });
-const render = async () => act(async () => { root.render(<MemoryRouter><AnalysisPage url={url}/></MemoryRouter>); });
+const render = async () => act(async () => { root.render(<MemoryRouter initialEntries={['/analysis']}><InvestigationAtmosphere><AnalysisPage url={url}/></InvestigationAtmosphere></MemoryRouter>); });
 
 it('explains how to recover from an unavailable TikTok share without a duplicate create', async () => {
   vi.mocked(createInvestigation).mockRejectedValue(new ApiError(502, 'SOURCE_LINK_UNAVAILABLE', 'Unavailable', true));
@@ -126,6 +128,7 @@ it('shows a completed report immediately when an idempotent create replays its o
   await render();
   // No timer advances: a refresh must not incur the 2.5-second poll delay.
   expect(container.querySelector('.report-view')).not.toBeNull();
+  expect(container.querySelector('.analysis-playground')?.getAttribute('data-phase')).toBe('complete');
   expect(createInvestigation).toHaveBeenCalledTimes(1);
   expect(getInvestigation).toHaveBeenCalledTimes(1);
   expect(getAnalysis).toHaveBeenCalledTimes(1);
@@ -137,6 +140,7 @@ it('drops the replay key once the report is complete so a later check asks the b
   vi.mocked(getGraph).mockResolvedValue(exampleData.graph);
   await render();
   expect(container.querySelector('.report-view')).not.toBeNull();
+  expect(container.querySelector('.analysis-playground')?.getAttribute('data-phase')).toBe('complete');
   expect(vi.mocked(createInvestigation).mock.calls[0][1]).toBe(key);
   expect(idempotencyKeyFor(url)).not.toBe(key);
 });
@@ -149,6 +153,7 @@ it('uses the already displayed immutable graph when the same revision and finger
   expect(container.textContent).toContain('Comments we collected');
   await act(async () => vi.advanceTimersByTimeAsync(2500));
   expect(container.querySelector('.report-view')).not.toBeNull();
+  expect(container.querySelector('.analysis-playground')?.getAttribute('data-phase')).toBe('complete');
   expect(getGraph).toHaveBeenCalledTimes(1);
 });
 
@@ -160,6 +165,7 @@ it('fetches the new graph if completion identifies a different revision instead 
   await render();
   await act(async () => vi.advanceTimersByTimeAsync(2500));
   expect(container.querySelector('.report-view')).not.toBeNull();
+  expect(container.querySelector('.analysis-playground')?.getAttribute('data-phase')).toBe('complete');
   expect(container.textContent).toContain('Updated discussion');
   expect(getGraph).toHaveBeenCalledTimes(2);
 });

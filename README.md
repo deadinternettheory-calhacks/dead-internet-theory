@@ -43,6 +43,8 @@ and reduced harm still need to be evaluated.
    of supportive and unsupportive authors and asks ingestion for bounded public
    histories. This enrichment is supported for Reddit and X. Missing, partial,
    or unsupported history remains explicit; it is not evidence against an account.
+   When Claude is configured, a focused review covers every returned account
+   history, including on discussions with no product recommendations.
 5. **Assess the evidence.** Code measures timing, overlap, commercial patterns,
    and available history signals. When recommendations exist, a CREAO agent
    receives their bounded context, measurements, and rubric, and returns proposed
