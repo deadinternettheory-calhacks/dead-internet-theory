@@ -65,7 +65,7 @@ export function AnalysisReport({ report }: { report: Report }) {
     <ResultCard report={report}/>
     <div className="card report-middle">
     <article className="card summary-card">
-      <h2 className="original-post-heading"><span>Original Post</span><span className="post-divider" aria-hidden="true"> · </span><span>{PLATFORM_LABEL[post.platform] ?? post.platform}</span>{post.title && <><span className="post-divider" aria-hidden="true"> · </span><span className="original-post-title">{post.title}</span></>}</h2>
+      <h2 className="original-post-heading"><span>{PLATFORM_LABEL[post.platform] ?? post.platform}</span>{post.title && <><span className="post-divider" aria-hidden="true"> · </span><span className="original-post-title">{post.title}</span></>}</h2>
       <p className="post-text">{post.text}</p>
       {(post.author || time) && <p className="url-display">{[post.author, time].filter(Boolean).join(' · ')}</p>}
       <SourceLink synthetic={report.synthetic} url={post.url}>View original post</SourceLink>
