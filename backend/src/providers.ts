@@ -79,6 +79,28 @@ export interface PlanState {
   index?: number;
   began?: number;
 }
+const terminalRun = (status: string) =>
+  ["SUCCEEDED", "FAILED", "ABORTED", "TIMED-OUT"].includes(status);
+const pending = (state: Required<PlanState>, waitMs: number) => ({
+  done: false as const,
+  state,
+  waitMs,
+});
+export type AdvanceResult =
+  | {
+      done: false;
+      state: Required<PlanState>;
+      waitMs?: number;
+      raw?: never;
+      discussion?: never;
+    }
+  | {
+      done: true;
+      raw: Task[];
+      discussion?: DiscussionData;
+      state?: never;
+      waitMs?: never;
+    };
 export function plan(
   platform: Platform,
   kind: "discussion" | "history",
@@ -389,7 +411,7 @@ export async function advance(args: {
     status: string,
     resources?: ProviderResources,
   ) => Promise<boolean>;
-}) {
+}): Promise<AdvanceResult> {
   liveGate(args.platform);
   const state: Required<PlanState> = {
     tasks:
@@ -440,7 +462,7 @@ export async function advance(args: {
   }
   if (task && !task.run) {
     const admission = await args.reserve(operation, task.actor);
-    if (admission.status === "busy") return { done: false as const, state };
+    if (admission.status === "busy") return pending(state, 2000);
     if (admission.status === "denied")
       throw new ApiFault(
         500,
@@ -513,7 +535,7 @@ export async function advance(args: {
             task.done = true;
             state.index++;
           }
-          return { done: false as const, state };
+          return pending(state, 0);
         }
       }
       if (rows.length > pageLimit)
@@ -547,7 +569,10 @@ export async function advance(args: {
       }
     }
   }
-  if (state.index < state.tasks.length) return { done: false as const, state };
+  if (state.index < state.tasks.length) {
+    const next = state.tasks[state.index];
+    return pending(state, next.run && !terminalRun(next.run.status) ? 2000 : 0);
+  }
   const raw = state.tasks;
   return {
     done: true as const,

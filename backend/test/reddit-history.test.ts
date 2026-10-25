@@ -301,6 +301,47 @@ it("shrinks oversized history pages and skips one unreadable row without restart
   );
 });
 
+it("immediately schedules ready dataset pages while backing off active runs and busy capacity", async () => {
+  const { advance, Apify } = await import("../src/providers");
+  vi.stubEnv("PROVIDER_MODE", "live");
+  vi.stubEnv("PROVIDER_AUTHORIZATION_APPROVED", "true");
+  vi.stubEnv("RETENTION_POLICY_REF", "SYNTHETIC");
+  vi.stubEnv("APIFY_TOKEN", "SYNTHETIC");
+  vi.stubEnv("HISTORY_CANDIDATES_PER_AUTHOR", "150");
+  const task = plan("reddit", "history", undefined, [author])[0];
+  Object.assign(task, {
+    run: {
+      id: "SYNTHETIC",
+      status: "SUCCEEDED",
+      defaultDatasetId: "SYNTHETIC",
+    },
+  });
+  vi.spyOn(Apify.prototype, "items").mockResolvedValue(
+    Array.from({ length: 100 }, (_, i) => row(`item${i}`)),
+  );
+  const args = {
+    platform: "reddit" as const,
+    kind: "history" as const,
+    authors: [author],
+    state: { tasks: [task], index: 0, began: Date.now() },
+    reserve: vi.fn(),
+    observe: vi.fn().mockResolvedValue(true),
+  };
+  const ready = await advance(args);
+  expect(ready.done).toBe(false);
+  expect(ready.waitMs).toBe(0);
+  task.run.status = "RUNNING";
+  vi.spyOn(Apify.prototype, "poll").mockResolvedValue(task.run);
+  const running = await advance(args);
+  expect(running.waitMs).toBe(2000);
+  const busy = await advance({
+    ...args,
+    state: {},
+    reserve: vi.fn().mockResolvedValue({ status: "busy" }),
+  });
+  expect(busy.waitMs).toBe(2000);
+});
+
 it("keeps valid returned comments from an interrupted provider run and derives observed source IDs from permalinks", async () => {
   const task = plan("reddit", "history", undefined, [author])[0];
   Object.assign(task, {

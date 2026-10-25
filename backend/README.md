@@ -11,6 +11,8 @@ lifetime. Concurrent submissions join one collection/analysis run; each browser
 has a private, read-only investigation view. Failed or expired work is not reused,
 except an unconfirmed provider start remains held to avoid a duplicate paid run.
 See [caching and rollout](RUNBOOK.md#link-result-reuse).
+See the [URL performance audit](URL-PERFORMANCE.md) for measured timings,
+pipeline optimizations and the remaining latency/coverage tradeoffs.
 
 Synthetic ingestion and an independent mock inference consumer have been verified
 against a real local Convex deployment. The authenticated REST lifecycle has also

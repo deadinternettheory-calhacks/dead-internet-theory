@@ -1,6 +1,7 @@
 // Direct Claude call for the triage stage. Triage is a single classification,
 // so one Messages API request with structured outputs replaces a CREAO agent
-// run: the reply is schema-constrained JSON and needs no format retries.
+// run: the reply is schema-constrained JSON. Semantic validation still checks
+// complete comment coverage and bounds retries for incomplete replies.
 // Scoring still runs on the CREAO agent.
 import Anthropic from '@anthropic-ai/sdk';
 import type { CreaoInputs } from './creao';

@@ -8,6 +8,7 @@ import { createCreaoClient, MockCreaoClient } from '../convex/lib/inference/crea
 import type { TriageOutput } from '../convex/lib/inference/outputs';
 import { buildScoringPacket } from '../convex/lib/inference/packet';
 import { runSequential, triageInputs } from '../convex/lib/inference/pipeline';
+import { parseTriage } from '../convex/lib/inference/outputs';
 
 const dir = resolve(__dirname, '../fixtures/synthetic-espresso');
 const read = (name: string) => readFileSync(resolve(dir, name), 'utf8');
@@ -41,6 +42,21 @@ describe('smaller scoring packet', () => {
 });
 
 describe('direct Claude triage', () => {
+  it('requires complete, unique comment coverage and tries later valid candidates before another run', () => {
+    const ids = triage.comments.map(c => c.commentId);
+    const missing = { ...triage, comments: triage.comments.slice(0, 1) };
+    expect(() => parseTriage(JSON.stringify(missing), ids)).toThrow('every analyzed comment');
+    expect(() => parseTriage(JSON.stringify({ ...triage, comments: triage.comments.map((c,i) => i ? c : triage.comments[1]) }), ids)).toThrow();
+    expect(() => parseTriage(JSON.stringify({ ...triage, comments: triage.comments.map((c,i) => i ? c : { ...c, commentId: 'foreign' }) }), ids)).toThrow();
+    expect(parseTriage([JSON.stringify(missing), JSON.stringify(triage)], ids)).toEqual(triage);
+  });
+
+  it('bounds retries when a fast model omits most comments instead of treating that as completed work', async () => {
+    const { client, calls } = fakeAnthropic({ stop_reason: 'end_turn', text: JSON.stringify({ ...triage, comments: triage.comments.slice(0,1) }) });
+    const creao = new MockCreaoClient({ triage: '', scoring: '' });
+    await expect(runSequential(graph, { creao, claude: { apiKey: 'k', client } })).rejects.toThrow('every analyzed comment');
+    expect(calls).toHaveLength(3);
+  });
   it('uses structured outputs, low effort, default fallbacks and untrusted-evidence framing', async () => {
     const { client, calls } = fakeAnthropic({ stop_reason: 'end_turn', text: read('creao-triage-response.json') });
     const outputs = await claudeTriage({ apiKey: 'k', client }, triageInputs(graph).inputs);
