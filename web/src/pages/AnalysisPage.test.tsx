@@ -36,7 +36,7 @@ afterEach(async () => {
   await act(async () => root.unmount());
   vi.useRealTimers();
 });
-const render = async () => act(async () => { root.render(<MemoryRouter initialEntries={['/analysis']}><InvestigationAtmosphere><AnalysisPage url={url}/></InvestigationAtmosphere></MemoryRouter>); });
+const render = async (sourceUrl = url) => act(async () => { root.render(<MemoryRouter initialEntries={['/analysis']}><InvestigationAtmosphere><AnalysisPage url={sourceUrl}/></InvestigationAtmosphere></MemoryRouter>); });
 
 it('explains how to recover from an unavailable TikTok share without a duplicate create', async () => {
   vi.mocked(createInvestigation).mockRejectedValue(new ApiError(502, 'SOURCE_LINK_UNAVAILABLE', 'Unavailable', true));
@@ -121,17 +121,34 @@ it('blames the service, not the post, and retries a refused start with a fresh r
   expect(vi.mocked(createInvestigation).mock.calls[1][1]).not.toBe(key);
 });
 
-it('shows a completed report immediately when an idempotent create replays its original queued receipt', async () => {
+it('shows saved comments for five seconds and saved analysis for five seconds after a finished replay lookup', async () => {
   vi.mocked(createInvestigation).mockResolvedValue({ ...exampleData.investigation, ingestionStatus: 'queued', analysisStatus: 'waiting_for_graph', graphRevision: null, graphFingerprint: null });
   vi.mocked(getInvestigation).mockResolvedValue(exampleData.investigation);
   vi.mocked(getGraph).mockResolvedValue(exampleData.graph);
   await render();
-  // No timer advances: a refresh must not incur the 2.5-second poll delay.
-  expect(container.querySelector('.report-view')).not.toBeNull();
+  expect(container.querySelector('.result-card')).toBeNull();
+  expect(container.querySelector('.analysis-playground')?.getAttribute('data-phase')).toBe('collecting');
+  expect(container.textContent).toContain('Loading saved comments…');
+  expect(container.textContent).toContain('This post has a saved result.');
+  expect(container.querySelector('.thread-preview')).toBeNull();
+  await act(async () => vi.advanceTimersByTimeAsync(4999));
+  expect(container.querySelector('.analysis-playground')?.getAttribute('data-phase')).toBe('collecting');
+  await act(async () => vi.advanceTimersByTimeAsync(1));
+  expect(container.querySelector('.analysis-playground')?.getAttribute('data-phase')).toBe('analyzing');
+  expect(container.textContent).toContain('Preparing saved analysis…');
+  expect(container.textContent).toContain('Comments we collected');
+  expect(container.textContent).not.toContain('This can take a few minutes.');
+  expect(container.querySelector('.result-card')).toBeNull();
+  await act(async () => vi.advanceTimersByTimeAsync(4999));
+  expect(container.querySelector('.result-card')).toBeNull();
+  expect(container.querySelector('.analysis-playground')?.getAttribute('data-phase')).toBe('analyzing');
+  await act(async () => vi.advanceTimersByTimeAsync(1));
+  expect(container.querySelector('.result-card')).not.toBeNull();
   expect(container.querySelector('.analysis-playground')?.getAttribute('data-phase')).toBe('complete');
   expect(createInvestigation).toHaveBeenCalledTimes(1);
   expect(getInvestigation).toHaveBeenCalledTimes(1);
   expect(getAnalysis).toHaveBeenCalledTimes(1);
+  expect(getGraph).toHaveBeenCalledTimes(1);
 });
 
 it('drops the replay key once the report is complete so a later check asks the backend again', async () => {
@@ -139,10 +156,42 @@ it('drops the replay key once the report is complete so a later check asks the b
   vi.mocked(createInvestigation).mockResolvedValue(exampleData.investigation);
   vi.mocked(getGraph).mockResolvedValue(exampleData.graph);
   await render();
+  expect(container.textContent).toContain('Loading saved comments…');
+  await act(async () => vi.advanceTimersByTimeAsync(10000));
   expect(container.querySelector('.report-view')).not.toBeNull();
   expect(container.querySelector('.analysis-playground')?.getAttribute('data-phase')).toBe('complete');
   expect(vi.mocked(createInvestigation).mock.calls[0][1]).toBe(key);
   expect(idempotencyKeyFor(url)).not.toBe(key);
+});
+
+it('clears saved-result timers when switching links so an old replay cannot finish the new one', async () => {
+  vi.mocked(createInvestigation).mockResolvedValue(exampleData.investigation);
+  const updated = { ...exampleData.graph, nodes: exampleData.graph.nodes.map(node => node.type === 'discussion' ? { ...node, title: 'Second saved discussion' } : node) };
+  vi.mocked(getGraph).mockResolvedValueOnce(exampleData.graph).mockResolvedValueOnce(updated);
+  await render();
+  await act(async () => vi.advanceTimersByTimeAsync(3000));
+  await render('https://www.reddit.com/r/synthetic/comments/def456/');
+  await act(async () => vi.advanceTimersByTimeAsync(2000));
+  expect(container.querySelector('.analysis-playground')?.getAttribute('data-phase')).toBe('collecting');
+  await act(async () => vi.advanceTimersByTimeAsync(3000));
+  expect(container.querySelector('.analysis-playground')?.getAttribute('data-phase')).toBe('analyzing');
+  await act(async () => vi.advanceTimersByTimeAsync(2000));
+  expect(container.querySelector('.result-card')).toBeNull();
+  await act(async () => vi.advanceTimersByTimeAsync(3000));
+  expect(container.querySelector('.report-view')).not.toBeNull();
+  expect(container.querySelector('.original-post-heading')?.textContent).toContain('Second saved discussion');
+  expect(createInvestigation).toHaveBeenCalledTimes(2);
+});
+
+it('shows failed saved-report reads immediately instead of playing a successful result sequence', async () => {
+  vi.mocked(createInvestigation).mockResolvedValue(exampleData.investigation);
+  vi.mocked(getGraph).mockRejectedValue(new ApiError(404, 'GRAPH_NOT_FOUND', 'Expired', false));
+  await render();
+  expect(container.textContent).toContain('Something went wrong.');
+  expect(container.textContent).not.toContain('Loading saved comments…');
+  await act(async () => vi.advanceTimersByTimeAsync(10000));
+  expect(container.querySelector('.report-view')).toBeNull();
+  expect(container.querySelector('.analysis-playground')?.getAttribute('data-phase')).toBe('failed');
 });
 
 it('uses the already displayed immutable graph when the same revision and fingerprint completes', async () => {

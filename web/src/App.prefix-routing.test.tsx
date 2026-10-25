@@ -47,7 +47,7 @@ describe('URL-prefix investigation routing', () => {
 
     expect(container.textContent).toContain('Your investigation.');
     expect(`${window.location.pathname}${window.location.search}`).toBe(path);
-    expect(createInvestigation).toHaveBeenCalledWith(sourceUrl, expect.any(String));
+    expect(createInvestigation).toHaveBeenCalledWith(sourceUrl, expect.any(String), expect.any(AbortSignal));
   });
 
   it('keeps an encoded external fragment and preserves the prefix address', async () => {
@@ -56,7 +56,7 @@ describe('URL-prefix investigation routing', () => {
     await renderPrefix(path);
 
     expect(`${window.location.pathname}${window.location.search}`).toBe(path);
-    expect(createInvestigation).toHaveBeenCalledWith(sourceUrl, expect.any(String));
+    expect(createInvestigation).toHaveBeenCalledWith(sourceUrl, expect.any(String), expect.any(AbortSignal));
   });
 
   it('uses the same idempotency key after a prefix-route refresh', async () => {
