@@ -12,6 +12,17 @@ npm test
 npm run build
 ```
 
+## Preview the results screen without a backend
+
+Run `npm run dev` in `web/`, then open `http://localhost:5173/dev/report`
+(use the port Vite prints if 5173 is busy). This renders the same results layout
+with saved synthetic report data, including the score, findings, discussion and
+account histories. No backend, inference service, API keys or analysis requests
+are needed. Changes to report components update through Vite as usual.
+
+The page labels its data as a local synthetic preview. The route and fixture
+import are development-only and excluded from production builds.
+
 ## Connecting the analysis API
 
 The analysis page calls the site's own `/api/v1/*` routes. A same-origin proxy

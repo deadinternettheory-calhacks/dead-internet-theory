@@ -151,7 +151,11 @@ export function AnalysisPage({ url }: { url: string }) {
   let body;
   if (!valid.ok) body = <UnsupportedLinkState/>;
   else body = <LiveAnalysis key={valid.url.href} url={valid.url.href}/>;
-  return <main className="analysis-main"><Link className="back-link" to="/">{String.fromCharCode(8592)} Check another post</Link><h1 className="sr-only">Your investigation.</h1>{body}<p className="report-expiry">Reports expire 24 hours after the check starts.</p><div className="bottom-cta"><h2>Have another post to check?</h2><Link className="primary-button link-button" to="/">Analyze another post <ArrowRight size={18}/></Link></div></main>;
+  return <AnalysisPageLayout>{body}</AnalysisPageLayout>;
+}
+
+export function AnalysisPageLayout({ children }: { children: import('react').ReactNode }) {
+  return <main className="analysis-main"><Link className="back-link" to="/">{String.fromCharCode(8592)} Check another post</Link><h1 className="sr-only">Your investigation.</h1>{children}<p className="report-expiry">Reports expire 24 hours after the check starts.</p><div className="bottom-cta"><h2>Have another post to check?</h2><Link className="primary-button link-button" to="/">Analyze another post <ArrowRight size={18}/></Link></div></main>;
 }
 
 export function UnsupportedPrefixPage() {
