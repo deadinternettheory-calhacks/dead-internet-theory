@@ -4,7 +4,8 @@
 //   -> scoring_start -> scoring_wait -> done | failed
 // Histories are requested for a seeded random sample of supportive and
 // unsupportive users after triage; triage is one direct Claude call when
-// ANTHROPIC_API_KEY is set (otherwise a CREAO run); validated model replies are
+// ANTHROPIC_API_KEY is set (otherwise a CREAO run), and so is scoring unless
+// SCORING_PROVIDER=creao (then a CREAO agent run); validated model replies are
 // cached by their exact input; CREAO can wake the job by webhook instead of
 // waiting for the next poll.
 // All reads and writes go to the ingestion backend's v1 API with stable
@@ -16,7 +17,7 @@ import { BackendError, createBackendClient, type BackendClient } from './lib/bac
 import type { EnrichmentJob, GraphEnvelope, InvestigationReadyEvent } from './lib/contract';
 import { recordedResponsesFor } from './lib/fixtures';
 import { assembleAnalysis } from './lib/inference/assemble';
-import { ClaudeError, claudeTriage, DEFAULT_CLAUDE_MODEL, type ClaudeConfig } from './lib/inference/claude';
+import { ClaudeError, claudeScoring, claudeTriage, DEFAULT_CLAUDE_MODEL, scoringProviderFrom, type ClaudeConfig } from './lib/inference/claude';
 import { createCreaoClient, CreaoError, MockCreaoClient, type CreaoClient } from './lib/inference/creao';
 import { checkSubmission } from './lib/inference/evidence';
 import { ModelOutputError, parseScoring, parseTriage, type ScoringOutput, type TriageOutput } from './lib/inference/outputs';
@@ -50,6 +51,8 @@ interface JobState {
   enrichmentIds?: string[];
   enrichmentNote?: string;
   scoringRunId?: string;
+  /** Set when scoring ran as a direct Claude call (SCORING_PROVIDER switch), e.g. claude-scoring:claude-haiku-5-5. */
+  scoringModel?: string;
   scoringCacheKey?: string;
   triageAttempts?: number;
   scoringAttempts?: number;
@@ -358,6 +361,17 @@ export const step = internalAction({
           }
           if (!needsScoring(state.triage!)) return void (await submitWith(null));
           const inputs = scoringInputs(graph, state.triage!, jobs, !!state.accountReviews);
+          // Internal switch: Claude by default; SCORING_PROVIDER=creao uses the CREAO agent.
+          if (scoringProviderFrom(process.env.SCORING_PROVIDER, !!claude) === 'claude') {
+            state.scoringModel = `claude-scoring:${claude!.model ?? DEFAULT_CLAUDE_MODEL}`;
+            state.scoringCacheKey = await cacheKey('scoring', state.scoringModel, inputs.evidence);
+            const hit = await ctx.runQuery(internal.worker.cacheGet, { key: state.scoringCacheKey });
+            if (hit) return void (await submitWith(parseScoring(hit)));
+            const scoring = await parseWithRetries(() => claudeScoring(claude!, inputs), parseScoring);
+            state.scoringCompletedAt = Date.now();
+            await ctx.runMutation(internal.worker.cachePut, { key: state.scoringCacheKey, stage: 'scoring', output: JSON.stringify(scoring) });
+            return void (await submitWith(scoring));
+          }
           state.scoringCacheKey = await cacheKey('scoring', creao.label, inputs.evidence);
           const cached = await ctx.runQuery(internal.worker.cacheGet, { key: state.scoringCacheKey });
           if (cached) return void (await submitWith(parseScoring(cached)));
@@ -436,7 +450,7 @@ async function submit(
     enrichmentNote: state.enrichmentNote,
     scoring,
     accountReviews: state.accountReviews,
-    modelLabel: (triageModel.startsWith('claude:') ? `${triageModel}+${creao.label}` : triageModel) + (state.accountReviewModel ? `+${state.accountReviewModel}` : ''),
+    modelLabel: (triageModel.startsWith('claude:') ? `${triageModel}+${state.scoringModel ?? creao.label}` : triageModel) + (state.accountReviewModel ? `+${state.accountReviewModel}` : ''),
   });
   const problem = checkSubmission(submission, graph, enrichments);
   if (problem) {
