@@ -12,7 +12,7 @@ body:has(.analysis-playground[data-background="true"]) .analysis-main::before {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: rgb(250 250 248 / 80%);
+  background: rgb(250 250 248 / 94%);
   border-inline: 1px solid var(--border);
   pointer-events: none;
 }
