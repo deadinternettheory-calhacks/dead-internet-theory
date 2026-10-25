@@ -12,6 +12,17 @@ npm test
 npm run build
 ```
 
+## Preview the results screen without a backend
+
+Run `npm run dev` in `web/`, then open `http://localhost:5173/dev/report`
+(use the port Vite prints if 5173 is busy). This renders the same results layout
+with saved synthetic report data, including the score, findings, discussion and
+account histories. No backend, inference service, API keys or analysis requests
+are needed. Changes to report components update through Vite as usual.
+
+The fixture post title identifies it as a synthetic example. The route and
+fixture import are development-only and excluded from production builds.
+
 ## Connecting the analysis API
 
 The analysis page calls the site's own `/api/v1/*` routes. A same-origin proxy
@@ -113,7 +124,7 @@ Inter is self-hosted through the pinned Fontsource variable-font package.
 ## Report
 
 `src/analysis/report.ts` turns the v1 `AnalysisResource` and graph into the
-page's sections, in the SPEC 4.2 order: post, plain-language result, up to three
+page's sections, in the SPEC 4.2 order: score and plain-language result, post, up to three
 findings with quoted evidence, detailed analysis, then coverage and limitations.
 The comment-section astroturfing index appears prominently with its bands and an
 uncalibrated-heuristic explanation; detailed analysis includes its rationale
@@ -193,3 +204,11 @@ instead of “0 / None found.” A completed review can genuinely score zero and
 logic. Supported signals and ordinary-participation evidence keep their existing
 presentation. This display change also works with retained reports; the separate
 inference update adds focused Claude history reviews for new analyses.
+
+The score card includes a collapsed **Score explanation** with the stored section
+score components, cited usernames, supporting reasons, weights and sampling note. Detailed signal assessments stay
+under detailed analysis. Formatting uses stored values and never recalculates scores. The post, findings, account signals and
+detailed evidence share one white panel; coverage details remain below it.
+
+The header shows **How it works** on the homepage only; search and report routes
+keep the home logo without the navigation link.

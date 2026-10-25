@@ -1,4 +1,5 @@
-import type { Report } from '../analysis/report';
+import { scoreExplanation } from '../analysis/scoreExplanation';
+import { verdictFor, type Report } from '../analysis/report';
 import { SourceLink, formatTime } from './EvidenceQuote';
 import { ReportFindings } from './ReportFindings';
 import { AccountSignals } from './AccountSignals';
@@ -8,7 +9,7 @@ import { EvidenceDetails } from './AnalysisPresentation';
 import './report.css';
 
 
-const PLATFORM_LABEL: Record<string, string> = { reddit: 'REDDIT', x: 'X / TWITTER', youtube: 'YOUTUBE', tiktok: 'TIKTOK' };
+const PLATFORM_LABEL: Record<string, string> = { reddit: 'Reddit', x: 'X', youtube: 'YouTube', tiktok: 'TikTok' };
 const STANCE_LABEL: Record<string, string> = { supportive: 'Supportive', critical: 'Critical', neutral: 'Neutral', mixed: 'Mixed', unclear: 'Unclear' };
 
 
@@ -22,6 +23,7 @@ function Estimate({ row }: { row: Report['comments'][number] }) {
 /** Score and verdict in one card. Bands follow the rubric tiers: under 35 low, 35-54 moderate, 55+ high. */
 function ResultCard({ report }: { report: Report }) {
   const score = report.index?.score ?? null;
+  const breakdown = report.index ? scoreExplanation(report.index.explanation) : null;
   return <section className={`card result-card tone-${report.verdict.tone}`} aria-label="Result">
     <div className="result-score">{score === null ? <strong>–</strong> : <strong>{score}</strong>}<span>/ 100</span></div>
     <div className="result-text">
@@ -32,6 +34,21 @@ function ResultCard({ report }: { report: Report }) {
         <i style={{ left: `${Math.max(0, Math.min(100, score))}%` }}/>
       </div>}
     </div>
+    <details className="score-explanation">
+      <summary>Score explanation</summary>
+      <div className="score-explanation-content">
+      {report.index && <div className="index-note">
+        {breakdown ? <>
+          <dl className="score-breakdown">{breakdown.parts.map(part => <div key={part.label}>
+            <dt>{part.label}</dt><dd><strong className={`tone-${verdictFor(part.score, '').tone}`}>{part.score}<small>/100</small></strong><p>{part.reason}</p></dd>
+          </div>)}</dl>
+          <p className="score-calculation-notes">{breakdown.notes}</p>
+        </> : <p>{report.index.explanation}</p>}
+        <Sources sources={HISTORY_CONTRAST_SOURCES}/>
+      </div>}
+      {!report.index && <p>Not enough evidence to calculate a score.</p>}
+      </div>
+    </details>
   </section>;
 }
 
@@ -45,27 +62,22 @@ export function AnalysisReport({ report }: { report: Report }) {
   const historiesReturned = report.histories.filter(history => history.comments.length > 0).length;
   const s = coverage.sentiment;
   return <div className="report-view">
+    <ResultCard report={report}/>
+    <div className="card report-middle">
     <article className="card summary-card">
-      <span className="platform-label">{PLATFORM_LABEL[post.platform] ?? 'POST'}</span>
-      {post.title && <h2 className="url-title">{post.title}</h2>}
+      <h2 className="original-post-heading"><span>{PLATFORM_LABEL[post.platform] ?? post.platform}</span>{post.title && <><span className="post-divider" aria-hidden="true"> · </span><span className="original-post-title">{post.title}</span></>}</h2>
       <p className="post-text">{post.text}</p>
       {(post.author || time) && <p className="url-display">{[post.author, time].filter(Boolean).join(' · ')}</p>}
       <SourceLink synthetic={report.synthetic} url={post.url}>View original post</SourceLink>
     </article>
 
-    <ResultCard report={report}/>
-
-    <div className="report-coverage-summary"><span><strong>{coverage.analyzed}</strong> comments</span><span><strong>{coverage.completeness}</strong> coverage</span><span><strong>{historiesReturned}/{report.histories.length}</strong> histories</span></div>
     <ReportFindings report={report}/>
     <AccountSignals report={report}/>
 
     <EvidenceDetails>
-      {report.index && <div className="index-note">
-        <p><strong>Astroturfing score: {report.index.score} / 100.</strong> {report.index.explanation}</p>
-        <Sources sources={HISTORY_CONTRAST_SOURCES}/>
-      </div>}
       <h3 className="detail-heading">Each signal we checked</h3>
       <ul className="axis-list">{report.axes.map(x => <li key={x.axis}><strong>{x.title}: {x.score === null ? 'not measured' : `${x.score} / 100`}</strong><p>{x.explanation}</p><Sources sources={SIGNAL_SOURCES[x.axis]}/></li>)}</ul>
+
       {report.clusters.length > 0 && <>
         <h3 className="detail-heading">Groups of related comments</h3>
         <ul className="axis-list">{report.clusters.map(c => <li key={c.id}><strong>{c.size} comments</strong><p>{c.explanation}</p></li>)}</ul>
@@ -88,6 +100,7 @@ export function AnalysisReport({ report }: { report: Report }) {
       </>}
       <p className="version-note">Analysis version: {report.inferenceVersion}</p>
     </EvidenceDetails>
+    </div>
 
     <aside className="limitations">
       <h2>Coverage</h2>

@@ -11,7 +11,7 @@ export function BrandWordmark() {
 export function SiteHeader() {
   const { pathname, hash } = useLocation();
   const alreadyAtSection = pathname === '/' && hash === '#how-it-works';
-  return <header className="header"><div className="header-inner"><BrandWordmark/><nav aria-label="Main navigation"><Link to="/#how-it-works" replace={alreadyAtSection}>How it works</Link></nav></div></header>;
+  return <header className="header"><div className="header-inner"><BrandWordmark/>{pathname === '/' && <nav aria-label="Main navigation"><Link to="/#how-it-works" replace={alreadyAtSection}>How it works</Link></nav>}</div></header>;
 }
 export function SiteFooter() {
   return null;

@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef } from 'react';
 import { BrowserRouter, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { SiteFooter, SiteHeader } from './components/SiteLayout';
 import { AboutPage } from './pages/AboutPage';
@@ -8,8 +8,10 @@ import { parsePrefixPath } from './url';
 import { InvestigationAtmosphere } from './components/AnalysisPlayground/InvestigationAtmosphere';
 import '@fontsource-variable/inter';
 import './styles.css';
+const DevReportPage = import.meta.env.DEV ? lazy(() => import('./pages/DevReportPage')) : null;
 function RouterView() {
   const location = useLocation();
+  if (DevReportPage && location.pathname === '/dev/report') return <Suspense fallback={null}><DevReportPage/></Suspense>;
   if (location.pathname === '/about' || location.pathname === '/about/') return <Navigate to="/#how-it-works" replace/>;
   if (location.pathname === '/example' || location.pathname === '/example/') return <Navigate to="/" replace/>;
   if (location.pathname === '/analysis' || location.pathname === '/analysis/') return <AnalysisPage url={new URLSearchParams(location.search).get('url') || ''}/>;

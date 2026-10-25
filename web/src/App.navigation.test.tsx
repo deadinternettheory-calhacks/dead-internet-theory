@@ -90,6 +90,15 @@ describe('homepage How it works navigation', () => {
     expect(scrollIntoView).not.toHaveBeenCalled();
   });
 
+  it('hides How it works on analysis screens and restores it on returning home', () => {
+    renderApp('/analysis');
+    expect(container.querySelector('.header nav')).toBeNull();
+    const home = container.querySelector<HTMLAnchorElement>('.header .brand')!;
+    act(() => home.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 })));
+    expect(window.location.pathname).toBe('/');
+    expect(container.querySelector('.header nav a')?.textContent).toBe('How it works');
+  });
+
   it('opens a direct homepage hash at the information section', () => {
     renderApp('/#how-it-works');
     expect(window.location.pathname).toBe('/');

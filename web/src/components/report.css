@@ -2,7 +2,7 @@
 .analysis-page-heading { margin: 10px 0 26px; }
 .analysis-page-heading h1 { font-size: 36px; font-weight: 550; line-height: 1.2; letter-spacing: -.05em; margin: 0 0 12px; }
 .analysis-page-heading p { font-size: 12px; color: var(--muted); margin: 0; }
-.report-view .summary-card { padding: 24px 28px; border-radius: 12px; background: transparent; margin-bottom: 18px; }
+.report-view .summary-card { padding: 24px 28px; border-radius: 12px; background: var(--surface); margin-bottom: 18px; }
 .report-view .platform-label { font-size: 10px; color: var(--muted); letter-spacing: .08em; }
 .report-view .url-title { font-size: 22px; font-weight: 550; letter-spacing: -.035em; margin: 12px 0; }
 .report-view .post-text { font-size: 14px; line-height: 1.8; }
@@ -14,8 +14,6 @@
 .report-view .risk-score { padding: 24px 28px; border-radius: 12px; margin: 16px 0 0; }
 .report-view .risk-score > p:first-child { font-size: 14px; font-weight: 550; color: var(--brand); margin-bottom: 10px; }
 .report-view .risk-score .risk-note { margin-top: 18px; font-size: 12px; line-height: 1.8; }
-.report-coverage-summary { display: flex; flex-wrap: wrap; gap: 12px 26px; padding: 18px 0 36px; font-size: 12px; color: var(--muted); }
-.report-coverage-summary strong { color: var(--brand); font-weight: 550; }
 .report-eyebrow { font-size: 10px; letter-spacing: .11em; color: var(--muted); font-weight: 550; }
 .report-section-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin: 0 0 18px; }
 .report-section-heading h2 { font-size: 28px; font-weight: 550; line-height: 1.3; letter-spacing: -.04em; margin: 8px 0 0; }
@@ -71,7 +69,6 @@
   .report-view .summary-card, .report-view .verdict-card { padding: 22px 18px; }
   .report-view .risk-score { padding: 22px 18px; }
   .report-view .url-title { font-size: 20px; }
-  .report-coverage-summary { gap: 8px 16px; padding-bottom: 28px; font-size: 11px; }
   .report-section-heading { display: block; }
   .report-section-heading h2 { font-size: 26px; }
   .report-section-heading > p { max-width: none; margin-top: 10px; }
@@ -90,12 +87,12 @@
 }
 
 /* Result: score and verdict in one card. */
-.result-card { display: flex; align-items: center; gap: 28px; padding: 24px 28px; margin-bottom: 14px; border-left: 4px solid #8a9c91; }
-.result-card.tone-low { border-left-color: #76a58c; }
-.result-card.tone-medium { border-left-color: #d3a85a; }
-.result-card.tone-high { border-left-color: #c8756c; }
+.result-card { display: flex; align-items: center; gap: 28px; padding: 24px 28px; margin-bottom: 14px; border-left: 6px solid #8a9c91; }
+.result-card.tone-low, .score-breakdown strong.tone-low { --result-color: #76a58c; border-left-color: var(--result-color); }
+.result-card.tone-medium, .score-breakdown strong.tone-medium { --result-color: #d3a85a; border-left-color: var(--result-color); }
+.result-card.tone-high, .score-breakdown strong.tone-high { --result-color: #c8756c; border-left-color: var(--result-color); }
 .result-score { display: flex; flex-direction: column; align-items: center; min-width: 76px; }
-.result-score strong { font-size: 48px; line-height: 1; font-weight: 600; letter-spacing: -.04em; }
+.result-score strong { color: var(--result-color, var(--text)); font-size: 48px; line-height: 1; font-weight: 600; letter-spacing: -.04em; }
 .result-score span { font-size: 12px; color: var(--muted); margin-top: 4px; }
 .result-text { flex: 1; min-width: 0; }
 .result-text h2 { font-size: 21px; line-height: 1.3; letter-spacing: -.02em; margin: 0 0 4px; }
@@ -148,3 +145,38 @@
 .account-history-meta { grid-column: 2 / -1; color: var(--muted); font-size: 11px; }
 .account-limited { font-size: 12px; font-weight: 500; color: var(--muted); }
 @media (max-width: 767px) { .account-history-meta { grid-column: 1 / -1; } }
+
+.report-expiry { font-size: 12px; color: var(--muted); margin: 24px 0 0; }
+
+/* One shared surface for the post, findings, accounts and detailed evidence. */
+.report-middle { padding: 28px; border-radius: 12px; background: var(--surface); }
+.report-middle > .summary-card { padding: 0 0 28px; margin: 0 0 28px; border: 0; border-bottom: 1px solid var(--border); border-radius: 0; box-shadow: none; }
+.report-middle .report-findings .finding-card { padding: 24px 0; margin: 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; background: transparent; box-shadow: none; }
+.report-middle .report-findings .finding-card:first-child { border-top: 0; }
+.report-middle > .evidence { padding: 0; margin: 24px 0 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; box-shadow: none; }
+.result-card { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 28px; row-gap: 18px; padding-bottom: 0; }
+.score-explanation { grid-column: 1 / -1; min-width: 0; border-top: 1px solid var(--border); }
+.score-explanation > summary { min-height: 44px; margin: 0; padding: 12px 0; cursor: pointer; color: var(--brand); font-size: 12px; font-weight: 550; }
+.score-explanation > summary::marker { font-size: 10px; }
+.score-explanation-content { padding: 12px 0 24px; font-size: 14px; line-height: 1.8; }
+.score-explanation .axis-list { margin-bottom: 0; }
+@media (max-width: 767px) { .report-middle { padding: 20px 18px; } .report-middle > .summary-card { padding: 0 0 24px; } .report-middle .report-findings .finding-card { padding: 20px 0; } .result-card { column-gap: 18px; } }
+
+.score-breakdown { margin: 0; }
+.score-breakdown > div { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.score-breakdown dt { font-weight: 550; }
+.score-breakdown dd { margin: 0; }
+.score-breakdown dd > strong { color: var(--result-color); font-variant-numeric: tabular-nums; }
+.score-breakdown small { color: var(--muted); font-weight: 400; }
+.score-breakdown dd p { margin: 2px 0 0; color: var(--muted); }
+.score-calculation-notes { margin: 16px 0; color: var(--muted); font-size: 12px; }
+@media (max-width: 767px) { .score-breakdown > div { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+
+/* Compact original-post identity, with natural wrapping on small screens. */
+.report-view .original-post-heading { font-size: 13px; font-weight: 550; line-height: 1.65; letter-spacing: normal; margin: 0 0 8px; overflow-wrap: anywhere; }
+.original-post-heading .post-divider { color: var(--muted); padding: 0 4px; }
+.original-post-title { font-weight: 400; }
+.report-view .summary-card .post-text { font-size: 13px; line-height: 1.65; margin: 0 0 6px; }
+.report-view .summary-card .url-display { font-size: 11px; margin: 0; }
+.report-view .summary-card .text-link { font-size: 12px; }
+.report-middle > .summary-card { padding-bottom: 20px; margin-bottom: 20px; }
