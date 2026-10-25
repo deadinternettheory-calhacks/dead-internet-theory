@@ -3,15 +3,15 @@ import { BrowserRouter, Navigate, useLocation, useNavigate } from 'react-router-
 import { SiteFooter, SiteHeader } from './components/SiteLayout';
 import { AboutPage } from './pages/AboutPage';
 import { AnalysisPage, UnsupportedPrefixPage } from './pages/AnalysisPage';
-import { ExamplePage } from './pages/ExamplePage';
 import { HomePage } from './pages/HomePage';
 import { parsePrefixPath } from './url';
+import { InvestigationAtmosphere } from './components/AnalysisPlayground/InvestigationAtmosphere';
 import '@fontsource-variable/inter';
 import './styles.css';
 function RouterView() {
   const location = useLocation();
   if (location.pathname === '/about' || location.pathname === '/about/') return <Navigate to="/#how-it-works" replace/>;
-  if (location.pathname === '/example' || location.pathname === '/example/') return <ExamplePage/>;
+  if (location.pathname === '/example' || location.pathname === '/example/') return <Navigate to="/" replace/>;
   if (location.pathname === '/analysis' || location.pathname === '/analysis/') return <AnalysisPage url={new URLSearchParams(location.search).get('url') || ''}/>;
   if (location.pathname !== '/') { const parsed = parsePrefixPath(location.pathname, location.search); return parsed.ok ? <AnalysisPage url={parsed.url.href}/> : <UnsupportedPrefixPage/>; }
   return <HomePage/>;
@@ -85,5 +85,5 @@ function SectionUrlSync() {
   return null;
 }
 export default function App() {
-  return <BrowserRouter><HashScroll/><RouteScroll/><SectionUrlSync/><div className="site-shell"><SiteHeader/><RouterView/><SiteFooter/></div></BrowserRouter>;
+  return <BrowserRouter><InvestigationAtmosphere><HashScroll/><RouteScroll/><SectionUrlSync/><div className="site-shell"><SiteHeader/><RouterView/><SiteFooter/></div></InvestigationAtmosphere></BrowserRouter>;
 }

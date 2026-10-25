@@ -83,8 +83,8 @@
 @media(max-height:600px){
   .hero-content{transform:none}
 }
-.header nav{gap:18px}.header nav a{line-height:1;justify-content:center}.header-play-demo{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;color:var(--brand)!important;font-size:13px!important;font-weight:550}.header-play-demo:hover{text-decoration:underline}
-@media(max-width:767px){.header-inner{padding:0 12px}.header nav{gap:0}.header-play-demo{width:44px;font-size:0!important}.header-play-demo>span{display:none}}
+.header nav{gap:18px}.header nav a{line-height:1;justify-content:center}
+@media(max-width:767px){.header-inner{padding:0 12px}.header nav{gap:0}}
 
 .explanation-cue{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:2px;color:#626864;font-size:13px;line-height:1.2;animation:explanation-bob 1.4s ease-in-out infinite}
 .explanation-cue svg{width:19px;height:19px;fill:none;stroke:#284D43;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}

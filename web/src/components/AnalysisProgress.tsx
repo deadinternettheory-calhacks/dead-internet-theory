@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Check, Clock3 } from 'lucide-react';
-import { AnalysisPlayground } from './AnalysisPlayground/AnalysisPlayground';
 import './report.css';
 
 export type ProgressPhase = 'starting' | 'queued' | 'collecting' | 'analysis-queued' | 'analyzing';
@@ -23,7 +22,6 @@ export function AnalysisProgress({ phase, status, collectedCount }: { phase: Pro
         <p>{phase === 'analyzing' || phase === 'analysis-queued' ? `${collectedCount === undefined ? 'The collected discussion is ready.' : `${collectedCount} comments collected.`} ${phase === 'analysis-queued' ? 'The discussion is waiting for analysis to begin.' : 'We’re checking the evidence for patterns. This can take a few minutes.'}` : phase === 'queued' ? 'Your request is queued for collection. This page will update when collection begins.' : phase === 'collecting' ? 'We’re retrieving public comments. The discussion will appear here when collection finishes.' : 'Connecting to the analysis service.'}</p>
         <p className="progress-wait-invitation">Drag to spin. Tap to say hello.</p>
       </div>
-      <AnalysisPlayground phase={phase}/>
     </div>
     <ol className="progress-stages">{stages.map((label, index) => <li key={label} className={index < active ? 'is-done' : index === active ? 'is-current' : ''} aria-current={index === active ? 'step' : undefined}>
       <span className="progress-stage-icon" aria-hidden="true">{index < active ? <Check size={13}/> : index + 1}</span><span>{label}{index < active && <small>Complete</small>}{index === active && <small>{phase === 'queued' || phase === 'analysis-queued' ? 'Queued' : 'In progress'}</small>}</span>

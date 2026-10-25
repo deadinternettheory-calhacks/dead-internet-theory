@@ -11,6 +11,7 @@ import { AnalysisProgress, type ProgressPhase } from '../components/AnalysisProg
 import { ServiceUnavailable, UnsupportedLinkState } from '../components/AnalysisStates';
 import { PostSummaryCard } from '../components/SiteLayout';
 import { parsePostUrl } from '../url';
+import { useInvestigationPhase } from '../components/AnalysisPlayground/InvestigationAtmosphere';
 
 const POLL_MS = 2500;
 /** Backend ingestion codes meaning live collection is not available for this link yet. */
@@ -57,6 +58,7 @@ function LiveAnalysis({ url }: { url: string }) {
   const [view, setView] = useState<View>({ kind: 'loading', status: 'Starting…', phase: 'starting' });
   const [attempt, setAttempt] = useState(0);
   const cancelled = useRef(false);
+  useInvestigationPhase(view.kind === 'loading' ? view.phase : view.kind === 'report' ? 'complete' : 'failed');
 
   const run = useCallback(async () => {
     const started = Date.now();
@@ -135,11 +137,11 @@ function LiveAnalysis({ url }: { url: string }) {
     return () => { cancelled.current = true; };
   }, [run, attempt]);
 
-  if (view.kind === 'unavailable') return <><PostSummaryCard url={url}/><ServiceUnavailable/><p className="example-link">Want to see what a finished report looks like? <Link className="text-link" to="/example">View the example</Link></p></>;
+  if (view.kind === 'unavailable') return <><PostSummaryCard url={url}/><ServiceUnavailable/></>;
   if (view.kind === 'loading') return <><AnalysisProgress key={attempt} phase={view.phase} status={view.status} collectedCount={view.preview?.collectedCount}/>{view.preview ? <ThreadPreviewCard preview={view.preview}/> : <PostSummaryCard url={url}/>}</>;
   if (view.kind === 'error') {
     return <><PostSummaryCard url={url}/><AnalysisErrorState title={view.title} message={view.message} onRetry={view.retry ? () => { if (view.freshRequest) forgetIdempotencyKeyFor(url); setAttempt(a => a + 1); } : undefined}/>
-      {view.showExample && <p className="example-link">Want to see what a finished report looks like? <Link className="text-link" to="/example">View the example</Link></p>}</>;
+      </>;
   }
   return <AnalysisReport report={view.report}/>;
 }
