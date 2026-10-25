@@ -213,3 +213,17 @@ detailed evidence share one white panel; coverage details remain below it.
 
 The header shows **How it works** on the homepage only; search and report routes
 keep the home logo without the navigation link.
+
+The evidence timeline scales from the earliest to latest plotted comment,
+including a selected comment added to the visible sample. Hidden timestamps do
+not stretch the axis; identical timestamps are centered. The chart labels when
+its range covers only the displayed sample.
+
+Completed reports retain the score card, white report panel and 960px reading
+width when background animations are active. Animation styling only flattens
+direct loading/error cards, not cards inside the finished report. The local
+`/dev/report` preview uses the same completed-state animated background.
+
+The discussion explorer is always visible directly after the original post and
+before the findings. Finding Explore actions select its relevant view and scroll
+back to it; no disclosure button is required.

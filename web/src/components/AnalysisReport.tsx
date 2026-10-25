@@ -35,7 +35,7 @@ function ResultCard({ report }: { report: Report }) {
       </div>}
     </div>
     <details className="score-explanation">
-      <summary>Score explanation</summary>
+      <summary><span className="score-explanation-label">Score explanation</span></summary>
       <div className="score-explanation-content">
       {report.index && <div className="index-note">
         {breakdown ? <>

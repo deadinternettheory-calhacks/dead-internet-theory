@@ -27,17 +27,16 @@
 .report-findings .evidence-quote + .evidence-quote { margin-top: 8px; }
 .report-findings .quote-meta { font-size: 11px !important; margin-bottom: 8px !important; }
 .report-findings blockquote { font-size: 14px; line-height: 1.8; border: 0; padding-left: 0; margin: 0; }
-.report-findings .finding-more > summary { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 12px; margin: 0; list-style: none; }
+.report-findings .finding-more { margin: 8px 0 0; }
+.report-findings .finding-more > summary { display: flex; align-items: center; gap: 8px; min-height: 0; padding: 0; font-size: 11px; line-height: 1.5; margin: 0; list-style: none; }
 .report-findings .finding-more[open] > summary > svg { transform: rotate(180deg); }
-.finding-actions { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px; border-top: 1px solid var(--border); margin-top: 16px; padding-top: 6px; }
+.finding-actions { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px; margin: 0; padding: 0; }
+.report-findings .finding-more + .finding-actions { margin-top: 8px; }
 .finding-actions > details { flex: 1; min-width: 180px; }
-.report-findings .finding-actions summary { display: inline-flex; align-items: center; min-height: 44px; font-size: 12px; margin: 0; }
-.finding-actions > button { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; border: 0; padding: 0; background: transparent; color: var(--brand); font-size: 12px; cursor: pointer; }
+.report-findings .finding-actions summary { display: flex; align-items: center; min-height: 0; padding: 0; font-size: 11px; line-height: 1.5; margin: 0; }
+.finding-actions > button { display: inline-flex; align-items: center; gap: 6px; min-height: 0; line-height: 1.5; border: 0; padding: 0; background: transparent; color: var(--brand); font-size: 12px; cursor: pointer; }
 .finding-actions > button:hover { text-decoration: underline; }
-.report-explorer { margin: 26px 0 20px; scroll-margin-top: 24px; }
-.report-explorer > summary { display: flex; justify-content: space-between; gap: 16px; align-items: center; min-height: 60px; border-top: 1px solid var(--border); cursor: pointer; color: var(--brand); font-size: 15px; font-weight: 550; list-style: none; }
-.report-explorer > summary > span { display: flex; align-items: center; gap: 10px; }
-.report-explorer[open] > summary > svg { transform: rotate(180deg); }
+.report-explorer { margin: 0 0 24px; scroll-margin-top: 24px; }
 .report-explorer-intro { font-size: 13px; color: var(--muted); margin: 0 0 16px; }
 .report-view .evidence { border-radius: 12px; }
 .report-view .evidence-content { padding-bottom: 16px; }
@@ -76,7 +75,6 @@
   .report-findings .finding-card h3 { font-size: 16px; }
   .finding-number { width: 24px; height: 24px; font-size: 9px; }
   .report-findings .evidence-quote { padding: 12px; margin-left: -36px; }
-  .report-findings .finding-actions { margin-left: -36px; }
   .report-view .limitations { padding: 20px 18px; }
   .analysis-progress { padding: 22px 18px; }
   .progress-status h2 { font-size: 21px; }
@@ -151,19 +149,21 @@
 /* One shared surface for the post, findings, accounts and detailed evidence. */
 .report-middle { padding: 28px; border-radius: 12px; background: var(--surface); }
 .report-middle > .summary-card { padding: 0 0 28px; margin: 0 0 28px; border: 0; border-bottom: 1px solid var(--border); border-radius: 0; box-shadow: none; }
-.report-middle .report-findings .finding-card { padding: 24px 0; margin: 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; background: transparent; box-shadow: none; }
+.report-middle .report-findings .finding-card { padding: 24px 0 8px; margin: 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; background: transparent; box-shadow: none; }
 .report-middle .report-findings .finding-card:first-child { border-top: 0; }
 .report-middle > .evidence { padding: 0; margin: 24px 0 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; box-shadow: none; }
 .result-card { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 28px; row-gap: 18px; padding-bottom: 0; }
 .score-explanation { grid-column: 1 / -1; min-width: 0; border-top: 1px solid var(--border); }
 .score-explanation > summary { min-height: 44px; margin: 0; padding: 12px 0; cursor: pointer; color: var(--brand); font-size: 12px; font-weight: 550; }
 .score-explanation > summary::marker { font-size: 10px; }
+.score-explanation-label { margin-left: 4px; }
 .score-explanation-content { padding: 12px 0 24px; font-size: 14px; line-height: 1.8; }
 .score-explanation .axis-list { margin-bottom: 0; }
-@media (max-width: 767px) { .report-middle { padding: 20px 18px; } .report-middle > .summary-card { padding: 0 0 24px; } .report-middle .report-findings .finding-card { padding: 20px 0; } .result-card { column-gap: 18px; } }
+@media (max-width: 767px) { .report-middle { padding: 20px 18px; } .report-middle > .summary-card { padding: 0 0 24px; } .report-middle .report-findings .finding-card { padding: 20px 0 8px; } .result-card { column-gap: 18px; } }
 
 .score-breakdown { margin: 0; }
 .score-breakdown > div { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.score-breakdown > div:first-child { border-bottom: 0; }
 .score-breakdown dt { font-weight: 550; }
 .score-breakdown dd { margin: 0; }
 .score-breakdown dd > strong { color: var(--result-color); font-variant-numeric: tabular-nums; }
