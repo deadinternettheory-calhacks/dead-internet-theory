@@ -1,6 +1,14 @@
+import { GhostIllustration } from '../components/AnalysisPlayground/GhostIllustration';
+
 export function AboutPage() {
   return <section className="how-it-works" id="how-it-works" aria-labelledby="how-it-works-heading">
     <h2 id="how-it-works-heading">How it works</h2>
+    <div className="about-ghost" aria-hidden="true">
+      <svg viewBox="0 0 240 280" fill="none">
+        <ellipse className="about-ghost-shadow" cx="120" cy="236" rx="48" ry="6" fill="#D4DFD5" opacity=".5"/>
+        <g className="about-ghost-hover"><g transform="translate(120 132) scale(2.2)"><GhostIllustration/></g></g>
+      </svg>
+    </div>
     <section className="about-section">
       <h3>What is Dead Internet Theory?</h3>
       <p>Dead Internet Theory suggests that much of today's internet is driven by bots and AI-generated content rather than real people. Our website helps you investigate suspicious activity and find signs of manipulation.</p>

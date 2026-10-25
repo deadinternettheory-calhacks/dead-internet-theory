@@ -92,3 +92,16 @@
 .platform-availability .is-demo small { color: var(--brand); }
 .platform-status-group { min-width: 0; }
 @media (max-width: 767px) { .home-hero-secondary { flex-direction: column; gap: 8px; } .platform-availability { gap: 10px 18px; } }
+
+/* Occupy only the existing empty FAQ gutter; never participate in layout. */
+.home-main > .how-it-works { position: relative; }
+.about-ghost { display: none; position: absolute; top: 132px; left: 0; width: min(280px, calc(100% - 760px)); pointer-events: none; user-select: none; }
+.about-ghost svg { display: block; width: 100%; overflow: visible; }
+.about-ghost-hover { animation: about-ghost-float 4.8s ease-in-out infinite; }
+.about-ghost .ghost-face-eyes { transform-box: fill-box; transform-origin: center; animation: about-ghost-blink 5.6s linear infinite; }
+.about-ghost-shadow { transform-box: fill-box; transform-origin: center; animation: about-ghost-shadow 4.8s ease-in-out infinite; }
+@keyframes about-ghost-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+@keyframes about-ghost-blink { 0%,44%,48%,100% { transform: scaleY(1); } 46% { transform: scaleY(.08); } }
+@keyframes about-ghost-shadow { 0%,100% { transform: scaleX(1); opacity: .5; } 50% { transform: scaleX(.84); opacity: .32; } }
+@media (min-width: 1024px) { .about-ghost { display: block; } }
+@media (prefers-reduced-motion: reduce) { .about-ghost-hover, .about-ghost .ghost-face-eyes, .about-ghost-shadow { animation: none; } }
