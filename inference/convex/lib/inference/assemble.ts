@@ -17,8 +17,9 @@ import { SCHEMA_VERSION } from '../contract';
 import { unique, utcNow } from '../util';
 import { communityFromUrl, daysBetween, mentions, round2, wordJaccard } from './features';
 import type { ScoringOutput, TriageOutput } from './outputs';
-import { GraphIndex, historyResults, sampleHistoryAuthors } from './packet';
+import { GraphIndex, historyResults, sampleHistoryAuthors, scoringTargets } from './packet';
 import { sectionIndex } from './section';
+import { commentEstimate, threadSignals } from './signals';
 import { PROMPT_VERSION } from './prompts';
 import { CONFIDENCE_VALUE, RUBRIC_VERSION, RULES, RULES_BY_ID } from './rubric';
 import { scoreAccount, scoreComment, type CommentScore, type EvidenceAvailability } from './scoring';
@@ -90,7 +91,9 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
   const handle = (commentId: string) => who(index.comment(commentId)?.authorId ?? null);
 
   // --- Rubric scores for each target comment -------------------------------------------
+  // All recommendations count for the thread; at most MAX_SCORING_TARGETS were sent for rubric scoring.
   const targets = new Set(index.comments.filter(c => triageById.get(c.id)?.recommendsProduct).map(c => c.id));
+  const sentForScoring = new Set(scoringTargets(index, triage));
   const proposals = new Map((input.scoring?.assessments ?? []).filter(p => targets.has(p.commentId)).map(p => [p.commentId, p]));
   const productOf = (id: string) => (triageById.get(id)?.recommendsProduct ?? '').trim().toLowerCase();
   const scores: CommentScore[] = [];
@@ -115,15 +118,32 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
     };
     scores.push(scoreComment(proposal, availability, known));
   }
-  const missingProposals = Array.from(targets).filter(id => !proposals.has(id));
+  const missingProposals = Array.from(sentForScoring).filter(id => !proposals.has(id));
   if (input.scoring && missingProposals.length) limitations.push(`${missingProposals.length} recommendation comment(s) were not scored by the model and were left out of the rubric results.`);
+  if (targets.size > sentForScoring.size) limitations.push(`${sentForScoring.size} of ${targets.size} recommendations were scored with the rubric (flagged and most detailed first).`);
   const discarded = scores.reduce((t, s) => t + s.discarded.length, 0);
   if (discarded) limitations.push(`${discarded} model-proposed rubric signal(s) were discarded because the platform, available evidence or cited IDs did not support them.`);
   const scored = scores.filter(s => s.score !== null);
   const scoreById = new Map(scores.map(s => [s.commentId, s]));
 
   // --- Axes ----------------------------------------------------------------------------------
-  const axes: AxisAssessment[] = AXES.map(axis => {
+  const thread = threadSignals(index, triage);
+  // Measured thread signals stand in for an axis when they show more than the rubric did.
+  const measuredAxis = (axis: AxisName): { score: number; refs: string[]; explanation: string } | null => {
+    if (axis === 'promotional_intent' && thread.promotion.score > 0) {
+      const parts = [
+        thread.sellerPraise.authors ? `${thread.sellerPraise.authors} of ${thread.sellerPraise.supportiveAuthors} supportive accounts have seller-style names` : '',
+        thread.templates.length ? `${thread.templates.length} comment(s) use seller or template phrases` : '',
+        thread.outreach.length ? `${thread.outreach.length} comment(s) fish for the store owner` : '',
+      ].filter(Boolean);
+      return { score: thread.promotion.score, refs: thread.promotion.refs, explanation: `${AXIS_LABEL[axis]}: measured in the thread: ${parts.join('; ')}.` };
+    }
+    if (axis === 'semantic_coordination' && thread.duplicates) {
+      return { score: thread.duplication.score, refs: thread.duplication.refs, explanation: `${AXIS_LABEL[axis]}: ${thread.duplicates.authors} different accounts posted exactly "${thread.duplicates.text}".` };
+    }
+    return null;
+  };
+  const rubricAxes: AxisAssessment[] = AXES.map(axis => {
     if (axis === 'disclosure_concerns') {
       const disclosed = scores.filter(s => s.label === 'disclosed_promotion');
       return {
@@ -172,6 +192,12 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
     };
   });
 
+  const axes: AxisAssessment[] = rubricAxes.map(a => {
+    const m = measuredAxis(a.axis);
+    if (!m || m.score <= (a.score ?? -1)) return a;
+    return { axis: a.axis, score: m.score, confidence: 0.3, assessedCommentCount: Math.max(a.assessedCommentCount, m.refs.length), explanation: m.explanation, evidenceRefs: unique(m.refs.filter(r => known.has(r))) };
+  });
+
   // --- Per-comment assessments and sentiment -------------------------------------------------------
   const analyzed = input.analyzedCommentIds.filter(id => index.comment(id));
   const counts: Record<Stance, number> = { supportive: 0, critical: 0, neutral: 0, mixed: 0, unclear: 0 };
@@ -210,6 +236,30 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
       evidenceRefs: [commentId],
     };
   });
+
+  // --- Per-comment astroturfing estimate (realism, username, phrases, duplicates, rubric) -------
+  const templateBy = new Map(thread.templates.map(t => [t.commentId, t.label]));
+  const outreachSet = new Set(thread.outreach);
+  const duplicateSet = new Set(thread.duplicates?.commentIds ?? []);
+  const estimates: { score: number; endorses: boolean }[] = [];
+  for (const assessment of commentAssessments) {
+    const c = index.comment(assessment.commentId);
+    const t = triageById.get(assessment.commentId);
+    if (!c || !c.text.trim()) continue;
+    const endorses = !!t && (t.stance === 'supportive' || t.recommendsSubject || !!t.recommendsProduct);
+    const estimate = commentEstimate({
+      realism: t?.realism,
+      handle: index.handle(c.authorId),
+      endorses,
+      template: templateBy.get(c.id) ?? null,
+      outreach: outreachSet.has(c.id),
+      duplicate: duplicateSet.has(c.id),
+      rubricScore: scoreById.get(c.id)?.score ?? null,
+    });
+    assessment.astroturfEstimate = estimate;
+    estimates.push({ score: estimate.score, endorses });
+  }
+
   // --- Account automation signals for each sampled user with history ---------------------------
   const sample = sampleHistoryAuthors(graph, triage);
   const mentionTerms = unique([triage.subject.label, ...triage.comments.map(c => c.recommendsProduct ?? '')].map(t => t.trim()).filter(Boolean));
@@ -307,6 +357,8 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
     scored,
     noRecommendations: targets.size === 0,
     clusters,
+    thread,
+    estimates,
     results,
     sample,
     counts,

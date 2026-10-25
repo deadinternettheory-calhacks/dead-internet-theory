@@ -174,7 +174,16 @@ for application, Apify and upstream-provider retention boundaries.
    account, E4 recognized member, E7 criticized the brand elsewhere; E2 is also
    measured from age, communities and brand mentions), no automation signals
    are reported and the score is 0 (`humanSignals`).
-9. **Submit.** `assemble.ts` builds the `AnalysisSubmission` and replaces
+9. **Comment estimates and commercial signals.** `signals.ts` measures, in
+   code, seller-style accounts among supporters, template and seller phrases,
+   store-owner outreach and copied short praise. Each comment with text gets an
+   `astroturfEstimate` (0–100, with reasons): the larger of its rubric score and
+   points for unnatural or generic text (from triage `realism`), seller, random
+   or default usernames, template phrases, outreach and copied praise. The
+   section score uses comment realism (share of endorsing comments at 50+),
+   coordination, commercial signals, rubric and history; one-sided support is
+   only a small bonus. At most 25 recommendations go to rubric scoring.
+10. **Submit.** `assemble.ts` builds the `AnalysisSubmission` and replaces
    accusatory model text. The worker checks it against the schema and every
    evidence reference, then POSTs it with a stable idempotency key.
 

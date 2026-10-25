@@ -50,11 +50,12 @@ export const CLAUDE_TRIAGE_SCHEMA = {
       items: {
         type: 'object',
         additionalProperties: false,
-        required: ['commentId', 'stance', 'aboutProduct', 'recommendsProduct', 'recommendsSubject', 'rationale'],
+        required: ['commentId', 'stance', 'aboutProduct', 'recommendsProduct', 'recommendsSubject', 'realism', 'rationale'],
         properties: {
           commentId: { type: 'string' },
           stance: { type: 'string', enum: ['supportive', 'critical', 'neutral', 'mixed', 'unclear'] },
           aboutProduct: nullableString,
+          realism: { type: 'string', enum: ['natural', 'generic', 'unnatural'] },
           recommendsProduct: nullableString,
           recommendsSubject: { type: 'boolean' },
           rationale: { type: 'string' },

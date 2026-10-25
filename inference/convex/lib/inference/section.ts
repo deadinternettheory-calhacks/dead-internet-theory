@@ -6,9 +6,17 @@ import { daysBetween, mentions, round2 } from './features';
 import type { GraphIndex, HistorySample } from './packet';
 import { tierFor } from './rubric';
 import type { CommentScore } from './scoring';
+import type { ThreadSignals } from './signals';
 
-/** Weights before renormalizing over the parts that could be measured. */
-export const SECTION_WEIGHTS = { rubric: 0.4, coordination: 0.25, historyContrast: 0.25, oneSided: 0.1 } as const;
+/** Weights before renormalizing over the parts that could be measured. One-sided support is not a part: it adds a small bonus. */
+export const SECTION_WEIGHTS = { comments: 0.35, coordination: 0.2, commercial: 0.2, rubric: 0.15, historyContrast: 0.1 } as const;
+/** A comment estimated at this or above counts as suspicious; this share of endorsing comments counts fully. */
+export const SUSPICIOUS_ESTIMATE = 50;
+export const FULL_SUSPICIOUS_SHARE = 0.3;
+const MIN_ENDORSING = 5;
+/** One-sided support adds at most this many points, and only when the other parts reach ONE_SIDED_MIN_BASE. */
+const ONE_SIDED_MAX_BONUS = 10;
+const ONE_SIDED_MIN_BASE = 15;
 /** Mention-rate gap (supportive minus unsupportive) that counts as the maximum contrast. */
 const FULL_MENTION_GAP = 0.3;
 /** New-account-share gap that counts as the maximum contrast. */
@@ -26,6 +34,10 @@ export interface SectionInput {
   /** True when there were no product recommendations, so nothing was promoted. */
   noRecommendations: boolean;
   clusters: ClusterAssessment[];
+  /** Seller accounts, template phrases, outreach and duplicate praise, measured without the model. */
+  thread: ThreadSignals;
+  /** Per-comment astroturfing estimates, with whether the comment endorses the product. */
+  estimates: { score: number; endorses: boolean }[];
   results: HistoryResult[];
   sample: HistorySample;
   counts: Record<Stance, number>;
@@ -36,8 +48,10 @@ export interface SectionInput {
 }
 
 export interface SectionParts {
+  comments: number | null;
   rubric: number | null;
   coordination: number | null;
+  commercial: number | null;
   historyContrast: number | null;
   oneSided: number | null;
 }
@@ -105,6 +119,27 @@ export function sectionIndex(input: SectionInput): { score: Score; parts: Sectio
     notes.push(best ? `Coordination ${Math.round(coordination * 100)}: ${best.commentIds.length} recommendations form the strongest cluster.` : 'Coordination 0: no cluster of recommendations shared coordination signals.');
   }
 
+  // Comment realism: share of endorsing comments whose per-comment estimate is high.
+  let comments: number | null = null;
+  const endorsing = input.estimates.filter(e => e.endorses);
+  if (endorsing.length >= MIN_ENDORSING) {
+    const suspicious = endorsing.filter(e => e.score >= SUSPICIOUS_ESTIMATE).length;
+    comments = clamp01(suspicious / endorsing.length / FULL_SUSPICIOUS_SHARE);
+    notes.push(`Comment realism ${Math.round(comments * 100)}: ${suspicious} of ${endorsing.length} endorsing comments are estimated at ${SUSPICIOUS_ESTIMATE}+ (unnatural text, seller or random usernames, template phrases, duplicates).`);
+  }
+
+  // Commercial signals: seller-style accounts praising the product, template phrases, outreach, duplicate praise.
+  const t = input.thread;
+  const commercial = t.strength;
+  const commercialNotes = [
+    t.sellerPraise.authors ? `${t.sellerPraise.authors} of ${t.sellerPraise.supportiveAuthors} supportive accounts have seller-style names` : '',
+    t.templates.length ? `${t.templates.length} comment(s) use seller or template phrases (${[...new Set(t.templates.map(x => x.label))].join(', ')})` : '',
+    t.outreach.length ? `${t.outreach.length} comment(s) fish for the store owner` : '',
+    t.duplicates ? `${t.duplicates.authors} different accounts posted exactly "${t.duplicates.text}"` : '',
+  ].filter(Boolean);
+  notes.push(commercialNotes.length ? `Commercial signals ${Math.round(commercial * 100)}: ${commercialNotes.join('; ')}.` : 'Commercial signals 0: no seller accounts, template phrases, outreach or duplicate praise found.');
+  refs.push(...t.sellerPraise.commentIds.slice(0, 8), ...t.templates.map(x => x.commentId), ...t.outreach);
+
   // History contrast: the random supportive sample against the random unsupportive baseline.
   let historyContrast: number | null = null;
   const sup = groupStats(input.sample.supportive.sampled, input);
@@ -136,8 +171,8 @@ export function sectionIndex(input: SectionInput): { score: Score; parts: Sectio
     notes.push(`One-sided support ${Math.round(oneSided * 100)}: ${pct(share)} of comments taking a side were supportive.`);
   }
 
-  const parts: SectionParts = { rubric, coordination, historyContrast, oneSided };
-  const measured = (Object.keys(SECTION_WEIGHTS) as (keyof SectionParts)[]).filter(k => parts[k] !== null);
+  const parts: SectionParts = { comments, rubric, coordination, commercial, historyContrast, oneSided };
+  const measured = (Object.keys(SECTION_WEIGHTS) as (keyof typeof SECTION_WEIGHTS)[]).filter(k => parts[k] !== null);
   if (input.analyzedCount < MIN_ANALYZED || measured.length === 0) {
     return {
       parts,
@@ -149,8 +184,11 @@ export function sectionIndex(input: SectionInput): { score: Score; parts: Sectio
       },
     };
   }
-  const weight = measured.reduce((t, k) => t + SECTION_WEIGHTS[k], 0);
-  const value = Math.round((100 * measured.reduce((t, k) => t + SECTION_WEIGHTS[k] * parts[k]!, 0)) / weight);
+  const weight = measured.reduce((sum, k) => sum + SECTION_WEIGHTS[k], 0);
+  const base = Math.round((100 * measured.reduce((sum, k) => sum + SECTION_WEIGHTS[k] * parts[k]!, 0)) / weight);
+  // Lopsided praise is normal under product posts, so it only strengthens other evidence.
+  const bonus = oneSided !== null && base >= ONE_SIDED_MIN_BASE ? Math.round(ONE_SIDED_MAX_BONUS * oneSided) : 0;
+  const value = Math.min(100, base + bonus);
   const confidence = round2(
     Math.min(0.8, 0.3 + (historyContrast !== null ? 0.25 : 0) + (input.scored.length >= 2 || input.noRecommendations ? 0.15 : 0) + (input.fullCoverage ? 0.1 : 0)),
   );
@@ -165,7 +203,7 @@ export function sectionIndex(input: SectionInput): { score: Score; parts: Sectio
       explanation: [
         `Comment-section astroturfing index: ${value}/100 (${tierFor(value)}).`,
         ...notes,
-        `Weights: rubric ${SECTION_WEIGHTS.rubric * 100}%, coordination ${SECTION_WEIGHTS.coordination * 100}%, history contrast ${SECTION_WEIGHTS.historyContrast * 100}%, one-sided support ${SECTION_WEIGHTS.oneSided * 100}%, spread over the parts that could be measured.`,
+        `Weights: comment realism ${SECTION_WEIGHTS.comments * 100}%, coordination ${SECTION_WEIGHTS.coordination * 100}%, commercial signals ${SECTION_WEIGHTS.commercial * 100}%, rubric ${SECTION_WEIGHTS.rubric * 100}%, history contrast ${SECTION_WEIGHTS.historyContrast * 100}%, spread over the parts that could be measured; one-sided support adds up to ${ONE_SIDED_MAX_BONUS} points only when the rest reach ${ONE_SIDED_MIN_BASE}${bonus ? ` (+${bonus} here)` : ''}.`,
         sampleNote,
       ].join(' '),
       evidenceRefs: Array.from(new Set(refs)).filter(id => input.known.has(id)),

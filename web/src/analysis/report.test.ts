@@ -14,7 +14,7 @@ describe('analysis report', () => {
   });
 
   it('resolves evidence from both the discussion and account histories', () => {
-    const sources = new Set(report.findings.flatMap(f => f.evidence.map(e => e.source)));
+    const sources = new Set(report.axes.flatMap(x => x.evidence.map(e => e.source)));
     expect(sources).toEqual(new Set(['discussion', 'history']));
   });
 

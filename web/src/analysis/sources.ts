@@ -18,7 +18,9 @@ const S = {
   schneider2026: { label: 'Schneider, Yuan & Rizoiu 2026', title: 'Beyond Content: Behavioral Policies Reveal Actors in Information Operations (npj Complexity)', url: 'https://arxiv.org/abs/2602.02838' },
 } satisfies Record<string, Source>;
 
-export const SIGNAL_SOURCES: Record<AxisName, Source[]> = {
+export const SIGNAL_SOURCES: Record<AxisName | 'comment_realism', Source[]> = {
+  // Text realism and username patterns: per-message judgments are weak alone (Trokhymovych et al. 2026); username patterns are heuristic.
+  comment_realism: [S.trokhymovych2026],
   semantic_coordination: [S.kumar2017, S.weerasinghe2022],
   temporal_coordination: [S.iannucci2025, S.miller2016],
   engagement_anomalies: [S.saeed2022, S.weber],

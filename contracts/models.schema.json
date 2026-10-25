@@ -1426,6 +1426,28 @@
             "unknown"
           ],
           "additionalProperties": false
+        },
+        "astroturfEstimate": {
+          "type": "object",
+          "description": "Optional (added 2026-10-25, backward compatible). Uncalibrated 0-100 estimate of how likely this comment is astroturfed: the larger of its rubric score and points for unnatural or generic text, seller-style, random or default usernames, template phrases, store-owner outreach and duplicate praise. Not a probability.",
+          "properties": {
+            "score": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "reasons": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "score",
+            "reasons"
+          ],
+          "additionalProperties": false
         }
       },
       "required": [

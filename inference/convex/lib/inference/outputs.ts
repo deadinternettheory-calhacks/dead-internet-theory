@@ -13,6 +13,8 @@ export interface TriageComment {
   recommendsSubject: boolean;
   /** The exact product the stance is about, resolved from the reply chain; null means the subject. */
   aboutProduct?: string | null;
+  /** How real the comment reads: natural, generic low-information praise, or unnatural (hype, ad copy, templates, nonsense). */
+  realism?: 'natural' | 'generic' | 'unnatural';
   rationale: string;
 }
 
@@ -99,6 +101,7 @@ export const TRIAGE_OUTPUT_SCHEMA = {
           recommendsProduct: { type: ['string', 'null'] },
           recommendsSubject: { type: 'boolean' },
           aboutProduct: { type: ['string', 'null'] },
+          realism: { enum: ['natural', 'generic', 'unnatural'] },
           rationale: { type: 'string' },
         },
       },

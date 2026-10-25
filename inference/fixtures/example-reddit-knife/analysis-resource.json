@@ -7,7 +7,7 @@
     "schemaVersion": "1.0.0",
     "graphRevision": 1,
     "graphFingerprint": "9ffe20a2cf5f96fb4c3571e70cead8708238dc89319e3622ac079f0329be337b",
-    "inferenceVersion": "dit-inference/0.2.0; rubric/0.3; prompts-2026-10-24e; recorded:claude-opus-5-5+creao-app-trigger",
+    "inferenceVersion": "dit-inference/0.2.0; rubric/0.3; prompts-2026-10-25a; recorded:claude-opus-5-5+creao-app-trigger",
     "inferredAt": "2026-10-24T20:40:00Z",
     "subject": {
       "label": "Wüsthof Classic chef's knife",
@@ -40,9 +40,9 @@
       ]
     },
     "overallCoordinationRisk": {
-      "score": 11,
+      "score": 0,
       "confidence": 0.45,
-      "explanation": "Comment-section astroturfing index: 11/100 (Minimal). Rubric strength 0: the top 3 recommendation(s) scored 0 (u/commenter2), 0 (u/commenter3), 0 (u/commenter9) on the rubric. Coordination 0: no cluster of recommendations shared coordination signals. History contrast not measured: it needs at least 2 sampled users with history in each group (supportive 0, unsupportive 0). One-sided support 80: 90% of comments taking a side were supportive. Weights: rubric 40%, coordination 25%, history contrast 25%, one-sided support 10%, spread over the parts that could be measured. Histories came from a random sample of 6 of 51 supportive and 6 of 10 unsupportive users.",
+      "explanation": "Comment-section astroturfing index: 0/100 (Minimal). Rubric strength 0: the top 3 recommendation(s) scored 0 (u/commenter2), 0 (u/commenter3), 0 (u/commenter9) on the rubric. Coordination 0: no cluster of recommendations shared coordination signals. Comment realism 0: 0 of 66 endorsing comments are estimated at 50+ (unnatural text, seller or random usernames, template phrases, duplicates). Commercial signals 0: no seller accounts, template phrases, outreach or duplicate praise found. History contrast not measured: it needs at least 2 sampled users with history in each group (supportive 0, unsupportive 0). One-sided support 80: 90% of comments taking a side were supportive. Weights: comment realism 35%, coordination 20%, commercial signals 20%, rubric 15%, history contrast 10%, spread over the parts that could be measured; one-sided support adds up to 10 points only when the rest reach 15. Histories came from a random sample of 6 of 51 supportive and 6 of 10 unsupportive users.",
       "evidenceRefs": [
         "reddit:comment:example_c002",
         "reddit:comment:example_c003",
@@ -111,7 +111,11 @@
         "rationale": "Recommends Henckels food service knives as best value.",
         "evidenceRefs": [
           "reddit:comment:example_c001"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c002",
@@ -120,7 +124,11 @@
         "rationale": "Balanced recommendation with specific drawbacks and maintenance guidance. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E6 -5: Directly answers the root question about European/BIFL chef's knife recommendations. E3 -10: Provides balanced analysis with drawbacks (Victorinox loses sharpness), maintenance requirements, and alternative options. Unknown for lack of data: B1, B2, B3, B4, B5, B6, B7, B8, B9, C2, C3, C5, C6, E2, E7.",
         "evidenceRefs": [
           "reddit:comment:example_c002"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c003",
@@ -129,7 +137,11 @@
         "rationale": "Minimal two-word recommendation with high engagement, but offset by brand's established reputation. Rubric 0/100 (Minimal; low evidence confidence). Signals: T4 +5: Short, low-effort recommendation ('Wusthof classic') with disproportionately high visibility (score 123). X5 +4: Extremely generic comment with no specific or costly-to-fake detail provided. Exculpatory: E6 -5: Directly answers the root question about European/BIFL chef's knife recommendations. E5 -10: Wüsthof is a well-known brand recommended across multiple discussions over a long period by many unrelated accounts. Unknown for lack of data: B1, B2, B3, B4, B5, B6, B7, B8, B9, C2, C3, C5, C6, E2, E7.",
         "evidenceRefs": [
           "reddit:comment:example_c003"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c004",
@@ -138,7 +150,11 @@
         "rationale": "Likes the Zwilling Pro.",
         "evidenceRefs": [
           "reddit:comment:example_c004"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c005",
@@ -147,7 +163,11 @@
         "rationale": "Shares informational videos.",
         "evidenceRefs": [
           "reddit:comment:example_c005"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c006",
@@ -156,7 +176,11 @@
         "rationale": "Recommends Lamson knives.",
         "evidenceRefs": [
           "reddit:comment:example_c006"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c007",
@@ -165,7 +189,11 @@
         "rationale": "Comparison favors Shun over Wüsthof for edge retention.",
         "evidenceRefs": [
           "reddit:comment:example_c007"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c008",
@@ -174,7 +202,11 @@
         "rationale": "Positive long-term Mercer experience.",
         "evidenceRefs": [
           "reddit:comment:example_c008"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c009",
@@ -192,7 +224,11 @@
         "rationale": "Direct answer to recommendation request with product specification. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E6 -5: Directly answers the root question about European/BIFL chef's knife recommendations. E5 -10: Wüsthof is a well-known brand recommended across multiple discussions over a long period by many unrelated accounts. Unknown for lack of data: B1, B2, B3, B4, B5, B6, B7, B8, B9, C2, C3, C5, C6, E2, E7.",
         "evidenceRefs": [
           "reddit:comment:example_c010"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c011",
@@ -201,7 +237,11 @@
         "rationale": "OP likes the look.",
         "evidenceRefs": [
           "reddit:comment:example_c011"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c012",
@@ -210,7 +250,11 @@
         "rationale": "Thanks for comparison.",
         "evidenceRefs": [
           "reddit:comment:example_c012"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c013",
@@ -219,7 +263,11 @@
         "rationale": "OP observation about Mercer.",
         "evidenceRefs": [
           "reddit:comment:example_c013"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c014",
@@ -228,7 +276,11 @@
         "rationale": "Thanks to deleted comment.",
         "evidenceRefs": [
           "reddit:comment:example_c014"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c015",
@@ -237,7 +289,11 @@
         "rationale": "Recommends Misono UX-10.",
         "evidenceRefs": [
           "reddit:comment:example_c015"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c016",
@@ -246,7 +302,11 @@
         "rationale": "Praises Rada.",
         "evidenceRefs": [
           "reddit:comment:example_c016"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c017",
@@ -255,7 +315,11 @@
         "rationale": "Recommends Fibrox.",
         "evidenceRefs": [
           "reddit:comment:example_c017"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c018",
@@ -273,7 +337,11 @@
         "rationale": "Recommends Tojiro DP.",
         "evidenceRefs": [
           "reddit:comment:example_c019"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c020",
@@ -282,7 +350,11 @@
         "rationale": "Recommends commercial Twin Master.",
         "evidenceRefs": [
           "reddit:comment:example_c020"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c021",
@@ -291,7 +363,11 @@
         "rationale": "Link-only endorsement.",
         "evidenceRefs": [
           "reddit:comment:example_c021"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c022",
@@ -300,7 +376,11 @@
         "rationale": "Long-term praise of Lamson.",
         "evidenceRefs": [
           "reddit:comment:example_c022"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c023",
@@ -309,7 +389,11 @@
         "rationale": "Identifies and endorses Twin Master.",
         "evidenceRefs": [
           "reddit:comment:example_c023"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c024",
@@ -318,7 +402,11 @@
         "rationale": "Product recommendation with comparative context (Victorinox as budget option). Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E6 -5: Directly answers the root question about European/BIFL chef's knife recommendations. E5 -10: Wüsthof is a well-known brand recommended across multiple discussions over a long period by many unrelated accounts. Unknown for lack of data: B1, B2, B3, B4, B5, B6, B7, B8, B9, C2, C3, C5, C6, E2, E7.",
         "evidenceRefs": [
           "reddit:comment:example_c024"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c025",
@@ -327,7 +415,11 @@
         "rationale": "Names Zwilling Pro.",
         "evidenceRefs": [
           "reddit:comment:example_c025"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c026",
@@ -336,7 +428,11 @@
         "rationale": "Favors Lamson over Global.",
         "evidenceRefs": [
           "reddit:comment:example_c026"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c027",
@@ -345,7 +441,11 @@
         "rationale": "Recommends Shun Classic Santoku.",
         "evidenceRefs": [
           "reddit:comment:example_c027"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c028",
@@ -354,7 +454,11 @@
         "rationale": "Agrees on Lamson.",
         "evidenceRefs": [
           "reddit:comment:example_c028"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c029",
@@ -363,7 +467,11 @@
         "rationale": "Loves their Zwilling Santoku.",
         "evidenceRefs": [
           "reddit:comment:example_c029"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c030",
@@ -372,7 +480,11 @@
         "rationale": "Sharpening advice.",
         "evidenceRefs": [
           "reddit:comment:example_c030"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c031",
@@ -381,7 +493,11 @@
         "rationale": "Says Mercer has been solid.",
         "evidenceRefs": [
           "reddit:comment:example_c031"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c032",
@@ -390,7 +506,11 @@
         "rationale": "Recommends Tojiro DP.",
         "evidenceRefs": [
           "reddit:comment:example_c032"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c033",
@@ -399,7 +519,11 @@
         "rationale": "General advice listing brands.",
         "evidenceRefs": [
           "reddit:comment:example_c033"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c034",
@@ -408,7 +532,11 @@
         "rationale": "Happy with Lamson after a decade.",
         "evidenceRefs": [
           "reddit:comment:example_c034"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c035",
@@ -417,7 +545,11 @@
         "rationale": "Strong praise of Lamson.",
         "evidenceRefs": [
           "reddit:comment:example_c035"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c036",
@@ -426,7 +558,11 @@
         "rationale": "General guidance.",
         "evidenceRefs": [
           "reddit:comment:example_c036"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c037",
@@ -435,7 +571,11 @@
         "rationale": "Endorses parent's Zwilling Pro.",
         "evidenceRefs": [
           "reddit:comment:example_c037"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c038",
@@ -444,7 +584,11 @@
         "rationale": "Recommends Global.",
         "evidenceRefs": [
           "reddit:comment:example_c038"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c039",
@@ -453,7 +597,11 @@
         "rationale": "Joke about phrase.",
         "evidenceRefs": [
           "reddit:comment:example_c039"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c040",
@@ -462,7 +610,11 @@
         "rationale": "Praises Shun.",
         "evidenceRefs": [
           "reddit:comment:example_c040"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c041",
@@ -471,7 +623,11 @@
         "rationale": "Suggests a local bladesmith.",
         "evidenceRefs": [
           "reddit:comment:example_c041"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c042",
@@ -480,7 +636,11 @@
         "rationale": "Recommends Fibrox and Classic Ikon.",
         "evidenceRefs": [
           "reddit:comment:example_c042"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c043",
@@ -489,7 +649,11 @@
         "rationale": "Loves Mercer Renaissance.",
         "evidenceRefs": [
           "reddit:comment:example_c043"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c044",
@@ -498,7 +662,11 @@
         "rationale": "Disappointed with edge retention.",
         "evidenceRefs": [
           "reddit:comment:example_c044"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c045",
@@ -507,7 +675,11 @@
         "rationale": "Loves Misen.",
         "evidenceRefs": [
           "reddit:comment:example_c045"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c046",
@@ -516,7 +688,11 @@
         "rationale": "Praises Cutco.",
         "evidenceRefs": [
           "reddit:comment:example_c046"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c047",
@@ -525,7 +701,11 @@
         "rationale": "Favors Messermeister over Wüsthof.",
         "evidenceRefs": [
           "reddit:comment:example_c047"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c048",
@@ -534,7 +714,11 @@
         "rationale": "Positive on Lamson.",
         "evidenceRefs": [
           "reddit:comment:example_c048"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c049",
@@ -543,7 +727,11 @@
         "rationale": "Personal connection, likes look.",
         "evidenceRefs": [
           "reddit:comment:example_c049"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c050",
@@ -552,7 +740,11 @@
         "rationale": "Joke.",
         "evidenceRefs": [
           "reddit:comment:example_c050"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c051",
@@ -561,7 +753,11 @@
         "rationale": "Joke.",
         "evidenceRefs": [
           "reddit:comment:example_c051"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c052",
@@ -570,7 +766,11 @@
         "rationale": "Joke.",
         "evidenceRefs": [
           "reddit:comment:example_c052"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c053",
@@ -579,7 +779,11 @@
         "rationale": "Likes Global.",
         "evidenceRefs": [
           "reddit:comment:example_c053"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c054",
@@ -588,7 +792,11 @@
         "rationale": "Joke.",
         "evidenceRefs": [
           "reddit:comment:example_c054"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c055",
@@ -597,7 +805,11 @@
         "rationale": "Recommends MAC.",
         "evidenceRefs": [
           "reddit:comment:example_c055"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c056",
@@ -606,7 +818,11 @@
         "rationale": "Joke.",
         "evidenceRefs": [
           "reddit:comment:example_c056"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c057",
@@ -615,7 +831,11 @@
         "rationale": "Joke.",
         "evidenceRefs": [
           "reddit:comment:example_c057"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c058",
@@ -624,7 +844,11 @@
         "rationale": "Joke.",
         "evidenceRefs": [
           "reddit:comment:example_c058"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c059",
@@ -633,7 +857,11 @@
         "rationale": "Joke.",
         "evidenceRefs": [
           "reddit:comment:example_c059"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c060",
@@ -642,7 +870,11 @@
         "rationale": "Joke.",
         "evidenceRefs": [
           "reddit:comment:example_c060"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c061",
@@ -651,7 +883,11 @@
         "rationale": "Names Global.",
         "evidenceRefs": [
           "reddit:comment:example_c061"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c062",
@@ -660,7 +896,11 @@
         "rationale": "Recommends Kramer line and shops.",
         "evidenceRefs": [
           "reddit:comment:example_c062"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c063",
@@ -678,7 +918,11 @@
         "rationale": "Likes Mercer more than Victorinox.",
         "evidenceRefs": [
           "reddit:comment:example_c064"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c065",
@@ -687,7 +931,11 @@
         "rationale": "Names CCK cleaver.",
         "evidenceRefs": [
           "reddit:comment:example_c065"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c066",
@@ -696,7 +944,11 @@
         "rationale": "Names Fibrox 10\".",
         "evidenceRefs": [
           "reddit:comment:example_c066"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c067",
@@ -705,7 +957,11 @@
         "rationale": "Reply affirming satisfaction with subject product and recommending sharpening maintenance. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E6 -5: Directly answers the root question about European/BIFL chef's knife recommendations. E5 -10: Wüsthof is a well-known brand recommended across multiple discussions over a long period by many unrelated accounts. Unknown for lack of data: B1, B2, B3, B4, B5, B6, B7, B8, B9, C2, C3, C5, C6, E2, E7.",
         "evidenceRefs": [
           "reddit:comment:example_c067"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c068",
@@ -714,7 +970,11 @@
         "rationale": "Prefers Ikon to Classic.",
         "evidenceRefs": [
           "reddit:comment:example_c068"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c069",
@@ -723,7 +983,11 @@
         "rationale": "Cites review favoring Lansky.",
         "evidenceRefs": [
           "reddit:comment:example_c069"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c070",
@@ -732,7 +996,11 @@
         "rationale": "Praises Genesis handles.",
         "evidenceRefs": [
           "reddit:comment:example_c070"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c071",
@@ -741,7 +1009,11 @@
         "rationale": "Product recommendation with gift and maintenance advice. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E6 -5: Directly answers the root question about European/BIFL chef's knife recommendations. E5 -10: Wüsthof is a well-known brand recommended across multiple discussions over a long period by many unrelated accounts. Unknown for lack of data: B1, B2, B3, B4, B5, B6, B7, B8, B9, C2, C3, C5, C6, E2, E7.",
         "evidenceRefs": [
           "reddit:comment:example_c071"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c072",
@@ -750,7 +1022,11 @@
         "rationale": "Link-only endorsement.",
         "evidenceRefs": [
           "reddit:comment:example_c072"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c073",
@@ -759,7 +1035,11 @@
         "rationale": "Names Victorinox.",
         "evidenceRefs": [
           "reddit:comment:example_c073"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c074",
@@ -768,7 +1048,11 @@
         "rationale": "Recommends Kikuichi.",
         "evidenceRefs": [
           "reddit:comment:example_c074"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c075",
@@ -777,7 +1061,11 @@
         "rationale": "Praises Cutco.",
         "evidenceRefs": [
           "reddit:comment:example_c075"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c076",
@@ -786,7 +1074,11 @@
         "rationale": "Recommends Gesshin.",
         "evidenceRefs": [
           "reddit:comment:example_c076"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c077",
@@ -795,7 +1087,11 @@
         "rationale": "Personal ownership recommendation with generational durability claim. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E6 -5: Directly answers the root question about European/BIFL chef's knife recommendations. E5 -10: Wüsthof is a well-known brand recommended across multiple discussions over a long period by many unrelated accounts. Unknown for lack of data: B1, B2, B3, B4, B5, B6, B7, B8, B9, C2, C3, C5, C6, E2, E7.",
         "evidenceRefs": [
           "reddit:comment:example_c077"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c078",
@@ -804,7 +1100,11 @@
         "rationale": "Suggests ICEL.",
         "evidenceRefs": [
           "reddit:comment:example_c078"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c079",
@@ -813,7 +1113,11 @@
         "rationale": "Favorite knife.",
         "evidenceRefs": [
           "reddit:comment:example_c079"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c080",
@@ -822,7 +1126,11 @@
         "rationale": "Notes sold out.",
         "evidenceRefs": [
           "reddit:comment:example_c080"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c081",
@@ -831,7 +1139,11 @@
         "rationale": "Thanks, notes Victorinox look.",
         "evidenceRefs": [
           "reddit:comment:example_c081"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c082",
@@ -840,7 +1152,11 @@
         "rationale": "Admires Schmitt knife.",
         "evidenceRefs": [
           "reddit:comment:example_c082"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c083",
@@ -849,7 +1165,11 @@
         "rationale": "Reply to deleted.",
         "evidenceRefs": [
           "reddit:comment:example_c083"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c084",
@@ -858,7 +1178,11 @@
         "rationale": "Finds Global ugly.",
         "evidenceRefs": [
           "reddit:comment:example_c084"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c085",
@@ -867,7 +1191,11 @@
         "rationale": "Interested but wonders if overrated.",
         "evidenceRefs": [
           "reddit:comment:example_c085"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c086",
@@ -876,7 +1204,11 @@
         "rationale": "Question about rust.",
         "evidenceRefs": [
           "reddit:comment:example_c086"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c087",
@@ -885,7 +1217,11 @@
         "rationale": "Says Shun worth price.",
         "evidenceRefs": [
           "reddit:comment:example_c087"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c088",
@@ -894,7 +1230,11 @@
         "rationale": "Nice but overpriced; prefers Tojiro.",
         "evidenceRefs": [
           "reddit:comment:example_c088"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c089",
@@ -903,7 +1243,11 @@
         "rationale": "Defends UX-10, likes Tojiro.",
         "evidenceRefs": [
           "reddit:comment:example_c089"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c090",
@@ -912,7 +1256,11 @@
         "rationale": "Agrees.",
         "evidenceRefs": [
           "reddit:comment:example_c090"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c091",
@@ -921,7 +1269,11 @@
         "rationale": "Seconds Zwilling quality.",
         "evidenceRefs": [
           "reddit:comment:example_c091"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c092",
@@ -930,7 +1282,11 @@
         "rationale": "Recommendation with acknowledgment of alternative options and context for gift-giving. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E6 -5: Directly answers the root question about European/BIFL chef's knife recommendations. E5 -10: Wüsthof is a well-known brand recommended across multiple discussions over a long period by many unrelated accounts. Unknown for lack of data: B1, B2, B3, B4, B5, B6, B7, B8, B9, C2, C3, C5, C6, E2, E7.",
         "evidenceRefs": [
           "reddit:comment:example_c092"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c093",
@@ -939,7 +1295,11 @@
         "rationale": "Joke.",
         "evidenceRefs": [
           "reddit:comment:example_c093"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c094",
@@ -948,7 +1308,11 @@
         "rationale": "Favors Øyo over others.",
         "evidenceRefs": [
           "reddit:comment:example_c094"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c095",
@@ -957,7 +1321,11 @@
         "rationale": "Adds link.",
         "evidenceRefs": [
           "reddit:comment:example_c095"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c096",
@@ -966,7 +1334,11 @@
         "rationale": "Shun broke.",
         "evidenceRefs": [
           "reddit:comment:example_c096"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c097",
@@ -975,7 +1347,11 @@
         "rationale": "Thanks.",
         "evidenceRefs": [
           "reddit:comment:example_c097"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c098",
@@ -984,7 +1360,11 @@
         "rationale": "Follow-up question.",
         "evidenceRefs": [
           "reddit:comment:example_c098"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c099",
@@ -993,7 +1373,11 @@
         "rationale": "OP praises Lamson purchase.",
         "evidenceRefs": [
           "reddit:comment:example_c099"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       },
       {
         "commentId": "reddit:comment:example_c100",
@@ -1002,7 +1386,11 @@
         "rationale": "Thanks and remark.",
         "evidenceRefs": [
           "reddit:comment:example_c100"
-        ]
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
       }
     ],
     "clusters": [],
@@ -1011,6 +1399,7 @@
       "enr_example_knife"
     ],
     "limitations": [
+      "25 of 62 recommendations were scored with the rubric (flagged and most detailed first).",
       "Account histories were requested for a seeded random sample of users, not everyone: 6 of 51 supportive and 6 of 10 unsupportive users, plus the post author. Rules that need an unsampled user's history are unknown.",
       "0 of 13 sampled users returned a full history (4 failed, 9 unavailable).",
       "Platform reports 163 comments; 100 were retained. Reported counts may include unavailable content.",

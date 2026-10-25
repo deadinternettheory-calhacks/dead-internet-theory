@@ -61,7 +61,7 @@ describe('assembled analysis', () => {
     const demo = await buildDemo();
     expect(validateModel('AnalysisResource', demo.analysis).valid).toBe(true);
     expect(checkSubmission(demo.analysis.result, graph, demo.enrichments)).toBeNull();
-    expect(demo.analysis.result.overallCoordinationRisk.score).toBe(63);
+    expect(demo.analysis.result.overallCoordinationRisk.score).toBe(69);
   });
 
   it('keeps generated example files in sync (npm run demo)', async () => {
@@ -109,7 +109,7 @@ describe('assembled analysis', () => {
     };
     const result = await runSequential(graph, { creao, requestEnrichment: async () => enrichment, getEnrichment: async () => enrichment, sleep: async () => {} });
     expect(started).toEqual(['triage', 'triage', 'scoring', 'scoring', 'scoring']);
-    expect(result.submission.overallCoordinationRisk.score).toBe(63);
+    expect(result.submission.overallCoordinationRisk.score).toBe(69);
   });
 
   it('fails instead of submitting when CREAO output is unusable', async () => {
