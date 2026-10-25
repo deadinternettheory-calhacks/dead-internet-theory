@@ -7,15 +7,16 @@ added. Public configuration is canonical in [extension-client.mjs](extension-cli
 
 For every request the client supplies:
 
-- `X-DIT-Extension-Id`: the listed public Chrome client ID, matched to the
-  unpacked manifest's public key. This is an allowlist entry, not a credential or
+- `X-DIT-Extension-Id`: the installed `chrome.runtime.id`, which must appear in
+  `EXTENSION_CLIENT_IDS`. The unpacked ID comes from the development public key;
+  the store ID is assigned by Chrome on the first draft upload. This is an allowlist entry, not a credential or
   proof that a request came from Chrome.
 - `X-DIT-Extension-Session`: a cryptographically random 32-byte nonce encoded as
   43 unpadded base64url characters. This is an anonymous session credential.
   It stays in trusted extension local storage and request headers, never URLs.
 
 The website proxy validates both headers. When an Origin is present it must
-exactly match the listed `chrome-extension://<id>`; missing Origin is supported
+exactly match `chrome-extension://<id>` for the same listed ID; missing Origin is supported
 for privileged extension fetch. Ordinary website creates still require the
 same-origin policy. Preflight accepts only that extension origin, the frontend
 GET/POST route allowlist, and the two headers plus Content-Type/Idempotency-Key.
@@ -35,7 +36,10 @@ report contents. Closing the panel does not cancel durable backend work. A
 separate extension report tab uses the same credential and stored investigation
 ID, so opening a report does not create another investigation.
 
-Before Chrome Web Store publication, use the store-assigned extension ID/public
-key and update this canonical allowlist and package together. The unpacked ZIP
-uses a fixed public key so all installations have the listed ID. The key contains
-no private material and grants no backend privilege.
+Packaging produces two variants from the same executable code. The unpacked ZIP
+uses a fixed development public key; the Web Store upload ZIP omits the `key`
+field and unpacked installation instructions. Both have a root manifest. Upload
+the store ZIP to create a draft, then add its assigned ID to the canonical
+allowlist and deploy the website before submitting for review. The client reads
+its installed ID at runtime, so listing registration requires no package rebuild.
+The public key contains no private material and grants no backend privilege.

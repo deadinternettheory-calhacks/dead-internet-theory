@@ -6,7 +6,7 @@ ghost. Analysis still runs on the configured Convex/Apify/Claude/CREAO pipeline.
 
 ## Install the ZIP
 
-1. Extract `dead-internet-theory-chrome-1.0.0.zip` into a folder.
+1. Extract `dead-internet-theory-chrome-1.0.1.zip` into a folder.
 2. Open `chrome://extensions` in Chrome 123 or newer and enable **Developer mode**.
 3. Choose **Load unpacked**, then select the folder containing `manifest.json`.
 4. Pin the ghost icon in Chrome's extensions menu.
@@ -14,6 +14,20 @@ ghost. Analysis still runs on the configured Convex/Apify/Claude/CREAO pipeline.
 No provider keys, personal access tokens, or environment configuration are
 needed. The default package calls `https://www.deadinternettheory.us`.
 It is an unpacked package, not a Chrome Web Store publication.
+
+## Upload to Chrome Web Store
+
+Use **`dead-internet-theory-chrome-webstore-1.0.1.zip`** for the developer dashboard.
+This ZIP has `manifest.json` at its root and omits the development-only `key`
+field. The ordinary Chrome ZIP retains that key for stable Load unpacked installs.
+
+Upload the Web Store ZIP to create a draft item, then copy its 32-letter Item ID.
+Add that ID to `EXTENSION_CLIENT_IDS` in
+[extension-client.mjs](../contracts/extension-client.mjs), deploy the website,
+and verify the store version's connection before submitting it for review.
+The client uses `chrome.runtime.id` automatically; no ID-specific rebuild is needed.
+The API accepts only explicitly listed IDs. A draft upload alone does not enable
+an unlisted store ID on the API.
 
 ## Use
 
@@ -49,16 +63,18 @@ npm run package
 ```
 
 `npm run build` typechecks and writes the unpacked package to `extension/dist/`.
-`npm run package` also validates package entries and writes a ZIP plus SHA-256
-checksum under the repository's ignored `output/` directory. Generated packages,
+`npm run package` also validates package entries and writes unpacked and Web Store
+ZIPs, each with a SHA-256 checksum, under the ignored `output/` directory.
+`npm run package:webstore` writes only the store-upload ZIP. Generated packages,
 browser profiles and credentials do not belong in Git. `art/ghost.svg` is the
 source for the committed PNG toolbar icons.
 
 The manifest's public key pins the unpacked ID to
 `nodkcggcbpiolpkphjkfedhlmaallhnb`. This must match the canonical public client ID
-in [extension-client.mjs](../contracts/extension-client.mjs). Before store publication,
-replace it with the store-assigned identity and update the proxy allowlist and
-package together. Changing an installed identity or removing extension storage
+in [extension-client.mjs](../contracts/extension-client.mjs). The store ZIP omits
+the public key so Chrome assigns the listing's identity. Add the assigned ID to
+the proxy allowlist before review; use the store public key for local testing
+if needed. Changing an installed identity or removing extension storage
 also removes access to that anonymous session's saved investigation IDs.
 
 ## Sessions, storage and permissions
