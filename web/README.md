@@ -213,3 +213,8 @@ detailed evidence share one white panel; coverage details remain below it.
 
 The header shows **How it works** on the homepage only; search and report routes
 keep the home logo without the navigation link.
+
+The evidence timeline scales from the earliest to latest plotted comment,
+including a selected comment added to the visible sample. Hidden timestamps do
+not stretch the axis; identical timestamps are centered. The chart labels when
+its range covers only the displayed sample.
