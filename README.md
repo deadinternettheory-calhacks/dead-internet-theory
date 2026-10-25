@@ -12,6 +12,8 @@ application retention are configured; the form shows live backend availability.
 
 ## Repository guide
 
+- [Cal Hacks pitch preparation](docs/calhacks-pitch.md): demo script, sponsor
+  fit, evidence to show judges, and current claim limits.
 - [SPEC.md](SPEC.md): canonical specification for scope, requirements, architecture,
   interfaces, validation, open decisions, and architecture decision log.
 - [CONTRIBUTING.md](CONTRIBUTING.md): development workflow, Conventional Commits,
