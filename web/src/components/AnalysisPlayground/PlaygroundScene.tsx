@@ -8,7 +8,6 @@ import {
 import { createHeadstoneShape, createWireframe, GRAVES } from '../GraveyardGlobe/globe-model';
 import { advanceGlobe } from '../GraveyardGlobe/globe-motion';
 import { formationFor, type PlaygroundSceneProps } from './playground-types';
-import { GhostCharacter } from './GhostCharacter';
 
 const COUNT = 18;
 const SPARKS = 32;
@@ -201,7 +200,6 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
       </group>)}
       <instancedMesh ref={sparks} args={[resources.spark, resources.sparkle, SPARKS]} frustumCulled={false}/>
     </group>
-    <GhostCharacter animate={animate} phase={phase} pulse={pulse} pointer={pointer} motion={motion}/>
   </group>;
 }
 

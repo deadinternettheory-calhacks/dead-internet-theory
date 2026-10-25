@@ -6,6 +6,7 @@ import { AnalysisPage, UnsupportedPrefixPage } from './pages/AnalysisPage';
 import { ExamplePage } from './pages/ExamplePage';
 import { HomePage } from './pages/HomePage';
 import { parsePrefixPath } from './url';
+import { InvestigationAtmosphere } from './components/AnalysisPlayground/InvestigationAtmosphere';
 import '@fontsource-variable/inter';
 import './styles.css';
 function RouterView() {
@@ -85,5 +86,5 @@ function SectionUrlSync() {
   return null;
 }
 export default function App() {
-  return <BrowserRouter><HashScroll/><RouteScroll/><SectionUrlSync/><div className="site-shell"><SiteHeader/><RouterView/><SiteFooter/></div></BrowserRouter>;
+  return <BrowserRouter><InvestigationAtmosphere><HashScroll/><RouteScroll/><SectionUrlSync/><div className="site-shell"><SiteHeader/><RouterView/><SiteFooter/></div></InvestigationAtmosphere></BrowserRouter>;
 }

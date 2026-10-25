@@ -164,9 +164,13 @@ scene timing is never used as live progress.
 ## Interactive analysis playground
 
 The live waiting view has a fixed, full-viewport 3D background: a large graveyard
-globe and eighteen comment tiles spread across the page, with an expressive ghost
-roaming both axes inside the visible viewport. Foreground status, links and
-collected-comment cards stay readable and interactive. There are no visible scene
+globe and eighteen comment tiles spread across the page. An expressive ghost
+roams both axes in a separate 224px foreground renderer with pointer events disabled,
+so links, forms and buttons work through it. The same companion appears on the
+landing page and stays mounted across navigation, phase changes and report completion.
+The completed scene keeps moving with a celebratory greeting; a failed request
+keeps a calm illustration. A continuous reading column with section dividers
+replaces individual floating text panels. There are no visible scene
 buttons or control panel. Formations follow the real backend phase: a gentle orbit
 while waiting, cards spiraling inward during collection, then an organized field
 and a magnifying glass during analysis. They never advance on a timer. The ghost
@@ -185,14 +189,14 @@ changes when the real investigation phase changes.
 This is an illustration with local controls, separate from the evidence. The
 real backend status, elapsed-view clock, milestones, collected count and comment
 preview remain authoritative. The toy does not initiate requests, alter polling,
-change scores or simulate completion. Finishing the report unmounts the scene.
+change scores or simulate completion. Finishing the report keeps the scene and companion; leaving the analysis/home routes releases them.
 
 The scene shares the homepage's lazy Three.js chunk; its own code loads only if
-the wait lasts at least 400 ms. Reduced motion starts with a stage-specific static
+the route remains visible for at least 400 ms. Reduced motion starts with a stage-specific static
 SVG, with Space as explicit opt-in. It reacts to preference changes
 and keeps a poster on graphics failure. Hidden tabs suspend motion and resume on
 return; scrolling or phase/layout changes never suspend the fixed scene. Simple
-shared geometry, front-facing tiles, instanced sparks, a 1.25 pixel-ratio cap and no shadow maps, post-processing or
+shared geometry, front-facing tiles, a small foreground canvas, instanced sparks and a 1.25 pixel-ratio cap and no shadow maps, post-processing or
 external models keep rendering bounded; resources are disposed on unmount.
 This feature deploys with the website and requires no ingestion or inference
 Convex redeployment.
