@@ -175,14 +175,16 @@ for application, Apify and upstream-provider retention boundaries.
    measured from age, communities and brand mentions), no automation signals
    are reported and the score is 0 (`humanSignals`).
 9. **Comment estimates and commercial signals.** `signals.ts` measures, in
-   code, seller-style accounts among supporters, template and seller phrases,
-   store-owner outreach and copied short praise. Each comment with text gets an
+   code, shop-style accounts among supporters, template and seller phrases,
+   store-owner outreach, every short phrase copied across accounts, low-effort
+   praise and nonsense filler. Each comment with text gets an
    `astroturfEstimate` (0–100, with reasons): the larger of its rubric score and
    points for unnatural or generic text (from triage `realism`), seller, random
-   or default usernames, template phrases, outreach and copied praise. The
-   section score uses comment realism (share of endorsing comments at 50+),
-   coordination, commercial signals, rubric and history; one-sided support is
-   only a small bonus. At most 25 recommendations go to rubric scoring.
+   or default usernames, template phrases, outreach, copied praise and nonsense
+   filler. The section score uses comment realism (share of endorsing comments
+   at 50+), low-effort support, coordination (including copied praise),
+   commercial signals, rubric and history; one-sided support is only a small
+   bonus. At most 25 recommendations go to rubric scoring.
 10. **Submit.** `assemble.ts` builds the `AnalysisSubmission` and replaces
    accusatory model text. The worker checks it against the schema and every
    evidence reference, then POSTs it with a stable idempotency key.
@@ -217,10 +219,13 @@ unvalidated and should be reviewed with the detection-research owner.
 | Contract field | Computed as |
 | --- | --- |
 | `overallCoordinationRisk.score` | Comment-section astroturfing index, 0–100: a weighted mean of the parts below that could be measured, with weights renormalized over them. `null` only when fewer than 3 comments were analyzed. |
-| …rubric strength (40%) | Mean of the top three recommendation rubric scores ÷ 100; 0 when nothing recommends a product. |
-| …coordination (25%) | Strongest cluster's `coordinationScore` ÷ 100; 0 when no cluster formed. |
-| …history contrast (25%) | Sampled supportive users against sampled unsupportive users: the gap in the share of recent comments that mention the subject (a 30-point gap counts fully), and the gap in the share of accounts under 90 days old (a 50-point gap counts fully), averaged. Needs at least 2 sampled users with history on each side. |
-| …one-sided support (10%) | Supportive share of comments taking a side, mapped from 50% → 0 to 100% → 1; needs at least 5 such comments. |
+| …comment realism (30%) | Share of endorsing comments whose `astroturfEstimate` is 50 or more; 30% counts fully. Needs at least 5 endorsing comments. |
+| …low-effort support (15%) | Share of supportive comments that are three words or fewer or generic praise, with nonsense filler (unnatural text from accounts that neither support nor criticize) added to both counts, mapped from 50% → 0 to 90% → 1. Needs at least 10 supportive comments. |
+| …coordination (15%) | The larger of the strongest cluster's `coordinationScore` ÷ 100 and copied praise: the share of supportive comments repeating another account's short text (40 characters or fewer), where 30% counts fully; needs a phrase from at least 3 accounts and at least 5 supportive comments. |
+| …commercial signals (20%) | Shop-style accounts among accounts praising or asking about the product (30% counts fully, weight 0.4; needs 5 supportive accounts), template phrases (3 count fully, 0.3) and store-owner outreach (2 count fully, 0.15), renormalized. |
+| …rubric strength (10%) | Mean of the top three recommendation rubric scores ÷ 100; 0 when nothing recommends a product. |
+| …history contrast (10%) | Sampled supportive users against sampled unsupportive users: the gap in the share of recent comments that mention the subject (a 30-point gap counts fully), and the gap in the share of accounts under 90 days old (a 50-point gap counts fully), averaged. Needs at least 2 sampled users with history on each side; never measured on TikTok or YouTube. |
+| …one-sided support (bonus) | Supportive share of comments taking a side, mapped from 50% → 0 to 100% → 1; needs at least 5 such comments. Adds up to 10 points, only when the weighted parts reach 15. |
 | `…confidence` | 0.3, +0.25 if history contrast was measured, +0.15 with at least two scored recommendations (or none to score), +0.1 with complete coverage; at most 0.8. |
 | Axis score | For each recommendation, the points of fired rules mapped to the axis ÷ the axis's maximum points on that platform × 100. The axis takes the highest value. `null` if no rule on the axis could be evaluated. |
 | `semantic_coordination` | C1, C6, B2 |

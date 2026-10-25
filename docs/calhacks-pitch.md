@@ -161,7 +161,7 @@ For general prizes, the best narratives are People-First Social Impact, Technica
 | “Is it accurate?” | No validated accuracy study yet. Operational/schema checks establish a functioning pipeline, not detection quality. Next is a labeled evaluation with benign fan communities and commercial discussions, reporting false positives and separating related discussions across evaluation splits. |
 | “What do you keep?” | Live application records have fixed 24-hour expiry; owned Apify artifacts have a deletion queue with retries. Provider internal copies/backups have separate controls. The anonymized public example is an approved longer-lived exception. |
 
-Current section weights in [section.ts](../inference/convex/lib/inference/section.ts) are comment realism 35%, coordination 20%, commercial signals 20%, recommendation rubric 15%, and history contrast 10%, renormalized over measurable parts. One-sided support adds at most ten points after a minimum base threshold. These are design choices, not learned or validated weights. The older mapping table in `inference/README.md` has stale weights; use the implementation and ADR-013 for current behavior.
+Current section weights in [section.ts](../inference/convex/lib/inference/section.ts) are comment realism 30%, low-effort support 15%, coordination (including copied praise) 15%, commercial signals 20%, recommendation rubric 10%, and history contrast 10%, renormalized over measurable parts. One-sided support adds at most ten points after a minimum base threshold. These are design choices, not learned or validated weights; see the mapping table in `inference/README.md` and ADR-015.
 
 ## Preparation before judging
 

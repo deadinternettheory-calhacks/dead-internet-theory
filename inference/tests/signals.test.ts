@@ -29,6 +29,21 @@ function videoThread(): { graph: GraphEnvelope; triage: TriageOutput } {
   return { graph, triage: { subject: { label: 'Mini steam iron', kind: 'product', confidence: 0.8, evidenceRefs: [] }, comments } };
 }
 
+type Row = [handle: string, text: string, stance: TriageOutput['comments'][number]['stance'], realism: 'natural' | 'generic' | 'unnatural'];
+
+/** A synthetic video thread from rows; supportive comments praise the product. */
+function rowsThread(rows: Row[]): { graph: GraphEnvelope; triage: TriageOutput } {
+  const nodes: GraphEnvelope['nodes'] = [{ id: 'tiktok:discussion:v', type: 'discussion', platform: 'tiktok', kind: 'video', url: 'https://www.tiktok.com/@x/video/1', text: 'Foldable night light', authorId: null, createdAt: null, metrics: {} } as never];
+  const comments: TriageOutput['comments'] = [];
+  rows.forEach(([handle, text, stance, realism], i) => {
+    nodes.push({ id: `tiktok:author:${i}`, type: 'author', handle, displayName: null } as never);
+    nodes.push({ id: `tiktok:comment:${i}`, type: 'comment', authorId: `tiktok:author:${i}`, parentId: 'tiktok:discussion:v', text, createdAt: null, url: null, metrics: {}, contentStatus: 'visible' } as never);
+    comments.push({ commentId: `tiktok:comment:${i}`, stance, aboutProduct: stance === 'supportive' ? 'Night light' : null, recommendsProduct: null, recommendsSubject: stance === 'supportive', rationale: '', realism });
+  });
+  const graph = { investigationId: 'inv_r', platform: 'tiktok', rootId: 'tiktok:discussion:v', nodes, edges: [], coverage: { retrievedCommentCount: rows.length, reportedCommentCount: null, completeness: 'complete', limitations: [] } } as unknown as GraphEnvelope;
+  return { graph, triage: { subject: { label: 'Night light', kind: 'product', confidence: 0.8, evidenceRefs: [] }, comments } };
+}
+
 describe('username patterns', () => {
   it('tells seller, random, default and normal names apart', () => {
     expect(handleKind('guangzhou.sourcing')).toBe('seller');
@@ -37,6 +52,8 @@ describe('username patterns', () => {
     expect(handleKind('wkkvdqwsunsg4p')).toBe('random');
     expect(handleKind('addxvvaf14996hew')).toBe('random');
     expect(handleKind('user8661746914582')).toBe('default');
+    for (const shop of ['findoratrends', 'everydaysmartpicks_', 'gadgetgrab099', 'burstdrop8', 'camaleononline', 'tudodigital9', 'homemagictools', 'productoentendencia', 'achadinhos_br_store']) expect(handleKind(shop)).toBe('seller');
+    expect(handleKind('solowolfstudio')).toBe('normal');
     expect(handleKind('jennievillanueva14')).toBe('normal');
     expect(handleKind('lagorfexx')).toBe('normal');
   });
@@ -54,7 +71,42 @@ describe('thread commercial signals', () => {
   });
 });
 
+describe('low-effort praise flood', () => {
+  const praise = ['nice', 'good', 'wow', 'nice', 'good', 'lo quiero', 'nice', 'cool', 'good', 'nice', 'so cute', 'lo quiero'];
+  it('measures one-word praise, every repeated phrase and nonsense filler', () => {
+    const rows: Row[] = [
+      ...praise.map((t, i): Row => [`person${i}`, t, 'supportive', 'generic']),
+      ['shopveralo', 'Nice', 'supportive', 'generic'],
+      ['witts_deals_21', 'does it run on battery', 'neutral', 'natural'],
+      ['x8ugmrfbaf1k5ht7', 'Tutorial legendary camera think', 'unclear', 'unnatural'],
+      ['nqdqlmgkb6xm8hsu', 'grwm sad camera lose!', 'unclear', 'unnatural'],
+      ['realbuyer', 'Mine stopped holding a charge after a month.', 'critical', 'natural'],
+    ];
+    const { graph, triage } = rowsThread(rows);
+    const s = threadSignals(new GraphIndex(graph), triage);
+    expect(s.repeated.groups.slice(0, 3)).toEqual([{ text: 'nice', authors: 5 }, { text: 'good', authors: 3 }, { text: 'lo quiero', authors: 2 }]);
+    expect(s.repeated.supportive).toBe(10);
+    expect(s.lowEffort.filler).toEqual(['tiktok:comment:14', 'tiktok:comment:15']);
+    expect(s.flood).toBe(100);
+    // A shop account counts even when it only asks a question.
+    expect(s.sellerPraise.authors).toBe(2);
+    expect(s.duplication.score).toBe(100);
+  });
+
+  it('stays at 0 when supporters write real comments, and is not measured on small threads', () => {
+    const real: Row[] = Array.from({ length: 12 }, (_, i): Row => [`person${i}`, `I use it every night in the nursery, the warm setting ${i} is great`, 'supportive', 'natural']);
+    expect(threadSignals(new GraphIndex(rowsThread(real).graph), rowsThread(real).triage).flood).toBe(0);
+    const small = rowsThread(praise.slice(0, 6).map((t, i): Row => [`person${i}`, t, 'supportive', 'generic']));
+    expect(threadSignals(new GraphIndex(small.graph), small.triage).flood).toBeNull();
+  });
+});
+
 describe('per-comment estimate', () => {
+  it('flags nonsense filler from a random-looking account', () => {
+    const e = commentEstimate({ realism: 'unnatural', handle: 'x8ugmrfbaf1k5ht7', endorses: false, template: null, outreach: false, duplicate: false, filler: true, rubricScore: null });
+    expect(e).toEqual({ score: 45, reasons: ['Nonsense filler (typical bot padding)', 'Random-looking username'] });
+  });
+
   it('adds realism, username, phrase and duplicate points, and keeps the rubric score when higher', () => {
     const e = commentEstimate({ realism: 'unnatural', handle: 'guangzhou.sourcing', endorses: true, template: '"winning product"', outreach: false, duplicate: false, rubricScore: 8 });
     expect(e.score).toBe(100);

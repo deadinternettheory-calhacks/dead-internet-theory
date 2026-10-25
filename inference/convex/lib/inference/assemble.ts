@@ -132,14 +132,14 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
   const measuredAxis = (axis: AxisName): { score: number; refs: string[]; explanation: string } | null => {
     if (axis === 'promotional_intent' && thread.promotion.score > 0) {
       const parts = [
-        thread.sellerPraise.authors ? `${thread.sellerPraise.authors} of ${thread.sellerPraise.supportiveAuthors} supportive accounts have seller-style names` : '',
+        thread.sellerPraise.authors ? `${thread.sellerPraise.authors} of ${thread.sellerPraise.supportiveAuthors} accounts praising or asking about the product have shop-style names` : '',
         thread.templates.length ? `${thread.templates.length} comment(s) use seller or template phrases` : '',
         thread.outreach.length ? `${thread.outreach.length} comment(s) fish for the store owner` : '',
       ].filter(Boolean);
       return { score: thread.promotion.score, refs: thread.promotion.refs, explanation: `${AXIS_LABEL[axis]}: measured in the thread: ${parts.join('; ')}.` };
     }
     if (axis === 'semantic_coordination' && thread.duplicates) {
-      return { score: thread.duplication.score, refs: thread.duplication.refs, explanation: `${AXIS_LABEL[axis]}: ${thread.duplicates.authors} different accounts posted exactly "${thread.duplicates.text}".` };
+      return { score: thread.duplication.score, refs: thread.duplication.refs, explanation: `${AXIS_LABEL[axis]}: ${thread.repeated.supportive} supportive comments repeat another account's short text (${thread.repeated.groups.slice(0, 4).map(g => `"${g.text}" ×${g.authors}`).join(', ')}).` };
     }
     return null;
   };
@@ -240,7 +240,8 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
   // --- Per-comment astroturfing estimate (realism, username, phrases, duplicates, rubric) -------
   const templateBy = new Map(thread.templates.map(t => [t.commentId, t.label]));
   const outreachSet = new Set(thread.outreach);
-  const duplicateSet = new Set(thread.duplicates?.commentIds ?? []);
+  const duplicateSet = new Set(thread.duplicates ? thread.repeated.commentIds : []);
+  const fillerSet = new Set(thread.lowEffort.filler);
   const estimates: { score: number; endorses: boolean }[] = [];
   for (const assessment of commentAssessments) {
     const c = index.comment(assessment.commentId);
@@ -254,6 +255,7 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
       template: templateBy.get(c.id) ?? null,
       outreach: outreachSet.has(c.id),
       duplicate: duplicateSet.has(c.id),
+      filler: fillerSet.has(c.id),
       rubricScore: scoreById.get(c.id)?.score ?? null,
     });
     assessment.astroturfEstimate = estimate;

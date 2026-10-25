@@ -9,7 +9,7 @@ import type { CommentScore } from './scoring';
 import type { ThreadSignals } from './signals';
 
 /** Weights before renormalizing over the parts that could be measured. One-sided support is not a part: it adds a small bonus. */
-export const SECTION_WEIGHTS = { comments: 0.35, coordination: 0.2, commercial: 0.2, rubric: 0.15, historyContrast: 0.1 } as const;
+export const SECTION_WEIGHTS = { comments: 0.3, lowEffort: 0.15, coordination: 0.15, commercial: 0.2, rubric: 0.1, historyContrast: 0.1 } as const;
 /** A comment estimated at this or above counts as suspicious; this share of endorsing comments counts fully. */
 export const SUSPICIOUS_ESTIMATE = 50;
 export const FULL_SUSPICIOUS_SHARE = 0.3;
@@ -49,6 +49,7 @@ export interface SectionInput {
 
 export interface SectionParts {
   comments: number | null;
+  lowEffort: number | null;
   rubric: number | null;
   coordination: number | null;
   commercial: number | null;
@@ -110,13 +111,22 @@ export function sectionIndex(input: SectionInput): { score: Score; parts: Sectio
     notes.push(`Rubric strength ${Math.round(rubric * 100)}: the top ${top.length} recommendation(s) scored ${top.map(s => `${s.score} (${input.handle(s.commentId)})`).join(', ')} on the rubric.`);
   }
 
-  // Coordination: strongest cluster of recommendations that share coordination signals.
+  // Coordination: the stronger of the best cluster of recommendations sharing coordination
+  // signals and copied short praise (many accounts posting the same few words).
   let coordination: number | null = null;
-  if (input.noRecommendations || input.scored.length) {
+  const copied = input.thread.duplicates ? input.thread.duplication.score / 100 : 0;
+  if (input.noRecommendations || input.scored.length || copied > 0) {
     const best = input.clusters.slice().sort((a, b) => (b.coordinationScore ?? 0) - (a.coordinationScore ?? 0))[0];
-    coordination = best ? (best.coordinationScore ?? 0) / 100 : 0;
-    if (best) refs.push(...best.commentIds);
-    notes.push(best ? `Coordination ${Math.round(coordination * 100)}: ${best.commentIds.length} recommendations form the strongest cluster.` : 'Coordination 0: no cluster of recommendations shared coordination signals.');
+    const cluster = best ? (best.coordinationScore ?? 0) / 100 : 0;
+    coordination = Math.max(cluster, copied);
+    if (copied > cluster) {
+      const r = input.thread.repeated;
+      refs.push(...input.thread.duplication.refs.slice(0, 10));
+      notes.push(`Coordination ${Math.round(coordination * 100)}: ${r.supportive} supportive comments repeat another account's short text (${r.groups.slice(0, 4).map(g => `"${g.text}" ×${g.authors}`).join(', ')}).`);
+    } else {
+      if (best) refs.push(...best.commentIds);
+      notes.push(best ? `Coordination ${Math.round(coordination * 100)}: ${best.commentIds.length} recommendations form the strongest cluster.` : 'Coordination 0: no cluster of recommendations shared coordination signals.');
+    }
   }
 
   // Comment realism: share of endorsing comments whose per-comment estimate is high.
@@ -128,16 +138,24 @@ export function sectionIndex(input: SectionInput): { score: Score; parts: Sectio
     notes.push(`Comment realism ${Math.round(comments * 100)}: ${suspicious} of ${endorsing.length} endorsing comments are estimated at ${SUSPICIOUS_ESTIMATE}+ (unnatural text, seller or random usernames, template phrases, duplicates).`);
   }
 
+  // Low-effort flood: how much of the support is one- to three-word praise, generic reactions or nonsense filler.
+  let lowEffort: number | null = null;
+  const le = input.thread.lowEffort;
+  if (input.thread.flood !== null && le.share !== null) {
+    lowEffort = input.thread.flood / 100;
+    notes.push(`Low-effort support ${input.thread.flood}: ${le.commentIds.length} of ${le.supportive} supportive comments are three words or fewer or generic praise${le.filler.length ? `, and ${le.filler.length} comment(s) are nonsense filler` : ''} (${pct(le.share)}; half is ordinary, 90% counts fully).`);
+    refs.push(...le.filler, ...le.commentIds.slice(0, 5));
+  }
+
   // Commercial signals: seller-style accounts praising the product, template phrases, outreach, duplicate praise.
   const t = input.thread;
   const commercial = t.strength;
   const commercialNotes = [
-    t.sellerPraise.authors ? `${t.sellerPraise.authors} of ${t.sellerPraise.supportiveAuthors} supportive accounts have seller-style names` : '',
+    t.sellerPraise.authors ? `${t.sellerPraise.authors} of ${t.sellerPraise.supportiveAuthors} accounts praising or asking about the product have shop-style names` : '',
     t.templates.length ? `${t.templates.length} comment(s) use seller or template phrases (${[...new Set(t.templates.map(x => x.label))].join(', ')})` : '',
     t.outreach.length ? `${t.outreach.length} comment(s) fish for the store owner` : '',
-    t.duplicates ? `${t.duplicates.authors} different accounts posted exactly "${t.duplicates.text}"` : '',
   ].filter(Boolean);
-  notes.push(commercialNotes.length ? `Commercial signals ${Math.round(commercial * 100)}: ${commercialNotes.join('; ')}.` : 'Commercial signals 0: no seller accounts, template phrases, outreach or duplicate praise found.');
+  notes.push(commercialNotes.length ? `Commercial signals ${Math.round(commercial * 100)}: ${commercialNotes.join('; ')}.` : 'Commercial signals 0: no shop accounts, template phrases or outreach found.');
   refs.push(...t.sellerPraise.commentIds.slice(0, 8), ...t.templates.map(x => x.commentId), ...t.outreach);
 
   // History contrast: the random supportive sample against the random unsupportive baseline.
@@ -173,7 +191,7 @@ export function sectionIndex(input: SectionInput): { score: Score; parts: Sectio
     notes.push(`One-sided support ${Math.round(oneSided * 100)}: ${pct(share)} of comments taking a side were supportive.`);
   }
 
-  const parts: SectionParts = { comments, rubric, coordination, commercial, historyContrast, oneSided };
+  const parts: SectionParts = { comments, lowEffort, rubric, coordination, commercial, historyContrast, oneSided };
   const measured = (Object.keys(SECTION_WEIGHTS) as (keyof typeof SECTION_WEIGHTS)[]).filter(k => parts[k] !== null);
   if (input.analyzedCount < MIN_ANALYZED || measured.length === 0) {
     return {
@@ -205,7 +223,7 @@ export function sectionIndex(input: SectionInput): { score: Score; parts: Sectio
       explanation: [
         `Comment-section astroturfing index: ${value}/100 (${tierFor(value)}).`,
         ...notes,
-        `Weights: comment realism ${SECTION_WEIGHTS.comments * 100}%, coordination ${SECTION_WEIGHTS.coordination * 100}%, commercial signals ${SECTION_WEIGHTS.commercial * 100}%, rubric ${SECTION_WEIGHTS.rubric * 100}%, history contrast ${SECTION_WEIGHTS.historyContrast * 100}%, spread over the parts that could be measured; one-sided support adds up to ${ONE_SIDED_MAX_BONUS} points only when the rest reach ${ONE_SIDED_MIN_BASE}${bonus ? ` (+${bonus} here)` : ''}.`,
+        `Weights: comment realism ${SECTION_WEIGHTS.comments * 100}%, low-effort support ${SECTION_WEIGHTS.lowEffort * 100}%, coordination ${SECTION_WEIGHTS.coordination * 100}%, commercial signals ${SECTION_WEIGHTS.commercial * 100}%, rubric ${SECTION_WEIGHTS.rubric * 100}%, history contrast ${SECTION_WEIGHTS.historyContrast * 100}%, spread over the parts that could be measured; one-sided support adds up to ${ONE_SIDED_MAX_BONUS} points only when the rest reach ${ONE_SIDED_MIN_BASE}${bonus ? ` (+${bonus} here)` : ''}.`,
         sampleNote,
       ].join(' '),
       evidenceRefs: Array.from(new Set(refs)).filter(id => input.known.has(id)),

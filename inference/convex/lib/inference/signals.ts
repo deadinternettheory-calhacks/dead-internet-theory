@@ -8,7 +8,7 @@ import type { TriageOutput } from './outputs';
 import type { GraphIndex } from './packet';
 
 /** Handles that read like shops, sellers or deal accounts. */
-const SELLER_HANDLE = /(shop|store|official|sourcing|deals?|finds|mart\b|outlet|boutique|supply|wholesale|trading|dropship|ecom|commerce|amz|amazon|goods|achad|_home\b|home(co)?$|buyingonly|shoppingbuddy|smartbuy)/i;
+const SELLER_HANDLE = /(shop|store|official|sourcing|deals?|finds|trends|picks|gadget|drops?\d*$|online$|digital\d*$|tools$|producto|products?\b|mart\b|outlet|boutique|supply|wholesale|trading|dropship|ecom|commerce|amz|amazon|goods|achad|_home\b|home(co)?$|buyingonly|shoppingbuddy|smartbuy)/i;
 
 /** Phrases sellers and comment templates use; real customers rarely write them. */
 const TEMPLATE_PHRASES: { pattern: RegExp; label: string }[] = [
@@ -21,7 +21,7 @@ const TEMPLATE_PHRASES: { pattern: RegExp; label: string }[] = [
 ];
 
 /** Outreach from sellers or marketers fishing for the store owner. */
-const OUTREACH = /\b(store owner|shop owner|shopify( store)?|reach out to the (store|shop|owner)|conversation with the (store|shop|owner)|promote your (store|shop|product)|collab(oration)?\b|dm me for)/i;
+const OUTREACH = /\b(store owner|shop owner|shopify( store)?|online (stores?|shops?|business(es)?)\b|dropshipping|reach out to the (store|shop|owner)|conversation with the (store|shop|owner)|promote your (store|shop|product)|collab(oration)?\b|dm me for)/i;
 
 export interface ThreadSignals {
   /** Commenters with seller-style handles who praise or endorse the product. */
@@ -30,7 +30,13 @@ export interface ThreadSignals {
   outreach: string[];
   /** Largest group of distinct accounts posting the same short text. */
   duplicates: { text: string; commentIds: string[]; authors: number } | null;
-  /** 0-1 strength of the combined commercial evidence. */
+  /** Every short text posted by two or more accounts, and the supportive comments in those groups. */
+  repeated: { groups: { text: string; authors: number }[]; commentIds: string[]; supportive: number };
+  /** Supportive comments that are low-effort (three words or fewer, or generic praise), and nonsense filler. */
+  lowEffort: { commentIds: string[]; filler: string[]; supportive: number; share: number | null };
+  /** 0-100 index of how much of the support is low-effort praise or filler; null under 10 supportive comments. */
+  flood: number | null;
+  /** 0-1 strength of the commercial evidence (shop accounts, template phrases, outreach); copied praise is coordination, see duplication. */
   strength: number;
   /** 0-100 promotional index (seller praise, templates, outreach) and its evidence, for the promotional-intent axis. */
   promotion: { score: number; refs: string[] };
@@ -39,6 +45,8 @@ export interface ThreadSignals {
 }
 
 const clamp01 = (n: number) => Math.max(0, Math.min(1, n));
+/** The low-effort flood index needs at least this many supportive comments. */
+const MIN_FLOOD_SUPPORTIVE = 10;
 
 export function threadSignals(index: GraphIndex, triage: TriageOutput): ThreadSignals {
   const stance = new Map(triage.comments.map(c => [c.commentId, c]));
@@ -49,8 +57,10 @@ export function threadSignals(index: GraphIndex, triage: TriageOutput): ThreadSi
   };
 
   const supportiveAuthors = new Set(visible.filter(supportive).map(c => c.authorId));
-  const seller = visible.filter(c => supportive(c) && SELLER_HANDLE.test(index.handle(c.authorId) ?? ''));
+  // Shop accounts count when they praise the product or just engage (questions, reactions), not when they criticize it.
+  const seller = visible.filter(c => stance.get(c.id)?.stance !== 'critical' && (supportive(c) || stance.has(c.id)) && SELLER_HANDLE.test(index.handle(c.authorId) ?? ''));
   const sellerAuthors = new Set(seller.map(c => c.authorId));
+  const engagedAuthors = new Set([...supportiveAuthors, ...sellerAuthors]).size;
 
   const templates: ThreadSignals['templates'] = [];
   for (const c of visible) {
@@ -68,18 +78,44 @@ export function threadSignals(index: GraphIndex, triage: TriageOutput): ThreadSi
     groups.get(key)!.push(c);
   }
   let duplicates: ThreadSignals['duplicates'] = null;
+  const repeatedGroups: { text: string; authors: number }[] = [];
+  const repeatedIds: string[] = [];
   for (const [text, cs] of groups) {
     const authors = new Set(cs.map(c => c.authorId)).size;
     if (authors >= 3 && (!duplicates || authors > duplicates.authors)) duplicates = { text, commentIds: cs.map(c => c.id), authors };
+    if (authors >= 2) {
+      repeatedGroups.push({ text, authors });
+      repeatedIds.push(...cs.map(c => c.id));
+    }
   }
+  repeatedGroups.sort((a, b) => b.authors - a.authors || a.text.localeCompare(b.text));
+  const supportiveComments = visible.filter(supportive);
+  const repeatedSupportive = supportiveComments.filter(c => repeatedIds.includes(c.id)).length;
+
+  // Low-effort support: praise of three words or fewer, or judged generic. Filler: text that makes
+  // no sense here from an account that neither supports nor criticizes (typical bot padding).
+  const words = (text: string) => text.replace(/[^\p{L}\p{N}\s']/gu, ' ').trim().split(/\s+/).filter(Boolean).length;
+  const lowEffortIds = supportiveComments.filter(c => words(c.text) <= 3 || stance.get(c.id)?.realism === 'generic').map(c => c.id);
+  const filler = visible
+    .filter(c => {
+      const t = stance.get(c.id);
+      return !!t && !supportive(c) && t.stance !== 'critical' && t.realism === 'unnatural' && !t.aboutProduct;
+    })
+    .map(c => c.id);
+  const floodBase = supportiveComments.length + filler.length;
+  const lowShare = floodBase ? (lowEffortIds.length + filler.length) / floodBase : null;
+  // Half the support being low-effort is ordinary for short-video comments; 90% counts fully.
+  const flood = supportiveComments.length >= MIN_FLOOD_SUPPORTIVE && lowShare !== null ? Math.round(100 * clamp01((lowShare - 0.5) / 0.4)) : null;
 
   // Seller praise: 30% of supportive accounts counts fully. Templates: 3 comments count fully.
-  // Outreach: 2 comments count fully. Duplicates: 8 accounts count fully (common words like "good" are weak alone).
+  // Outreach: 2 comments count fully. Copied praise: 30% of supportive comments repeating
+  // another account's short text counts fully (common words like "good" are weak alone, so it
+  // needs at least 5 supportive comments and a group of 3).
   const parts = [
-    { w: 0.4, x: supportiveAuthors.size >= 5 ? clamp01(sellerAuthors.size / supportiveAuthors.size / 0.3) : 0 },
+    { w: 0.4, x: supportiveAuthors.size >= 5 ? clamp01(sellerAuthors.size / engagedAuthors / 0.3) : 0 },
     { w: 0.3, x: clamp01(templates.length / 3) },
     { w: 0.15, x: clamp01(outreach.length / 2) },
-    { w: 0.15, x: duplicates ? clamp01(duplicates.authors / 8) : 0 },
+    { w: 0.15, x: duplicates && supportiveComments.length >= 5 ? clamp01(repeatedSupportive / supportiveComments.length / 0.3) : 0 },
   ];
   const [seller_, templates_, outreach_, duplicates_] = parts;
   return {
@@ -87,12 +123,15 @@ export function threadSignals(index: GraphIndex, triage: TriageOutput): ThreadSi
       score: Math.round((100 * (seller_.w * seller_.x + templates_.w * templates_.x + outreach_.w * outreach_.x)) / (seller_.w + templates_.w + outreach_.w)),
       refs: [...seller.map(c => c.id), ...templates.map(t => t.commentId), ...outreach],
     },
-    duplication: { score: Math.round(100 * duplicates_.x), refs: duplicates?.commentIds ?? [] },
-    sellerPraise: { commentIds: seller.map(c => c.id), authors: sellerAuthors.size, supportiveAuthors: supportiveAuthors.size },
+    duplication: { score: Math.round(100 * duplicates_.x), refs: duplicates ? repeatedIds : [] },
+    sellerPraise: { commentIds: seller.map(c => c.id), authors: sellerAuthors.size, supportiveAuthors: engagedAuthors },
     templates,
     outreach,
     duplicates,
-    strength: parts.reduce((t, p) => t + p.w * p.x, 0),
+    repeated: { groups: repeatedGroups, commentIds: repeatedIds, supportive: repeatedSupportive },
+    lowEffort: { commentIds: lowEffortIds, filler, supportive: supportiveComments.length, share: lowShare },
+    flood,
+    strength: (seller_.w * seller_.x + templates_.w * templates_.x + outreach_.w * outreach_.x) / (seller_.w + templates_.w + outreach_.w),
   };
 }
 
@@ -132,6 +171,7 @@ export const ESTIMATE_POINTS = {
   template: 30,
   outreach: 25,
   duplicate: 10,
+  filler: 30,
 } as const;
 
 export function commentEstimate(args: {
@@ -141,6 +181,8 @@ export function commentEstimate(args: {
   template: string | null;
   outreach: boolean;
   duplicate: boolean;
+  /** Text that makes no sense here, from an account neither supporting nor criticizing. */
+  filler?: boolean;
   rubricScore: number | null;
 }): CommentEstimate {
   const reasons: string[] = [];
@@ -150,7 +192,8 @@ export function commentEstimate(args: {
   if (args.endorses && args.realism === 'unnatural') add(ESTIMATE_POINTS.unnatural, 'Unnatural or ad-like text');
   if (args.endorses && args.realism === 'generic') add(ESTIMATE_POINTS.generic, 'Generic praise');
   const kind = handleKind(args.handle);
-  if (args.endorses || args.outreach) {
+  if (args.filler) add(ESTIMATE_POINTS.filler, 'Nonsense filler (typical bot padding)');
+  if (args.endorses || args.outreach || args.filler) {
     if (kind === 'seller') add(ESTIMATE_POINTS.sellerHandle, 'Seller-style username');
     if (kind === 'random') add(ESTIMATE_POINTS.randomHandle, 'Random-looking username');
     if (kind === 'default') add(ESTIMATE_POINTS.defaultHandle, 'Default username');

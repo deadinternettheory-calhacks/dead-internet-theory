@@ -3930,11 +3930,15 @@
       "overallCoordinationRisk": {
         "score": 0,
         "confidence": 0.45,
-        "explanation": "Comment-section astroturfing index: 0/100 (Minimal). Rubric strength 0: the top 3 recommendation(s) scored 0 (u/commenter2), 0 (u/commenter3), 0 (u/commenter9) on the rubric. Coordination 0: no cluster of recommendations shared coordination signals. Comment realism 0: 0 of 66 endorsing comments are estimated at 50+ (unnatural text, seller or random usernames, template phrases, duplicates). Commercial signals 0: no seller accounts, template phrases, outreach or duplicate praise found. History contrast not measured: it needs at least 2 sampled users with history in each group (supportive 0, unsupportive 0). One-sided support 80: 90% of comments taking a side were supportive. Weights: comment realism 35%, coordination 20%, commercial signals 20%, rubric 15%, history contrast 10%, spread over the parts that could be measured; one-sided support adds up to 10 points only when the rest reach 15. Histories came from a random sample of 6 of 51 supportive and 6 of 10 unsupportive users.",
+        "explanation": "Comment-section astroturfing index: 0/100 (Minimal). Rubric strength 0: the top 3 recommendation(s) scored 0 (u/commenter2), 0 (u/commenter3), 0 (u/commenter9) on the rubric. Coordination 0: no cluster of recommendations shared coordination signals. Comment realism 0: 0 of 66 endorsing comments are estimated at 50+ (unnatural text, seller or random usernames, template phrases, duplicates). Low-effort support 0: 5 of 63 supportive comments are three words or fewer or generic praise (8%; half is ordinary, 90% counts fully). Commercial signals 0: no shop accounts, template phrases or outreach found. History contrast not measured: it needs at least 2 sampled users with history in each group (supportive 0, unsupportive 0). One-sided support 80: 90% of comments taking a side were supportive. Weights: comment realism 30%, low-effort support 15%, coordination 15%, commercial signals 20%, rubric 10%, history contrast 10%, spread over the parts that could be measured; one-sided support adds up to 10 points only when the rest reach 15. Histories came from a random sample of 6 of 51 supportive and 6 of 10 unsupportive users.",
         "evidenceRefs": [
           "reddit:comment:example_c002",
           "reddit:comment:example_c003",
-          "reddit:comment:example_c010"
+          "reddit:comment:example_c010",
+          "reddit:comment:example_c016",
+          "reddit:comment:example_c061",
+          "reddit:comment:example_c073",
+          "reddit:comment:example_c090"
         ]
       },
       "axes": [
