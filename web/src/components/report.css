@@ -88,9 +88,9 @@
 
 /* Result: score and verdict in one card. */
 .result-card { display: flex; align-items: center; gap: 28px; padding: 24px 28px; margin-bottom: 14px; border-left: 4px solid #8a9c91; }
-.result-card.tone-low { --result-color: #76a58c; border-left-color: var(--result-color); }
-.result-card.tone-medium { --result-color: #d3a85a; border-left-color: var(--result-color); }
-.result-card.tone-high { --result-color: #c8756c; border-left-color: var(--result-color); }
+.result-card.tone-low, .score-breakdown strong.tone-low { --result-color: #76a58c; border-left-color: var(--result-color); }
+.result-card.tone-medium, .score-breakdown strong.tone-medium { --result-color: #d3a85a; border-left-color: var(--result-color); }
+.result-card.tone-high, .score-breakdown strong.tone-high { --result-color: #c8756c; border-left-color: var(--result-color); }
 .result-score { display: flex; flex-direction: column; align-items: center; min-width: 76px; }
 .result-score strong { color: var(--result-color, var(--text)); font-size: 48px; line-height: 1; font-weight: 600; letter-spacing: -.04em; }
 .result-score span { font-size: 12px; color: var(--muted); margin-top: 4px; }
@@ -165,7 +165,7 @@
 .score-breakdown > div { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border); }
 .score-breakdown dt { font-weight: 550; }
 .score-breakdown dd { margin: 0; }
-.score-breakdown dd > strong { font-variant-numeric: tabular-nums; }
+.score-breakdown dd > strong { color: var(--result-color); font-variant-numeric: tabular-nums; }
 .score-breakdown small { color: var(--muted); font-weight: 400; }
 .score-breakdown dd p { margin: 2px 0 0; color: var(--muted); }
 .score-calculation-notes { margin: 16px 0; color: var(--muted); font-size: 12px; }

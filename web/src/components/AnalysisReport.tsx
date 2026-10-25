@@ -1,5 +1,5 @@
 import { scoreExplanation } from '../analysis/scoreExplanation';
-import type { Report } from '../analysis/report';
+import { verdictFor, type Report } from '../analysis/report';
 import { SourceLink, formatTime } from './EvidenceQuote';
 import { ReportFindings } from './ReportFindings';
 import { AccountSignals } from './AccountSignals';
@@ -40,7 +40,7 @@ function ResultCard({ report }: { report: Report }) {
       {report.index && <div className="index-note">
         {breakdown ? <>
           <dl className="score-breakdown">{breakdown.parts.map(part => <div key={part.label}>
-            <dt>{part.label}</dt><dd><strong>{part.score}<small>/100</small></strong><p>{part.reason}</p></dd>
+            <dt>{part.label}</dt><dd><strong className={`tone-${verdictFor(part.score, '').tone}`}>{part.score}<small>/100</small></strong><p>{part.reason}</p></dd>
           </div>)}</dl>
           <p className="score-calculation-notes">{breakdown.notes}</p>
         </> : <p>{report.index.explanation}</p>}
