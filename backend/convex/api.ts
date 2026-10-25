@@ -13,7 +13,17 @@ import {
 } from "../src/core";
 import { authorize, type Principal } from "../src/auth";
 import { source } from "../src/url";
-import { get, put, immutable, type Ctx } from "./db";
+import { get, put, immutable, deadline, type Ctx } from "./db";
+import {
+  sourceCacheKey,
+  ownerCacheKey,
+  reusable,
+  backing,
+  resourceView,
+  graphView,
+  analysisView,
+  enrichmentView,
+} from "./reuse";
 import { checkAnchors, checkAnalysis } from "../src/invariants";
 const id = (prefix: string) =>
   `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2)}`;
@@ -136,39 +146,90 @@ async function dispatch(
   }
   let result: { status: number; body: unknown };
   let commit: (() => Promise<void>) | undefined;
+  let createsWork = false;
+  const original = invId && inv ? await backing(ctx, inv, invId) : undefined;
+  if (post && inv?.reusedFrom)
+    throw new ApiFault(
+      409,
+      "INVESTIGATION_REUSED",
+      "A reused investigation is a read-only view of existing work",
+    );
   if (!invId && post) {
     const req = validate("InvestigationCreateRequest", a.body);
     const resolved = source(req.sourceUrl);
     const mode = providerMode();
-    const investigationId = id("inv");
-    const resource = validateOutput("InvestigationResource", {
-      schemaVersion: "1.0.0",
-      investigationId,
-      sourceUrl: resolved.url,
-      platform: resolved.platform,
-      ingestionStatus: "queued",
-      analysisStatus: "waiting_for_graph",
-      graphRevision: null,
-      graphFingerprint: null,
-      createdAt: iso(now),
-      updatedAt: iso(now),
-    });
-    result = { status: 202, body: resource };
-    commit = async () => {
-      await put(ctx, "investigations", investigationId, {
-        owner: p.sub,
-        providerMode: mode,
-        resource,
+    const cacheKey = await sourceCacheKey(resolved.url, mode);
+    const cached = await reusable(ctx, cacheKey, mode);
+    if (cached) {
+      const ownKey = await ownerCacheKey(cacheKey, p.sub);
+      const ownEntry = await get(ctx, "cache", ownKey);
+      const own = ownEntry
+        ? await get(ctx, "investigations", ownEntry.investigationId)
+        : undefined;
+      const existingId =
+        cached.inv.owner === p.sub
+          ? cached.id
+          : own?.owner === p.sub && own.reusedFrom === cached.id
+            ? ownEntry.investigationId
+            : undefined;
+      const investigationId = existingId ?? id("inv");
+      const resource = await resourceView(
+        ctx,
+        cached.inv,
+        cached.id,
+        investigationId,
+      );
+      result = { status: 202, body: resource };
+      commit = async () => {
+        if (!existingId) {
+          await put(ctx, "investigations", investigationId, {
+            owner: p.sub,
+            providerMode: mode,
+            reusedFrom: cached.id,
+            resource,
+          });
+          await put(ctx, "cache", ownKey, {
+            investigationId,
+            expires: cached.expires,
+          });
+        }
+      };
+    } else {
+      createsWork = true;
+      const investigationId = id("inv");
+      const resource = validateOutput("InvestigationResource", {
+        schemaVersion: "1.0.0",
+        investigationId,
+        sourceUrl: resolved.url,
+        platform: resolved.platform,
+        ingestionStatus: "queued",
+        analysisStatus: "waiting_for_graph",
+        graphRevision: null,
+        graphFingerprint: null,
+        createdAt: iso(now),
+        updatedAt: iso(now),
       });
-      await queue(ctx, "ingest", investigationId);
-    };
+      result = { status: 202, body: resource };
+      commit = async () => {
+        await put(ctx, "investigations", investigationId, {
+          owner: p.sub,
+          providerMode: mode,
+          resource,
+        });
+        await queue(ctx, "ingest", investigationId);
+        await put(ctx, "cache", cacheKey, {
+          investigationId,
+          expires: await deadline(ctx, "investigations", investigationId),
+        });
+      };
+    }
   } else if (invId && !post && !part) {
     result = {
       status: 200,
-      body: validateOutput("InvestigationResource", inv.resource),
+      body: await resourceView(ctx, original!.inv, original!.id, invId),
     };
   } else if (invId && part === "graph" && !enrId && !post) {
-    const graph = await get(ctx, "graphs", invId);
+    const graph = await graphView(ctx, original!.id, invId);
     if (!graph) throw new ApiFault(409, "NOT_READY", "Graph is not ready");
     if (new TextEncoder().encode(stable(graph)).length > limits().graphBytes)
       throw new ApiFault(
@@ -178,6 +239,7 @@ async function dispatch(
       );
     result = { status: 200, body: validateOutput("GraphEnvelope", graph) };
   } else if (invId && part === "enrichments" && !enrId && post) {
+    createsWork = true;
     const req = validate("EnrichmentRequest", a.body);
     const graph = await get(ctx, "graphs", invId);
     if (!graph) throw new ApiFault(409, "NOT_READY", "Graph is not ready");
@@ -198,13 +260,20 @@ async function dispatch(
       await queue(ctx, "enrich", enrichmentId);
     };
   } else if (invId && part === "enrichments" && enrId && !post) {
-    const enr = await get(ctx, "enrichments", enrId);
-    if (!enr || enr.resource.investigationId !== invId)
-      throw new ApiFault(404, "ENRICHMENT_NOT_FOUND", "Enrichment not found");
-    result = {
-      status: 200,
-      body: validateOutput("EnrichmentJob", enr.resource),
-    };
+    if (inv.reusedFrom) {
+      const job = await enrichmentView(ctx, original!.id, invId, enrId);
+      if (!job)
+        throw new ApiFault(404, "ENRICHMENT_NOT_FOUND", "Enrichment not found");
+      result = { status: 200, body: job };
+    } else {
+      const enr = await get(ctx, "enrichments", enrId);
+      if (!enr || enr.resource.investigationId !== invId)
+        throw new ApiFault(404, "ENRICHMENT_NOT_FOUND", "Enrichment not found");
+      result = {
+        status: 200,
+        body: validateOutput("EnrichmentJob", enr.resource),
+      };
+    }
   } else if (invId && part === "analysis" && !enrId && post) {
     const req = validate("AnalysisSubmission", a.body, 422);
     const graph = await get(ctx, "graphs", invId);
@@ -257,7 +326,7 @@ async function dispatch(
       await put(ctx, "investigations", invId, inv);
     };
   } else if (invId && part === "analysis" && !enrId && !post) {
-    const analysis = await get(ctx, "analyses", invId);
+    const analysis = await analysisView(ctx, original!.id, invId);
     if (!analysis)
       throw new ApiFault(409, "ANALYSIS_NOT_READY", "Analysis is not ready");
     result = {
@@ -275,7 +344,7 @@ async function dispatch(
         "Hourly submission limit reached",
         true,
       );
-    if (result.status === 202) {
+    if (result.status === 202 && createsWork) {
       const jobs = await ctx.db
         .query("jobs")
         .withIndex("status_due", (q) => q.eq("status", "queued"))

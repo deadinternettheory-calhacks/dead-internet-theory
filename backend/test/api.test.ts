@@ -493,6 +493,8 @@ it("isolates foreign enrichment jobs and returns structured not-found errors", a
     inference,
   );
   await drain();
+  // A new cache epoch creates genuinely independent work for this isolation check.
+  vi.stubEnv("RESULT_CACHE_VERSION", "foreign-investigation");
   const otherInv = await call(
     "POST",
     "/v1/investigations",
@@ -549,7 +551,11 @@ it("deduplicates repeated-author candidates across distinct anchors and reuses t
     )
   ).value;
   expect(resource.results).toHaveLength(2);
-  expect(await t.run((ctx) => ctx.db.query("cache").collect())).toHaveLength(1);
+  expect(
+    (await t.run((ctx) => ctx.db.query("cache").collect())).filter(
+      (row) => row.data.set,
+    ),
+  ).toHaveLength(1);
   const snapshotCount = (
     await t.run((ctx) => ctx.db.query("snapshots").collect())
   ).length;
@@ -653,7 +659,13 @@ it("freezes enrichment cache misses before an unrelated job fills the cache", as
   const { emptySet } = await import("../src/fixture");
   await t.run((ctx) =>
     ctx.db.insert("cache", {
-      key: stable(["fixture", "reddit", pair.authorId, "authored-150-v1"]),
+      key: stable([
+        "fixture",
+        "reddit",
+        pair.authorId,
+        "authored-bounded-v2",
+        40,
+      ]),
       data: { set: emptySet("unavailable"), expires: Date.now() + 3600000 },
     }),
   );
@@ -677,7 +689,13 @@ it("keeps the original cache hit for a running enrichment after its cache entry 
   const { fixtureHistory } = await import("../src/fixture");
   await t.run((ctx) =>
     ctx.db.insert("cache", {
-      key: stable(["fixture", "reddit", pair.authorId, "authored-150-v1"]),
+      key: stable([
+        "fixture",
+        "reddit",
+        pair.authorId,
+        "authored-bounded-v2",
+        40,
+      ]),
       data: {
         set: fixtureHistory(pair.authorId, "original-candidate-snapshot"),
         expires: Date.now() + 1,

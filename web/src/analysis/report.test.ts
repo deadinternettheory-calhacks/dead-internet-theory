@@ -28,6 +28,12 @@ describe('analysis report', () => {
     expect(report.coverage.histories).toBe('6 account histories requested: 5 complete, 1 partial.');
   });
 
+  it('preserves the original collection time when an existing report is reused', () => {
+    const collectedAt = '2026-10-24T08:00:00Z';
+    const stored = buildReport(testDemo.analysis, { ...testDemo.graph, coverage: { ...testDemo.graph.coverage, collectedAt } }, testDemo.enrichments);
+    expect(stored.coverage.collectedAt).toBe(collectedAt);
+  });
+
   it('keeps every axis citation available even when findings share quotes', () => {
     const semantic = report.axes.find(x => x.axis === 'semantic_coordination')!;
     const temporal = report.axes.find(x => x.axis === 'temporal_coordination')!;

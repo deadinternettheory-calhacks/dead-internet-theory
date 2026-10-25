@@ -4,7 +4,10 @@ import { sample } from "../src/history";
 import { normalize } from "../src/graph";
 import { fixtureDiscussion, fixtureUrls } from "../src/fixture";
 import type { Model } from "../src/core";
-afterEach(() => vi.unstubAllEnvs());
+afterEach(() => {
+  vi.unstubAllEnvs();
+  vi.restoreAllMocks();
+});
 
 const author: Model<"AuthorNode"> = {
   id: "reddit:author:t2_alex",
@@ -150,14 +153,183 @@ it("does not associate mismatched native authors or explicit post rows with comm
   expect(set.comments).toEqual([]);
 });
 
+it("accepts Reddit native-ID prefixes and resolves requested handle-only graph identities without overriding conflicting IDs", () => {
+  const bare = { ...author, id: "reddit:author:alex", nativeId: "alex" };
+  const byHandle = {
+    ...author,
+    id: "reddit:author:handle:synthetic_alex",
+    nativeId: null,
+    identityQuality: "handle" as const,
+  };
+  expect(collect([row()], [bare]).get(bare.id)!.comments).toHaveLength(1);
+  expect(collect([row()], [byHandle]).get(byHandle.id)!.comments).toHaveLength(
+    1,
+  );
+  expect(
+    collect([{ ...row(), author_fullname: "t2_someone_else" }], [bare]).get(
+      bare.id,
+    )!.comments,
+  ).toHaveLength(0);
+});
+
 it("marks a capped author's candidate pool truncated independently of another author", () => {
   vi.stubEnv("HISTORY_CANDIDATES_PER_AUTHOR", "150");
   const sets = collect(
     Array.from({ length: 151 }, (_, i) => row(`history${i}`)),
   );
-  expect(sets.get(author.id)!.comments).toHaveLength(150);
+  expect(sets.get(author.id)!.coverage.candidateFetchedCount).toBe(150);
+  expect(sets.get(author.id)!.comments.length).toBeGreaterThanOrEqual(10);
+  expect(JSON.stringify(sets.get(author.id)!.comments).length).toBeLessThan(
+    18000,
+  );
   expect(sets.get(author.id)!.coverage.providerTruncated).toBe(true);
   expect(sets.get(other.id)!.coverage.candidateFetchedCount).toBe(0);
+});
+
+it("retains evidence for all 25 authors within the job budget even with large Unicode comments", async () => {
+  const { retainHistoryRows, slimRedditHistoryRow } =
+    await import("../src/providers");
+  vi.stubEnv("HISTORY_CANDIDATES_PER_AUTHOR", "150");
+  const authors = Array.from({ length: 25 }, (_, i) => ({
+    ...author,
+    id: `reddit:author:t2_user${i}`,
+    nativeId: `t2_user${i}`,
+    handle: `user${i}`,
+  }));
+  const task = plan("reddit", "history", undefined, authors)[0];
+  for (const a of authors)
+    retainHistoryRows(
+      "reddit",
+      task,
+      Array.from({ length: 150 }, (_, i) =>
+        slimRedditHistoryRow({
+          ...row(`${a.handle}_${i}`),
+          author: a.handle,
+          author_fullname: a.nativeId,
+          body: "語".repeat(2000),
+        }),
+      ),
+    );
+  expect(new TextEncoder().encode(JSON.stringify(task)).length).toBeLessThan(
+    450000,
+  );
+  Object.assign(task, {
+    run: { id: "SYNTHETIC", status: "SUCCEEDED" },
+    done: true,
+  });
+  const sets = historySets(
+    "reddit",
+    authors.map((a) => a.id),
+    [task],
+    "synthetic-snapshot",
+  );
+  for (const a of authors) {
+    const set = sets.get(a.id)!;
+    expect(set.comments.length).toBeGreaterThan(0);
+    expect(set.coverage.candidateFetchedCount).toBe(150);
+    expect(set.coverage.providerTruncated).toBe(true);
+    expect(set.status).toBeUndefined();
+  }
+  expect(
+    new TextEncoder().encode(JSON.stringify([...sets])).length,
+  ).toBeLessThan(500000);
+});
+
+it("shrinks oversized history pages and skips one unreadable row without restarting the paid run or losing later authors", async () => {
+  const { advance, Apify } = await import("../src/providers");
+  const { ApiFault } = await import("../src/core");
+  vi.stubEnv("PROVIDER_MODE", "live");
+  vi.stubEnv("PROVIDER_AUTHORIZATION_APPROVED", "true");
+  vi.stubEnv("RETENTION_POLICY_REF", "SYNTHETIC");
+  vi.stubEnv("APIFY_TOKEN", "SYNTHETIC");
+  const task = plan("reddit", "history", undefined, [author, other])[0];
+  Object.assign(task, {
+    run: {
+      id: "SYNTHETIC",
+      status: "SUCCEEDED",
+      defaultDatasetId: "synthetic-dataset",
+    },
+  });
+  const start = vi.spyOn(Apify.prototype, "start");
+  const items = vi
+    .spyOn(Apify.prototype, "items")
+    .mockImplementation(async (_dataset, offset, limit) => {
+      if (offset === 0 || limit > 2)
+        throw new ApiFault(
+          500,
+          "PROVIDER_SIZE_LIMIT",
+          "SYNTHETIC oversized page",
+        );
+      return offset === 1
+        ? [
+            {
+              ...row("ben-history"),
+              author: other.handle,
+              author_fullname: other.nativeId,
+            },
+          ]
+        : offset === 2
+          ? [row("alex-history")]
+          : [];
+    });
+  let state = { tasks: [task], index: 0, began: Date.now() };
+  let result;
+  for (let n = 0; n < 5; n++) {
+    result = await advance({
+      platform: "reddit",
+      kind: "history",
+      state,
+      reserve: vi.fn(),
+      observe: vi.fn().mockResolvedValue(true),
+    });
+    if (result.done) break;
+    state = result.state;
+  }
+  expect(result?.done).toBe(true);
+  expect(start).not.toHaveBeenCalled();
+  expect(items.mock.calls.some(([, offset]) => offset === 2)).toBe(true);
+  const sets = historySets(
+    "reddit",
+    [author.id, other.id],
+    [task],
+    "synthetic-snapshot",
+  );
+  expect(sets.get(author.id)!.comments).toHaveLength(1);
+  expect(sets.get(other.id)!.comments).toHaveLength(1);
+  expect(sets.get(author.id)!.coverage.limitations.join(" ")).toContain(
+    "Oversized provider rows",
+  );
+});
+
+it("keeps valid returned comments from an interrupted provider run and derives observed source IDs from permalinks", async () => {
+  const task = plan("reddit", "history", undefined, [author])[0];
+  Object.assign(task, {
+    rows: [{ ...row("usable"), link_id: null }],
+    run: { id: "SYNTHETIC", status: "TIMED-OUT" },
+    done: true,
+    truncated: true,
+  });
+  const set = historySets(
+    "reddit",
+    [author.id],
+    [task],
+    "synthetic-snapshot",
+  ).get(author.id)!;
+  const a = await anchor();
+  const result = sample(
+    { authorId: author.id, anchorCommentId: a.id },
+    a,
+    "demo",
+    set,
+    14,
+    Date.parse("2026-10-24T00:00:00Z"),
+  );
+  expect(result.status).toBe("partial");
+  expect(result.comments).toHaveLength(1);
+  expect(result.comments[0]?.sourceDiscussionNativeId).toBe("other");
+  expect(result.coverage.limitations.join(" ")).toContain(
+    "valid returned comments were retained",
+  );
 });
 
 it("omits hidden scores and still accepts untyped comments from older persisted plans", () => {

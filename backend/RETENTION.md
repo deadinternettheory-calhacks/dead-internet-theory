@@ -9,6 +9,15 @@ Existing rows receive deadlines based on their original creation time during
 rollout. Cached history pools are removed at their configured cache expiry,
 which is one hour by default and never longer than 24 hours.
 
+Submitting the same platform/post identity reuses its retained analysis or joins
+the existing run. Each browser keeps its own owner-scoped investigation view;
+the underlying graph, analysis and histories are stored once. Views and link-cache
+pointers inherit the original investigation's fixed deadline. Hits do not extend
+retention, repeat collection, send another ready event or start more model runs.
+Views become unavailable if their backing investigation is removed or expires.
+For source corrections, remove the backing investigation and reconcile its owned
+provider artifacts; deleting one browser view only removes that view.
+
 Idempotency receipts keep their contractual 24-hour lifetime after each POST,
 including when the investigation expires sooner. They store a request hash and
 authorization/receipt metadata, not the original request body or report text.

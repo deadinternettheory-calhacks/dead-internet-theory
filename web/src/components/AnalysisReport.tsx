@@ -82,10 +82,12 @@ export function AnalysisReport({ report }: { report: Report }) {
     <aside className="limitations">
       <h2>Coverage</h2>
       <dl className="coverage-list">
+        {formatTime(coverage.collectedAt) && <div><dt>Comments collected</dt><dd><time dateTime={coverage.collectedAt!}>{formatTime(coverage.collectedAt)}</time></dd></div>}
         <div><dt>Comments</dt><dd>{coverage.analyzed} analyzed{coverage.reported !== null ? ` of ${coverage.reported}` : ''}</dd></div>
         <div><dt>Stance</dt><dd>{s.supportive} supportive · {s.critical} critical · {s.mixed} mixed · {s.neutral + s.unclear} neutral</dd></div>
         <div><dt>Histories</dt><dd>{historiesReturned} of {report.histories.length} sampled users</dd></div>
       </dl>
+      {!report.synthetic && <p>Stored results may be reused for the same post until their original 24-hour expiry.</p>}
       {report.limitations.length > 0 && <details className="coverage-details"><summary>Details</summary><ul className="limitation-list">{report.limitations.map(l => <li key={l}>{l}</li>)}</ul></details>}
     </aside>
   </div>;

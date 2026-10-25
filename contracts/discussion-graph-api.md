@@ -83,6 +83,12 @@ A graph is immutable for its `(investigationId, graphRevision)`. **Unlike the v0
 - `coverage.retrievedCommentCount` is the number of unique retained comment nodes, **not the number of all discussion comments**. `reportedCommentCount` may be null, and `truncated` may be null if unknowable. `completeness:'complete'` is permitted only with independent evidence of exhaustive retrieval; a successful Apify run is insufficient. Record sort order, platform constraints, missing replies, timestamp precision, run provenance, collection time and raw snapshot reference.
 - Raw Apify output is stored in the backend's protected snapshot store; the returned `sourceSnapshotRef` is an opaque lookup key, never an exposed Apify access token or unrestricted dataset URL.
 
+### Retained-result reuse
+
+Creating an investigation may reuse retained work for the same canonical platform/post identity and compatible collection policy. A completed hit returns the existing completed state with HTTP 202; an in-flight hit follows the existing work without another provider run or ready event. Different principals receive separate owner-scoped, read-only investigation views; original IDs remain inaccessible. View graphs have consistently recomputed fingerprints, and their analysis/enrichment resources reference the view. Stored source content is not duplicated or modified. A write to a reused view returns 409 `INVESTIGATION_REUSED`; inference writes target the original investigation.
+
+Reuse and view expiry never exceed the backing investigation's original 24-hour deadline. Source removal or missing required evidence invalidates reuse. Normal request idempotency and per-principal rate limits remain unchanged. Collection timestamps remain original so the frontend can show data age.
+
 ## 5. Author-history sampling algorithm
 
 **Inference chooses the author; ingestion chooses the historical sample.** `authors[]` entries must reference a graph author and a graph comment authored by that author; mismatch is a 422. Duplicate identical `(authorId, anchorCommentId)` pairs in one request are rejected with 422 `DUPLICATE_AUTHOR_ANCHOR`; multiple distinct anchors for the same author are allowed. Deduplicate provider lookups by author but produce one result per accepted pair. For user-selected authors from YouTube or TikTok, return `unsupported` without invoking Apify.
@@ -136,7 +142,7 @@ All errors follow `{ "error": {"code", "message", "retryable", "requestId", "det
 | 400 | `INVALID_REQUEST`, `INVALID_URL` (unsupported domains, invalid syntax) |
 | 401 / 403 | `UNAUTHORIZED`, `FORBIDDEN` |
 | 404 | `INVESTIGATION_NOT_FOUND`, `ENRICHMENT_NOT_FOUND` |
-| 409 | `NOT_READY`, `ANALYSIS_NOT_READY`, `STALE_GRAPH_REVISION`, `ANALYSIS_ALREADY_SUBMITTED`, `IDEMPOTENCY_CONFLICT` |
+| 409 | `NOT_READY`, `ANALYSIS_NOT_READY`, `STALE_GRAPH_REVISION`, `ANALYSIS_ALREADY_SUBMITTED`, `IDEMPOTENCY_CONFLICT`, `INVESTIGATION_REUSED` |
 | 422 | `ANCHOR_AUTHOR_MISMATCH`, `DUPLICATE_AUTHOR_ANCHOR`, `UNKNOWN_AUTHOR`, `UNKNOWN_ANCHOR`, `INVALID_EVIDENCE_REF`, `INVALID_ANALYSIS` |
 | 413 | `DISCUSSION_TOO_LARGE` (configured graph-size guard) |
 | 429 | `RATE_LIMITED` (honor `Retry-After` when set) |

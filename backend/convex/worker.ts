@@ -103,7 +103,13 @@ export const tick = action({
           HistoryContext | undefined;
         const mode = context?.mode ?? (work.providerMode as ProviderMode);
         const cacheKey = (author: string) =>
-          stable([mode, graph.platform, author, "authored-150-v1"]);
+          stable([
+            mode,
+            graph.platform,
+            author,
+            "authored-bounded-v2",
+            limits().historyCandidates,
+          ]);
         const sets = new Map<string, CandidateSet>(
           Object.entries(context?.sets ?? {}),
         );

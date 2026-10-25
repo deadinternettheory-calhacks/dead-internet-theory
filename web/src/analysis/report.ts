@@ -54,7 +54,7 @@ export interface Report {
   accounts: AccountRow[];
   comments: CommentRow[];
   clusters: { id: string; size: number; explanation: string }[];
-  coverage: { analyzed: number; retrieved: number; reported: number | null; completeness: string; sentiment: Record<Stance, number>; histories: string | null };
+  coverage: { analyzed: number; retrieved: number; reported: number | null; completeness: string; sentiment: Record<Stance, number>; histories: string | null; collectedAt: string | null };
   limitations: string[];
   inferenceVersion: string;
 }
@@ -181,6 +181,7 @@ export function buildReport(analysis: AnalysisResource, graph: GraphEnvelope, en
     comments: rows.sort((x, y) => Number(y.isRecommendation) - Number(x.isRecommendation)),
     clusters: a.clusters.map(c => ({ id: c.clusterId, size: c.commentIds.length, explanation: c.explanation })),
     coverage: {
+      collectedAt: graph.coverage.collectedAt ?? null,
       analyzed: a.sentiment.analyzedCommentCount,
       retrieved: graph.coverage.retrievedCommentCount,
       reported: graph.coverage.reportedCommentCount,

@@ -53,6 +53,7 @@ export interface GraphEnvelope {
   rootId: string;
   nodes: GraphNode[];
   coverage: {
+    collectedAt?: string;
     retrievedCommentCount: number;
     reportedCommentCount: number | null;
     completeness: 'complete' | 'partial' | 'unknown';

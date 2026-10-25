@@ -6,6 +6,12 @@ immutable graph persistence, exact history sampling, ready-event delivery and
 analysis validation/storage. It contains no inference model. The existing Vite
 application is preserved.
 
+Repeated links reuse retained results across browsers for the original 24-hour
+lifetime. Concurrent submissions join one collection/analysis run; each browser
+has a private, read-only investigation view. Failed or expired work is not reused,
+except an unconfirmed provider start remains held to avoid a duplicate paid run.
+See [caching and rollout](RUNBOOK.md#link-result-reuse).
+
 Synthetic ingestion and an independent mock inference consumer have been verified
 against a real local Convex deployment. The authenticated REST lifecycle has also
 been verified on the hosted development deployment described below. One authorized

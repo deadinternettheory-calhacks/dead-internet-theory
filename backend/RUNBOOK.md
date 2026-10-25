@@ -150,7 +150,9 @@ required at the default. A graph over budget fails with `DISCUSSION_TOO_LARGE` i
 the investigation. GET also returns 413 if the configured ceiling is subsequently
 lowered. Comment caps produce an explicit partial graph; an Actor's success is
 never proof of complete coverage. Raw provider state/snapshots are bounded to
-650000 bytes. Larger raw collections fail honestly instead of silently losing data.
+650000 bytes. Larger discussion collections fail honestly instead of silently
+losing data. History collection has per-author storage budgets and disclosed
+omissions so one large history cannot crowd out every later author.
 
 Each investigation pins its provider mode at creation; changing deployment mode cannot silently replace a running live collection with fixture data or turn a synthetic investigation into a live lookup. Enrichment jobs persist their initial cache hits and missing-author plan before external work, so cache fills and expiry in another job cannot change an in-flight plan.
 
@@ -165,6 +167,49 @@ cannot be established. Estimated dates force recent fallback for temporal purpos
 Fewer than ten in the exact anchor window cause full replacement with the ten
 most recent usable candidates, never a blend. Status `complete` means ten returned
 items, not exhaustive history. Unsupported YouTube/TikTok history invokes no provider.
+
+History paging shrinks a response that exceeds the transport limit without
+restarting its paid Actor run. If one row still exceeds the limit, it is skipped
+with an explicit coverage limitation and later rows remain eligible. Each author
+has a 16 KB raw-row budget and at most 18 KB of normalized cached comments;
+candidate counts and truncation remain visible. This keeps 25-author jobs and
+mixed cached/live state bounded. Valid returned comments from interrupted runs
+are retained; fewer than ten valid samples remain partial. Reddit source IDs can
+be recovered from observed, validated Reddit permalinks. Unknown timestamps,
+conflicting author identities, future comments and focal-discussion comments
+remain excluded. The bounded candidate policy uses a new cache namespace so
+oversized old pools are not loaded into new jobs.
+
+## Link result reuse
+
+Source-cache keys use platform/native post ID, provider mode, collection limits,
+reviewed Actor builds and `RESULT_CACHE_VERSION` (default `1`). Tracking queries,
+YouTube share/watch/Shorts forms and X username aliases resolve to one identity.
+Completed results are reused until their original 24-hour expiry; simultaneous
+submissions join the same in-flight work. Submission rate limits still apply,
+while cache hits need no free worker-queue slot. Ordinary failures are retried by
+a fresh request; ambiguous paid starts remain shared failures until reconciled.
+
+Different browsers receive separate owner-scoped, read-only views. They cannot
+read one another's investigation IDs. Graph fingerprints and analysis/history
+resource IDs are consistently derived for each view; no graph or source content
+is copied, no extra ready event is sent, and the original records stay immutable.
+Missing required evidence, removed backing data or expiry prevents reuse. The
+website shows the original comment-collection time. See [RETENTION.md](RETENTION.md).
+
+After deploying, an operator may seed compatible retained results without
+collecting anything. From `backend/`, with the explicit deployment env file:
+
+```sh
+npx convex run reuse:seed '{"versionPrefix":"dit-inference/0.2.0; rubric/0.3; prompts-2026-10-24e;"}' --env-file .env.server.local
+npx convex run reuse:peek '{"sourceUrl":"https://www.youtube.com/watch?v=jDtG_pwIIv0"}' --env-file .env.server.local
+```
+
+Seed in pages using the returned cursor until `isDone:true`; only compatible,
+validated, unexpired results with complete required evidence are indexed. The
+inspection query returns cache status and expiry, never report content or keys.
+Bump `RESULT_CACHE_VERSION` on the backend after incompatible rubric, prompt or
+analysis-policy changes. This invalidates reuse without modifying old reports.
 
 ## Provider verification and smoke checks
 

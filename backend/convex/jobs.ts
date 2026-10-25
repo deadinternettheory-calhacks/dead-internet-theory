@@ -73,12 +73,7 @@ export const claim = mutation({
     return { key, job };
   },
 });
-async function fail(
-  ctx: Parameters<typeof get>[0],
-  job: any,
-  key: string,
-  error: unknown,
-) {
+async function fail(ctx: Ctx, job: any, key: string, error: unknown) {
   job.status = "failed";
   job.lease = null;
   job.error = error;
