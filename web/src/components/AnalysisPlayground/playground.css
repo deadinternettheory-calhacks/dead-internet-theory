@@ -12,7 +12,7 @@ body:has(.analysis-playground[data-background="true"]) .analysis-main::before {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: rgb(250 250 248 / 80%);
+  background: rgb(250 250 248 / 94%);
   border-inline: 1px solid var(--border);
   pointer-events: none;
 }
@@ -56,6 +56,7 @@ body:has(.analysis-playground[data-background="true"]) .analysis-main .finding-c
   height: 100dvh;
   z-index: 0;
   overflow: hidden;
+  pointer-events: none;
 }
 .playground-stage {
   position: absolute;
@@ -64,29 +65,11 @@ body:has(.analysis-playground[data-background="true"]) .analysis-main .finding-c
   user-select: none;
   -webkit-user-select: none;
 }
-.analysis-playground[data-background="true"] .playground-stage[data-ready="true"] { cursor: grab; }
-.playground-stage[data-dragging="true"] { cursor: grabbing; }
-.playground-stage:focus-visible { outline: 2px solid var(--brand); outline-offset: -4px; }
+.analysis-playground * { pointer-events: none !important; }
 .playground-poster, .playground-canvas { position: absolute !important; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .playground-poster svg { display: block; width: 100%; height: 100%; }
 .playground-poster.is-hidden { visibility: hidden; }
 .playground-canvas canvas { display: block; }
-.playground-stage-hint {
-  position: absolute;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 6px 12px;
-  background: var(--bg);
-  border-radius: 8px;
-  color: var(--muted);
-  font-size: 11px;
-  text-align: center;
-  pointer-events: none;
-  opacity: 0;
-}
-.playground-stage:focus-visible .playground-stage-hint { opacity: 1; }
-
 .analysis-playground[data-background="false"] { pointer-events: none; }
 .progress-copy { position: relative; width: 100%; padding: 0; margin: 0; background: transparent; }
 .progress-copy .progress-status { margin: 0 0 14px; gap: 10px; align-items: flex-start; }
@@ -117,3 +100,27 @@ body:has(.analysis-playground[data-background="true"]) .analysis-main .finding-c
   .progress-copy .progress-status h2 { font-size: 27px; }
   .progress-copy .progress-wait-invitation { font-size: 11px; }
 }
+
+.comment-overlay { position: fixed; inset: 0; height: 100dvh; z-index: 0; pointer-events: none; overflow: hidden; }
+.comment-overlay[data-idle="true"] { z-index: 4; }
+.comment-overlay * { pointer-events: none !important; }
+.comment-canvas { position: absolute !important; inset: 0; width: 100%; height: 100%; }
+.comment-canvas canvas { display: block; }
+.ghost-overlay .ghost-interaction {
+  position: absolute;
+  left: 36px;
+  top: 24px;
+  width: 152px;
+  height: 176px;
+  padding: 0;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  clip-path: ellipse(50% 50%);
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  pointer-events: auto !important;
+}
+.ghost-interaction:focus-visible { outline: none; border-color: var(--brand); }
+.ghost-interaction:disabled { pointer-events: none !important; cursor: default; }

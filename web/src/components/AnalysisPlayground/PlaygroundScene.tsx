@@ -1,30 +1,17 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import {
-  BoxGeometry, CircleGeometry, ExtrudeGeometry, IcosahedronGeometry, LineBasicMaterial,
-  MathUtils, MeshBasicMaterial, MeshStandardMaterial, Object3D, Shape, SphereGeometry,
-  TorusGeometry, type Group, type InstancedMesh, type Mesh,
+  BoxGeometry, ExtrudeGeometry, IcosahedronGeometry, LineBasicMaterial,
+  MathUtils, MeshBasicMaterial, MeshStandardMaterial, Object3D, SphereGeometry,
+  TorusGeometry, type Group, type InstancedMesh,
 } from 'three';
 import { createHeadstoneShape, createWireframe, GRAVES } from '../GraveyardGlobe/globe-model';
 import { advanceGlobe } from '../GraveyardGlobe/globe-motion';
 import { formationFor, type PlaygroundSceneProps } from './playground-types';
-import { commentFlight } from './playground-motion';
 
-const COUNT = 18;
 const SPARKS = 32;
 const TAU = Math.PI * 2;
 const COLORS = { paper: '#FFFFFF', core: '#EAF1ED', green: '#9BB5A7', sage: '#E2EAE3', ink: '#A8BFB0', trim: '#D4DFD5', gold: '#C5A980' };
-
-function commentShape() {
-  const s = new Shape();
-  s.moveTo(-0.26, -0.18);
-  s.lineTo(-0.22, -0.18); s.lineTo(-0.22, -0.28); s.lineTo(-0.10, -0.18);
-  s.lineTo(0.26, -0.18); s.quadraticCurveTo(0.32, -0.18, 0.32, -0.12);
-  s.lineTo(0.32, 0.16); s.quadraticCurveTo(0.32, 0.22, 0.26, 0.22);
-  s.lineTo(-0.26, 0.22); s.quadraticCurveTo(-0.32, 0.22, -0.32, 0.16);
-  s.lineTo(-0.32, -0.12); s.quadraticCurveTo(-0.32, -0.18, -0.26, -0.18);
-  return s;
-}
 
 function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<PlaygroundSceneProps, 'onFailure'>) {
   const { invalidate } = useThree();
@@ -32,8 +19,6 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
   const tilt = useRef<Group>(null);
   const core = useRef<Group>(null);
   const halo = useRef<Group>(null);
-  const commentField = useRef<Group>(null);
-  const cards = useRef<Group[]>([]);
   const ripples = useRef<Group[]>([]);
   const sparks = useRef<InstancedMesh>(null);
   const time = useRef(0);
@@ -42,19 +27,15 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
   const initialized = useRef(false);
   const formation = formationFor(phase);
   const lastPhase = useRef(phase);
-  const phaseAge = useRef(0);
   const stamp = useMemo(() => new Object3D(), []);
   const resources = useMemo(() => ({
     wire: createWireframe(),
     sphere: new SphereGeometry(1.44, 36, 24),
     stone: new ExtrudeGeometry(createHeadstoneShape(), { depth: 0.09, bevelEnabled: true, bevelSize: 0.016, bevelThickness: 0.016, bevelSegments: 2, steps: 1, curveSegments: 10 }).translate(0, 0, -0.045),
-    card: new ExtrudeGeometry(commentShape(), { depth: 0.065, bevelEnabled: true, bevelSize: 0.018, bevelThickness: 0.018, bevelSegments: 2, steps: 1, curveSegments: 8 }).translate(0, 0, -0.033),
     box: new BoxGeometry(1, 1, 1),
-    circle: new CircleGeometry(0.055, 20),
     ring: new TorusGeometry(1.38, 0.012, 6, 128),
     ripple: new TorusGeometry(1, 0.012, 6, 96),
     spark: new IcosahedronGeometry(0.035, 0),
-    paper: new MeshStandardMaterial({ color: COLORS.paper, roughness: 0.36, metalness: 0.08 }),
     green: new MeshStandardMaterial({ color: COLORS.green, roughness: 0.4, metalness: 0.12 }),
     sage: new MeshStandardMaterial({ color: COLORS.sage, roughness: 0.45 }),
     // An opaque surface hides the graves and grid on the far side.
@@ -80,9 +61,8 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
     if (!world.current || !tilt.current) return;
     const dt = Math.min(delta, 0.05);
     const phaseChanged = lastPhase.current !== phase;
-    if (phaseChanged) phaseAge.current = 0;
     if (animate) {
-      phaseAge.current += dt; time.current += dt; pulseAge.current += dt; advanceGlobe(motion.current, dt);
+      time.current += dt; pulseAge.current += dt; advanceGlobe(motion.current, dt);
       if (!motion.current.drag) {
         motion.current.yaw -= (formation === 'inspect' ? 0.12 : 0.06) * dt;
         if (formation === 'inspect' && Math.hypot(motion.current.velocityYaw, motion.current.velocityPitch) < 0.1) {
@@ -100,8 +80,6 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
     const globeScale = Math.max(width, height) * 0.30;
     tilt.current.scale.setScalar(globeScale);
     tilt.current.position.set(-width * 0.14, -height * 0.10, -3);
-    // Keep the floating comment animation in front of the now-solid globe.
-    if (commentField.current) commentField.current.position.z = globeScale * 0.65 * 1.44 - 1;
     world.current.rotation.set(motion.current.pitch, motion.current.yaw, 0, 'YXZ');
     // Demand frames can still occur on resize or React commits. A paused scene
     // keeps its exact pose; direct turns and backend phase changes remain available.
@@ -112,24 +90,6 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
     tilt.current.rotation.z = MathUtils.damp(tilt.current.rotation.z, -0.07 - pointer.current.x * 0.08, 4, dt);
     if (core.current) { core.current.rotation.y = t * 0.16; core.current.position.y = Math.sin(t * 0.8) * 0.07; }
     if (halo.current) { halo.current.rotation.y = t * -0.13; halo.current.rotation.z = Math.sin(t * 0.3) * 0.1; }
-    for (let i = 0; i < COUNT; i++) {
-      const card = cards.current[i];
-      if (!card) continue;
-      const { x, y, z, arrival, scan } = commentFlight({ phase, age: phaseAge.current, time: t, index: i, count: COUNT, width, height });
-      const angle = i / COUNT * TAU + t * 0.035;
-      card.visible = arrival > 0.001;
-      (card.children[0] as Mesh).material = scan > 0.6 ? resources.gold : i % 4 === 0 ? resources.green : resources.paper;
-      const swell = 1 + shock * 0.035;
-      const floatY = y * swell + Math.sin(t + i) * 0.08;
-      if (animate && t > 0.05) card.position.set(
-        MathUtils.damp(card.position.x, x * swell, 4.5, dt),
-        MathUtils.damp(card.position.y, floatY, 4.5, dt),
-        MathUtils.damp(card.position.z, z * swell, 4.5, dt),
-      );
-      else card.position.set(x * swell, floatY, z * swell);
-      card.rotation.set(Math.sin(t * 0.45 + i) * 0.08, formation === 'inspect' ? 0 : Math.sin(angle) * 0.35, Math.sin(i * 2 + t * 0.2) * (formation === 'inspect' ? 0.04 : 0.2) + shock * (i % 2 ? 0.4 : -0.4));
-      card.scale.setScalar((width < 7 ? 0.75 : 1) * (1 + (i % 3) * 0.10 + shock * 0.1 + scan * 0.22) * arrival);
-    }
     for (let i = 0; i < 3; i++) {
       const p = Math.max(0, age - i * 0.13);
       ripples.current[i]?.scale.setScalar(0.85 + p * 2.1);
@@ -170,16 +130,7 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
       </group>
     </group>
     </group>
-    <group ref={commentField} name="viewport-comment-field">
-      {Array.from({ length: COUNT }, (_,i) => <group key={i} name={`illustrative-comment-${i}`} ref={g => { if (g) cards.current[i] = g; }}>
-        <mesh geometry={resources.card} material={i % 4 === 0 ? resources.green : resources.paper}/>
-        <group>
-          <mesh geometry={resources.circle} material={i % 4 === 0 ? resources.lightInk : i % 5 === 0 ? resources.gold : resources.ink} position={[-0.20, 0.085, 0.065]}/>
-          <mesh geometry={resources.box} material={i % 4 === 0 ? resources.lightInk : resources.ink} position={[0.055, 0.1, 0.065]} scale={[0.28, 0.03, 0.012]}/>
-          <mesh geometry={resources.box} material={i % 4 === 0 ? resources.sage : resources.trim} position={[0.015, 0.025, 0.065]} scale={[0.20, 0.025, 0.012]}/>
-          <mesh geometry={resources.box} material={i % 4 === 0 ? resources.sage : resources.trim} position={[0, -0.085, 0.065]} scale={[0.43, 0.025, 0.012]}/>
-        </group>
-      </group>)}
+    <group>
       {rippleMaterials.map((material,i) => <group key={i} ref={g => { if (g) ripples.current[i] = g; }}>
         <mesh geometry={resources.ripple} material={material} rotation={[0.25 + i * 0.55, i * 0.4, i * 0.2]}/>
       </group>)}

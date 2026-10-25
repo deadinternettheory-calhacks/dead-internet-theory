@@ -6,7 +6,7 @@ import { checkSubmission } from './evidence';
 import type { CreaoClient, CreaoInputs } from './creao';
 import { ModelOutputError, parseScoring, parseTriage, type ScoringOutput, type TriageOutput } from './outputs';
 import { buildScoringPacket, buildTriagePacket, sampleHistoryAuthors } from './packet';
-import { claudeTriage, DEFAULT_CLAUDE_MODEL, type ClaudeConfig } from './claude';
+import { claudeScoring, claudeTriage, DEFAULT_CLAUDE_MODEL, scoringProviderFrom, type ClaudeConfig, type ScoringProvider } from './claude';
 import { scoringInstructions, triageInstructions } from './prompts';
 import { ACCOUNT_REVIEW_VERSION, accountReviewInputs, reviewAccounts } from './accounts';
 
@@ -42,8 +42,10 @@ export function needsScoring(triage: TriageOutput): boolean {
 
 export interface SequentialDeps {
   creao: CreaoClient;
-  /** When set, triage runs as one direct Claude call instead of a CREAO run. */
+  /** When set, triage (and, by default, scoring) runs as one direct Claude call instead of a CREAO run. */
   claude?: ClaudeConfig;
+  /** Scoring stage switch; defaults to Claude when `claude` is set, otherwise CREAO. */
+  scoringProvider?: ScoringProvider;
   requestEnrichment?: (request: EnrichmentRequest) => Promise<EnrichmentJob>;
   getEnrichment?: (enrichmentId: string) => Promise<EnrichmentJob>;
   sleep?: (ms: number) => Promise<void>;
@@ -100,8 +102,12 @@ export async function runSequential(graph: GraphEnvelope, deps: SequentialDeps):
 
   const accountInput = deps.claude ? accountReviewInputs(graph, triage, jobs) : null;
   const accountReviews = accountInput ? await reviewAccounts(deps.claude!, accountInput) : undefined;
-  const scoring = needsScoring(triage) ? await runStage(() => runToText(deps.creao, scoringInputs(graph, triage, jobs, !!accountReviews), deps), parseScoring) : null;
-  const modelLabel = (deps.claude ? `claude:${deps.claude.model ?? DEFAULT_CLAUDE_MODEL}+${deps.creao.label}` : deps.creao.label)
+  const scoringOnClaude = scoringProviderFrom(deps.scoringProvider, !!deps.claude) === 'claude';
+  const runScoring = (inputs: CreaoInputs) => (scoringOnClaude ? claudeScoring(deps.claude!, inputs) : runToText(deps.creao, inputs, deps));
+  const scoring = needsScoring(triage) ? await runStage(() => runScoring(scoringInputs(graph, triage, jobs, !!accountReviews)), parseScoring) : null;
+  const claudeModel = deps.claude?.model ?? DEFAULT_CLAUDE_MODEL;
+  const scoringLabel = scoringOnClaude ? `claude-scoring:${claudeModel}` : deps.creao.label;
+  const modelLabel = (deps.claude ? `claude:${claudeModel}+${scoringLabel}` : deps.creao.label)
     + (accountReviews ? `+accounts:${deps.claude!.model ?? DEFAULT_CLAUDE_MODEL}:${ACCOUNT_REVIEW_VERSION}` : '');
   const result = assembleAnalysis({ graph, triage, analyzedCommentIds, enrichments: jobs, scoring, accountReviews, inferredAt: deps.inferredAt, modelLabel });
   const problem = checkSubmission(result.submission, graph, jobs.filter(j => j.status === 'completed'));

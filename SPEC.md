@@ -265,7 +265,7 @@ AI is an optional explanation layer behind deterministic analysis and validation
 
 1. Construct a bounded packet from validated source records and deterministic signals. Each item has a stable evidence ID and source reference.
 2. Treat social posts, comments, profiles, pages, and retrieved records as untrusted data, including possible prompt injection. Source text cannot change system instructions or grant tools.
-3. Inference uses Claude and CREAO (ADR-008, ADR-009): triage is one direct Claude call with a schema-constrained reply when an Anthropic key is configured. After history collection, a focused direct Claude task reviews every supplied account history, even without product recommendations; complete, unique author coverage is validated. Recommendation scoring runs on a CREAO agent whose model is Claude. Neither is granted tools; the CREAO agent's prompt forbids browsing, code and integrations. Validated replies are cached by stage, prompt version, model and exact evidence for 24 hours; the account task also has its own version. It reuses collected histories and starts no additional scraping. Each run has a 256 KB input cap (packets are bounded to 180 KB) and a 15-minute stage limit. Any future tool must be allowlisted with validated arguments, budgets, timeouts and recorded outputs.
+3. Inference uses Claude and CREAO (ADR-008, ADR-009, ADR-018): triage is one direct Claude call with a schema-constrained reply when an Anthropic key is configured. After history collection, a focused direct Claude task reviews every supplied account history, even without product recommendations; complete, unique author coverage is validated. Recommendation scoring defaults to one direct Claude call with structured outputs when an Anthropic key is configured; `SCORING_PROVIDER=creao` selects the CREAO agent running Claude instead (ADR-018). Neither is granted tools; the CREAO agent's prompt forbids browsing, code and integrations. Validated replies are cached by stage, prompt version, model and exact evidence for 24 hours; the account task also has its own version. It reuses collected histories and starts no additional scraping. Each run has a 256 KB input cap (packets are bounded to 180 KB) and a 15-minute stage limit. Any future tool must be allowlisted with validated arguments, budgets, timeouts and recorded outputs.
 4. The Claude prompts request observations vs interpretations, contrary evidence, plausible benign explanations, unavailable inputs, and citations to supplied graph/history evidence IDs.
 5. Treat model output as draft data. A deterministic validator checks the AnalysisSubmission contract, confirms every evidence ID exists in the graph or referenced enrichment, rejects invented metrics/sources, enforces limits, and prevents unsupported allegations. Invalid output becomes partial/unavailable, not a fabricated report.
 6. Persist only permitted fields; retain prompts/provider output only as justified by an approved policy. Never expose credentials or hidden reasoning to the browser.
@@ -324,20 +324,27 @@ backend states, show elapsed time in the view, and let readers browse a bounded
 preview of collected comments while analysis runs. They do not use the synthetic
 walkthrough's timing, invented percentages or an estimated completion countdown.
 
-Live waiting views use a fixed, full-viewport 3D background with no visible
-scene-control buttons: a graveyard globe and illustrative comment tiles fill the
-page while a rounded, expressive ghost roams within the visible viewport in a small foreground renderer that never intercepts page controls. The companion also appears on the landing page and remains with the background after a report resolves; completion triggers a greeting/celebration pose. Actual
-backend phases drive the formations: resting orbit while queued, comment models
-spawning one by one and gathering during collection, then a rotating double helix with a traveling scan highlight
-and a magnifying glass during analysis.
-The ghost waves, blinks, reaches, nods and reacts to taps with hops, winks and
-twirls. Reactions finish before accepting another; rapid clicks never toggle
-pause. Drag/flick and keyboard interactions remain available, with Space to
-pause/resume and Escape to pause. A centered, translucent reading column replaces floating text panels; foreground text, navigation and collected
-comments remain readable and usable. The art never represents collected evidence
-or invented progress. Reduced motion, graphics fallback, hidden-tab suspension
-and deferred lazy loading keep the real investigation usable independently of
-the scene. Scrolling or a backend phase change does not suspend animation. See
+Live analyses use a fixed full-viewport globe behind the reading column,
+illustrative comment models, and a rounded, expressive ghost above the comments.
+Comments start behind the column and move fully in front after three seconds
+without activity. Pointer movement/presses, scrolling, typing or focus changes
+immediately return them behind the column; returning from a hidden tab restarts
+the delay. Layer changes preserve the running animation and real backend phase.
+The companion also appears on the landing page and remains
+with the scene after a report resolves; completion triggers a greeting. Actual
+backend phases drive comment formations: spawning and gathering during
+collection, then a rotating double helix with a traveling scan highlight during
+analysis. The ghost waves, blinks, reaches, nods and reacts with hops, winks and
+twirls. Reactions finish before accepting another; rapid clicks never toggle pause.
+The analysis globe is passive: it has no drag, flick, hover-tilt or keyboard-turn
+controls. Only the ghost is an interactive illustration target. Click it or use
+Enter/Space to react; P pauses/resumes scene motion, Escape pauses, and clicking
+a paused ghost resumes it. Its flight holds while hovered/focused for reliable
+activation. Comment models ignore pointer events so report controls remain usable.
+The centered translucent column, reduced-motion posters, graphics fallback,
+hidden-tab suspension and lazy loading keep the actual investigation usable.
+Illustrations never represent collected evidence or invented progress, and
+scrolling or a backend phase change never suspends motion. See
 [web/README.md](web/README.md#interactive-analysis-playground).
 
 ## 11. Security, privacy, and platform access
@@ -490,6 +497,7 @@ These entries capture project direction and the adopted v1 interface delta; they
 | ADR-015 | 2026-10-25 UTC | Requested by the owner; implemented | The section score adds low-effort support (15%: one- to three-word or generic praise and nonsense filler) and counts every short phrase copied across accounts as coordination; weights become comment realism 30%, low-effort 15%, coordination 15%, commercial 20%, rubric 10%, history 10%; wider shop-name patterns; nonsense filler gets a per-comment estimate. See the [low-effort delta](deltas/2026-10-25T02-10-00Z-low-effort-praise-flood.md). |
 | ADR-016 | 2026-10-25 UTC | Requested by the owner ("The knife one is bad. get rid of it"; chose replacing it with the TikTok thread) | The public example becomes the @goodstuffdiary night-light TikTok video's 100 comments, with usernames replaced by made-up names of the same kind so username evidence stays meaningful; the r/BuyItForLife knife thread is removed. The walkthrough and evidence explorer skip the history view when a report has no histories. Supersedes ADR-011's choice of thread. |
 | ADR-017 | 2026-10-25 UTC | Requested by the owner | Lead the report with its score and verdict, then post identity and evidence. Remove the visible page title so the score leads without a Summary heading. Supersedes the post-first display order in REQ-UX-2 and section 4.2. See the [score-first delta](deltas/2026-10-25T03-37-18Z-score-first-report.md). |
+| ADR-018 | 2026-10-25 UTC | Requested by the owner after slow analyses ("add an internal switch to go between claude and creao at this stage. Turn it to claude … by default") | Rubric scoring runs as one direct Claude call with structured outputs by default (about 30 s instead of 1.5–5 min on the CREAO agent); `SCORING_PROVIDER=creao` on the inference deployment switches it back without a deploy. Supersedes the CREAO-only scoring default in ADR-008/ADR-009 and section 9; prompts, re-scoring and validation are unchanged; the analysis label records `claude-scoring:<model>`. |
 
 
 ### 13.5 Specification change history
@@ -507,5 +515,7 @@ These entries capture project direction and the adopted v1 interface delta; they
 | 2026-10-25 UTC | Missing history on TikTok and YouTube is neutral: rubric v0.4 lifts the 74 cap there. | [no-history delta](deltas/2026-10-25T01-35-00Z-no-history-platforms-neutral.md). |
 | 2026-10-25 UTC | Low-effort praise floods, copied praise as coordination, wider shop-name patterns and nonsense filler in the section score. | [low-effort delta](deltas/2026-10-25T02-10-00Z-low-effort-praise-flood.md). |
 | 2026-10-25 UTC | Public example replaced: TikTok night-light video instead of the r/BuyItForLife knife thread (ADR-016). | No delta: a content choice within ADR-011's approved public-example exception. |
+| 2026-10-25 UTC | Score and verdict lead the report before post identity and evidence; no visible Summary heading (ADR-017). | [Score-first report delta](deltas/2026-10-25T03-37-18Z-score-first-report.md). |
+| 2026-10-25 UTC | Scoring on Claude by default with a `SCORING_PROVIDER` switch back to CREAO (ADR-018). | No delta: a provider switch within the selected Claude/CREAO inference design. |
 
 Future changes that conflict with an established requirement follow [CONTRIBUTING.md](CONTRIBUTING.md): propose affected sections/rationale, obtain explicit approval, create the timestamped delta, update the spec and decision log together, and preserve the historical decision. Filling a TBD or correcting an evidence-based implementation status does not itself require a delta. The v1.0.0 contract adoption is recorded by its linked approved delta.

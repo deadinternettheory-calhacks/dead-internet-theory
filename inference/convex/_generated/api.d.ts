@@ -13,6 +13,7 @@ import type * as http from "../http.js";
 import type * as lib_backendClient from "../lib/backendClient.js";
 import type * as lib_contract from "../lib/contract.js";
 import type * as lib_fixtures from "../lib/fixtures.js";
+import type * as lib_inference_accounts from "../lib/inference/accounts.js";
 import type * as lib_inference_assemble from "../lib/inference/assemble.js";
 import type * as lib_inference_claude from "../lib/inference/claude.js";
 import type * as lib_inference_creao from "../lib/inference/creao.js";
@@ -42,6 +43,7 @@ declare const fullApi: ApiFromModules<{
   "lib/backendClient": typeof lib_backendClient;
   "lib/contract": typeof lib_contract;
   "lib/fixtures": typeof lib_fixtures;
+  "lib/inference/accounts": typeof lib_inference_accounts;
   "lib/inference/assemble": typeof lib_inference_assemble;
   "lib/inference/claude": typeof lib_inference_claude;
   "lib/inference/creao": typeof lib_inference_creao;
