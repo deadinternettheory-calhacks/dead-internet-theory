@@ -133,8 +133,8 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
   // Measured thread signals stand in for an axis when they show more than the rubric did.
   const measuredAxis = (axis: AxisName): { score: number; refs: string[]; explanation: string } | null => {
     if (axis === 'promotional_intent' && thread.promotion.score > 0) {
+      // Promotional language only; shop-style names are their own finding on the website.
       const parts = [
-        thread.sellerPraise.authors ? `${thread.sellerPraise.authors} of ${thread.sellerPraise.supportiveAuthors} accounts praising or asking about the product have shop-style names` : '',
         thread.templates.length ? `${thread.templates.length} comment(s) use seller or template phrases` : '',
         thread.outreach.length ? `${thread.outreach.length} comment(s) fish for the store owner` : '',
       ].filter(Boolean);

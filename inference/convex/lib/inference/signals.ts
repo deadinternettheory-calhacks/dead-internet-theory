@@ -38,7 +38,7 @@ export interface ThreadSignals {
   flood: number | null;
   /** 0-1 strength of the commercial evidence (shop accounts, template phrases, outreach); copied praise is coordination, see duplication. */
   strength: number;
-  /** 0-100 promotional index (seller praise, templates, outreach) and its evidence, for the promotional-intent axis. */
+  /** 0-100 promotional-language index (template phrases, outreach) and its evidence, for the promotional-intent axis. Shop-style names are reported separately (sellerPraise). */
   promotion: { score: number; refs: string[] };
   /** 0-100 duplicate-praise index and its evidence, for the similar-wording axis. */
   duplication: { score: number; refs: string[] };
@@ -120,8 +120,8 @@ export function threadSignals(index: GraphIndex, triage: TriageOutput): ThreadSi
   const [seller_, templates_, outreach_, duplicates_] = parts;
   return {
     promotion: {
-      score: Math.round((100 * (seller_.w * seller_.x + templates_.w * templates_.x + outreach_.w * outreach_.x)) / (seller_.w + templates_.w + outreach_.w)),
-      refs: [...seller.map(c => c.id), ...templates.map(t => t.commentId), ...outreach],
+      score: Math.round((100 * (templates_.w * templates_.x + outreach_.w * outreach_.x)) / (templates_.w + outreach_.w)),
+      refs: [...templates.map(t => t.commentId), ...outreach],
     },
     duplication: { score: Math.round(100 * duplicates_.x), refs: duplicates ? repeatedIds : [] },
     sellerPraise: { commentIds: seller.map(c => c.id), authors: sellerAuthors.size, supportiveAuthors: engagedAuthors },
