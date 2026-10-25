@@ -14,7 +14,9 @@ export function SiteHeader() {
   return <header className="header"><div className="header-inner"><BrandWordmark/>{pathname === '/' && <nav aria-label="Main navigation"><Link to="/#how-it-works" replace={alreadyAtSection}>How it works</Link></nav>}</div></header>;
 }
 export function SiteFooter() {
-  return null;
+  const { pathname } = useLocation();
+  if (pathname !== '/') return null;
+  return <footer className="footer home-footer"><div className="footer-main"><nav aria-label="Privacy"><a href="/extension/privacy.html">Extension privacy</a></nav></div></footer>;
 }
 function InlineError({ children }: { children: string }) { return <p className="inline-error" role="alert">{children}</p>; }
 export function PostUrlInput({ onSubmit }: { onSubmit: (url: string) => void }) {

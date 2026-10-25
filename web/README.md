@@ -12,6 +12,12 @@ npm test
 npm run build
 ```
 
+Production builds also publish the extension's canonical privacy HTML and CSS
+at `/extension/privacy.html` and `/extension/privacy.css`. Use
+`https://www.deadinternettheory.us/extension/privacy.html` for the Chrome Web
+Store privacy-policy field. The source remains in `extension/public/`; the
+website build copies it without maintaining a separate policy.
+
 ## Preview the results screen without a backend
 
 Run `npm run dev` in `web/`, then open `http://localhost:5173/dev/report`
