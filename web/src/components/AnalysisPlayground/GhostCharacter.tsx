@@ -17,7 +17,7 @@ function bodyShape() {
 }
 
 /** Local character reactions never imply a finding or a change in job progress. */
-export function GhostCharacter({ animate, phase, pulse, pointer, motion }: Pick<PlaygroundSceneProps, 'animate' | 'phase' | 'pulse' | 'pointer' | 'motion'>) {
+export function GhostCharacter({ animate, phase, pulse, pointer, motion, roaming = true }: Pick<PlaygroundSceneProps, 'animate' | 'phase' | 'pulse' | 'pointer' | 'motion'> & { roaming?: boolean }) {
   const { invalidate } = useThree();
   const root = useRef<Group>(null);
   const eyes = useRef<Group>(null);
@@ -27,6 +27,7 @@ export function GhostCharacter({ animate, phase, pulse, pointer, motion }: Pick<
   const lens = useRef<Group>(null);
   const time = useRef(0);
   const reactionAge = useRef(3);
+  const completionAge = useRef(3);
   const initialized = useRef(false);
   const lastPhase = useRef(phase);
   const formation = formationFor(phase);
@@ -47,30 +48,32 @@ export function GhostCharacter({ animate, phase, pulse, pointer, motion }: Pick<
   }), []);
   useEffect(() => () => Object.values(resources).forEach(r => r.dispose()), [resources]);
   useEffect(() => { if (pulse > 0) reactionAge.current = 0; invalidate(); }, [pulse, invalidate]);
-  useEffect(() => { invalidate(); }, [phase, animate, invalidate]);
+  useEffect(() => { if (phase === 'complete') completionAge.current = 0; invalidate(); }, [phase, invalidate]);
+  useEffect(() => { invalidate(); }, [animate, invalidate]);
 
   useFrame((state, delta) => {
     if (!root.current) return;
     if (!animate && initialized.current && lastPhase.current === phase) return;
     initialized.current = true; lastPhase.current = phase;
     const dt = Math.min(delta, 0.05);
-    if (animate) { time.current += dt; reactionAge.current += dt; }
+    if (animate) { time.current += dt; reactionAge.current += dt; completionAge.current += dt; }
     const t = time.current, age = reactionAge.current;
     const reaction = pulse % 3;
     const hop = age < 1.2 ? Math.sin(Math.min(1, age / 1.2) * Math.PI) * Math.exp(-age * 0.5) : 0;
     const wink = reaction === 2 && age < 1.35;
     const twirl = reaction === 0 && pulse > 0 && age < 1.4 ? MathUtils.smoothstep(age, 0, 1.4) * Math.PI * 2 : 0;
-    const hello = formation === 'rest' && t % 10 < 1.8;
+    const hello = (formation === 'rest' || formation === 'celebrate') && t % 10 < 1.8;
+    const cheers = formation === 'celebrate' && (completionAge.current < 3 || t % 12 < 3);
     const nod = formation === 'inspect' ? Math.sin(t * 1.4) * 0.07 : 0;
     const travel = ghostTravel(t, state.viewport.width, state.viewport.height);
-    root.current.position.set(travel.x, travel.y + hop * 0.24, 1.5);
+    root.current.position.set(roaming ? travel.x : 0, (roaming ? travel.y : Math.sin(t * 1.5) * 0.08) + hop * 0.24, 1.5);
     root.current.rotation.set(pointer.current.y * 0.09 + nod, Math.sin(motion.current.yaw) * 0.23 + Math.sin(t * 0.45) * 0.06, twirl + Math.sin(t * 0.7) * 0.06 - pointer.current.x * 0.08);
     root.current.scale.set(1.3 + hop * 0.15, 1.3 - hop * 0.16, 1.3);
     if (eyes.current) eyes.current.scale.y = MathUtils.damp(eyes.current.scale.y, t % 5.5 > 5.28 ? 0.1 : 1 + hop * 0.25, 35, dt);
     if (rightEye.current) rightEye.current.scale.y = MathUtils.damp(rightEye.current.scale.y, wink && age > 0.12 && age < 0.8 ? 0.12 : 1, 30, dt);
-    if (leftArm.current) leftArm.current.rotation.z = hello || wink ? -2.1 + Math.sin(t * 9) * 0.35 : formation === 'gather' ? -1.1 + Math.sin(t * 3) * 0.4 : -0.65 + Math.sin(t * 1.5) * 0.1;
+    if (leftArm.current) leftArm.current.rotation.z = hello || wink || cheers ? -2.1 + Math.sin(t * 9) * 0.35 : formation === 'gather' ? -1.1 + Math.sin(t * 3) * 0.4 : -0.65 + Math.sin(t * 1.5) * 0.1;
     if (rightArm.current) {
-      rightArm.current.rotation.z = formation === 'inspect' ? 0.9 : formation === 'gather' ? 1.1 - Math.sin(t * 3) * 0.4 : 0.65 - Math.sin(t * 1.5) * 0.1;
+      rightArm.current.rotation.z = cheers ? 2.1 + Math.sin(t * 9) * 0.3 : formation === 'inspect' ? 0.9 : formation === 'gather' ? 1.1 - Math.sin(t * 3) * 0.4 : 0.65 - Math.sin(t * 1.5) * 0.1;
       rightArm.current.position.z = formation === 'inspect' ? 0.2 : 0.03;
     }
     if (lens.current) {

@@ -3,15 +3,25 @@ import { act, useEffect } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { AnalysisProgress, type ProgressPhase } from '../AnalysisProgress';
+import { AnalysisPlayground } from './AnalysisPlayground';
 import type { PlaygroundSceneProps } from './playground-types';
 
 let latest: PlaygroundSceneProps | undefined;
+let latestGhost: PlaygroundSceneProps | undefined;
 const disposed = vi.fn();
 vi.mock('./PlaygroundScene', () => ({
   default: function Scene(props: PlaygroundSceneProps) {
     latest = props;
     useEffect(() => { props.onReady(() => {}); return disposed; }, [props.onReady]);
     return <div data-testid="playground-scene"/>;
+  },
+}));
+
+vi.mock('./GhostScene', () => ({
+  default: function GhostScene(props: PlaygroundSceneProps) {
+    latestGhost = props;
+    useEffect(() => { props.onReady(() => {}); }, [props.onReady]);
+    return <div data-testid="ghost-scene"/>;
   },
 }));
 
@@ -22,7 +32,7 @@ let hidden: boolean;
 let preferenceChanged: (() => void) | undefined;
 beforeEach(() => {
   vi.useFakeTimers();
-  latest = undefined;
+  latest = latestGhost = undefined;
   reduced = hidden = false;
   preferenceChanged = undefined;
   disposed.mockClear();
@@ -45,13 +55,13 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 const render = async (phase: ProgressPhase = 'analyzing') => act(async () => {
-  root.render(<AnalysisProgress phase={phase} status={phase === 'analyzing' ? 'Analyzing the discussion…' : 'Waiting to collect public comments…'} collectedCount={8}/>);
+  root.render(<><AnalysisProgress phase={phase} status={phase === 'analyzing' ? 'Analyzing the discussion…' : 'Waiting to collect public comments…'} collectedCount={8}/><AnalysisPlayground phase={phase}/></>);
 });
 const advance = async (ms = 450) => act(async () => vi.advanceTimersByTimeAsync(ms));
 const stage = () => container.querySelector<HTMLElement>('.playground-stage')!;
 const key = (value: string) => act(() => stage().dispatchEvent(new KeyboardEvent('keydown', { key: value, bubbles: true, cancelable: true })));
 
-it('keeps a fast completed request from loading any 3D scene', async () => {
+it('skips optional 3D for a route visit shorter than the lazy delay', async () => {
   await render();
   expect(latest).toBeUndefined();
   await act(async () => root.render(<p>Completed report</p>));
@@ -162,8 +172,19 @@ it('updates the reduced-motion illustration with the actual stage without loadin
   reduced = true;
   await render('collecting'); await advance();
   expect(latest).toBeUndefined();
-  expect(container.querySelector('.ghost-poster-lens')).toBeNull();
+  expect(document.querySelector('.ghost-poster-lens')).toBeNull();
   await render('analyzing');
-  expect(container.querySelector('.ghost-poster-lens')).not.toBeNull();
+  expect(document.querySelector('.ghost-poster-lens')).not.toBeNull();
   expect(latest).toBeUndefined();
+});
+
+it('renders only the foreground companion on the landing page without a second world', async () => {
+  await act(async () => root.render(<AnalysisPlayground phase="queued" background={false}/>));
+  await advance();
+  expect(latest).toBeUndefined();
+  expect(latestGhost?.animate).toBe(true);
+  expect(container.querySelector('.playground-poster')).toBeNull();
+  expect(document.querySelector('.ghost-overlay [data-testid="ghost-scene"]')).not.toBeNull();
+  key('Escape');
+  expect(latestGhost?.animate).toBe(false);
 });
