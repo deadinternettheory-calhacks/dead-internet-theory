@@ -1,6 +1,6 @@
 // Turns a stored v1 analysis plus its graph into the plain-language report the
-// analysis page shows (SPEC 4.2 order: post, result, findings, details,
-// coverage and limitations). Only fields the API returned are shown.
+// analysis page shows (SPEC 4.2 order: result, findings, details,
+// coverage and limitations, original post). Only fields the API returned are shown.
 import type { AnalysisResource, AxisAssessment, AxisName, CommentNode, EnrichmentJob, GraphEnvelope, Stance } from '../api/contract';
 
 export type Tone = 'high' | 'medium' | 'low' | 'neutral';

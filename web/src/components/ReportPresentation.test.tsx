@@ -58,7 +58,7 @@ it('opens relevant evidence and shows the section score without per-item caveats
   await act(async () => finding.querySelector<HTMLButtonElement>('.finding-actions button')!.click());
   expect(container.querySelector('.report-explorer')?.tagName).toBe('SECTION');
   expect(container.querySelector('.report-explorer > summary')).toBeNull();
-  expect(container.querySelector('.summary-card')?.nextElementSibling?.classList.contains('report-explorer')).toBe(true);
+  expect(container.querySelector('.report-middle')?.firstElementChild?.classList.contains('report-explorer')).toBe(true);
   expect(container.querySelector('.report-explorer')?.nextElementSibling?.classList.contains('report-findings')).toBe(true);
   expect(container.querySelector('.mode-timing')).not.toBeNull();
   expect(container.querySelector('.index-note')?.closest('details')?.open).toBe(false);
@@ -70,7 +70,8 @@ it('opens relevant evidence and shows the section score without per-item caveats
   // Synthetic reports never link to their made-up sources; only research links remain.
   expect([...container.querySelectorAll('a')].every(a => a.closest('.signal-sources'))).toBe(true);
   expect(container.querySelector('.report-coverage-summary')).toBeNull();
-  expect(container.querySelector('.summary-card')?.parentElement?.classList.contains('report-middle')).toBe(true);
+  expect(container.querySelector('.report-view')?.lastElementChild).toBe(container.querySelector('.summary-card'));
+  expect(container.querySelector('.summary-card')?.previousElementSibling?.classList.contains('limitations')).toBe(true);
   expect(container.querySelector('.original-post-heading')?.textContent).toBe(`Reddit \u00b7 ${exampleReport.post.title}`);
   expect(container.querySelector('.summary-card .platform-label')).toBeNull();
   expect(container.querySelector('.report-findings')?.parentElement?.classList.contains('report-middle')).toBe(true);
@@ -87,8 +88,8 @@ it('opens relevant evidence and shows the section score without per-item caveats
   await act(async () => explanation.querySelector('summary')!.click());
   expect(explanation.open).toBe(true);
   expect(container.querySelector('.report-view')?.firstElementChild?.classList.contains('result-card')).toBe(true);
-  const sections = [...container.querySelectorAll('.summary-card, .result-card, .report-findings, .evidence, .limitations')].map(node => node.className);
-  expect(sections).toEqual(['card result-card tone-high', 'card summary-card', 'findings report-findings', 'card evidence', 'limitations']);
+  const sections = [...container.querySelectorAll('.result-card, .report-explorer, .report-findings, .report-accounts, .evidence, .limitations, .summary-card')].map(node => node.className);
+  expect(sections).toEqual(['card result-card tone-high', 'report-explorer', 'findings report-findings', 'report-accounts', 'card evidence', 'limitations', 'card summary-card']);
 });
 it('lists each sampled account with its automation-signal score, never a bot label', async () => {
   await render(<AnalysisReport report={exampleReport}/>);
