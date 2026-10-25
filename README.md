@@ -23,6 +23,19 @@ an account is a bot, a recommendation was paid for, or a company manipulated a
 discussion. Consumer protection is the product's purpose; improved decisions
 and reduced harm still need to be evaluated.
 
+## Cal Hacks 13.0 — CREAO submission
+
+- **Shared agent run:** [Open the CREAO run](https://agent.creao.ai/share/02dddfa5410c9d0642e24f5fc8691d8c).
+- **Agent ID:** `ecc896fc-80ba-457f-9075-4c3cdb3e0bc4`.
+
+[CREAO's submission guide](https://community.creao.ai/CalHacks2026) asks for the
+run share link and agent ID in the **Devpost README**. Select the CREAO track
+and demonstrate a CREAO agent doing core work in the demo.
+
+Our [CREAO agent](inference/creao-agent.md) performs recommendation rubric
+scoring through API Trigger. The application validates its evidence references
+and recomputes the final scores from the returned rule matches.
+
 ## Data path
 
 1. **Submit a link.** The browser validates the supported URL and sends it through
