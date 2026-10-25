@@ -136,8 +136,10 @@ Inter is self-hosted through the pinned Fontsource variable-font package.
 ## Report
 
 `src/analysis/report.ts` turns the v1 `AnalysisResource` and graph into the
-page's sections, in the SPEC 4.2 order: score and plain-language result, post, up to three
-findings with quoted evidence, detailed analysis, then coverage and limitations.
+page's sections, in the SPEC 4.2 order: score and plain-language result, up to three
+findings with quoted evidence, account signals, detailed analysis, coverage and
+limitations, then the original post and source. Completed reports put the post
+below all analytics; the collected-thread preview remains available while waiting.
 The comment-section astroturfing index appears prominently with its bands and an
 uncalibrated-heuristic explanation; detailed analysis includes its rationale
 (SPEC ADR-010). Types in `src/api/contract.ts` mirror only the fields
@@ -221,8 +223,9 @@ inference update adds focused Claude history reviews for new analyses.
 
 The score card includes a collapsed **Score explanation** with the stored section
 score components, cited usernames, supporting reasons, weights and sampling note. Detailed signal assessments stay
-under detailed analysis. Formatting uses stored values and never recalculates scores. The post, findings, account signals and
-detailed evidence share one white panel; coverage details remain below it.
+under detailed analysis. Formatting uses stored values and never recalculates scores. Findings, account signals and
+detailed evidence share one white panel; coverage details and the original post
+follow below it, in that order.
 
 The header shows **How it works** on the homepage only; search and report routes
 keep the home logo without the navigation link.

@@ -64,13 +64,6 @@ export function AnalysisReport({ report }: { report: Report }) {
   return <div className="report-view">
     <ResultCard report={report}/>
     <div className="card report-middle">
-    <article className="card summary-card">
-      <h2 className="original-post-heading"><span>{PLATFORM_LABEL[post.platform] ?? post.platform}</span>{post.title && <><span className="post-divider" aria-hidden="true"> · </span><span className="original-post-title">{post.title}</span></>}</h2>
-      <p className="post-text">{post.text}</p>
-      {(post.author || time) && <p className="url-display">{[post.author, time].filter(Boolean).join(' · ')}</p>}
-      <SourceLink synthetic={report.synthetic} url={post.url}>View original post</SourceLink>
-    </article>
-
     <ReportFindings report={report}/>
     <AccountSignals report={report}/>
 
@@ -113,6 +106,13 @@ export function AnalysisReport({ report }: { report: Report }) {
       {!report.synthetic && <p>Stored results may be reused for the same post until their original 24-hour expiry.</p>}
       {report.limitations.length > 0 && <details className="coverage-details"><summary>Details</summary><ul className="limitation-list">{report.limitations.map(l => <li key={l}>{l}</li>)}</ul></details>}
     </aside>
+
+    <article className="card summary-card">
+      <h2 className="original-post-heading"><span>{PLATFORM_LABEL[post.platform] ?? post.platform}</span>{post.title && <><span className="post-divider" aria-hidden="true"> · </span><span className="original-post-title">{post.title}</span></>}</h2>
+      <p className="post-text">{post.text}</p>
+      {(post.author || time) && <p className="url-display">{[post.author, time].filter(Boolean).join(' · ')}</p>}
+      <SourceLink synthetic={report.synthetic} url={post.url}>View original post</SourceLink>
+    </article>
   </div>;
 }
 
