@@ -8,6 +8,7 @@ import { ModelOutputError, parseScoring, parseTriage, type ScoringOutput, type T
 import { buildScoringPacket, buildTriagePacket, sampleHistoryAuthors } from './packet';
 import { claudeTriage, DEFAULT_CLAUDE_MODEL, type ClaudeConfig } from './claude';
 import { scoringInstructions, triageInstructions } from './prompts';
+import { ACCOUNT_REVIEW_VERSION, accountReviewInputs, reviewAccounts } from './accounts';
 
 export const HISTORY_WINDOW_DAYS = 14;
 
@@ -25,8 +26,13 @@ export function enrichmentRequestFor(graph: GraphEnvelope, triage: TriageOutput)
   return request(sampleHistoryAuthors(graph, triage).pairs);
 }
 
-export function scoringInputs(graph: GraphEnvelope, triage: TriageOutput, jobs: EnrichmentJob[]): CreaoInputs {
-  return { stage: 'scoring', instructions: scoringInstructions(), evidence: JSON.stringify(buildScoringPacket(graph, triage, jobs)) };
+export function scoringInputs(graph: GraphEnvelope, triage: TriageOutput, jobs: EnrichmentJob[], accountsReviewed = false): CreaoInputs {
+  const packet = buildScoringPacket(graph, triage, jobs);
+  return {
+    stage: 'scoring',
+    instructions: scoringInstructions() + (accountsReviewed ? '\nAccount histories have already received a separate review. Return accounts: [] and do not repeat that task. Still use the histories as evidence when assessing recommendation comments.' : ''),
+    evidence: JSON.stringify(accountsReviewed ? { ...packet, accountsReviewed: ACCOUNT_REVIEW_VERSION } : packet),
+  };
 }
 
 /** Recommendation comments exist, so the rubric stage has something to score. */
@@ -92,9 +98,12 @@ export async function runSequential(graph: GraphEnvelope, deps: SequentialDeps):
     }
   }
 
-  const scoring = needsScoring(triage) ? await runStage(() => runToText(deps.creao, scoringInputs(graph, triage, jobs), deps), parseScoring) : null;
-  const modelLabel = deps.claude ? `claude:${deps.claude.model ?? DEFAULT_CLAUDE_MODEL}+${deps.creao.label}` : deps.creao.label;
-  const result = assembleAnalysis({ graph, triage, analyzedCommentIds, enrichments: jobs, scoring, inferredAt: deps.inferredAt, modelLabel });
+  const accountInput = deps.claude ? accountReviewInputs(graph, triage, jobs) : null;
+  const accountReviews = accountInput ? await reviewAccounts(deps.claude!, accountInput) : undefined;
+  const scoring = needsScoring(triage) ? await runStage(() => runToText(deps.creao, scoringInputs(graph, triage, jobs, !!accountReviews), deps), parseScoring) : null;
+  const modelLabel = (deps.claude ? `claude:${deps.claude.model ?? DEFAULT_CLAUDE_MODEL}+${deps.creao.label}` : deps.creao.label)
+    + (accountReviews ? `+accounts:${deps.claude!.model ?? DEFAULT_CLAUDE_MODEL}:${ACCOUNT_REVIEW_VERSION}` : '');
+  const result = assembleAnalysis({ graph, triage, analyzedCommentIds, enrichments: jobs, scoring, accountReviews, inferredAt: deps.inferredAt, modelLabel });
   const problem = checkSubmission(result.submission, graph, jobs.filter(j => j.status === 'completed'));
   if (problem) throw new Error(`Assembled analysis is invalid (${problem.code}): ${problem.message}`);
   return { ...result, triage, scoring, enrichments: jobs };

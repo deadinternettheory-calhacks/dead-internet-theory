@@ -114,7 +114,7 @@ describe('comment-section index', () => {
 });
 
 describe('account automation signals', () => {
-  const facts = { authorId: 'a', platform: 'reddit' as const, historyCount: 10, historyPartial: false, productMentionIds: [] as string[], accountAgeDays: null as number | null, anchorCommentId: 'reddit:comment:t1_syn01', communityCount: 1, historyIds: ['reddit:comment:t1_syn_a01', 'reddit:comment:t1_syn_a02', 'reddit:comment:t1_syn_a03'] };
+  const facts = { authorId: 'a', platform: 'reddit' as const, historyCount: 10, historyPartial: false, hasProductContext: true, productMentionIds: [] as string[], accountAgeDays: null as number | null, anchorCommentId: 'reddit:comment:t1_syn01', communityCount: 1, historyIds: ['reddit:comment:t1_syn_a01', 'reddit:comment:t1_syn_a02', 'reddit:comment:t1_syn_a03'] };
   const known = new Set(['reddit:comment:t1_syn01', 'reddit:comment:t1_syn_a01', 'reddit:comment:t1_syn_a02', 'reddit:comment:t1_syn_a03']);
 
   it('re-scores the model’s account rules, keeping only family B with real evidence', async () => {

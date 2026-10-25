@@ -16,7 +16,7 @@ import type {
 import { SCHEMA_VERSION } from '../contract';
 import { unique, utcNow } from '../util';
 import { communityFromUrl, daysBetween, mentions, round2, wordJaccard } from './features';
-import type { ScoringOutput, TriageOutput } from './outputs';
+import type { ProposedAccount, ScoringOutput, TriageOutput } from './outputs';
 import { GraphIndex, historyResults, sampleHistoryAuthors, scoringTargets } from './packet';
 import { sectionIndex } from './section';
 import { commentEstimate, threadSignals } from './signals';
@@ -60,6 +60,8 @@ export interface AssembleInput {
   enrichments: EnrichmentJob[];
   enrichmentNote?: string;
   scoring: ScoringOutput | null;
+  /** Dedicated history reviews take precedence over the broader rubric response. */
+  accountReviews?: ProposedAccount[];
   inferredAt?: string;
   modelLabel?: string;
 }
@@ -264,8 +266,11 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
 
   // --- Account automation signals for each sampled user with history ---------------------------
   const sample = sampleHistoryAuthors(graph, triage);
-  const mentionTerms = unique([triage.subject.label, ...triage.comments.map(c => c.recommendsProduct ?? '')].map(t => t.trim()).filter(Boolean));
-  const accountProposals = new Map((input.scoring?.accounts ?? []).map(a => [a.authorId, a]));
+  const mentionTerms = unique([
+    ...(['product', 'brand', 'service'].includes(triage.subject.kind) ? [triage.subject.label] : []),
+    ...triage.comments.map(c => c.recommendsProduct ?? ''),
+  ].map(t => t.trim()).filter(Boolean));
+  const accountProposals = new Map((input.accountReviews ?? input.scoring?.accounts ?? []).map(a => [a.authorId, a]));
   const assessmentById = new Map(commentAssessments.map(c => [c.commentId, c]));
   for (const pair of sample.pairs) {
     const r = resultByAuthor.get(pair.authorId);
@@ -280,6 +285,7 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
       historyCount: r.comments.length,
       historyPartial: r.status === 'partial',
       productMentionIds: r.comments.filter(c => mentionTerms.some(t => mentions(c.text, t)) && known.has(c.id)).map(c => c.id),
+      hasProductContext: mentionTerms.length > 0,
       accountAgeDays: daysBetween(profile?.accountCreatedAt, index.comment(pair.anchorCommentId)?.createdAt ?? null),
       anchorCommentId: target.commentId,
       communityCount: new Set(r.comments.map(c => communityFromUrl(c.url)).filter(Boolean)).size,
@@ -289,8 +295,8 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
       authorId: account.authorId,
       score: account.score,
       historyCount: account.historyCount,
-      signals: account.signals.map(x => ({ ruleId: x.id, points: x.points, evidence: x.evidence, evidenceRefs: x.evidenceRefs })),
-      ...(account.humanSignals.length ? { humanSignals: account.humanSignals.map(x => ({ ruleId: x.id, evidence: x.evidence, evidenceRefs: x.evidenceRefs })) } : {}),
+      signals: account.signals.map(x => ({ ruleId: x.id, points: x.points, evidence: safeText(x.evidence, 'A pattern was observed in the sampled history.'), evidenceRefs: x.evidenceRefs })),
+      ...(account.humanSignals.length ? { humanSignals: account.humanSignals.map(x => ({ ruleId: x.id, evidence: safeText(x.evidence, 'Ordinary participation was observed in the sampled history.'), evidenceRefs: x.evidenceRefs })) } : {}),
       unknown: account.unknown,
     };
   }

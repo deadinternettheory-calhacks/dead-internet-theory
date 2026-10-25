@@ -21,6 +21,8 @@ import { createCreaoClient, CreaoError, MockCreaoClient, type CreaoClient } from
 import { checkSubmission } from './lib/inference/evidence';
 import { ModelOutputError, parseScoring, parseTriage, type ScoringOutput, type TriageOutput } from './lib/inference/outputs';
 import { enrichmentRequestFor, MAX_STAGE_ATTEMPTS, needsScoring, scoringInputs, triageInputs } from './lib/inference/pipeline';
+import { ACCOUNT_REVIEW_VERSION, accountReviewInputs, parseAccountReview, reviewAccounts } from './lib/inference/accounts';
+import type { ProposedAccount } from './lib/inference/outputs';
 import { PROMPT_VERSION } from './lib/inference/prompts';
 import { validateModel } from './lib/schema';
 import { sha256Hex } from './lib/util';
@@ -52,6 +54,8 @@ interface JobState {
   triageAttempts?: number;
   scoringAttempts?: number;
   scoring?: ScoringOutput | null;
+  accountReviews?: ProposedAccount[];
+  accountReviewModel?: string;
   analysisId?: string;
 }
 
@@ -342,8 +346,18 @@ export const step = internalAction({
         }
         case 'scoring_start': {
           state.scoringStartedAt ??= Date.now();
+          const jobs = await completedJobs();
+          const accountInput = claude ? accountReviewInputs(graph, state.triage!, jobs) : null;
+          if (accountInput && !state.accountReviews) {
+            const model = claude!.model ?? DEFAULT_CLAUDE_MODEL;
+            const key = await cacheKey(`accounts/${ACCOUNT_REVIEW_VERSION}`, `claude:${model}`, accountInput.evidence);
+            const cached = await ctx.runQuery(internal.worker.cacheGet, { key });
+            state.accountReviews = cached ? parseAccountReview([cached], accountInput.authorIds) : await reviewAccounts(claude!, accountInput);
+            state.accountReviewModel = `accounts:${model}:${ACCOUNT_REVIEW_VERSION}`;
+            if (!cached) await ctx.runMutation(internal.worker.cachePut, { key, stage: 'accounts', output: JSON.stringify({ accounts: state.accountReviews }) });
+          }
           if (!needsScoring(state.triage!)) return void (await submitWith(null));
-          const inputs = scoringInputs(graph, state.triage!, await completedJobs());
+          const inputs = scoringInputs(graph, state.triage!, jobs, !!state.accountReviews);
           state.scoringCacheKey = await cacheKey('scoring', creao.label, inputs.evidence);
           const cached = await ctx.runQuery(internal.worker.cacheGet, { key: state.scoringCacheKey });
           if (cached) return void (await submitWith(parseScoring(cached)));
@@ -361,7 +375,7 @@ export const step = internalAction({
           } catch (err) {
             if (!(err instanceof ModelOutputError) || (state.scoringAttempts ?? 1) >= MAX_STAGE_ATTEMPTS) throw err;
             state.scoringAttempts = (state.scoringAttempts ?? 1) + 1;
-            state.scoringRunId = await creao.startRun(scoringInputs(graph, state.triage!, await completedJobs()));
+            state.scoringRunId = await creao.startRun(scoringInputs(graph, state.triage!, await completedJobs(), !!state.accountReviews));
             return void (await next('scoring_wait', creaoPollMs(), state.scoringRunId));
           }
           await ctx.runMutation(internal.worker.cachePut, { key: state.scoringCacheKey!, stage: 'scoring', output: JSON.stringify(scoring) });
@@ -421,7 +435,8 @@ async function submit(
     enrichments,
     enrichmentNote: state.enrichmentNote,
     scoring,
-    modelLabel: triageModel.startsWith('claude:') ? `${triageModel}+${creao.label}` : triageModel,
+    accountReviews: state.accountReviews,
+    modelLabel: (triageModel.startsWith('claude:') ? `${triageModel}+${creao.label}` : triageModel) + (state.accountReviewModel ? `+${state.accountReviewModel}` : ''),
   });
   const problem = checkSubmission(submission, graph, enrichments);
   if (problem) {

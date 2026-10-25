@@ -88,6 +88,21 @@ it('shows ordinary-user evidence instead of automation signs, and lists those ac
   }
   expect(rows.slice(-human.length)).toEqual(human);
 });
+it('shows limited review coverage instead of a misleading zero and None found', async () => {
+  const report = structuredClone(exampleReport);
+  report.accounts = [{ ...report.accounts[0], score: 0, signals: [], humanSignals: [], unknown: ['B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9'], historyCount: 10 }];
+  await render(<AnalysisReport report={report}/>);
+  const section = container.querySelector('.report-accounts')!;
+  expect(section.textContent).toContain('Limited');
+  expect(section.textContent).toContain('10 history comments');
+  expect(section.textContent).toContain('8 checks unavailable');
+  expect(section.textContent).not.toContain('0/100');
+  expect(section.textContent).not.toContain('None found');
+  report.accounts[0].unknown = [];
+  await render(<AnalysisReport report={report}/>);
+  expect(section.textContent).toContain('0/100');
+  expect(section.textContent).toContain('No signals in sampled history');
+});
 it('rates comment realism like the other signals and shows each comment’s estimate', async () => {
   await render(<AnalysisReport report={exampleReport}/>);
   const realism = [...container.querySelectorAll('.axis-list li')].find(li => li.textContent?.startsWith('Comment realism'));
