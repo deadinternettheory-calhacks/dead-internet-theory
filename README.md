@@ -81,10 +81,7 @@ uses observed text, not audiovisual content. The form reads live backend
 availability; successful checks do not guarantee exhaustive collection or
 future provider availability.
 
-The `/example` walkthrough replays a completed analysis of a real TikTok product
-video's comments with usernames and comment identifiers replaced and recorded
-Claude/CREAO replies. It does not start fresh collection. This public example has an approved
-[retention exception](backend/RETENTION.md#public-example-exception).
+The public demo has been removed; legacy `/example` links redirect home.
 
 ### Development and project references
 
