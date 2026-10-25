@@ -7,7 +7,7 @@ import { Button } from './ui/button';
 import { PLATFORM_LABEL } from '../platforms';
 
 export function BrandWordmark() {
-  return <Link className="brand" to="/" aria-label="Dead Internet Theory, home"><span className="network-mark" aria-hidden="true"><i/><i/><i/></span><span>Dead Internet Theory</span></Link>;
+  return <Link className="brand" to="/" aria-label="Dead Internet Theory, home"><img className="brand-logo" src="/deadinternettheorylogo.png" alt=""/></Link>;
 }
 export function SiteHeader() {
   const { pathname, hash } = useLocation();
