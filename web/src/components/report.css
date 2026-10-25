@@ -153,10 +153,10 @@
 .report-middle > .summary-card { padding: 0 0 28px; margin: 0 0 28px; border: 0; border-bottom: 1px solid var(--border); border-radius: 0; box-shadow: none; }
 .report-middle .report-findings .finding-card { padding: 24px 0; margin: 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; background: transparent; box-shadow: none; }
 .report-middle > .evidence { padding: 0; margin: 24px 0 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; box-shadow: none; }
-.result-card { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 28px; row-gap: 18px; }
+.result-card { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 28px; row-gap: 18px; padding-bottom: 0; }
 .score-explanation { grid-column: 1 / -1; min-width: 0; border-top: 1px solid var(--border); }
-.score-explanation > summary { min-height: 44px; padding-top: 12px; cursor: pointer; color: var(--brand); font-size: 14px; font-weight: 550; }
-.score-explanation-content { padding: 12px 0 0; font-size: 14px; line-height: 1.8; }
+.score-explanation > summary { min-height: 44px; margin: 0; padding: 12px 0; cursor: pointer; color: var(--brand); font-size: 14px; font-weight: 550; }
+.score-explanation-content { padding: 12px 0 24px; font-size: 14px; line-height: 1.8; }
 .score-explanation .axis-list { margin-bottom: 0; }
 @media (max-width: 767px) { .report-middle { padding: 20px 18px; } .report-middle > .summary-card { padding: 0 0 24px; } .report-middle .report-findings .finding-card { padding: 20px 0; } .result-card { column-gap: 18px; } }
 
