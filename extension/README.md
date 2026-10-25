@@ -6,7 +6,7 @@ ghost. Analysis still runs on the configured Convex/Apify/Claude/CREAO pipeline.
 
 ## Install the ZIP
 
-1. Extract `dead-internet-theory-chrome-1.0.1.zip` into a folder.
+1. Extract `dead-internet-theory-chrome-1.0.2.zip` into a folder.
 2. Open `chrome://extensions` in Chrome 123 or newer and enable **Developer mode**.
 3. Choose **Load unpacked**, then select the folder containing `manifest.json`.
 4. Pin the ghost icon in Chrome's extensions menu.
@@ -17,7 +17,7 @@ It is an unpacked package, not a Chrome Web Store publication.
 
 ## Upload to Chrome Web Store
 
-Use **`dead-internet-theory-chrome-webstore-1.0.1.zip`** for the developer dashboard.
+Use **`dead-internet-theory-chrome-webstore-1.0.2.zip`** for the developer dashboard.
 This ZIP has `manifest.json` at its root and omits the development-only `key`
 field. The ordinary Chrome ZIP retains that key for stable Load unpacked installs.
 

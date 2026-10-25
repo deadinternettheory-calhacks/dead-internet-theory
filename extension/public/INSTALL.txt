@@ -9,7 +9,12 @@ Dead Internet Theory — Chrome extension
 Open a public Reddit, X, TikTok or YouTube post and click the ghost.
 Keyboard shortcut: Ctrl+Shift+Y (Command+Shift+Y on macOS).
 Alternatively, right-click a post link and choose Analyze with Dead Internet Theory.
-Review the selected link, then click Analyze post.
+Use Current Page in the panel fills the link from an active Reddit post, TikTok
+video or YouTube video. It does not start analysis. Review the selected link,
+then click Analyze post.
+
+When updating, reload the extension in chrome://extensions and accept the tabs
+permission used to read the active page URL when you click Use Current Page.
 
 You can close the panel while the server works. Reopen it to resume.
 Open full report displays the same investigation in an extension tab; it does
