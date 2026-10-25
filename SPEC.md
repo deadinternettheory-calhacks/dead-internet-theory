@@ -322,13 +322,16 @@ backend states, show elapsed time in the view, and let readers browse a bounded
 preview of collected comments while analysis runs. They do not use the synthetic
 walkthrough's timing, invented percentages or an estimated completion countdown.
 
-Live waiting views also include a separate interactive 3D playground: a ghost
-investigator, graveyard globe, rings and illustrative comment tiles. Drag/flick
-rotation, tap/button ripples, three remixable arrangements and keyboard controls
-make the wait interactive. The illustration responds to actual phase changes but
-never represents collected evidence or invented progress. Pause, reduced motion,
-graphics fallback, offscreen/background suspension and deferred lazy loading keep
-the real investigation usable independently of the scene. See
+Live waiting views include a larger unframed 3D illustration with no visible
+scene-control buttons: a rounded, expressive ghost, graveyard globe, rings and
+illustrative comment tiles. Actual backend phases drive its formations: resting
+orbit while queued, gathering cards during collection, and organized rows with a
+magnifying glass during analysis. The ghost waves, blinks, reaches, nods and reacts
+to taps with hops, winks and twirls. Drag/flick and keyboard interactions remain
+available, with Space/double-click to pause/resume and Escape to pause. The art
+never represents collected evidence or invented progress. Reduced motion,
+graphics fallback, offscreen/background suspension and deferred lazy loading
+keep the real investigation usable independently of the scene. See
 [web/README.md](web/README.md#interactive-analysis-playground).
 
 ## 11. Security, privacy, and platform access

@@ -1,10 +1,9 @@
 import { Component, lazy, memo, Suspense, useCallback, useEffect, useId, useRef, useState, type ReactNode } from 'react';
-import { Pause, Play, Radio, Shuffle } from 'lucide-react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import type { ProgressPhase } from '../AnalysisProgress';
 import { useGlobeDrag } from '../GraveyardGlobe/useGlobeDrag';
 import { PlaygroundPoster } from './PlaygroundPoster';
-import { ORBITS } from './playground-types';
+import { formationFor } from './playground-types';
 import './playground.css';
 
 const PlaygroundScene = lazy(() => import('./PlaygroundScene'));
@@ -27,7 +26,6 @@ export const AnalysisPlayground = memo(function AnalysisPlayground({ phase }: { 
   const [requested, setRequested] = useState(false);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
-  const [orbit, setOrbit] = useState(0);
   const [pulse, setPulse] = useState(0);
   const helpId = useId();
   const animate = playing && inView && visible && !failed;
@@ -55,33 +53,28 @@ export const AnalysisPlayground = memo(function AnalysisPlayground({ phase }: { 
     return () => { observer?.disconnect(); document.removeEventListener('visibilitychange', update); };
   }, []);
 
-  return <div className="analysis-playground" ref={frame} data-orbit={ORBITS[orbit]}>
-    <div className="playground-topline"><span>The signal playground</span><span className="playground-orbit-label">{ORBITS[orbit]}</span></div>
-    <div className="playground-stage" ref={stage} role="group" aria-label="Interactive signal playground" aria-describedby={helpId}
-      tabIndex={ready && !failed ? 0 : undefined} data-ready={ready && !failed} data-dragging={dragging} {...handlers}
+  return <div className="analysis-playground" ref={frame} data-phase={phase} data-formation={formationFor(phase)} data-playing={playing && !failed}>
+    <div className="playground-stage" ref={stage} role="group" aria-label="Interactive investigation illustration" aria-describedby={helpId}
+      aria-keyshortcuts="Space Enter Escape Home ArrowLeft ArrowRight ArrowUp ArrowDown"
+      tabIndex={failed ? undefined : 0} data-ready={ready && !failed} data-dragging={dragging} {...handlers}
+      onDoubleClick={() => { if (!failed) setPlaying(p => !p); }}
       onPointerUp={event => {
         const tapped = motion.current.drag?.id === event.pointerId && !motion.current.drag.moved;
         handlers.onPointerUp(event);
         if (tapped) sendPulse();
       }}
       onKeyDown={event => {
-        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); sendPulse(); }
+        if (event.key === ' ') { event.preventDefault(); if (!failed) setPlaying(p => !p); }
+        else if (event.key === 'Escape') { event.preventDefault(); setPlaying(false); }
+        else if (event.key === 'Enter') { event.preventDefault(); sendPulse(); }
         else handlers.onKeyDown(event);
       }}>
-      <div className={`playground-poster${ready && !failed ? ' is-hidden' : ''}`} aria-hidden="true"><PlaygroundPoster/></div>
+      <div className={`playground-poster${ready && !failed ? ' is-hidden' : ''}`} aria-hidden="true"><PlaygroundPoster phase={phase}/></div>
       {requested && !failed && <SceneBoundary onFailure={handleFailure}><Suspense fallback={null}>
-        <PlaygroundScene animate={animate} phase={phase} orbit={orbit} pulse={pulse} pointer={pointer} motion={motion} onReady={handleReady} onFailure={handleFailure}/>
+        <PlaygroundScene animate={animate} phase={phase} pulse={pulse} pointer={pointer} motion={motion} onReady={handleReady} onFailure={handleFailure}/>
       </Suspense></SceneBoundary>}
-      <span className="playground-stage-hint" aria-hidden="true">{ready && !failed ? 'Drag to spin · Tap to ripple' : 'A little universe, just for the wait'}</span>
+      <span className="playground-stage-hint" aria-hidden="true">{playing ? 'Drag to spin · Tap to say hi · Space to pause' : 'Motion paused · Space or double-click to play'}</span>
     </div>
-    <div className="playground-controls" aria-label="Playground controls">
-      <button type="button" className="playground-pulse" onClick={sendPulse} disabled={!ready || !animate}><Radio size={16} aria-hidden="true"/>Send a pulse</button>
-      <button type="button" className="playground-remix" onClick={() => setOrbit(o => (o + 1) % ORBITS.length)} disabled={!ready || failed} aria-label={`Remix the orbit. Current: ${ORBITS[orbit]}`}><Shuffle size={15} aria-hidden="true"/><span>Remix</span></button>
-      <button type="button" className="playground-motion" onClick={() => setPlaying(p => !p)} disabled={failed} aria-label={playing ? 'Pause playground motion' : 'Play playground animation'} aria-pressed={playing}>
-        {playing ? <Pause size={16} aria-hidden="true"/> : <Play size={16} aria-hidden="true"/>}
-      </button>
-    </div>
-    <p className="playground-disclosure">Just a playground. Your analysis keeps running.</p>
-    <span className="sr-only" id={helpId}>Decorative illustration, separate from your results. Drag to spin, or use arrow keys. Enter or Space sends a pulse. Home resets the view. On touch screens, swipe sideways to spin or vertically to scroll.</span>
+    <span className="sr-only" id={helpId}>Decorative illustration, separate from your results. It changes with the real investigation stage. Drag to spin, or use arrow keys. Tap or Enter makes the ghost react. Space or double-click pauses and resumes motion; Escape pauses. Home resets the view. On touch screens, swipe sideways to spin or vertically to scroll.</span>
   </div>;
 });

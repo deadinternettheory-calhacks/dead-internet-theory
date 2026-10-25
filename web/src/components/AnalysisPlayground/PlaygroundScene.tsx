@@ -7,7 +7,8 @@ import {
 } from 'three';
 import { createHeadstoneShape, createWireframe, GRAVES } from '../GraveyardGlobe/globe-model';
 import { advanceGlobe } from '../GraveyardGlobe/globe-motion';
-import type { PlaygroundSceneProps } from './playground-types';
+import { formationFor, type PlaygroundSceneProps } from './playground-types';
+import { GhostCharacter } from './GhostCharacter';
 
 const COUNT = 14;
 const SPARKS = 32;
@@ -25,27 +26,12 @@ function commentShape() {
   return s;
 }
 
-function ghostShape() {
-  const s = new Shape();
-  s.moveTo(-0.38, -0.34); s.lineTo(-0.38, 0.14);
-  s.absarc(0, 0.14, 0.38, Math.PI, 0, true);
-  s.lineTo(0.38, -0.34);
-  s.quadraticCurveTo(0.38, -0.46, 0.25, -0.32);
-  s.quadraticCurveTo(0.18, -0.25, 0.12, -0.36);
-  s.quadraticCurveTo(0, -0.53, -0.12, -0.36);
-  s.quadraticCurveTo(-0.18, -0.25, -0.25, -0.32);
-  s.quadraticCurveTo(-0.38, -0.46, -0.38, -0.34);
-  return s;
-}
-
-function Model({ animate, phase, orbit, pulse, pointer, motion, onReady }: Omit<PlaygroundSceneProps, 'onFailure'>) {
+function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<PlaygroundSceneProps, 'onFailure'>) {
   const { invalidate } = useThree();
   const world = useRef<Group>(null);
   const tilt = useRef<Group>(null);
   const core = useRef<Group>(null);
   const halo = useRef<Group>(null);
-  const ghost = useRef<Group>(null);
-  const eyes = useRef<Group>(null);
   const cards = useRef<Group[]>([]);
   const ripples = useRef<Group[]>([]);
   const sparks = useRef<InstancedMesh>(null);
@@ -53,16 +39,14 @@ function Model({ animate, phase, orbit, pulse, pointer, motion, onReady }: Omit<
   const pulseAge = useRef(3);
   const first = useRef(true);
   const initialized = useRef(false);
-  const lastOrbit = useRef(orbit);
+  const formation = formationFor(phase);
+  const lastFormation = useRef(formation);
   const stamp = useMemo(() => new Object3D(), []);
   const resources = useMemo(() => ({
     wire: createWireframe(),
     sphere: new SphereGeometry(1.44, 36, 24),
     stone: new ExtrudeGeometry(createHeadstoneShape(), { depth: 0.09, bevelEnabled: true, bevelSize: 0.016, bevelThickness: 0.016, bevelSegments: 2, steps: 1, curveSegments: 10 }).translate(0, 0, -0.045),
     card: new ExtrudeGeometry(commentShape(), { depth: 0.065, bevelEnabled: true, bevelSize: 0.018, bevelThickness: 0.018, bevelSegments: 2, steps: 1, curveSegments: 8 }).translate(0, 0, -0.033),
-    ghost: new ExtrudeGeometry(ghostShape(), { depth: 0.34, bevelEnabled: true, bevelSize: 0.06, bevelThickness: 0.09, bevelSegments: 4, steps: 1, curveSegments: 24 }).translate(0, 0, -0.17),
-    eye: new SphereGeometry(1, 16, 12),
-    smile: new TorusGeometry(0.095, 0.016, 6, 24, Math.PI),
     box: new BoxGeometry(1, 1, 1),
     circle: new CircleGeometry(0.055, 20),
     ring: new TorusGeometry(1.38, 0.012, 6, 128),
@@ -86,36 +70,40 @@ function Model({ animate, phase, orbit, pulse, pointer, motion, onReady }: Omit<
     rippleMaterials.forEach(material => material.dispose());
   }, [resources, rippleMaterials]);
   useEffect(() => { pulseAge.current = 0; invalidate(); }, [pulse, phase, invalidate]);
-  useEffect(() => { invalidate(); }, [orbit, animate, invalidate]);
+  useEffect(() => { invalidate(); }, [formation, animate, invalidate]);
 
   useFrame((state, delta) => {
     if (first.current) { first.current = false; onReady(state.invalidate); }
     if (!world.current || !tilt.current) return;
     const dt = Math.min(delta, 0.05);
-    if (animate) { time.current += dt; pulseAge.current += dt; advanceGlobe(motion.current, dt); }
+    if (animate) {
+      time.current += dt; pulseAge.current += dt; advanceGlobe(motion.current, dt);
+      if (!motion.current.drag) {
+        motion.current.yaw -= (formation === 'inspect' ? 0.12 : 0.06) * dt;
+        if (formation === 'inspect' && Math.hypot(motion.current.velocityYaw, motion.current.velocityPitch) < 0.1) {
+          motion.current.yaw = MathUtils.damp(motion.current.yaw, Math.round(motion.current.yaw / TAU) * TAU, 1.4, dt);
+          motion.current.pitch = MathUtils.damp(motion.current.pitch, Math.round(motion.current.pitch / TAU) * TAU, 1.4, dt);
+        }
+      }
+    }
     const t = time.current;
     const age = pulseAge.current;
     const analyzing = phase === 'analyzing';
     const pace = analyzing ? 0.23 : phase === 'collecting' ? 0.16 : 0.08;
     const shock = age < 1.6 ? Math.sin(Math.min(1, age / 1.6) * Math.PI) * Math.exp(-age * 1.5) : 0;
-    const fit = Math.min(1, state.viewport.width / 6.5);
-    tilt.current.scale.setScalar(fit);
+    const fit = Math.min(1.1, state.viewport.width / (formation === 'gather' ? 7.2 : 6.0));
+    // Leave room for the incoming stream and settle into a closer inspection view.
+    tilt.current.scale.setScalar(animate && initialized.current ? MathUtils.damp(tilt.current.scale.x, fit, 4, dt) : fit);
     world.current.rotation.set(motion.current.pitch, motion.current.yaw, 0, 'YXZ');
     // Demand frames can still occur on resize or React commits. A paused scene
-    // keeps its exact pose; direct turns and an explicit remix remain available.
-    if (!animate && initialized.current && lastOrbit.current === orbit) return;
+    // keeps its exact pose; direct turns and backend phase changes remain available.
+    if (!animate && initialized.current && lastFormation.current === formation) return;
     initialized.current = true;
-    lastOrbit.current = orbit;
+    lastFormation.current = formation;
     tilt.current.rotation.x = MathUtils.damp(tilt.current.rotation.x, 0.12 + pointer.current.y * 0.10, 4, dt);
     tilt.current.rotation.z = MathUtils.damp(tilt.current.rotation.z, -0.07 - pointer.current.x * 0.08, 4, dt);
     if (core.current) { core.current.rotation.y = t * 0.16; core.current.position.y = Math.sin(t * 0.8) * 0.07; }
     if (halo.current) { halo.current.rotation.y = t * -0.13; halo.current.rotation.z = Math.sin(t * 0.3) * 0.1; }
-    if (ghost.current) {
-      ghost.current.position.set(Math.sin(t * 0.55) * 0.06, 0.07 + Math.sin(t * 1.4) * 0.13 + shock * 0.3, 1.35);
-      ghost.current.rotation.set(pointer.current.y * 0.1, Math.sin(motion.current.yaw) * 0.28, Math.sin(t * 0.7) * 0.06 - pointer.current.x * 0.08);
-      ghost.current.scale.set(1.1 + shock * 0.18, 1.1 - shock * 0.10, 1.1);
-    }
-    if (eyes.current) eyes.current.scale.y = MathUtils.damp(eyes.current.scale.y, t % 5.5 > 5.28 ? 0.12 : 1 + shock * 0.8, 35, dt);
     resources.wireInk.opacity = analyzing ? 0.65 : 0.42;
 
     for (let i = 0; i < COUNT; i++) {
@@ -123,13 +111,17 @@ function Model({ animate, phase, orbit, pulse, pointer, motion, onReady }: Omit<
       if (!card) continue;
       const angle = i / COUNT * TAU + t * pace;
       let x: number, y: number, z: number;
-      if (orbit === 1) {
-        const a = angle * 1.7;
-        x = Math.cos(a) * 1.85; y = (i / (COUNT - 1) - 0.5) * 3.2; z = Math.sin(a) * 1.45;
-      } else if (orbit === 2) {
-        x = (i - (COUNT - 1) / 2) * 0.38;
-        y = Math.sin(i * 0.65 + t * 0.9) * 1.15;
-        z = Math.cos(i * 0.65 + t * 0.9) * 0.85;
+      let arrival = 1;
+      if (formation === 'gather') {
+        const travel = (i / COUNT + t * 0.105) % 1;
+        const a = travel * TAU * 1.35;
+        const radius = 1 + (1 - travel) * 1.7;
+        x = Math.cos(a) * radius; y = (1 - travel) * 2.1 - 0.5; z = Math.sin(a) * radius * 0.65;
+        arrival = Math.min(1, travel * 12, (1 - travel) * 12);
+      } else if (formation === 'inspect') {
+        x = (i % 7 - 3) * 0.69;
+        y = (i < 7 ? 1.22 : -1.22) + Math.sin(i + t * 0.8) * 0.07;
+        z = Math.sin(i * 0.5 + t * 0.35) * 0.18;
       } else {
         x = Math.cos(angle) * 2.12; y = Math.sin(angle * 2 + t * 0.35) * 0.8; z = Math.sin(angle) * 1.65;
       }
@@ -141,8 +133,8 @@ function Model({ animate, phase, orbit, pulse, pointer, motion, onReady }: Omit<
         MathUtils.damp(card.position.z, z * swell, 4.5, dt),
       );
       else card.position.set(x * swell, floatY, z * swell);
-      card.rotation.set(Math.sin(t * 0.45 + i) * 0.12, Math.sin(angle) * 0.35, Math.sin(i * 2 + t * 0.2) * 0.2 + shock * (i % 2 ? 0.4 : -0.4));
-      card.scale.setScalar(1 + (i % 3) * 0.10 + shock * 0.2);
+      card.rotation.set(Math.sin(t * 0.45 + i) * 0.08, formation === 'inspect' ? 0 : Math.sin(angle) * 0.35, Math.sin(i * 2 + t * 0.2) * (formation === 'inspect' ? 0.04 : 0.2) + shock * (i % 2 ? 0.4 : -0.4));
+      card.scale.setScalar((1 + (i % 3) * 0.10 + shock * 0.2) * arrival);
     }
     for (let i = 0; i < 3; i++) {
       const p = Math.max(0, age - i * 0.13);
@@ -195,16 +187,7 @@ function Model({ animate, phase, orbit, pulse, pointer, motion, onReady }: Omit<
       </group>)}
       <instancedMesh ref={sparks} args={[resources.spark, resources.sparkle, SPARKS]} frustumCulled={false}/>
     </group>
-    <group ref={ghost} position={[0, 0.07, 1.35]} scale={1.1}>
-      <mesh geometry={resources.ghost} material={resources.paper}/>
-      <group ref={eyes} position={[0, 0.12, 0.25]}>
-        {[-0.13,0.13].map(x => <group key={x} position={[x, 0, 0]}>
-          <mesh geometry={resources.eye} material={resources.green} scale={[0.052, 0.075, 0.025]}/>
-          <mesh geometry={resources.eye} material={resources.paper} position={[-0.012, 0.018, 0.023]} scale={0.014}/>
-        </group>)}
-      </group>
-      <mesh geometry={resources.smile} material={resources.green} position={[0, -0.07, 0.25]} rotation={[0, 0, Math.PI]}/>
-    </group>
+    <GhostCharacter animate={animate} phase={phase} pulse={pulse} pointer={pointer} motion={motion}/>
   </group>;
 }
 

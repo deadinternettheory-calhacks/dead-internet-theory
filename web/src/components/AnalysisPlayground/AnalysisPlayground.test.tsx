@@ -11,7 +11,7 @@ vi.mock('./PlaygroundScene', () => ({
   default: function Scene(props: PlaygroundSceneProps) {
     latest = props;
     useEffect(() => { props.onReady(() => {}); return disposed; }, [props.onReady]);
-    return <div data-testid="playground-scene"><button onClick={props.onFailure}>Simulate graphics loss</button></div>;
+    return <div data-testid="playground-scene"/>;
   },
 }));
 
@@ -57,8 +57,8 @@ const render = async (phase: ProgressPhase = 'analyzing') => act(async () => {
   root.render(<AnalysisProgress phase={phase} status={phase === 'analyzing' ? 'Analyzing the discussion…' : 'Waiting to collect public comments…'} collectedCount={8}/>);
 });
 const advance = async (ms = 450) => act(async () => vi.advanceTimersByTimeAsync(ms));
-const button = (label: string) => container.querySelector<HTMLButtonElement>(`button[aria-label^="${label}"]`)!;
 const stage = () => container.querySelector<HTMLElement>('.playground-stage')!;
+const key = (value: string) => act(() => stage().dispatchEvent(new KeyboardEvent('keydown', { key: value, bubbles: true, cancelable: true })));
 
 it('keeps a fast completed request from loading any 3D scene', async () => {
   await render();
@@ -75,7 +75,7 @@ it('starts reduced motion with a static illustration and allows explicit opt-in'
   await advance();
   expect(latest).toBeUndefined();
   expect(container.querySelector('.playground-poster.is-hidden')).toBeNull();
-  await act(async () => button('Play playground').click());
+  key(' ');
   await advance();
   expect(latest?.animate).toBe(true);
   expect(container.querySelector('.playground-poster.is-hidden')).not.toBeNull();
@@ -83,32 +83,37 @@ it('starts reduced motion with a static illustration and allows explicit opt-in'
 
 it('pauses inertia while preserving direct keyboard turns', async () => {
   await render(); await advance();
-  act(() => stage().dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true })));
+  key('ArrowRight');
   expect(latest!.motion.current.velocityYaw).toBeGreaterThan(0);
-  await act(async () => button('Pause playground').click());
+  key(' ');
   expect(latest?.animate).toBe(false);
   expect(latest!.motion.current.velocityYaw).toBe(0);
   const yaw = latest!.motion.current.yaw;
-  act(() => stage().dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, cancelable: true })));
+  key('ArrowLeft');
   expect(latest!.motion.current.yaw).toBeLessThan(yaw);
   expect(latest!.motion.current.velocityYaw).toBe(0);
 });
 
-it('keeps playful pulses and remixing independent of real progress, including after minutes', async () => {
+it('has no buttons and changes formation only when the real phase changes, even after minutes', async () => {
   await render('queued'); await advance();
-  act(() => stage().dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true })));
-  await act(async () => button('Remix').click());
+  expect(container.querySelectorAll('button')).toHaveLength(0);
+  expect(container.querySelector('.analysis-playground')?.getAttribute('data-formation')).toBe('rest');
+  key('Enter');
   expect(latest?.pulse).toBe(1);
-  expect(latest?.orbit).toBe(1);
   await advance(180000);
   expect(container.textContent).toContain('3:00 in this view');
   expect(container.querySelector('[role="status"]')?.textContent).toContain('Waiting to collect public comments…');
   expect(container.querySelector('[aria-current="step"]')?.textContent).toContain('Collect public comments');
   expect(container.textContent).not.toMatch(/\d+%/);
-  await act(async () => button('Pause playground').click());
+  expect(container.querySelector('.analysis-playground')?.getAttribute('data-formation')).toBe('rest');
+  await render('collecting');
+  expect(container.querySelector('.analysis-playground')?.getAttribute('data-formation')).toBe('gather');
+  await render('analysis-queued');
+  expect(container.querySelector('.analysis-playground')?.getAttribute('data-formation')).toBe('rest');
+  key(' ');
   await render();
   expect(latest?.phase).toBe('analyzing');
-  expect(latest?.orbit).toBe(1);
+  expect(container.querySelector('.analysis-playground')?.getAttribute('data-formation')).toBe('inspect');
   expect(latest?.animate).toBe(false);
   expect(container.textContent).toContain('8 comments collected.');
   expect(container.querySelector('[aria-current="step"]')?.textContent).toContain('Analyze the discussion');
@@ -132,9 +137,30 @@ it('immediately respects a changed system preference and restores the poster on 
   await render(); await advance();
   act(() => { reduced = true; preferenceChanged?.(); });
   expect(latest?.animate).toBe(false);
-  act(() => container.querySelector<HTMLButtonElement>('[data-testid="playground-scene"] button')!.click());
+  act(() => latest!.onFailure());
   expect(container.querySelector('[data-testid="playground-scene"]')).toBeNull();
   expect(container.querySelector('.playground-poster.is-hidden')).toBeNull();
   expect(container.querySelector('[role="status"]')?.textContent).toContain('Analyzing the discussion…');
   expect(disposed).toHaveBeenCalledOnce();
+});
+
+it('allows pause and resume directly on the scene without exposing buttons', async () => {
+  await render(); await advance();
+  act(() => stage().dispatchEvent(new MouseEvent('dblclick', { bubbles: true })));
+  expect(latest?.animate).toBe(false);
+  act(() => stage().dispatchEvent(new MouseEvent('dblclick', { bubbles: true })));
+  expect(latest?.animate).toBe(true);
+  key('Escape');
+  expect(latest?.animate).toBe(false);
+  expect(container.querySelectorAll('button')).toHaveLength(0);
+});
+
+it('updates the reduced-motion illustration with the actual stage without loading WebGL', async () => {
+  reduced = true;
+  await render('collecting'); await advance();
+  expect(latest).toBeUndefined();
+  expect(container.querySelector('.ghost-poster-lens')).toBeNull();
+  await render('analyzing');
+  expect(container.querySelector('.ghost-poster-lens')).not.toBeNull();
+  expect(latest).toBeUndefined();
 });

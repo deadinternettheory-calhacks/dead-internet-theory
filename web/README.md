@@ -163,14 +163,21 @@ scene timing is never used as live progress.
 
 ## Interactive analysis playground
 
-While a live investigation is waiting, collecting or analyzing, a separate 3D
-playground shows a floating ghost investigator, the graveyard globe, gyroscope
-rings and fourteen modeled comment tiles. Drag and flick to rotate with momentum;
-tap the scene or **Send a pulse** to launch ripples and sparks. **Remix** changes
-between Orbit, Vortex and Wave arrangements. Arrow keys rotate, Enter/Space sends
-a pulse, and Home resets the view. Horizontal touch gestures leave vertical
-scrolling and pinch zoom available. **Pause** stops automatic motion and inertia,
-while direct rotation remains available.
+The live waiting view has a larger, unframed 3D illustration beside the real
+status, stacking below it on mobile. There are no visible scene buttons or
+control panel. Formations follow the real backend phase: a gentle orbit and a
+waving ghost while waiting, cards spiraling inward during collection, then two
+organized rows and a ghost inspecting them with a magnifying glass during
+analysis. They never advance on a timer. The ghost has a rounder body, arms,
+blush, shiny eyes, blinks, waves, reaching motions and nods. Taps cycle local
+hop, wink/wave and twirl reactions with ripples and sparks.
+
+Drag/flick rotates with momentum; tap or Enter makes the ghost react. Space or
+double-click pauses/resumes illustration motion, Escape pauses, arrow keys turn
+it, and Home resets the view. Instructions are available to screen readers and
+on keyboard focus. Horizontal touch gestures preserve vertical scrolling and
+pinch zoom. Pausing stops automatic motion and inertia while allowing direct
+turns and static pose changes when the real investigation phase changes.
 
 This is an illustration with local controls, separate from the evidence. The
 real backend status, elapsed-view clock, milestones, collected count and comment
@@ -178,9 +185,10 @@ preview remain authoritative. The toy does not initiate requests, alter polling,
 change scores or simulate completion. Finishing the report unmounts the scene.
 
 The scene shares the homepage's lazy Three.js chunk; its own code loads only if
-the wait lasts at least 400 ms. Reduced motion starts with a static SVG and an
-explicit Play option, reacts to preference changes, and keeps a poster on graphics
-failure. Offscreen and background-tab animation suspends. Simple shared geometry,
+the wait lasts at least 400 ms. Reduced motion starts with a stage-specific static
+SVG, with Space/double-click as explicit opt-in. It reacts to preference changes
+and keeps a poster on graphics failure. Offscreen and background-tab motion
+suspends. Simple shared geometry,
 instanced sparks, a 1.5 pixel-ratio cap and no shadow maps, post-processing or
 external models keep rendering bounded; resources are disposed on unmount.
 This feature deploys with the website and requires no ingestion or inference
