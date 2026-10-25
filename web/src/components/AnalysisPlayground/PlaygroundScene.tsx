@@ -3,11 +3,12 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import {
   BoxGeometry, CircleGeometry, ExtrudeGeometry, IcosahedronGeometry, LineBasicMaterial,
   MathUtils, MeshBasicMaterial, MeshStandardMaterial, Object3D, Shape, SphereGeometry,
-  TorusGeometry, type Group, type InstancedMesh,
+  TorusGeometry, type Group, type InstancedMesh, type Mesh,
 } from 'three';
 import { createHeadstoneShape, createWireframe, GRAVES } from '../GraveyardGlobe/globe-model';
 import { advanceGlobe } from '../GraveyardGlobe/globe-motion';
 import { formationFor, type PlaygroundSceneProps } from './playground-types';
+import { commentFlight } from './playground-motion';
 
 const COUNT = 18;
 const SPARKS = 32;
@@ -39,7 +40,8 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
   const first = useRef(true);
   const initialized = useRef(false);
   const formation = formationFor(phase);
-  const lastFormation = useRef(formation);
+  const lastPhase = useRef(phase);
+  const phaseAge = useRef(0);
   const stamp = useMemo(() => new Object3D(), []);
   const resources = useMemo(() => ({
     wire: createWireframe(),
@@ -75,8 +77,10 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
     if (first.current) { first.current = false; onReady(state.invalidate); }
     if (!world.current || !tilt.current) return;
     const dt = Math.min(delta, 0.05);
+    const phaseChanged = lastPhase.current !== phase;
+    if (phaseChanged) phaseAge.current = 0;
     if (animate) {
-      time.current += dt; pulseAge.current += dt; advanceGlobe(motion.current, dt);
+      phaseAge.current += dt; time.current += dt; pulseAge.current += dt; advanceGlobe(motion.current, dt);
       if (!motion.current.drag) {
         motion.current.yaw -= (formation === 'inspect' ? 0.12 : 0.06) * dt;
         if (formation === 'inspect' && Math.hypot(motion.current.velocityYaw, motion.current.velocityPitch) < 0.1) {
@@ -88,7 +92,6 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
     const t = time.current;
     const age = pulseAge.current;
     const analyzing = phase === 'analyzing';
-    const pace = analyzing ? 0.04 : phase === 'collecting' ? 0.07 : 0.035;
     const shock = age < 1.6 ? Math.sin(Math.min(1, age / 1.6) * Math.PI) * Math.exp(-age * 1.5) : 0;
     const { width, height } = state.viewport;
     // The globe fills the background; comment positions use viewport dimensions
@@ -98,42 +101,21 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
     world.current.rotation.set(motion.current.pitch, motion.current.yaw, 0, 'YXZ');
     // Demand frames can still occur on resize or React commits. A paused scene
     // keeps its exact pose; direct turns and backend phase changes remain available.
-    if (!animate && initialized.current && lastFormation.current === formation) return;
+    if (!animate && initialized.current && !phaseChanged) return;
     initialized.current = true;
-    lastFormation.current = formation;
+    lastPhase.current = phase;
     tilt.current.rotation.x = MathUtils.damp(tilt.current.rotation.x, 0.12 + pointer.current.y * 0.10, 4, dt);
     tilt.current.rotation.z = MathUtils.damp(tilt.current.rotation.z, -0.07 - pointer.current.x * 0.08, 4, dt);
     if (core.current) { core.current.rotation.y = t * 0.16; core.current.position.y = Math.sin(t * 0.8) * 0.07; }
     if (halo.current) { halo.current.rotation.y = t * -0.13; halo.current.rotation.z = Math.sin(t * 0.3) * 0.1; }
     resources.wireInk.opacity = analyzing ? 0.32 : 0.22;
-    const fieldX = Math.max(0.5, width / 2 - 0.55);
-    const fieldY = Math.max(0.5, height / 2 - 0.55);
-
     for (let i = 0; i < COUNT; i++) {
       const card = cards.current[i];
       if (!card) continue;
-      const angle = i / COUNT * TAU + t * pace;
-      let x: number, y: number, z: number;
-      let arrival = 1;
-      if (formation === 'gather') {
-        const travel = (i / COUNT + t * 0.055) % 1;
-        const a = travel * TAU * 1.35;
-        const radius = 0.25 + (1 - travel) * 0.75;
-        x = Math.cos(a) * fieldX * radius;
-        y = Math.sin(a) * fieldY * radius;
-        z = -1;
-        arrival = Math.min(1, travel * 12, (1 - travel) * 12);
-      } else if (formation === 'inspect') {
-        const columns = width < 7 ? 3 : 6;
-        const rows = Math.ceil(COUNT / columns);
-        x = (i % columns / (columns - 1) * 2 - 1) * fieldX;
-        y = (1 - Math.floor(i / columns) / (rows - 1) * 2) * fieldY;
-        z = -1;
-      } else {
-        x = Math.cos(angle) * fieldX;
-        y = Math.sin(angle * 2 + t * 0.1) * fieldY;
-        z = -1 + Math.sin(angle) * 0.2;
-      }
+      const { x, y, z, arrival, scan } = commentFlight({ phase, age: phaseAge.current, time: t, index: i, count: COUNT, width, height });
+      const angle = i / COUNT * TAU + t * 0.035;
+      card.visible = arrival > 0.001;
+      (card.children[0] as Mesh).material = scan > 0.6 ? resources.gold : i % 4 === 0 ? resources.green : resources.paper;
       const swell = 1 + shock * 0.035;
       const floatY = y * swell + Math.sin(t + i) * 0.08;
       if (animate && t > 0.05) card.position.set(
@@ -143,7 +125,7 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
       );
       else card.position.set(x * swell, floatY, z * swell);
       card.rotation.set(Math.sin(t * 0.45 + i) * 0.08, formation === 'inspect' ? 0 : Math.sin(angle) * 0.35, Math.sin(i * 2 + t * 0.2) * (formation === 'inspect' ? 0.04 : 0.2) + shock * (i % 2 ? 0.4 : -0.4));
-      card.scale.setScalar((width < 7 ? 0.75 : 1) * (1 + (i % 3) * 0.10 + shock * 0.1) * arrival);
+      card.scale.setScalar((width < 7 ? 0.75 : 1) * (1 + (i % 3) * 0.10 + shock * 0.1 + scan * 0.22) * arrival);
     }
     for (let i = 0; i < 3; i++) {
       const p = Math.max(0, age - i * 0.13);
