@@ -4,7 +4,7 @@
 import type { ClusterAssessment, HistoryResult, Score, Stance } from '../contract';
 import { daysBetween, mentions, round2 } from './features';
 import type { GraphIndex, HistorySample } from './packet';
-import { tierFor } from './rubric';
+import { hasAccountHistory, tierFor } from './rubric';
 import type { CommentScore } from './scoring';
 import type { ThreadSignals } from './signals';
 
@@ -158,6 +158,8 @@ export function sectionIndex(input: SectionInput): { score: Score; parts: Sectio
   if (contrasts.length) {
     historyContrast = mean(contrasts);
     notes.push(`History contrast ${Math.round(historyContrast * 100)}: ${contrastNotes.join('; ')}.`);
+  } else if (!hasAccountHistory(input.index.graph.platform)) {
+    notes.push('History contrast not measured: this platform does not give access to commenter histories, so it is left out and the other parts carry its weight.');
   } else {
     notes.push(`History contrast not measured: it needs at least ${MIN_GROUP} sampled users with history in each group (supportive ${sup.withHistory}, unsupportive ${uns.withHistory}).`);
   }

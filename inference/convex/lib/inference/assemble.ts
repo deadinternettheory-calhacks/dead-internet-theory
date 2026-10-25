@@ -21,7 +21,7 @@ import { GraphIndex, historyResults, sampleHistoryAuthors, scoringTargets } from
 import { sectionIndex } from './section';
 import { commentEstimate, threadSignals } from './signals';
 import { PROMPT_VERSION } from './prompts';
-import { CONFIDENCE_VALUE, RUBRIC_VERSION, RULES, RULES_BY_ID } from './rubric';
+import { CONFIDENCE_VALUE, RUBRIC_VERSION, RULES, RULES_BY_ID, hasAccountHistory } from './rubric';
 import { scoreAccount, scoreComment, type CommentScore, type EvidenceAvailability } from './scoring';
 import { knownEvidenceIds } from './evidence';
 
@@ -385,7 +385,7 @@ export function assembleAnalysis(input: AssembleInput): AssembleResult {
     limitations.push(`${sampledResults.length - gaps.length} of ${sampledResults.length} sampled users returned a full history (${Array.from(byStatus, ([k, n]) => `${n} ${k}`).join(', ')}).`);
   }
 
-  if (platform === 'youtube' || platform === 'tiktok') limitations.push('Commenter histories are not modelled on this platform, so scores cannot exceed 74 and confidence is low.');
+  if (!hasAccountHistory(platform)) limitations.push('This platform does not give access to commenters’ histories. Missing history counts neither for nor against astroturfing: history-based checks are left out of every score, and confidence is low.');
   if (index.root.authorId && !results.some(r => r.authorId === index.root.authorId)) limitations.push('The root author’s history was not available, so seeding checks that need it (T2, C5) are unknown.');
   limitations.push(...graph.coverage.limitations);
 
