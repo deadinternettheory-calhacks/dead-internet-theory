@@ -240,14 +240,17 @@ unvalidated and should be reviewed with the detection-research owner.
 
 ## Website example and test fixtures
 
-`fixtures/example-reddit-knife/` is a real r/BuyItForLife thread ("Recommendation
-for BIFL chef's knife?") collected through the hosted backend on 2026-10-24,
-with usernames, author and comment IDs and per-comment links replaced (see the
-retention exception in backend/RETENTION.md). It holds the live Claude triage
-and CREAO scoring replies recorded for it. `npm run demo` runs the pipeline on
-it with those replies and writes `../web/src/demo/example-report.json`, which
-the website shows at `/example`. Its histories are empty until the backend's
-history size fix is deployed; then re-collect them and re-run `npm run demo`.
+`fixtures/example-tiktok-nightlight/` is the real comment section of a TikTok
+product video (a foldable night light) collected through the hosted backend on
+2026-10-25. Usernames are replaced with made-up names of the same kind
+(shop-like, random string, platform default or ordinary), and author IDs,
+comment IDs and per-comment links are replaced (see the retention exception in
+backend/RETENTION.md). It holds the Claude triage (`claude-haiku-5-5`, as in
+production) and CREAO scoring replies recorded from a local run on 2026-10-25,
+with the same replacements. `npm run demo` runs the pipeline on it with those
+replies and writes `../web/src/demo/example-report.json`, which the website
+shows at `/example`. TikTok gives no commenter histories, so the walkthrough
+skips its history scene.
 
 `fixtures/synthetic-espresso/` is a fabricated thread used only in tests (it is
 written to `../web/src/test/` for UI tests and never shown on the site). `fixtures/contract-example-reddit/` holds

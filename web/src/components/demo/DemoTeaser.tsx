@@ -22,8 +22,8 @@ export function DemoTeaser() {
   }, []);
   return <section className="home-demo-section" ref={section} data-visible={visible} aria-labelledby="home-demo-title">
     <div className="home-demo-copy">
-      <h2 id="home-demo-title">A real thread.<br/><span>Every recommendation, checked.</span></h2>
-      <p>A real r/BuyItForLife question about chef’s knives. Follow the wording, timing, and account-history evidence behind its score.</p>
+      <h2 id="home-demo-title">A real comment section.<br/><span>Every comment, checked.</span></h2>
+      <p>A real TikTok product video with 100 comments. Follow the copied praise, shop accounts and bot filler behind its score.</p>
       <TransitionLink className="home-demo-link" to="/example?play=1">Explore this example <ArrowRight size={17} aria-hidden="true"/></TransitionLink><small>Ready instantly · explore at your pace</small>
     </div>
     <div className="home-demo-preview" aria-label="Sample comments from the example thread">

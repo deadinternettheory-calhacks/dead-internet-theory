@@ -59,7 +59,7 @@ The guide recommends preparing two minutes and requires a live demo (printed pp.
 
 If the run is still pending, keep it visible and use the completed report for inspection. A recording can show the full cold path with its elapsed time disclosed. Do not time a reused report as fresh inference. Do not promise a live CREAO run on a discussion without recommendations: that path correctly skips scoring.
 
-The public `/example` is now a stored real r/BuyItForLife knife discussion with replaced account/comment identifiers and recorded model replies. It is not synthetic, fresh collection, or confirmed ground truth for astroturfing. The synthetic espresso case remains a test fixture. Older verification notes describing a synthetic public example predate this change; use [the current example implementation](../web/src/pages/ExamplePage.tsx), [fixture provenance](../inference/README.md#website-example-and-test-fixtures), and [retention exception](../backend/RETENTION.md#public-example-exception).
+The public `/example` is now a stored real TikTok product video's comment section (a foldable night light) with usernames replaced by made-up names of the same kind, replaced comment identifiers and recorded model replies. It is not synthetic, fresh collection, or confirmed ground truth for astroturfing. The synthetic espresso case remains a test fixture. Older verification notes describing a synthetic public example predate this change; use [the current example implementation](../web/src/pages/ExamplePage.tsx), [fixture provenance](../inference/README.md#website-example-and-test-fixtures), and [retention exception](../backend/RETENTION.md#public-example-exception).
 
 ## Sponsor priorities
 

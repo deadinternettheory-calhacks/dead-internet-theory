@@ -6,9 +6,9 @@ import { useWalkthrough } from './useWalkthrough';
 import './demo.css';
 
 const STEPS = [
-  { label: 'The thread', title: 'An ordinary question.', description: 'Select a comment to read it.', mode: 'overview' },
+  { label: 'The thread', title: 'What people said.', description: 'Select a comment to read it.', mode: 'overview' },
   { label: 'The wording', title: 'Repeated wording?', description: 'Select a phrase to see who used it.', mode: 'wording' },
-  { label: 'The timing', title: 'Put those comments on a timeline.', description: 'When the recommendations arrived.', mode: 'timing' },
+  { label: 'The timing', title: 'Put those comments on a timeline.', description: 'When the comments arrived.', mode: 'timing' },
   { label: 'The history', title: 'Account histories.', description: 'Recent comments from a random sample of users.', mode: 'history' },
   { label: 'The result', title: 'The result.', description: 'One score, with its evidence.', mode: 'result' },
 ] as const;
@@ -22,24 +22,27 @@ export function DemoExperience({ report, autoplay = false, onOpenReport }: { rep
     observer.observe(stage.current);
     return () => observer.disconnect();
   }, []);
-  const { step, playing, go, toggle, pause } = useWalkthrough(autoplay, STEPS.length, inView);
-  const current = STEPS[step];
+  // Platforms without commenter histories (TikTok, YouTube) skip the history scene.
+  const steps = report.histories.length ? STEPS : STEPS.filter(s => s.mode !== 'history');
+  const last = steps.length - 1;
+  const { step, playing, go, toggle, pause } = useWalkthrough(autoplay, steps.length, inView);
+  const current = steps[step];
   return <section className="demo-experience" aria-label="Guided example investigation">
     <div className="demo-controls">
       <div className="demo-controls-start"><button type="button" className="demo-play" onClick={toggle}
-        aria-label={playing ? 'Pause walkthrough' : step === STEPS.length - 1 ? 'Replay walkthrough' : 'Play walkthrough'}>
-        {playing ? <Pause size={15} aria-hidden="true"/> : step === STEPS.length - 1 ? <RotateCcw size={15} aria-hidden="true"/> : <Play size={15} aria-hidden="true"/>}
-        {playing ? 'Pause' : step === STEPS.length - 1 ? 'Replay' : 'Play walkthrough'}
+        aria-label={playing ? 'Pause walkthrough' : step === last ? 'Replay walkthrough' : 'Play walkthrough'}>
+        {playing ? <Pause size={15} aria-hidden="true"/> : step === last ? <RotateCcw size={15} aria-hidden="true"/> : <Play size={15} aria-hidden="true"/>}
+        {playing ? 'Pause' : step === last ? 'Replay' : 'Play walkthrough'}
       </button></div>
-      <button type="button" className="demo-skip" onClick={() => { pause(); go(4); onOpenReport(); }}>Skip to full report <ArrowRight size={14} aria-hidden="true"/></button>
+      <button type="button" className="demo-skip" onClick={() => { pause(); go(last); onOpenReport(); }}>Skip to full report <ArrowRight size={14} aria-hidden="true"/></button>
     </div>
-    <ol className="demo-step-nav" aria-label="Walkthrough steps">{STEPS.map((s, index) => <li key={s.label} className={step === index ? 'is-current' : step > index ? 'is-visited' : ''} data-playing={playing && step === index}>
+    <ol className="demo-step-nav" aria-label="Walkthrough steps">{steps.map((s, index) => <li key={s.label} className={step === index ? 'is-current' : step > index ? 'is-visited' : ''} data-playing={playing && step === index}>
       <button type="button" onClick={() => go(index)} aria-current={step === index ? 'step' : undefined}>
         <span className="demo-step-number">{step > index ? <Check size={12} aria-hidden="true"/> : String(index + 1).padStart(2, '0')}</span><span>{s.label}</span>
       </button>
     </li>)}</ol>
     <div className="demo-scene-heading" key={step}>
-      <span className="demo-scene-eyebrow">{step + 1} / {STEPS.length}</span>
+      <span className="demo-scene-eyebrow">{step + 1} / {steps.length}</span>
       <h2 aria-live="polite">{current.title}</h2><p>{current.description}</p>
     </div>
     <div className="demo-playback-stage" ref={stage}>{current.mode === 'result' ? <div className="demo-result-scene">
@@ -48,10 +51,10 @@ export function DemoExperience({ report, autoplay = false, onOpenReport }: { rep
       <div className="demo-result-observations">{report.findings.map(f => <span key={f.axis}><Check size={14} aria-hidden="true"/>{f.title}</span>)}</div>
       <button type="button" className="primary-button" onClick={onOpenReport}>Full report <ArrowRight size={16} aria-hidden="true"/></button>
     </div> : <EvidenceExplorer report={report} mode={current.mode} onInteraction={pause}
-      onModeChange={(mode: EvidenceMode) => go(STEPS.findIndex(s => s.mode === mode))}/>}</div>
+      onModeChange={(mode: EvidenceMode) => go(steps.findIndex(s => s.mode === mode))}/>}</div>
     <div className="demo-scene-footer"><span/><div>
       <button type="button" className="demo-arrow" aria-label="Previous walkthrough step" disabled={step === 0} onClick={() => go(step - 1)}><ArrowLeft size={16} aria-hidden="true"/></button>
-      <button type="button" className="demo-next" disabled={step === STEPS.length - 1} onClick={() => go(step + 1)}>Next <ArrowRight size={16} aria-hidden="true"/></button>
+      <button type="button" className="demo-next" disabled={step === last} onClick={() => go(step + 1)}>Next <ArrowRight size={16} aria-hidden="true"/></button>
     </div></div>
   </section>;
 }

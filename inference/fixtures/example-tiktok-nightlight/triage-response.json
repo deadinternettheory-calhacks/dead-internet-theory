@@ -1,0 +1,912 @@
+{
+  "subject": {
+    "label": "Portable foldable night light with warm light and USB charge",
+    "kind": "product",
+    "confidence": 0.8,
+    "evidenceRefs": [
+      "tiktok:discussion:7669788981508197663"
+    ]
+  },
+  "comments": [
+    {
+      "commentId": "tiktok:comment:example_c001",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "realism": "generic",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Asks about price, which is not an endorsement."
+    },
+    {
+      "commentId": "tiktok:comment:example_c002",
+      "stance": "unclear",
+      "aboutProduct": null,
+      "realism": "generic",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Random digits with no content about the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c003",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "realism": "generic",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Asks where to buy, not an endorsement."
+    },
+    {
+      "commentId": "tiktok:comment:example_c004",
+      "stance": "unclear",
+      "aboutProduct": null,
+      "realism": "unnatural",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Unrelated, nonsensical phrase under this post."
+    },
+    {
+      "commentId": "tiktok:comment:example_c005",
+      "stance": "unclear",
+      "aboutProduct": null,
+      "realism": "generic",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Emoji-laden remark about paint, unrelated to the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c006",
+      "stance": "unclear",
+      "aboutProduct": null,
+      "realism": "unnatural",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Vietnamese remark about a cute item from a shop, not clearly about the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c007",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Expresses wanting the product shown in the post."
+    },
+    {
+      "commentId": "tiktok:comment:example_c008",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Short praise for the product shown."
+    },
+    {
+      "commentId": "tiktok:comment:example_c009",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Generic praise reaction to the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c010",
+      "stance": "unclear",
+      "aboutProduct": null,
+      "realism": "generic",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Meaningless single word."
+    },
+    {
+      "commentId": "tiktok:comment:example_c011",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Generic praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c012",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Generic praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c013",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Short praise, misspelled, for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c014",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "One-word praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c015",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Short Spanish praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c016",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "natural",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Specific use-case praise fitting a portable night light."
+    },
+    {
+      "commentId": "tiktok:comment:example_c017",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Short praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c018",
+      "stance": "unclear",
+      "aboutProduct": null,
+      "realism": "unnatural",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Unrelated remark in another language, not about the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c019",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Reply echoing praise from the parent comment."
+    },
+    {
+      "commentId": "tiktok:comment:example_c020",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Emoji reply agreeing with parent praise."
+    },
+    {
+      "commentId": "tiktok:comment:example_c021",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "realism": "unnatural",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Odd remark that does not engage with the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c022",
+      "stance": "unclear",
+      "aboutProduct": null,
+      "realism": "unnatural",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Unrelated exclamation in another language."
+    },
+    {
+      "commentId": "tiktok:comment:example_c023",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Short Spanish praise calling the product useful."
+    },
+    {
+      "commentId": "tiktok:comment:example_c024",
+      "stance": "unclear",
+      "aboutProduct": null,
+      "realism": "unnatural",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Off-topic question about online stores that does not fit the post."
+    },
+    {
+      "commentId": "tiktok:comment:example_c025",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Generic praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c026",
+      "stance": "unclear",
+      "aboutProduct": null,
+      "realism": "unnatural",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Unrelated phrase that does not fit the post."
+    },
+    {
+      "commentId": "tiktok:comment:example_c027",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "One-word praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c028",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Generic praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c029",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Generic praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c030",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Generic praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c031",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "natural",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Expresses wanting the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c032",
+      "stance": "unclear",
+      "aboutProduct": null,
+      "realism": "generic",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Deleted or empty comment."
+    },
+    {
+      "commentId": "tiktok:comment:example_c033",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Generic praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c034",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Emoji reaction praising the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c035",
+      "stance": "unclear",
+      "aboutProduct": null,
+      "realism": "unnatural",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Garbled phrase that does not fit the post."
+    },
+    {
+      "commentId": "tiktok:comment:example_c036",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Emoji-heavy generic praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c037",
+      "stance": "unclear",
+      "aboutProduct": null,
+      "realism": "generic",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Deleted or empty comment."
+    },
+    {
+      "commentId": "tiktok:comment:example_c038",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "natural",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Specific praise on use for a portable lamp."
+    },
+    {
+      "commentId": "tiktok:comment:example_c039",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "One-word praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c040",
+      "stance": "neutral",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "natural",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Asks how the product gets power, a neutral question."
+    },
+    {
+      "commentId": "tiktok:comment:example_c041",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Generic approval with a heart."
+    },
+    {
+      "commentId": "tiktok:comment:example_c042",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Short praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c043",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Short praise calling it useful."
+    },
+    {
+      "commentId": "tiktok:comment:example_c044",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "One-word praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c045",
+      "stance": "unclear",
+      "aboutProduct": null,
+      "realism": "unnatural",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Unrelated question in another language about a bootcamp."
+    },
+    {
+      "commentId": "tiktok:comment:example_c046",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Casual wanting-one reaction to the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c047",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Says they love it, generic praise."
+    },
+    {
+      "commentId": "tiktok:comment:example_c048",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Short praise calling it useful."
+    },
+    {
+      "commentId": "tiktok:comment:example_c049",
+      "stance": "neutral",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "natural",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Asks about battery operation, a neutral question."
+    },
+    {
+      "commentId": "tiktok:comment:example_c050",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "realism": "natural",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Asks how to purchase, not an endorsement."
+    },
+    {
+      "commentId": "tiktok:comment:example_c051",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Short Portuguese approval of the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c052",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Simple statement of liking the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c053",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Says they want the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c054",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Generic praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c055",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "One-word praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c056",
+      "stance": "neutral",
+      "aboutProduct": null,
+      "realism": "generic",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Vague reaction that does not endorse anything."
+    },
+    {
+      "commentId": "tiktok:comment:example_c057",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Generic praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c058",
+      "stance": "unclear",
+      "aboutProduct": null,
+      "realism": "generic",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Greeting with flowers, no product content."
+    },
+    {
+      "commentId": "tiktok:comment:example_c059",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "natural",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Spanish praise for practicality and quality."
+    },
+    {
+      "commentId": "tiktok:comment:example_c060",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "One-word praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c061",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Says they like it, generic."
+    },
+    {
+      "commentId": "tiktok:comment:example_c062",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Short praise, pretty and loved."
+    },
+    {
+      "commentId": "tiktok:comment:example_c063",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Short statement of love for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c064",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "One-word praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c065",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Generic reaction praising the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c066",
+      "stance": "neutral",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Says interesting, a lukewarm reaction without endorsement."
+    },
+    {
+      "commentId": "tiktok:comment:example_c067",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "natural",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Specific use-case praise for a balcony."
+    },
+    {
+      "commentId": "tiktok:comment:example_c068",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Says they want the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c069",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "One-word praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c070",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "One-word praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c071",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Generic praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c072",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Short praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c073",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Says they want the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c074",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "One-word praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c075",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "One-word praise replying to a parent praise."
+    },
+    {
+      "commentId": "tiktok:comment:example_c076",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Short praise calling the product pretty."
+    },
+    {
+      "commentId": "tiktok:comment:example_c077",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "One-word praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c078",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "natural",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Says they need one for a desk, a specific use."
+    },
+    {
+      "commentId": "tiktok:comment:example_c079",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Single word reaction, lightly supportive of the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c080",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Emoji-laden generic praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c081",
+      "stance": "unclear",
+      "aboutProduct": null,
+      "realism": "generic",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Truncated reaction with no clear product content."
+    },
+    {
+      "commentId": "tiktok:comment:example_c082",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Emoji-only reaction of approval."
+    },
+    {
+      "commentId": "tiktok:comment:example_c083",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "One-word praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c084",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Emoji-only approval of the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c085",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "natural",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Says they need this, a plausible personal reaction."
+    },
+    {
+      "commentId": "tiktok:comment:example_c086",
+      "stance": "unclear",
+      "aboutProduct": null,
+      "realism": "generic",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Deleted or empty comment."
+    },
+    {
+      "commentId": "tiktok:comment:example_c087",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Short praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c088",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "One-word praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c089",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "One-word value remark, favorable to the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c090",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Emoji-only reaction of approval."
+    },
+    {
+      "commentId": "tiktok:comment:example_c091",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "One-word praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c092",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "One-word reaction praising the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c093",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "One-word approval of the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c094",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Short praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c095",
+      "stance": "neutral",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "natural",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Asks whether the light is warm or white, a neutral question."
+    },
+    {
+      "commentId": "tiktok:comment:example_c096",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Short praise for the product."
+    },
+    {
+      "commentId": "tiktok:comment:example_c097",
+      "stance": "neutral",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "natural",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Asks how to buy the product, not an endorsement."
+    },
+    {
+      "commentId": "tiktok:comment:example_c098",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Short praise replying to the buying question."
+    },
+    {
+      "commentId": "tiktok:comment:example_c099",
+      "stance": "neutral",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "natural",
+      "recommendsProduct": null,
+      "recommendsSubject": false,
+      "rationale": "Asks about international shipping, a neutral question."
+    },
+    {
+      "commentId": "tiktok:comment:example_c100",
+      "stance": "supportive",
+      "aboutProduct": "Portable foldable night light with warm light and USB charge",
+      "realism": "generic",
+      "recommendsProduct": "Portable foldable night light with warm light and USB charge",
+      "recommendsSubject": true,
+      "rationale": "Short mildly positive remark about the product."
+    }
+  ]
+}

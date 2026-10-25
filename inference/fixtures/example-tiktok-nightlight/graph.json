@@ -1,0 +1,3918 @@
+{
+  "coverage": {
+    "actorRuns": [],
+    "collectedAt": "2026-10-25T00:57:17.383Z",
+    "completeness": "partial",
+    "limitations": [
+      "Video caption metadata only; no audiovisual analysis or cross-video commenter histories.",
+      "Configured comment cap reached; graph is partial.",
+      "2 comments have unavailable parents; native parents preserved without dangling edges.",
+      "Some source times are estimated or unavailable.",
+      "Usernames and comment IDs are replaced with made-up ones of the same kind (shop-like, random, default or ordinary); comment text is unchanged."
+    ],
+    "reportedCommentCount": null,
+    "retrievedCommentCount": 100,
+    "sortOrder": "provider-ranked",
+    "sourceSnapshotRef": "snapshot:example-tiktok-nightlight",
+    "truncated": true
+  },
+  "edges": [
+    {
+      "from": "tiktok:author:example_44",
+      "to": "tiktok:comment:example_c045",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_79",
+      "to": "tiktok:comment:example_c080",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_63",
+      "to": "tiktok:comment:example_c064",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_69",
+      "to": "tiktok:comment:example_c070",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_14",
+      "to": "tiktok:comment:example_c014",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_52",
+      "to": "tiktok:comment:example_c053",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_32",
+      "to": "tiktok:comment:example_c033",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_35",
+      "to": "tiktok:comment:example_c036",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_17",
+      "to": "tiktok:comment:example_c017",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_24",
+      "to": "tiktok:comment:example_c025",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_92",
+      "to": "tiktok:comment:example_c093",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_54",
+      "to": "tiktok:comment:example_c055",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_9",
+      "to": "tiktok:comment:example_c009",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_62",
+      "to": "tiktok:comment:example_c063",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_74",
+      "to": "tiktok:comment:example_c075",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_60",
+      "to": "tiktok:comment:example_c061",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_16",
+      "to": "tiktok:comment:example_c016",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_16",
+      "to": "tiktok:comment:example_c018",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_40",
+      "to": "tiktok:comment:example_c041",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_56",
+      "to": "tiktok:comment:example_c057",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_76",
+      "to": "tiktok:comment:example_c077",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_6",
+      "to": "tiktok:comment:example_c006",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_36",
+      "to": "tiktok:comment:example_c037",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_61",
+      "to": "tiktok:comment:example_c062",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_27",
+      "to": "tiktok:comment:example_c028",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_93",
+      "to": "tiktok:comment:example_c094",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_96",
+      "to": "tiktok:comment:example_c097",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_49",
+      "to": "tiktok:comment:example_c050",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_47",
+      "to": "tiktok:comment:example_c048",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_94",
+      "to": "tiktok:comment:example_c095",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_51",
+      "to": "tiktok:comment:example_c052",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_91",
+      "to": "tiktok:comment:example_c092",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_84",
+      "to": "tiktok:comment:example_c085",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_1",
+      "to": "tiktok:comment:example_c001",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_3",
+      "to": "tiktok:comment:example_c003",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_67",
+      "to": "tiktok:comment:example_c068",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_15",
+      "to": "tiktok:comment:example_c015",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_31",
+      "to": "tiktok:comment:example_c032",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_77",
+      "to": "tiktok:comment:example_c078",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_66",
+      "to": "tiktok:comment:example_c067",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_43",
+      "to": "tiktok:comment:example_c044",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_19",
+      "to": "tiktok:comment:example_c020",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_70",
+      "to": "tiktok:comment:example_c071",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_99",
+      "to": "tiktok:comment:example_c100",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_85",
+      "to": "tiktok:comment:example_c086",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_23",
+      "to": "tiktok:comment:example_c024",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_46",
+      "to": "tiktok:comment:example_c047",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_34",
+      "to": "tiktok:comment:example_c035",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_55",
+      "to": "tiktok:comment:example_c056",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_71",
+      "to": "tiktok:comment:example_c072",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_4",
+      "to": "tiktok:comment:example_c004",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_25",
+      "to": "tiktok:comment:example_c026",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_5",
+      "to": "tiktok:comment:example_c005",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_90",
+      "to": "tiktok:comment:example_c091",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_59",
+      "to": "tiktok:comment:example_c060",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_2",
+      "to": "tiktok:comment:example_c002",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_7",
+      "to": "tiktok:comment:example_c007",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_58",
+      "to": "tiktok:comment:example_c059",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_48",
+      "to": "tiktok:comment:example_c049",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_13",
+      "to": "tiktok:comment:example_c013",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_8",
+      "to": "tiktok:comment:example_c008",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_18",
+      "to": "tiktok:comment:example_c019",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_72",
+      "to": "tiktok:comment:example_c073",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_10",
+      "to": "tiktok:comment:example_c010",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_11",
+      "to": "tiktok:comment:example_c011",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_68",
+      "to": "tiktok:comment:example_c069",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_12",
+      "to": "tiktok:comment:example_c012",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_57",
+      "to": "tiktok:comment:example_c058",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_22",
+      "to": "tiktok:comment:example_c023",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_20",
+      "to": "tiktok:comment:example_c021",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_45",
+      "to": "tiktok:comment:example_c046",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_21",
+      "to": "tiktok:comment:example_c022",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_42",
+      "to": "tiktok:comment:example_c043",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_53",
+      "to": "tiktok:comment:example_c054",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_78",
+      "to": "tiktok:comment:example_c079",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_28",
+      "to": "tiktok:comment:example_c029",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_50",
+      "to": "tiktok:comment:example_c051",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_26",
+      "to": "tiktok:comment:example_c027",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_30",
+      "to": "tiktok:comment:example_c031",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_29",
+      "to": "tiktok:comment:example_c030",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_33",
+      "to": "tiktok:comment:example_c034",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_39",
+      "to": "tiktok:comment:example_c040",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_88",
+      "to": "tiktok:comment:example_c089",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_64",
+      "to": "tiktok:comment:example_c065",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_37",
+      "to": "tiktok:comment:example_c038",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_38",
+      "to": "tiktok:comment:example_c039",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_41",
+      "to": "tiktok:comment:example_c042",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_75",
+      "to": "tiktok:comment:example_c076",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_98",
+      "to": "tiktok:comment:example_c099",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_65",
+      "to": "tiktok:comment:example_c066",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_95",
+      "to": "tiktok:comment:example_c096",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_73",
+      "to": "tiktok:comment:example_c074",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_80",
+      "to": "tiktok:comment:example_c081",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_81",
+      "to": "tiktok:comment:example_c082",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_82",
+      "to": "tiktok:comment:example_c083",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_83",
+      "to": "tiktok:comment:example_c084",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_86",
+      "to": "tiktok:comment:example_c087",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_87",
+      "to": "tiktok:comment:example_c088",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_89",
+      "to": "tiktok:comment:example_c090",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:author:example_97",
+      "to": "tiktok:comment:example_c098",
+      "type": "AUTHORED"
+    },
+    {
+      "from": "tiktok:comment:example_c001",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c002",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c003",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c004",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c005",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c006",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c007",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c008",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c009",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c010",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c011",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c012",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c013",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c014",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c015",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c016",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c017",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c019",
+      "to": "tiktok:comment:example_c017",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c020",
+      "to": "tiktok:comment:example_c015",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c021",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c022",
+      "to": "tiktok:comment:example_c019",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c023",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c024",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c025",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c026",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c027",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c028",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c029",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c030",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c031",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c032",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c033",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c034",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c035",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c036",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c037",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c038",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c039",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c040",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c041",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c042",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c043",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c044",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c046",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c047",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c048",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c049",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c050",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c051",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c052",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c053",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c054",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c055",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c056",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c057",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c058",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c059",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c060",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c061",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c062",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c063",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c064",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c065",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c066",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c067",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c068",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c069",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c070",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c071",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c072",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c073",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c074",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c075",
+      "to": "tiktok:comment:example_c015",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c076",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c077",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c078",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c079",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c080",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c081",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c082",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c083",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c084",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c085",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c086",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c087",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c088",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c089",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c090",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c091",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c092",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c093",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c094",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c095",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c096",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c097",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c098",
+      "to": "tiktok:comment:example_c097",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c099",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    },
+    {
+      "from": "tiktok:comment:example_c100",
+      "to": "tiktok:discussion:7669788981508197663",
+      "type": "REPLIES_TO"
+    }
+  ],
+  "graphRevision": 1,
+  "investigationId": "inv_example_tiktok",
+  "nodes": [
+    {
+      "type": "author",
+      "id": "tiktok:author:example_44",
+      "platform": "tiktok",
+      "nativeId": "example_44",
+      "handle": "commenter44",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_79",
+      "platform": "tiktok",
+      "nativeId": "example_79",
+      "handle": "examplefinds16",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_63",
+      "platform": "tiktok",
+      "nativeId": "example_63",
+      "handle": "commenter63",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_69",
+      "platform": "tiktok",
+      "nativeId": "example_69",
+      "handle": "commenter69",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_14",
+      "platform": "tiktok",
+      "nativeId": "example_14",
+      "handle": "commenter14",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_52",
+      "platform": "tiktok",
+      "nativeId": "example_52",
+      "handle": "commenter52",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_32",
+      "platform": "tiktok",
+      "nativeId": "example_32",
+      "handle": "commenter32",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_35",
+      "platform": "tiktok",
+      "nativeId": "example_35",
+      "handle": "exampletrends5",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_17",
+      "platform": "tiktok",
+      "nativeId": "example_17",
+      "handle": "commenter17",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_24",
+      "platform": "tiktok",
+      "nativeId": "example_24",
+      "handle": "commenter24",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_92",
+      "platform": "tiktok",
+      "nativeId": "example_92",
+      "handle": "user1679985215496",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_54",
+      "platform": "tiktok",
+      "nativeId": "example_54",
+      "handle": "commenter54",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_9",
+      "platform": "tiktok",
+      "nativeId": "example_9",
+      "handle": "commenter9",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_62",
+      "platform": "tiktok",
+      "nativeId": "example_62",
+      "handle": "commenter62",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_74",
+      "platform": "tiktok",
+      "nativeId": "example_74",
+      "handle": "user5944369510775",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_60",
+      "platform": "tiktok",
+      "nativeId": "example_60",
+      "handle": "commenter60",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_16",
+      "platform": "tiktok",
+      "nativeId": "example_16",
+      "handle": "commenter16",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_40",
+      "platform": "tiktok",
+      "nativeId": "example_40",
+      "handle": "commenter40",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_56",
+      "platform": "tiktok",
+      "nativeId": "example_56",
+      "handle": "commenter56",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_76",
+      "platform": "tiktok",
+      "nativeId": "example_76",
+      "handle": "user4651338306746",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_6",
+      "platform": "tiktok",
+      "nativeId": "example_6",
+      "handle": "commenter6",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_36",
+      "platform": "tiktok",
+      "nativeId": "example_36",
+      "handle": "commenter36",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_61",
+      "platform": "tiktok",
+      "nativeId": "example_61",
+      "handle": "examplegadget13",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_27",
+      "platform": "tiktok",
+      "nativeId": "example_27",
+      "handle": "commenter27",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_93",
+      "platform": "tiktok",
+      "nativeId": "example_93",
+      "handle": "exampletrends19",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_96",
+      "platform": "tiktok",
+      "nativeId": "example_96",
+      "handle": "commenter96",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_49",
+      "platform": "tiktok",
+      "nativeId": "example_49",
+      "handle": "commenter49",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_47",
+      "platform": "tiktok",
+      "nativeId": "example_47",
+      "handle": "examplefinds9",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_94",
+      "platform": "tiktok",
+      "nativeId": "example_94",
+      "handle": "commenter94",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_51",
+      "platform": "tiktok",
+      "nativeId": "example_51",
+      "handle": "commenter51",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_91",
+      "platform": "tiktok",
+      "nativeId": "example_91",
+      "handle": "commenter91",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_84",
+      "platform": "tiktok",
+      "nativeId": "example_84",
+      "handle": "commenter84",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_1",
+      "platform": "tiktok",
+      "nativeId": "example_1",
+      "handle": "commenter1",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_3",
+      "platform": "tiktok",
+      "nativeId": "example_3",
+      "handle": "commenter3",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_67",
+      "platform": "tiktok",
+      "nativeId": "example_67",
+      "handle": "user1966436227288",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_15",
+      "platform": "tiktok",
+      "nativeId": "example_15",
+      "handle": "commenter15",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_31",
+      "platform": "tiktok",
+      "nativeId": "example_31",
+      "handle": "commenter31",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_77",
+      "platform": "tiktok",
+      "nativeId": "example_77",
+      "handle": "examplestore15",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_66",
+      "platform": "tiktok",
+      "nativeId": "example_66",
+      "handle": "commenter66",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_43",
+      "platform": "tiktok",
+      "nativeId": "example_43",
+      "handle": "examplegadget6",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_19",
+      "platform": "tiktok",
+      "nativeId": "example_19",
+      "handle": "commenter19",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_70",
+      "platform": "tiktok",
+      "nativeId": "example_70",
+      "handle": "commenter70",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_99",
+      "platform": "tiktok",
+      "nativeId": "example_99",
+      "handle": "commenter99",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_85",
+      "platform": "tiktok",
+      "nativeId": "example_85",
+      "handle": "commenter85",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_23",
+      "platform": "tiktok",
+      "nativeId": "example_23",
+      "handle": "commenter23",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_46",
+      "platform": "tiktok",
+      "nativeId": "example_46",
+      "handle": "examplestore8",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_34",
+      "platform": "tiktok",
+      "nativeId": "example_34",
+      "handle": "hkjtbvvfs49039",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_55",
+      "platform": "tiktok",
+      "nativeId": "example_55",
+      "handle": "commenter55",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_71",
+      "platform": "tiktok",
+      "nativeId": "example_71",
+      "handle": "commenter71",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_4",
+      "platform": "tiktok",
+      "nativeId": "example_4",
+      "handle": "bbfsqpmjr91854",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_25",
+      "platform": "tiktok",
+      "nativeId": "example_25",
+      "handle": "kqnmhgcnx04415",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_5",
+      "platform": "tiktok",
+      "nativeId": "example_5",
+      "handle": "jdxrhlkpp54811",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_90",
+      "platform": "tiktok",
+      "nativeId": "example_90",
+      "handle": "commenter90",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_59",
+      "platform": "tiktok",
+      "nativeId": "example_59",
+      "handle": "commenter59",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_2",
+      "platform": "tiktok",
+      "nativeId": "example_2",
+      "handle": "commenter2",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_7",
+      "platform": "tiktok",
+      "nativeId": "example_7",
+      "handle": "examplestore1",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_58",
+      "platform": "tiktok",
+      "nativeId": "example_58",
+      "handle": "exampletrends12",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_48",
+      "platform": "tiktok",
+      "nativeId": "example_48",
+      "handle": "exampledeals10",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_13",
+      "platform": "tiktok",
+      "nativeId": "example_13",
+      "handle": "commenter13",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_8",
+      "platform": "tiktok",
+      "nativeId": "example_8",
+      "handle": "commenter8",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_18",
+      "platform": "tiktok",
+      "nativeId": "example_18",
+      "handle": "examplefinds2",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_72",
+      "platform": "tiktok",
+      "nativeId": "example_72",
+      "handle": "commenter72",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_10",
+      "platform": "tiktok",
+      "nativeId": "example_10",
+      "handle": "commenter10",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_11",
+      "platform": "tiktok",
+      "nativeId": "example_11",
+      "handle": "user4734844488306",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_68",
+      "platform": "tiktok",
+      "nativeId": "example_68",
+      "handle": "zkpvsmmtv91342",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_12",
+      "platform": "tiktok",
+      "nativeId": "example_12",
+      "handle": "commenter12",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_57",
+      "platform": "tiktok",
+      "nativeId": "example_57",
+      "handle": "zfdzxxvvl62742",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_22",
+      "platform": "tiktok",
+      "nativeId": "example_22",
+      "handle": "exampledeals3",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_20",
+      "platform": "tiktok",
+      "nativeId": "example_20",
+      "handle": "commenter20",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_45",
+      "platform": "tiktok",
+      "nativeId": "example_45",
+      "handle": "exampleshop7",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_21",
+      "platform": "tiktok",
+      "nativeId": "example_21",
+      "handle": "commenter21",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_42",
+      "platform": "tiktok",
+      "nativeId": "example_42",
+      "handle": "commenter42",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_53",
+      "platform": "tiktok",
+      "nativeId": "example_53",
+      "handle": "commenter53",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_78",
+      "platform": "tiktok",
+      "nativeId": "example_78",
+      "handle": "commenter78",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_28",
+      "platform": "tiktok",
+      "nativeId": "example_28",
+      "handle": "commenter28",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_50",
+      "platform": "tiktok",
+      "nativeId": "example_50",
+      "handle": "examplepicks11",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_26",
+      "platform": "tiktok",
+      "nativeId": "example_26",
+      "handle": "commenter26",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_30",
+      "platform": "tiktok",
+      "nativeId": "example_30",
+      "handle": "examplepicks4",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_29",
+      "platform": "tiktok",
+      "nativeId": "example_29",
+      "handle": "commenter29",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_33",
+      "platform": "tiktok",
+      "nativeId": "example_33",
+      "handle": "commenter33",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_39",
+      "platform": "tiktok",
+      "nativeId": "example_39",
+      "handle": "commenter39",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_88",
+      "platform": "tiktok",
+      "nativeId": "example_88",
+      "handle": "examplepicks18",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_64",
+      "platform": "tiktok",
+      "nativeId": "example_64",
+      "handle": "commenter64",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_37",
+      "platform": "tiktok",
+      "nativeId": "example_37",
+      "handle": "commenter37",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_38",
+      "platform": "tiktok",
+      "nativeId": "example_38",
+      "handle": "commenter38",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_41",
+      "platform": "tiktok",
+      "nativeId": "example_41",
+      "handle": "commenter41",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_75",
+      "platform": "tiktok",
+      "nativeId": "example_75",
+      "handle": "exampleshop14",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_98",
+      "platform": "tiktok",
+      "nativeId": "example_98",
+      "handle": "commenter98",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_65",
+      "platform": "tiktok",
+      "nativeId": "example_65",
+      "handle": "commenter65",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_95",
+      "platform": "tiktok",
+      "nativeId": "example_95",
+      "handle": "examplegadget20",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_73",
+      "platform": "tiktok",
+      "nativeId": "example_73",
+      "handle": "commenter73",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_80",
+      "platform": "tiktok",
+      "nativeId": "example_80",
+      "handle": "commenter80",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_81",
+      "platform": "tiktok",
+      "nativeId": "example_81",
+      "handle": "commenter81",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_82",
+      "platform": "tiktok",
+      "nativeId": "example_82",
+      "handle": "exampledeals17",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_83",
+      "platform": "tiktok",
+      "nativeId": "example_83",
+      "handle": "commenter83",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_86",
+      "platform": "tiktok",
+      "nativeId": "example_86",
+      "handle": "commenter86",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_87",
+      "platform": "tiktok",
+      "nativeId": "example_87",
+      "handle": "user6148706078430",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_89",
+      "platform": "tiktok",
+      "nativeId": "example_89",
+      "handle": "commenter89",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "type": "author",
+      "id": "tiktok:author:example_97",
+      "platform": "tiktok",
+      "nativeId": "example_97",
+      "handle": "commenter97",
+      "displayName": null,
+      "identityQuality": "handle"
+    },
+    {
+      "authorId": "tiktok:author:example_1",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-03T13:38:09.000Z",
+      "id": "tiktok:comment:example_c001",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 96,
+        "replyCount": 0
+      },
+      "nativeId": "example_c001",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-03T13:38:09Z",
+      "text": "hola, precio?",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_2",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-04T02:13:57.000Z",
+      "id": "tiktok:comment:example_c002",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 17,
+        "replyCount": 0
+      },
+      "nativeId": "example_c002",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-04T02:13:57Z",
+      "text": "6666666",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_3",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-04T06:21:10.000Z",
+      "id": "tiktok:comment:example_c003",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 10,
+        "replyCount": 0
+      },
+      "nativeId": "example_c003",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-04T06:21:10Z",
+      "text": "Where to buy",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_4",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-04T17:28:56.000Z",
+      "id": "tiktok:comment:example_c004",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 23,
+        "replyCount": 0
+      },
+      "nativeId": "example_c004",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-04T17:28:56Z",
+      "text": "grwm sad camera lose!",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_5",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-06T03:22:21.000Z",
+      "id": "tiktok:comment:example_c005",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 23,
+        "replyCount": 0
+      },
+      "nativeId": "example_c005",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-06T03:22:21Z",
+      "text": "Bird paint 👏",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_6",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-08T09:25:22.000Z",
+      "id": "tiktok:comment:example_c006",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 4,
+        "replyCount": 0
+      },
+      "nativeId": "example_c006",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-08T09:25:22Z",
+      "text": "Mẩu này xinh Quá shop",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_7",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-09T15:30:21.000Z",
+      "id": "tiktok:comment:example_c007",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 5,
+        "replyCount": 0
+      },
+      "nativeId": "example_c007",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-09T15:30:21Z",
+      "text": "need it",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_8",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-09T15:35:37.000Z",
+      "id": "tiktok:comment:example_c008",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 6,
+        "replyCount": 0
+      },
+      "nativeId": "example_c008",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-09T15:35:37Z",
+      "text": "so dope 🥰",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_9",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-09T16:07:18.000Z",
+      "id": "tiktok:comment:example_c009",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 4,
+        "replyCount": 0
+      },
+      "nativeId": "example_c009",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-09T16:07:18Z",
+      "text": "woww",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_10",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-09T20:06:07.000Z",
+      "id": "tiktok:comment:example_c010",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 9,
+        "replyCount": 0
+      },
+      "nativeId": "example_c010",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-09T20:06:07Z",
+      "text": "meed",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_11",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-11T17:08:26.000Z",
+      "id": "tiktok:comment:example_c011",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 12,
+        "replyCount": 0
+      },
+      "nativeId": "example_c011",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-11T17:08:26Z",
+      "text": "wow nice",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_12",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-13T21:21:48.000Z",
+      "id": "tiktok:comment:example_c012",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 6,
+        "replyCount": 0
+      },
+      "nativeId": "example_c012",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-13T21:21:48Z",
+      "text": "How cool",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_13",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-14T19:23:23.000Z",
+      "id": "tiktok:comment:example_c013",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 68,
+        "replyCount": 0
+      },
+      "nativeId": "example_c013",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-14T19:23:23Z",
+      "text": "Is Increibol",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_14",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-16T03:37:31.000Z",
+      "id": "tiktok:comment:example_c014",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 4,
+        "replyCount": 0
+      },
+      "nativeId": "example_c014",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-16T03:37:31Z",
+      "text": "good",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_15",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-16T17:30:31.000Z",
+      "id": "tiktok:comment:example_c015",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 64,
+        "replyCount": 2
+      },
+      "nativeId": "example_c015",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-16T17:30:31Z",
+      "text": "muy bueno",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_16",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-17T18:06:14.000Z",
+      "id": "tiktok:comment:example_c016",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 9,
+        "replyCount": 2
+      },
+      "nativeId": "example_c016",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-17T18:06:14Z",
+      "text": "really perfect when people are sleeping in your room",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_17",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-17T18:06:33.000Z",
+      "id": "tiktok:comment:example_c017",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 113,
+        "replyCount": 3
+      },
+      "nativeId": "example_c017",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-17T18:06:33Z",
+      "text": "nice",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_16",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-17T18:12:01.000Z",
+      "id": "tiktok:comment:example_c018",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 45
+      },
+      "nativeId": "example_c018",
+      "nativeParentId": "example_unavailable",
+      "parentId": null,
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-17T18:12:01Z",
+      "text": "palit eləmə 😂😂",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_18",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-18T12:07:11.000Z",
+      "id": "tiktok:comment:example_c019",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 53
+      },
+      "nativeId": "example_c019",
+      "nativeParentId": "example_c017",
+      "parentId": "tiktok:comment:example_c017",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-18T12:07:11Z",
+      "text": "resaaad",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_19",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-19T00:14:26.000Z",
+      "id": "tiktok:comment:example_c020",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 52
+      },
+      "nativeId": "example_c020",
+      "nativeParentId": "example_c015",
+      "parentId": "tiktok:comment:example_c015",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-19T00:14:26Z",
+      "text": "🥰",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_20",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-20T06:42:31.000Z",
+      "id": "tiktok:comment:example_c021",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 9,
+        "replyCount": 0
+      },
+      "nativeId": "example_c021",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-20T06:42:31Z",
+      "text": "I love shiny places",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_21",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-21T17:27:13.000Z",
+      "id": "tiktok:comment:example_c022",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 53
+      },
+      "nativeId": "example_c022",
+      "nativeParentId": "example_c019",
+      "parentId": "tiktok:comment:example_c019",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-21T17:27:13Z",
+      "text": "Vay vay vay",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_22",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-23T07:06:40.000Z",
+      "id": "tiktok:comment:example_c023",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 13,
+        "replyCount": 0
+      },
+      "nativeId": "example_c023",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-23T07:06:40Z",
+      "text": "Es tan útil",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_23",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-25T01:54:58.000Z",
+      "id": "tiktok:comment:example_c024",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 8,
+        "replyCount": 0
+      },
+      "nativeId": "example_c024",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-25T01:54:58Z",
+      "text": "Who here is exploring the world of online stores?",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_24",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-27T19:01:34.000Z",
+      "id": "tiktok:comment:example_c025",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 9,
+        "replyCount": 0
+      },
+      "nativeId": "example_c025",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-27T19:01:34Z",
+      "text": "that s good",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_25",
+      "contentStatus": "visible",
+      "createdAt": "2026-08-30T00:04:11.000Z",
+      "id": "tiktok:comment:example_c026",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 38,
+        "replyCount": 0
+      },
+      "nativeId": "example_c026",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-08-30T00:04:11Z",
+      "text": "red ocean swim",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_26",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-02T09:26:52.000Z",
+      "id": "tiktok:comment:example_c027",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 2,
+        "replyCount": 0
+      },
+      "nativeId": "example_c027",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-02T09:26:52Z",
+      "text": "Good",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_27",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-03T12:59:39.000Z",
+      "id": "tiktok:comment:example_c028",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 3,
+        "replyCount": 0
+      },
+      "nativeId": "example_c028",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-03T12:59:39Z",
+      "text": "nice",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_28",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-03T13:24:11.000Z",
+      "id": "tiktok:comment:example_c029",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 3,
+        "replyCount": 0
+      },
+      "nativeId": "example_c029",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-03T13:24:11Z",
+      "text": "Cool",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_29",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-03T20:17:14.000Z",
+      "id": "tiktok:comment:example_c030",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 3,
+        "replyCount": 0
+      },
+      "nativeId": "example_c030",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-03T20:17:14Z",
+      "text": "nice",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_30",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-04T00:28:35.000Z",
+      "id": "tiktok:comment:example_c031",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 8,
+        "replyCount": 0
+      },
+      "nativeId": "example_c031",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-04T00:28:35Z",
+      "text": "I want one!",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_31",
+      "contentStatus": "unknown",
+      "createdAt": "2026-09-04T02:11:53.000Z",
+      "id": "tiktok:comment:example_c032",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 2,
+        "replyCount": 0
+      },
+      "nativeId": "example_c032",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-04T02:11:53Z",
+      "text": "",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_32",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-04T05:35:56.000Z",
+      "id": "tiktok:comment:example_c033",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 4,
+        "replyCount": 0
+      },
+      "nativeId": "example_c033",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-04T05:35:56Z",
+      "text": "nice",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_33",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-05T10:06:18.000Z",
+      "id": "tiktok:comment:example_c034",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 1,
+        "replyCount": 0
+      },
+      "nativeId": "example_c034",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-05T10:06:18Z",
+      "text": "wow🥰",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_34",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-05T12:20:53.000Z",
+      "id": "tiktok:comment:example_c035",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 4,
+        "replyCount": 0
+      },
+      "nativeId": "example_c035",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-05T12:20:53Z",
+      "text": "Tutorial legendary camera think",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_35",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-07T07:35:34.000Z",
+      "id": "tiktok:comment:example_c036",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 7,
+        "replyCount": 0
+      },
+      "nativeId": "example_c036",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-07T07:35:34Z",
+      "text": "amazing 😍😍😍😍",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_36",
+      "contentStatus": "unknown",
+      "createdAt": "2026-09-07T19:17:01.000Z",
+      "id": "tiktok:comment:example_c037",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 5,
+        "replyCount": 0
+      },
+      "nativeId": "example_c037",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-07T19:17:01Z",
+      "text": "",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_37",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-08T01:04:06.000Z",
+      "id": "tiktok:comment:example_c038",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 9,
+        "replyCount": 0
+      },
+      "nativeId": "example_c038",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-08T01:04:06Z",
+      "text": "que buen producto, para esos momentos en que hace falta una lámpara portátil",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_38",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-08T06:02:35.000Z",
+      "id": "tiktok:comment:example_c039",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 1,
+        "replyCount": 0
+      },
+      "nativeId": "example_c039",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-08T06:02:35Z",
+      "text": "Nice",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_39",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-08T10:03:42.000Z",
+      "id": "tiktok:comment:example_c040",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 6,
+        "replyCount": 0
+      },
+      "nativeId": "example_c040",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-08T10:03:42Z",
+      "text": "Where does it get its energy from?",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_40",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-08T16:39:27.000Z",
+      "id": "tiktok:comment:example_c041",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 9,
+        "replyCount": 0
+      },
+      "nativeId": "example_c041",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-08T16:39:27Z",
+      "text": "respect! ❤️",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_41",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-08T17:14:09.000Z",
+      "id": "tiktok:comment:example_c042",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 3,
+        "replyCount": 0
+      },
+      "nativeId": "example_c042",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-08T17:14:09Z",
+      "text": "Muy bueno",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_42",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-08T19:26:13.000Z",
+      "id": "tiktok:comment:example_c043",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 2,
+        "replyCount": 0
+      },
+      "nativeId": "example_c043",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-08T19:26:13Z",
+      "text": "muy bueno y util",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_43",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-08T21:44:42.000Z",
+      "id": "tiktok:comment:example_c044",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 2,
+        "replyCount": 0
+      },
+      "nativeId": "example_c044",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-08T21:44:42Z",
+      "text": "good",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_44",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-09T05:24:07.000Z",
+      "id": "tiktok:comment:example_c045",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 30
+      },
+      "nativeId": "example_c045",
+      "nativeParentId": "example_unavailable",
+      "parentId": null,
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-09T05:24:07Z",
+      "text": "Veziyyet necedi usaglar? Nece gedir bootcampdan sonra?",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_45",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-09T09:16:38.000Z",
+      "id": "tiktok:comment:example_c046",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 5,
+        "replyCount": 0
+      },
+      "nativeId": "example_c046",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-09T09:16:38Z",
+      "text": "wooow we all want one right😂😂",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_46",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-10T01:20:55.000Z",
+      "id": "tiktok:comment:example_c047",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 3,
+        "replyCount": 0
+      },
+      "nativeId": "example_c047",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-10T01:20:55Z",
+      "text": "Me encanta",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_47",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-10T20:00:14.000Z",
+      "id": "tiktok:comment:example_c048",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 3,
+        "replyCount": 0
+      },
+      "nativeId": "example_c048",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-10T20:00:14Z",
+      "text": "Muy útil",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_48",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-10T21:04:01.000Z",
+      "id": "tiktok:comment:example_c049",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 1,
+        "replyCount": 0
+      },
+      "nativeId": "example_c049",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-10T21:04:01Z",
+      "text": "does it run on battery",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_49",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-11T13:21:21.000Z",
+      "id": "tiktok:comment:example_c050",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 5,
+        "replyCount": 0
+      },
+      "nativeId": "example_c050",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-11T13:21:21Z",
+      "text": "how to get this",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_50",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-11T18:40:27.000Z",
+      "id": "tiktok:comment:example_c051",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 6,
+        "replyCount": 0
+      },
+      "nativeId": "example_c051",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-11T18:40:27Z",
+      "text": "gostei",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_51",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-13T18:25:19.000Z",
+      "id": "tiktok:comment:example_c052",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 5,
+        "replyCount": 0
+      },
+      "nativeId": "example_c052",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-13T18:25:19Z",
+      "text": "I like this light",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_52",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-13T20:50:47.000Z",
+      "id": "tiktok:comment:example_c053",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 46,
+        "replyCount": 0
+      },
+      "nativeId": "example_c053",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-13T20:50:47Z",
+      "text": "Lo quiero",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_53",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-14T05:07:32.000Z",
+      "id": "tiktok:comment:example_c054",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 3,
+        "replyCount": 0
+      },
+      "nativeId": "example_c054",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-14T05:07:32Z",
+      "text": "nice !",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_54",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-14T17:42:02.000Z",
+      "id": "tiktok:comment:example_c055",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 2,
+        "replyCount": 0
+      },
+      "nativeId": "example_c055",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-14T17:42:02Z",
+      "text": "great",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_55",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-16T20:11:02.000Z",
+      "id": "tiktok:comment:example_c056",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 5,
+        "replyCount": 0
+      },
+      "nativeId": "example_c056",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-16T20:11:02Z",
+      "text": "Interesting!",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_56",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-17T07:29:14.000Z",
+      "id": "tiktok:comment:example_c057",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 3,
+        "replyCount": 0
+      },
+      "nativeId": "example_c057",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-17T07:29:14Z",
+      "text": "nice",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_57",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-17T11:38:05.000Z",
+      "id": "tiktok:comment:example_c058",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 4,
+        "replyCount": 0
+      },
+      "nativeId": "example_c058",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-17T11:38:05Z",
+      "text": "Hello🌹🌹🌹",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_58",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-17T21:50:30.000Z",
+      "id": "tiktok:comment:example_c059",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 19,
+        "replyCount": 0
+      },
+      "nativeId": "example_c059",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-17T21:50:30Z",
+      "text": "práctico calidad y el Perec",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_59",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-18T06:39:38.000Z",
+      "id": "tiktok:comment:example_c060",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 0,
+        "replyCount": 0
+      },
+      "nativeId": "example_c060",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-18T06:39:38Z",
+      "text": "good",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_60",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-18T17:08:31.000Z",
+      "id": "tiktok:comment:example_c061",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 5,
+        "replyCount": 0
+      },
+      "nativeId": "example_c061",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-18T17:08:31Z",
+      "text": "me gusta",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_61",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-19T14:55:37.000Z",
+      "id": "tiktok:comment:example_c062",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 2,
+        "replyCount": 0
+      },
+      "nativeId": "example_c062",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-19T14:55:37Z",
+      "text": "Linda, amei",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_62",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-19T17:14:03.000Z",
+      "id": "tiktok:comment:example_c063",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 2,
+        "replyCount": 0
+      },
+      "nativeId": "example_c063",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-19T17:14:03Z",
+      "text": "I love",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_63",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-21T02:26:34.000Z",
+      "id": "tiktok:comment:example_c064",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 5,
+        "replyCount": 0
+      },
+      "nativeId": "example_c064",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-21T02:26:34Z",
+      "text": "excelente",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_64",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-22T01:47:37.000Z",
+      "id": "tiktok:comment:example_c065",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 1,
+        "replyCount": 0
+      },
+      "nativeId": "example_c065",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-22T01:47:37Z",
+      "text": "wow",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_65",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-22T16:39:41.000Z",
+      "id": "tiktok:comment:example_c066",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 3,
+        "replyCount": 0
+      },
+      "nativeId": "example_c066",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-22T16:39:41Z",
+      "text": "interesante",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_66",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-23T20:31:25.000Z",
+      "id": "tiktok:comment:example_c067",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 17,
+        "replyCount": 0
+      },
+      "nativeId": "example_c067",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-23T20:31:25Z",
+      "text": "esta good para la noche en el balcon",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_67",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-23T22:33:25.000Z",
+      "id": "tiktok:comment:example_c068",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 6,
+        "replyCount": 0
+      },
+      "nativeId": "example_c068",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-23T22:33:25Z",
+      "text": "lo quiero",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_68",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-24T05:53:39.000Z",
+      "id": "tiktok:comment:example_c069",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 10,
+        "replyCount": 0
+      },
+      "nativeId": "example_c069",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-24T05:53:39Z",
+      "text": "Good",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_69",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-24T08:36:13.000Z",
+      "id": "tiktok:comment:example_c070",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 2,
+        "replyCount": 0
+      },
+      "nativeId": "example_c070",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-24T08:36:13Z",
+      "text": "great",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_70",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-24T13:32:26.000Z",
+      "id": "tiktok:comment:example_c071",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 2,
+        "replyCount": 0
+      },
+      "nativeId": "example_c071",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-24T13:32:26Z",
+      "text": "Cool",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_71",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-25T01:26:43.000Z",
+      "id": "tiktok:comment:example_c072",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 2,
+        "replyCount": 0
+      },
+      "nativeId": "example_c072",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-25T01:26:43Z",
+      "text": "very good",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_72",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-25T01:38:08.000Z",
+      "id": "tiktok:comment:example_c073",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 5,
+        "replyCount": 0
+      },
+      "nativeId": "example_c073",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-25T01:38:08Z",
+      "text": "lo quiero",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_73",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-27T11:23:42.000Z",
+      "id": "tiktok:comment:example_c074",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 3,
+        "replyCount": 0
+      },
+      "nativeId": "example_c074",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-27T11:23:42Z",
+      "text": "nice",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_74",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-28T12:10:48.000Z",
+      "id": "tiktok:comment:example_c075",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 12
+      },
+      "nativeId": "example_c075",
+      "nativeParentId": "example_c015",
+      "parentId": "tiktok:comment:example_c015",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-28T12:10:48Z",
+      "text": "Good",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_75",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-28T15:43:32.000Z",
+      "id": "tiktok:comment:example_c076",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 82,
+        "replyCount": 0
+      },
+      "nativeId": "example_c076",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-28T15:43:32Z",
+      "text": "muy bonito",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_76",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-30T12:02:13.000Z",
+      "id": "tiktok:comment:example_c077",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 1,
+        "replyCount": 0
+      },
+      "nativeId": "example_c077",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-30T12:02:13Z",
+      "text": "Nice",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_77",
+      "contentStatus": "visible",
+      "createdAt": "2026-09-30T22:16:42.000Z",
+      "id": "tiktok:comment:example_c078",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 7,
+        "replyCount": 0
+      },
+      "nativeId": "example_c078",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-09-30T22:16:42Z",
+      "text": "Para mi escritorio necesito una",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_78",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-02T13:27:19.000Z",
+      "id": "tiktok:comment:example_c079",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 1,
+        "replyCount": 0
+      },
+      "nativeId": "example_c079",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-02T13:27:19Z",
+      "text": "this",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_79",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-02T16:53:44.000Z",
+      "id": "tiktok:comment:example_c080",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 4,
+        "replyCount": 0
+      },
+      "nativeId": "example_c080",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-02T16:53:44Z",
+      "text": "Opa😍",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_80",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-04T04:42:17.000Z",
+      "id": "tiktok:comment:example_c081",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 1,
+        "replyCount": 0
+      },
+      "nativeId": "example_c081",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-04T04:42:17Z",
+      "text": "😳I’m",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_81",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-04T10:02:19.000Z",
+      "id": "tiktok:comment:example_c082",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 1,
+        "replyCount": 0
+      },
+      "nativeId": "example_c082",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-04T10:02:19Z",
+      "text": "🥰",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_82",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-05T16:27:38.000Z",
+      "id": "tiktok:comment:example_c083",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 1,
+        "replyCount": 0
+      },
+      "nativeId": "example_c083",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-05T16:27:38Z",
+      "text": "Nice",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_83",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-05T20:21:37.000Z",
+      "id": "tiktok:comment:example_c084",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 1,
+        "replyCount": 0
+      },
+      "nativeId": "example_c084",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-05T20:21:37Z",
+      "text": "🥰",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_84",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-06T12:39:53.000Z",
+      "id": "tiktok:comment:example_c085",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 3,
+        "replyCount": 0
+      },
+      "nativeId": "example_c085",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-06T12:39:53Z",
+      "text": "so usefully i need this rnn",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_85",
+      "contentStatus": "unknown",
+      "createdAt": "2026-10-08T02:42:39.000Z",
+      "id": "tiktok:comment:example_c086",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 1,
+        "replyCount": 0
+      },
+      "nativeId": "example_c086",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-08T02:42:39Z",
+      "text": "",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_86",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-08T19:06:46.000Z",
+      "id": "tiktok:comment:example_c087",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 4,
+        "replyCount": 0
+      },
+      "nativeId": "example_c087",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-08T19:06:46Z",
+      "text": "Muy bonito",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_87",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-09T09:30:50.000Z",
+      "id": "tiktok:comment:example_c088",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 1,
+        "replyCount": 0
+      },
+      "nativeId": "example_c088",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-09T09:30:50Z",
+      "text": "Good",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_88",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-10T01:47:15.000Z",
+      "id": "tiktok:comment:example_c089",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 1,
+        "replyCount": 0
+      },
+      "nativeId": "example_c089",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-10T01:47:15Z",
+      "text": "Valor",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_89",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-10T14:07:17.000Z",
+      "id": "tiktok:comment:example_c090",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 1,
+        "replyCount": 0
+      },
+      "nativeId": "example_c090",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-10T14:07:17Z",
+      "text": "😁",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_90",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-11T13:13:26.000Z",
+      "id": "tiktok:comment:example_c091",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 1,
+        "replyCount": 0
+      },
+      "nativeId": "example_c091",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-11T13:13:26Z",
+      "text": "super",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_91",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-12T01:59:37.000Z",
+      "id": "tiktok:comment:example_c092",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 1,
+        "replyCount": 0
+      },
+      "nativeId": "example_c092",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-12T01:59:37Z",
+      "text": "wow",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_92",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-12T02:03:00.000Z",
+      "id": "tiktok:comment:example_c093",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 1,
+        "replyCount": 0
+      },
+      "nativeId": "example_c093",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-12T02:03:00Z",
+      "text": "bueno",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_93",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-12T14:57:39.000Z",
+      "id": "tiktok:comment:example_c094",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 1,
+        "replyCount": 0
+      },
+      "nativeId": "example_c094",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-12T14:57:39Z",
+      "text": "Linda, adorei 😍",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_94",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-12T17:23:34.000Z",
+      "id": "tiktok:comment:example_c095",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 77,
+        "replyCount": 0
+      },
+      "nativeId": "example_c095",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-12T17:23:34Z",
+      "text": "es luz calida y luz blanca?",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_95",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-13T14:30:22.000Z",
+      "id": "tiktok:comment:example_c096",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 1,
+        "replyCount": 0
+      },
+      "nativeId": "example_c096",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-13T14:30:22Z",
+      "text": "adorei de vdd",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_96",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-13T19:18:22.000Z",
+      "id": "tiktok:comment:example_c097",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 12,
+        "replyCount": 1
+      },
+      "nativeId": "example_c097",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-13T19:18:22Z",
+      "text": "How can I buy it???",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_97",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-15T03:47:23.000Z",
+      "id": "tiktok:comment:example_c098",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 0
+      },
+      "nativeId": "example_c098",
+      "nativeParentId": "example_c097",
+      "parentId": "tiktok:comment:example_c097",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-15T03:47:23Z",
+      "text": "so cute",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_98",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-15T14:38:24.000Z",
+      "id": "tiktok:comment:example_c099",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 6,
+        "replyCount": 0
+      },
+      "nativeId": "example_c099",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-15T14:38:24Z",
+      "text": "Hacen envios a Perusalen? :3",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": "tiktok:author:example_99",
+      "contentStatus": "visible",
+      "createdAt": "2026-10-23T14:03:00.000Z",
+      "id": "tiktok:comment:example_c100",
+      "idQuality": "synthetic",
+      "metrics": {
+        "likeCount": 0,
+        "replyCount": 0
+      },
+      "nativeId": "example_c100",
+      "nativeParentId": null,
+      "parentId": "tiktok:discussion:7669788981508197663",
+      "platform": "tiktok",
+      "sourceTimestamp": "2026-10-23T14:03:00Z",
+      "text": "Not bad, very good👍",
+      "timestampPrecision": "exact",
+      "type": "comment",
+      "url": null
+    },
+    {
+      "authorId": null,
+      "contentScope": "metadata_text_only",
+      "createdAt": null,
+      "id": "tiktok:discussion:7669788981508197663",
+      "kind": "video",
+      "metrics": {},
+      "nativeId": "7669788981508197663",
+      "platform": "tiktok",
+      "text": "Fold, glow, go. 🏮 Portable foldable night light with warm light & USB charge. #foldablenightlight #portablelight #travelessential#tiktokmademebuyit#fyp",
+      "timestampPrecision": "unknown",
+      "title": null,
+      "type": "discussion",
+      "url": "https://www.tiktok.com/@goodstuffdiary/video/7669788981508197663"
+    }
+  ],
+  "platform": "tiktok",
+  "rootId": "tiktok:discussion:7669788981508197663",
+  "schemaVersion": "1.0.0",
+  "graphFingerprint": "0a1261273b8a632e40b8ff7228ba1ea83c2499d44276d8184a2be892dd67aff7"
+}

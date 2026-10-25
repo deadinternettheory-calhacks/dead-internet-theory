@@ -1,0 +1,1428 @@
+{
+  "assessments": [
+    {
+      "commentId": "tiktok:comment:example_c013",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [
+        {
+          "id": "X5",
+          "points": 4,
+          "evidence": "Comment contains generic praise with no specific, costly-to-fake detail.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c013"
+          ]
+        }
+      ],
+      "exculpatory": [
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T2",
+        "T3",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Short generic recommendation with no specific detail, balanced by widespread product appeal across the discussion."
+    },
+    {
+      "commentId": "tiktok:comment:example_c016",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [],
+      "exculpatory": [
+        {
+          "id": "E3",
+          "points": -10,
+          "evidence": "Comment names a specific, costly-to-fake use case: comfort for others sleeping in the room.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c016"
+          ]
+        },
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Recommendation with specific use-case detail indicating genuine experience, supported by broad product appeal."
+    },
+    {
+      "commentId": "tiktok:comment:example_c019",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [
+        {
+          "id": "X5",
+          "points": 4,
+          "evidence": "Single-word exclamation with no specific detail or timeline.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c019"
+          ]
+        }
+      ],
+      "exculpatory": [
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Very low-effort single-word recommendation, balanced by widespread product popularity."
+    },
+    {
+      "commentId": "tiktok:comment:example_c023",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [
+        {
+          "id": "X5",
+          "points": 4,
+          "evidence": "Generic praise with no specific, costly-to-fake detail or experience.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c023"
+          ]
+        }
+      ],
+      "exculpatory": [
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Generic positive comment, balanced by broad appeal across the discussion."
+    },
+    {
+      "commentId": "tiktok:comment:example_c025",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [
+        {
+          "id": "X5",
+          "points": 4,
+          "evidence": "Generic two-word comment with no specific detail or costly-to-fake information.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c025"
+          ]
+        }
+      ],
+      "exculpatory": [
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Minimal low-effort recommendation repeated across multiple accounts, countered by popularity across diverse recommenders."
+    },
+    {
+      "commentId": "tiktok:comment:example_c031",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [
+        {
+          "id": "X5",
+          "points": 4,
+          "evidence": "Generic expression of want with no specific detail or timeline.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c031"
+          ]
+        }
+      ],
+      "exculpatory": [
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Generic low-effort recommendation, balanced by widespread product popularity."
+    },
+    {
+      "commentId": "tiktok:comment:example_c036",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [
+        {
+          "id": "X5",
+          "points": 4,
+          "evidence": "Emoji-based praise with no specific detail or experience described.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c036"
+          ]
+        }
+      ],
+      "exculpatory": [
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Very low-effort emoji recommendation, offset by broad product appeal."
+    },
+    {
+      "commentId": "tiktok:comment:example_c038",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [],
+      "exculpatory": [
+        {
+          "id": "E3",
+          "points": -10,
+          "evidence": "Comment provides specific use case: moments when a portable lamp is needed, with concrete explanation.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c038"
+          ]
+        },
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Recommendation with specific, costly-to-fake use case and reasoning, supported by widespread product popularity."
+    },
+    {
+      "commentId": "tiktok:comment:example_c041",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [
+        {
+          "id": "X5",
+          "points": 4,
+          "evidence": "Generic single word with emoji, no specific detail or experience.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c041"
+          ]
+        }
+      ],
+      "exculpatory": [
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Minimal low-effort recommendation, balanced by broad product appeal."
+    },
+    {
+      "commentId": "tiktok:comment:example_c043",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [
+        {
+          "id": "X5",
+          "points": 4,
+          "evidence": "Generic praise with no specific detail or costly-to-fake information.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c043"
+          ]
+        }
+      ],
+      "exculpatory": [
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Generic recommendation, balanced by widespread product popularity."
+    },
+    {
+      "commentId": "tiktok:comment:example_c044",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [
+        {
+          "id": "X5",
+          "points": 4,
+          "evidence": "Single-word comment with no specific detail, timeline or costly-to-fake information.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c044"
+          ]
+        }
+      ],
+      "exculpatory": [
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Minimal one-word recommendation, countered by broad product appeal."
+    },
+    {
+      "commentId": "tiktok:comment:example_c046",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [
+        {
+          "id": "X5",
+          "points": 4,
+          "evidence": "Generic expression with no specific detail or costly-to-fake information.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c046"
+          ]
+        }
+      ],
+      "exculpatory": [
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Generic recommendation, balanced by widespread product popularity."
+    },
+    {
+      "commentId": "tiktok:comment:example_c048",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [
+        {
+          "id": "X5",
+          "points": 4,
+          "evidence": "Generic two-word praise with no specific detail.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c048"
+          ]
+        }
+      ],
+      "exculpatory": [
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Generic low-effort recommendation, balanced by widespread product popularity."
+    },
+    {
+      "commentId": "tiktok:comment:example_c052",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [],
+      "exculpatory": [
+        {
+          "id": "E3",
+          "points": -10,
+          "evidence": "Personal endorsement naming the product specifically with direct preference statement.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c052"
+          ]
+        },
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Direct personal preference with product name, supported by widespread product appeal."
+    },
+    {
+      "commentId": "tiktok:comment:example_c059",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [
+        {
+          "id": "X5",
+          "points": 4,
+          "evidence": "Unclear phrasing with possible corrupted text; no clear specific detail.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c059"
+          ]
+        }
+      ],
+      "exculpatory": [
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Comment with unclear or corrupted text, balanced by widespread product popularity."
+    },
+    {
+      "commentId": "tiktok:comment:example_c062",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [],
+      "exculpatory": [
+        {
+          "id": "E3",
+          "points": -10,
+          "evidence": "Personal enthusiastic endorsement with direct emotional expression.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c062"
+          ]
+        },
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Personal enthusiasm, supported by widespread product popularity."
+    },
+    {
+      "commentId": "tiktok:comment:example_c067",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [],
+      "exculpatory": [
+        {
+          "id": "E3",
+          "points": -10,
+          "evidence": "Comment provides specific use case: suitable for the night on a balcony.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c067"
+          ]
+        },
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Recommendation with specific use case detail, supported by widespread product popularity."
+    },
+    {
+      "commentId": "tiktok:comment:example_c076",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [
+        {
+          "id": "T4",
+          "points": 5,
+          "evidence": "Short, low-effort two-word comment with 82 likes, outranking more detailed recommendations in engagement.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c076"
+          ]
+        },
+        {
+          "id": "X5",
+          "points": 4,
+          "evidence": "Generic praise with no specific detail.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c076"
+          ]
+        }
+      ],
+      "exculpatory": [
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Short low-effort comment with disproportionately high engagement, offset by widespread product popularity."
+    },
+    {
+      "commentId": "tiktok:comment:example_c078",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [],
+      "exculpatory": [
+        {
+          "id": "E3",
+          "points": -10,
+          "evidence": "Specific use case mentioned: for desk use.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c078"
+          ]
+        },
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Recommendation with specific use case, supported by widespread product popularity."
+    },
+    {
+      "commentId": "tiktok:comment:example_c080",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [
+        {
+          "id": "X5",
+          "points": 4,
+          "evidence": "Single-word emoji exclamation with no specific detail.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c080"
+          ]
+        }
+      ],
+      "exculpatory": [
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Very low-effort emoji response, balanced by widespread product popularity."
+    },
+    {
+      "commentId": "tiktok:comment:example_c083",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [
+        {
+          "id": "X5",
+          "points": 4,
+          "evidence": "Single-word generic praise, repeated across multiple target comments.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c083"
+          ]
+        }
+      ],
+      "exculpatory": [
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Minimal one-word recommendation, balanced by widespread product appeal."
+    },
+    {
+      "commentId": "tiktok:comment:example_c085",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [
+        {
+          "id": "X6",
+          "points": 3,
+          "evidence": "Comment contains awkward English phrasing ('so usefully') and unclear abbreviation ('rnn'), suggesting possible non-native LLM composition.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c085"
+          ]
+        },
+        {
+          "id": "X5",
+          "points": 4,
+          "evidence": "Generic use case with no specific detail.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c085"
+          ]
+        }
+      ],
+      "exculpatory": [
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Awkward phrasing suggests non-native composition, balanced by widespread product popularity."
+    },
+    {
+      "commentId": "tiktok:comment:example_c094",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [],
+      "exculpatory": [
+        {
+          "id": "E3",
+          "points": -10,
+          "evidence": "Personal enthusiastic endorsement with direct emotional expression.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c094"
+          ]
+        },
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Personal enthusiasm, supported by widespread product popularity."
+    },
+    {
+      "commentId": "tiktok:comment:example_c096",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [],
+      "exculpatory": [
+        {
+          "id": "E3",
+          "points": -10,
+          "evidence": "Personal enthusiastic endorsement with direct emotional expression.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c096"
+          ]
+        },
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Personal enthusiasm, supported by widespread product popularity."
+    },
+    {
+      "commentId": "tiktok:comment:example_c100",
+      "label": "scored",
+      "product": "Portable foldable night light with warm light and USB charge",
+      "signals": [],
+      "exculpatory": [
+        {
+          "id": "E3",
+          "points": -10,
+          "evidence": "Two-part response showing some judgment: 'Not bad' acknowledges potential concerns, 'very good' provides qualified praise.",
+          "evidenceRefs": [
+            "tiktok:comment:example_c100"
+          ]
+        },
+        {
+          "id": "E5",
+          "points": -10,
+          "evidence": "Many unrelated accounts recommend this product across the discussion over a long period.",
+          "evidenceRefs": [
+            "tiktok:discussion:7669788981508197663"
+          ]
+        }
+      ],
+      "unknown": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X6",
+        "X7",
+        "E2",
+        "E4",
+        "E7"
+      ],
+      "summary": "Balanced assessment with qualified praise, supported by widespread product popularity."
+    }
+  ],
+  "clusters": [],
+  "accounts": [],
+  "overallSummary": "The 25 target comments across approximately 65 days show widespread product enthusiasm with no coordinated messaging patterns detected at the discussion level. Most comments are generic single-word or short praise with no specific detail; however, roughly eight comments provide specific use cases or personal endorsement. The recommendation timeline shows two comments in a 30-minute window early (earliest spike), then scattered recommendations across the remainder. Evidence levels A (author history) and C (co-recommender history) were not available, making coordination detection at the account level impossible. The product appears genuinely popular, with many unrelated accounts recommending independently across an extended period."
+}

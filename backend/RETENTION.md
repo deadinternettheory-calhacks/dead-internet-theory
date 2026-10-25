@@ -50,10 +50,14 @@ refresh operation is added to the frozen v1 API.
 
 ## Public example (exception)
 
-The owner approved one stored exception on 2026-10-24: the website's example
-(`inference/fixtures/example-reddit-knife/`, `web/src/demo/example-report.json`)
-is a real public r/BuyItForLife thread kept beyond 24 hours. Usernames, author
-IDs, comment IDs and per-comment links are replaced, `u/` mentions in text are
-masked, and only the link to the original thread is kept. Comment text,
-timestamps and scores are unchanged. Remove or replace it if the thread is
-deleted or its authors ask.
+The owner approved one stored exception on 2026-10-24 for the website's
+example, and on 2026-10-25 replaced the original r/BuyItForLife thread with a
+TikTok product video. The example
+(`inference/fixtures/example-tiktok-nightlight/`, `web/src/demo/example-report.json`)
+is the real public comment section of that video, kept beyond 24 hours.
+Usernames are replaced with made-up names of the same kind (shop-like, random
+string, platform default or ordinary) so username evidence still reads
+correctly; author IDs, comment IDs and per-comment links are replaced, and only
+the link to the original video is kept. Comment text, timestamps and like
+counts are unchanged. Remove or replace it if the video is deleted or its
+commenters ask.
