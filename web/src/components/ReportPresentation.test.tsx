@@ -76,6 +76,9 @@ it('opens relevant evidence and shows the section score without per-item caveats
   expect(explanation.textContent).not.toContain('Comment-section astroturfing index:');
   expect(explanation.querySelector('.axis-list')).toBeNull();
   expect(explanation.textContent).toContain('Weights:');
+  expect(explanation.textContent).toContain('76 (u/brewfan_22)');
+  expect(explanation.textContent).toContain('76 (u/crema_queen)');
+  expect(explanation.textContent).toContain('template phrases, duplicates');
   await act(async () => explanation.querySelector('summary')!.click());
   expect(explanation.open).toBe(true);
   expect(container.querySelector('.report-view')?.firstElementChild?.classList.contains('result-card')).toBe(true);

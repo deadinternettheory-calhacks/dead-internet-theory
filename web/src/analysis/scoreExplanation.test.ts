@@ -9,7 +9,11 @@ it('preserves stored component scores, weights and history sampling while removi
     ['Rubric strength', 76], ['Coordination', 55], ['Comment realism', 100],
     ['Commercial signals', 0], ['History contrast', 50], ['One-sided support', 67],
   ]);
-  expect(result.parts[0].reason).toBe('Average of the 3 highest-scoring recommendations.');
+  expect(result.parts[0].reason).toContain('76 (u/brewfan_22)');
+  expect(result.parts[0].reason).toContain('76 (u/crema_queen)');
+  expect(result.parts[0].reason).toContain('76 (u/daily_grind_dan)');
+  expect(result.parts.find(p => p.label === 'Comment realism')!.reason).toContain('unnatural text, seller or random usernames, template phrases, duplicates');
+  expect(result.parts.every(p => original.includes(p.reason))).toBe(true);
   expect(result.notes).toBe(original.slice(original.indexOf('Weights:')));
 });
 
