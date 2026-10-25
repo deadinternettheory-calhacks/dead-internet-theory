@@ -1,0 +1,96 @@
+.analysis-playground {
+  min-width: 0;
+  padding: 16px 12px 14px;
+  border: 1px solid #E3EAE1;
+  border-radius: 16px;
+  background: #F4F7F2;
+}
+.playground-topline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 0 6px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 550;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.playground-orbit-label { color: var(--brand); letter-spacing: .05em; }
+.playground-stage {
+  position: relative;
+  height: 310px;
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.playground-stage[data-ready="true"] { cursor: grab; }
+.playground-stage[data-dragging="true"] { cursor: grabbing; }
+.playground-stage:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 8px; }
+.playground-poster, .playground-canvas { position: absolute !important; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.playground-poster svg { display: block; width: 100%; height: 100%; }
+.playground-poster.is-hidden { visibility: hidden; }
+.playground-canvas canvas { display: block; }
+.playground-stage-hint {
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  pointer-events: none;
+  color: var(--muted);
+  font-size: 12px;
+}
+.playground-controls { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.playground-controls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 0 13px;
+  border: 1px solid #D2DDD0;
+  border-radius: 9px;
+  background: var(--surface, #FFFFFF);
+  color: var(--brand);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 550;
+  cursor: pointer;
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+}
+.playground-controls button:hover:not(:disabled) { background: #EAF1ED; border-color: #9DB5A3; transform: translateY(-2px); }
+.playground-controls button:active:not(:disabled) { transform: translateY(0) scale(.96); }
+.playground-controls button:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+.playground-controls button:disabled { opacity: .45; cursor: default; }
+.playground-controls .playground-pulse { background: var(--brand); color: #FFFFFF; border-color: var(--brand); }
+.playground-controls .playground-pulse:hover:not(:disabled) { background: #1F3D35; border-color: #1F3D35; }
+.playground-controls .playground-motion { width: 44px; padding: 0; flex: none; }
+.analysis-playground .playground-disclosure { color: var(--muted); font-size: 11px; line-height: 1.5; text-align: center; margin: 11px 0 0; }
+.analysis-progress-body { display: grid; grid-template-columns: minmax(0,1.35fr) minmax(0,1fr); align-items: center; gap: 28px; margin: 22px 0 26px; }
+.progress-copy { min-width: 0; grid-column: 2; grid-row: 1; }
+.analysis-progress-body > .analysis-playground { grid-column: 1; grid-row: 1; }
+.progress-copy .progress-status { margin: 0 0 14px; gap: 10px; align-items: flex-start; }
+.progress-copy .progress-status h2 { font-size: 26px; font-weight: 550; line-height: 1.2; letter-spacing: -.04em; }
+.progress-copy .loading-indicator { margin-top: 6px; }
+.progress-copy > p { color: var(--muted); font-size: 13px; line-height: 1.8; margin: 0; }
+.progress-copy .progress-wait-invitation { color: var(--brand); margin-top: 20px; font-size: 12px; }
+@media (max-width: 767px) {
+  .analysis-progress-body { grid-template-columns: minmax(0,1fr); gap: 20px; margin: 20px 0 24px; }
+  .progress-copy { grid-column: 1; grid-row: 1; }
+  .analysis-progress-body > .analysis-playground { grid-column: 1; grid-row: 2; }
+  .progress-copy .progress-status h2 { font-size: 24px; }
+  .progress-copy .progress-wait-invitation { display: none; }
+  .playground-stage { height: 280px; }
+  .analysis-playground { padding: 14px 8px; }
+  .playground-controls { gap: 8px; }
+  .playground-controls button { padding: 0 10px; gap: 6px; }
+}
+@media (max-width: 359px) {
+  .playground-controls .playground-remix { width: 44px; padding: 0; }
+  .playground-remix > span { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .playground-controls button { transition: none; }
+}
