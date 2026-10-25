@@ -148,3 +148,5 @@
 .account-history-meta { grid-column: 2 / -1; color: var(--muted); font-size: 11px; }
 .account-limited { font-size: 12px; font-weight: 500; color: var(--muted); }
 @media (max-width: 767px) { .account-history-meta { grid-column: 1 / -1; } }
+
+.report-expiry { font-size: 12px; color: var(--muted); margin: 24px 0 0; }

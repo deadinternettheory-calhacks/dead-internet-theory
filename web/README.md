@@ -113,7 +113,7 @@ Inter is self-hosted through the pinned Fontsource variable-font package.
 ## Report
 
 `src/analysis/report.ts` turns the v1 `AnalysisResource` and graph into the
-page's sections, in the SPEC 4.2 order: post, plain-language result, up to three
+page's sections, in the SPEC 4.2 order: score and plain-language result, post, up to three
 findings with quoted evidence, detailed analysis, then coverage and limitations.
 The comment-section astroturfing index appears prominently with its bands and an
 uncalibrated-heuristic explanation; detailed analysis includes its rationale

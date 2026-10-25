@@ -67,8 +67,9 @@ it('opens relevant evidence and shows the section score without per-item caveats
   // Synthetic reports never link to their made-up sources; only research links remain.
   expect([...container.querySelectorAll('a')].every(a => a.closest('.signal-sources'))).toBe(true);
   expect(container.querySelector('.report-coverage-summary')?.textContent).toMatch(/6\/\d+ histories/);
+  expect(container.querySelector('.report-view')?.firstElementChild?.classList.contains('result-card')).toBe(true);
   const sections = [...container.querySelectorAll('.summary-card, .result-card, .report-findings, .evidence, .limitations')].map(node => node.className);
-  expect(sections).toEqual(['card summary-card', 'card result-card tone-high', 'findings report-findings', 'card evidence', 'limitations']);
+  expect(sections).toEqual(['card result-card tone-high', 'card summary-card', 'findings report-findings', 'card evidence', 'limitations']);
 });
 it('lists each sampled account with its automation-signal score, never a bot label', async () => {
   await render(<AnalysisReport report={exampleReport}/>);

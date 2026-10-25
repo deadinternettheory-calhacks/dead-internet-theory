@@ -45,6 +45,7 @@ export function AnalysisReport({ report }: { report: Report }) {
   const historiesReturned = report.histories.filter(history => history.comments.length > 0).length;
   const s = coverage.sentiment;
   return <div className="report-view">
+    <ResultCard report={report}/>
     <article className="card summary-card">
       <span className="platform-label">{PLATFORM_LABEL[post.platform] ?? 'POST'}</span>
       {post.title && <h2 className="url-title">{post.title}</h2>}
@@ -52,8 +53,6 @@ export function AnalysisReport({ report }: { report: Report }) {
       {(post.author || time) && <p className="url-display">{[post.author, time].filter(Boolean).join(' · ')}</p>}
       <SourceLink synthetic={report.synthetic} url={post.url}>View original post</SourceLink>
     </article>
-
-    <ResultCard report={report}/>
 
     <div className="report-coverage-summary"><span><strong>{coverage.analyzed}</strong> comments</span><span><strong>{coverage.completeness}</strong> coverage</span><span><strong>{historiesReturned}/{report.histories.length}</strong> histories</span></div>
     <ReportFindings report={report}/>

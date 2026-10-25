@@ -138,7 +138,7 @@ The SPA, the Convex ingestion backend (v1 routes, jobs, `investigation.ready` de
 - **REQ-DATA-4:** do not claim intent, sponsorship, bot identity, or organizational attribution based only on similarity, timing, or model output.
 - **REQ-STATE-1:** support pending, partial, completed, insufficient, unsupported, inaccessible, and failure states. Progress labels must track real states; no simulated completion, countdown, or synthetic score.
 - **REQ-UX-1:** homepage has centered headline, labeled URL field, **Analyze Post**, visible prefix guidance/example, and a concise three-step explanation.
-- **REQ-UX-2:** analysis view orders post identity, plain-language result, evidence, coverage/limitations, and return action.
+- **REQ-UX-2:** analysis view orders score and plain-language result, post identity, evidence, coverage/limitations, and return action (ADR-017).
 - **REQ-UX-3:** source links open a validated URL in a new tab with safe link attributes.
 - **REQ-ACCESS-1:** keyboard access, visible focus, programmatic labels/errors, accessible status announcements, readable contrast, and reduced-motion support.
 - **REQ-ACCESS-2:** no horizontal overflow at 375px; target 375px, 768px, and 1440px. Interactive targets should generally be at least 44px.
@@ -147,7 +147,7 @@ The SPA, the Convex ingestion backend (v1 routes, jobs, `investigation.ready` de
 
 Prefer “We found unusual activity” or “Some comments were posted close together” over “bot network detected.” Use “not proof” language. Never say “definitely fake” or “confirmed propaganda,” or accuse real users/organizations of misconduct based on weak signals.
 
-Results order: (1) original post and source, (2) validated plain-language result, (3) up to three prioritized evidence-backed findings, (4) the comment-section astroturfing index (0–100) with its meaning, direction and bands documented (ADR-010); it is not validated, (5) expandable detailed evidence, (6) sampling coverage and limitations, (7) another-post action. Numeric charts require real documented data. Missing fields are omitted.
+Results order (ADR-017 supersedes the previous post-first order): (1) the comment-section astroturfing index and validated plain-language result, with meaning, direction and bands documented (ADR-010); the index is not validated, (2) original post and source, (3) up to three prioritized evidence-backed findings, (4) expandable detailed evidence, (5) sampling coverage and limitations, (6) another-post action. Numeric charts require real documented data. Missing fields are omitted.
 
 ## 5. Architecture and dependencies
 
@@ -489,6 +489,7 @@ These entries capture project direction and the adopted v1 interface delta; they
 | ADR-014 | 2026-10-25 UTC | Requested by the owner; implemented | Missing commenter history on platforms that do not provide it (TikTok, YouTube) counts neither for nor against astroturfing: rubric v0.4 gate K4 no longer requires a history-based B signal there, so those scores are no longer held at 74. See the [no-history delta](deltas/2026-10-25T01-35-00Z-no-history-platforms-neutral.md). |
 | ADR-015 | 2026-10-25 UTC | Requested by the owner; implemented | The section score adds low-effort support (15%: one- to three-word or generic praise and nonsense filler) and counts every short phrase copied across accounts as coordination; weights become comment realism 30%, low-effort 15%, coordination 15%, commercial 20%, rubric 10%, history 10%; wider shop-name patterns; nonsense filler gets a per-comment estimate. See the [low-effort delta](deltas/2026-10-25T02-10-00Z-low-effort-praise-flood.md). |
 | ADR-016 | 2026-10-25 UTC | Requested by the owner ("The knife one is bad. get rid of it"; chose replacing it with the TikTok thread) | The public example becomes the @goodstuffdiary night-light TikTok video's 100 comments, with usernames replaced by made-up names of the same kind so username evidence stays meaningful; the r/BuyItForLife knife thread is removed. The walkthrough and evidence explorer skip the history view when a report has no histories. Supersedes ADR-011's choice of thread. |
+| ADR-017 | 2026-10-25 UTC | Requested by the owner | Lead the report with its score and verdict, then post identity and evidence. Remove the visible page title so the score leads without a Summary heading. Supersedes the post-first display order in REQ-UX-2 and section 4.2. See the [score-first delta](deltas/2026-10-25T03-37-18Z-score-first-report.md). |
 
 
 ### 13.5 Specification change history
