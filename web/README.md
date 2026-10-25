@@ -142,13 +142,17 @@ landing page and stays mounted across navigation, phase changes and report compl
 The completed scene keeps moving with a celebratory greeting; a failed request
 keeps a calm illustration. A continuous reading column with section dividers
 replaces individual floating text panels. The column is horizontally centered
-with a 70%-opacity backdrop so the modeled background remains visible; secondary
+with an 80%-opacity backdrop so the modeled background remains visible; secondary
 text uses a darker tone for readability. There are no visible scene
 buttons or control panel. Formations follow the real backend phase: a gentle orbit
 while waiting, comment models spawning one by one and spiraling inward during collection, then a rotating double helix with a traveling gold scan highlight
 and a magnifying glass during analysis. They never advance on a timer. The ghost
 has arms, blush, shiny eyes, blinks, waves, reaching motions and nods. Taps cycle
 local hop, wink/wave and twirl reactions with ripples and sparks.
+
+The analysis globe uses a stronger, 90%-opacity green grid over an opaque surface,
+which hides far-side graves and grid lines. Floating comment models stay in front
+of that surface during collection and analysis.
 
 Drag/flick rotates the world with momentum; tap or Enter makes the ghost react.
 Each reaction finishes before another starts, so rapid input cannot constantly
