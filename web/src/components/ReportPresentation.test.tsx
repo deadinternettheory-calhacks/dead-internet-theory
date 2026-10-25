@@ -68,6 +68,8 @@ it('opens relevant evidence and shows the section score without per-item caveats
   expect([...container.querySelectorAll('a')].every(a => a.closest('.signal-sources'))).toBe(true);
   expect(container.querySelector('.report-coverage-summary')).toBeNull();
   expect(container.querySelector('.summary-card')?.parentElement?.classList.contains('report-middle')).toBe(true);
+  expect(container.querySelector('.original-post-heading')?.textContent).toBe(`Original Post \u00b7 Reddit \u00b7 ${exampleReport.post.title}`);
+  expect(container.querySelector('.summary-card .platform-label')).toBeNull();
   expect(container.querySelector('.report-findings')?.parentElement?.classList.contains('report-middle')).toBe(true);
   const explanation = container.querySelector<HTMLDetailsElement>('.score-explanation')!;
   expect(explanation.open).toBe(false);

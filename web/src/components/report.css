@@ -170,3 +170,12 @@
 .score-breakdown dd p { margin: 2px 0 0; color: var(--muted); }
 .score-calculation-notes { margin: 16px 0; color: var(--muted); font-size: 12px; }
 @media (max-width: 767px) { .score-breakdown > div { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+
+/* Compact original-post identity, with natural wrapping on small screens. */
+.report-view .original-post-heading { font-size: 13px; font-weight: 550; line-height: 1.65; letter-spacing: normal; margin: 0 0 8px; overflow-wrap: anywhere; }
+.original-post-heading .post-divider { color: var(--muted); padding: 0 4px; }
+.original-post-title { font-weight: 400; }
+.report-view .summary-card .post-text { font-size: 13px; line-height: 1.65; margin: 0 0 6px; }
+.report-view .summary-card .url-display { font-size: 11px; margin: 0; }
+.report-view .summary-card .text-link { font-size: 12px; }
+.report-middle > .summary-card { padding-bottom: 20px; margin-bottom: 20px; }

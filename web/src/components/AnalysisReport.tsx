@@ -9,7 +9,7 @@ import { EvidenceDetails } from './AnalysisPresentation';
 import './report.css';
 
 
-const PLATFORM_LABEL: Record<string, string> = { reddit: 'REDDIT', x: 'X / TWITTER', youtube: 'YOUTUBE', tiktok: 'TIKTOK' };
+const PLATFORM_LABEL: Record<string, string> = { reddit: 'Reddit', x: 'X', youtube: 'YouTube', tiktok: 'TikTok' };
 const STANCE_LABEL: Record<string, string> = { supportive: 'Supportive', critical: 'Critical', neutral: 'Neutral', mixed: 'Mixed', unclear: 'Unclear' };
 
 
@@ -65,8 +65,7 @@ export function AnalysisReport({ report }: { report: Report }) {
     <ResultCard report={report}/>
     <div className="card report-middle">
     <article className="card summary-card">
-      <span className="platform-label">{PLATFORM_LABEL[post.platform] ?? 'POST'}</span>
-      {post.title && <h2 className="url-title">{post.title}</h2>}
+      <h2 className="original-post-heading"><span>Original Post</span><span className="post-divider" aria-hidden="true"> · </span><span>{PLATFORM_LABEL[post.platform] ?? post.platform}</span>{post.title && <><span className="post-divider" aria-hidden="true"> · </span><span className="original-post-title">{post.title}</span></>}</h2>
       <p className="post-text">{post.text}</p>
       {(post.author || time) && <p className="url-display">{[post.author, time].filter(Boolean).join(' · ')}</p>}
       <SourceLink synthetic={report.synthetic} url={post.url}>View original post</SourceLink>
