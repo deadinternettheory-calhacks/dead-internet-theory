@@ -2,7 +2,7 @@
 .analysis-page-heading { margin: 10px 0 26px; }
 .analysis-page-heading h1 { font-size: 36px; font-weight: 550; line-height: 1.2; letter-spacing: -.05em; margin: 0 0 12px; }
 .analysis-page-heading p { font-size: 12px; color: var(--muted); margin: 0; }
-.report-view .summary-card { padding: 24px 28px; border-radius: 12px; background: transparent; margin-bottom: 18px; }
+.report-view .summary-card { padding: 24px 28px; border-radius: 12px; background: var(--surface); margin-bottom: 18px; }
 .report-view .platform-label { font-size: 10px; color: var(--muted); letter-spacing: .08em; }
 .report-view .url-title { font-size: 22px; font-weight: 550; letter-spacing: -.035em; margin: 12px 0; }
 .report-view .post-text { font-size: 14px; line-height: 1.8; }

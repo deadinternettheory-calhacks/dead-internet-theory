@@ -20,8 +20,8 @@ with saved synthetic report data, including the score, findings, discussion and
 account histories. No backend, inference service, API keys or analysis requests
 are needed. Changes to report components update through Vite as usual.
 
-The page labels its data as a local synthetic preview. The route and fixture
-import are development-only and excluded from production builds.
+The fixture post title identifies it as a synthetic example. The route and
+fixture import are development-only and excluded from production builds.
 
 ## Connecting the analysis API
 
