@@ -352,7 +352,9 @@ scrolling or a backend phase change never suspends motion. See
 
 The Manifest V3 client in `extension/` opens a side panel from the toolbar action,
 keyboard shortcut or supported-link context menu. It reads the selected URL only
-when invoked; analysis requires pressing Analyze post. It uses the existing v1
+when invoked. The secondary Use Current Page button below Analyze post fills
+the input from an active Reddit post, TikTok video or YouTube video, with inline
+errors for unsupported pages; analysis still requires pressing Analyze post. It uses the existing v1
 pipeline and shared report/evidence presentation. The ghost follows actual
 phases, respects reduced motion and hidden documents, and makes only local reactions.
 
@@ -363,8 +365,11 @@ The client sends its installed Chrome runtime ID; the server accepts only IDs
 listed in the canonical public configuration. Packaging separates the pinned-ID
 unpacked ZIP from the keyless Chrome Web Store ZIP. After the first draft upload,
 the store-assigned ID must be added to the server allowlist before review.
-The package requests activeTab, sidePanel, contextMenus, storage and alarms, plus
-host permission for the website origin. It has no social-site content scripts.
+The package requests activeTab, tabs, sidePanel, contextMenus, storage and alarms, plus
+host permission for the website origin. The tabs permission allows reading the
+active tab URL on a Use Current Page click even after switching tabs while the
+panel remains open; there is no background browsing monitor. It has no social-site
+content scripts.
 
 Closing the panel does not cancel server work. Pending intent and idempotency
 keys are stored before creating an investigation; known IDs resume using GET.
