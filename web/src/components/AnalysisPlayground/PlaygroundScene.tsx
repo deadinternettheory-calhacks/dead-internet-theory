@@ -10,10 +10,10 @@ import { advanceGlobe } from '../GraveyardGlobe/globe-motion';
 import { formationFor, type PlaygroundSceneProps } from './playground-types';
 import { GhostCharacter } from './GhostCharacter';
 
-const COUNT = 14;
+const COUNT = 18;
 const SPARKS = 32;
 const TAU = Math.PI * 2;
-const COLORS = { paper: '#FFFFFF', core: '#EAF1ED', green: '#284D43', sage: '#D4DFD5', ink: '#648575', trim: '#B7CABB', gold: '#A86518' };
+const COLORS = { paper: '#FFFFFF', core: '#EAF1ED', green: '#9BB5A7', sage: '#E2EAE3', ink: '#A8BFB0', trim: '#D4DFD5', gold: '#C5A980' };
 
 function commentShape() {
   const s = new Shape();
@@ -55,7 +55,7 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
     paper: new MeshStandardMaterial({ color: COLORS.paper, roughness: 0.36, metalness: 0.08 }),
     green: new MeshStandardMaterial({ color: COLORS.green, roughness: 0.4, metalness: 0.12 }),
     sage: new MeshStandardMaterial({ color: COLORS.sage, roughness: 0.45 }),
-    core: new MeshStandardMaterial({ color: COLORS.core, roughness: 0.45, metalness: 0.05 }),
+    core: new MeshStandardMaterial({ color: COLORS.core, roughness: 0.45, metalness: 0.05, transparent: true, opacity: 0.18 }),
     trim: new MeshStandardMaterial({ color: COLORS.trim, metalness: 0.4, roughness: 0.35 }),
     ink: new MeshBasicMaterial({ color: COLORS.ink }),
     lightInk: new MeshBasicMaterial({ color: COLORS.core }),
@@ -89,11 +89,13 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
     const t = time.current;
     const age = pulseAge.current;
     const analyzing = phase === 'analyzing';
-    const pace = analyzing ? 0.23 : phase === 'collecting' ? 0.16 : 0.08;
+    const pace = analyzing ? 0.04 : phase === 'collecting' ? 0.07 : 0.035;
     const shock = age < 1.6 ? Math.sin(Math.min(1, age / 1.6) * Math.PI) * Math.exp(-age * 1.5) : 0;
-    const fit = Math.min(1.1, state.viewport.width / (formation === 'gather' ? 7.2 : 6.0));
-    // Leave room for the incoming stream and settle into a closer inspection view.
-    tilt.current.scale.setScalar(animate && initialized.current ? MathUtils.damp(tilt.current.scale.x, fit, 4, dt) : fit);
+    const { width, height } = state.viewport;
+    // The globe fills the background; comment positions use viewport dimensions
+    // independently so portrait and landscape both reach all four edges.
+    tilt.current.scale.setScalar(Math.max(width, height) * 0.30);
+    tilt.current.position.set(-width * 0.14, -height * 0.10, -3);
     world.current.rotation.set(motion.current.pitch, motion.current.yaw, 0, 'YXZ');
     // Demand frames can still occur on resize or React commits. A paused scene
     // keeps its exact pose; direct turns and backend phase changes remain available.
@@ -104,7 +106,9 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
     tilt.current.rotation.z = MathUtils.damp(tilt.current.rotation.z, -0.07 - pointer.current.x * 0.08, 4, dt);
     if (core.current) { core.current.rotation.y = t * 0.16; core.current.position.y = Math.sin(t * 0.8) * 0.07; }
     if (halo.current) { halo.current.rotation.y = t * -0.13; halo.current.rotation.z = Math.sin(t * 0.3) * 0.1; }
-    resources.wireInk.opacity = analyzing ? 0.65 : 0.42;
+    resources.wireInk.opacity = analyzing ? 0.32 : 0.22;
+    const fieldX = Math.max(0.5, width / 2 - 0.55);
+    const fieldY = Math.max(0.5, height / 2 - 0.55);
 
     for (let i = 0; i < COUNT; i++) {
       const card = cards.current[i];
@@ -113,19 +117,25 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
       let x: number, y: number, z: number;
       let arrival = 1;
       if (formation === 'gather') {
-        const travel = (i / COUNT + t * 0.105) % 1;
+        const travel = (i / COUNT + t * 0.055) % 1;
         const a = travel * TAU * 1.35;
-        const radius = 1 + (1 - travel) * 1.7;
-        x = Math.cos(a) * radius; y = (1 - travel) * 2.1 - 0.5; z = Math.sin(a) * radius * 0.65;
+        const radius = 0.25 + (1 - travel) * 0.75;
+        x = Math.cos(a) * fieldX * radius;
+        y = Math.sin(a) * fieldY * radius;
+        z = -1;
         arrival = Math.min(1, travel * 12, (1 - travel) * 12);
       } else if (formation === 'inspect') {
-        x = (i % 7 - 3) * 0.69;
-        y = (i < 7 ? 1.22 : -1.22) + Math.sin(i + t * 0.8) * 0.07;
-        z = Math.sin(i * 0.5 + t * 0.35) * 0.18;
+        const columns = width < 7 ? 3 : 6;
+        const rows = Math.ceil(COUNT / columns);
+        x = (i % columns / (columns - 1) * 2 - 1) * fieldX;
+        y = (1 - Math.floor(i / columns) / (rows - 1) * 2) * fieldY;
+        z = -1;
       } else {
-        x = Math.cos(angle) * 2.12; y = Math.sin(angle * 2 + t * 0.35) * 0.8; z = Math.sin(angle) * 1.65;
+        x = Math.cos(angle) * fieldX;
+        y = Math.sin(angle * 2 + t * 0.1) * fieldY;
+        z = -1 + Math.sin(angle) * 0.2;
       }
-      const swell = 1 + shock * 0.55;
+      const swell = 1 + shock * 0.035;
       const floatY = y * swell + Math.sin(t + i) * 0.08;
       if (animate && t > 0.05) card.position.set(
         MathUtils.damp(card.position.x, x * swell, 4.5, dt),
@@ -134,7 +144,7 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
       );
       else card.position.set(x * swell, floatY, z * swell);
       card.rotation.set(Math.sin(t * 0.45 + i) * 0.08, formation === 'inspect' ? 0 : Math.sin(angle) * 0.35, Math.sin(i * 2 + t * 0.2) * (formation === 'inspect' ? 0.04 : 0.2) + shock * (i % 2 ? 0.4 : -0.4));
-      card.scale.setScalar((1 + (i % 3) * 0.10 + shock * 0.2) * arrival);
+      card.scale.setScalar((width < 7 ? 0.75 : 1) * (1 + (i % 3) * 0.10 + shock * 0.1) * arrival);
     }
     for (let i = 0; i < 3; i++) {
       const p = Math.max(0, age - i * 0.13);
@@ -158,7 +168,8 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
     }
   });
 
-  return <group ref={tilt} dispose={null} rotation={[0.12, 0, -0.07]}>
+  return <group dispose={null}>
+    <group ref={tilt} rotation={[0.12, 0, -0.07]}>
     <group ref={world}>
       <group ref={halo}>
         <mesh geometry={resources.ring} material={resources.trim} rotation={[1.1, 0.2, 0.35]}/>
@@ -173,14 +184,17 @@ function Model({ animate, phase, pulse, pointer, motion, onReady }: Omit<Playgro
           <mesh geometry={resources.box} material={i % 3 === 0 ? resources.lightInk : resources.ink} position={[0, 0.21, 0.065]} scale={[0.11, 0.02, 0.012]}/>
         </group>)}
       </group>
-      {Array.from({ length: COUNT }, (_,i) => <group key={i} ref={g => { if (g) cards.current[i] = g; }}>
+    </group>
+    </group>
+    <group name="viewport-comment-field">
+      {Array.from({ length: COUNT }, (_,i) => <group key={i} name={`illustrative-comment-${i}`} ref={g => { if (g) cards.current[i] = g; }}>
         <mesh geometry={resources.card} material={i % 4 === 0 ? resources.green : resources.paper}/>
-        {[1,-1].map(side => <group key={side} rotation={[0, side === -1 ? Math.PI : 0, 0]}>
+        <group>
           <mesh geometry={resources.circle} material={i % 4 === 0 ? resources.lightInk : i % 5 === 0 ? resources.gold : resources.ink} position={[-0.20, 0.085, 0.065]}/>
           <mesh geometry={resources.box} material={i % 4 === 0 ? resources.lightInk : resources.ink} position={[0.055, 0.1, 0.065]} scale={[0.28, 0.03, 0.012]}/>
           <mesh geometry={resources.box} material={i % 4 === 0 ? resources.sage : resources.trim} position={[0.015, 0.025, 0.065]} scale={[0.20, 0.025, 0.012]}/>
           <mesh geometry={resources.box} material={i % 4 === 0 ? resources.sage : resources.trim} position={[0, -0.085, 0.065]} scale={[0.43, 0.025, 0.012]}/>
-        </group>)}
+        </group>
       </group>)}
       {rippleMaterials.map((material,i) => <group key={i} ref={g => { if (g) ripples.current[i] = g; }}>
         <mesh geometry={resources.ripple} material={material} rotation={[0.25 + i * 0.55, i * 0.4, i * 0.2]}/>
@@ -198,8 +212,8 @@ export default function PlaygroundScene(props: PlaygroundSceneProps) {
     element?.addEventListener('webglcontextlost', props.onFailure);
     return () => element?.removeEventListener('webglcontextlost', props.onFailure);
   }, [props.onFailure]);
-  return <Canvas ref={canvas} className="playground-canvas" aria-hidden="true" camera={{ position: [0, 0, 7.4], fov: 37 }}
-    dpr={[1, 1.5]} frameloop={props.animate ? 'always' : 'demand'}
+  return <Canvas ref={canvas} className="playground-canvas" aria-hidden="true" orthographic camera={{ position: [0, 0, 20], zoom: 80, near: 0.1, far: 100 }}
+    dpr={[1, 1.25]} frameloop={props.animate ? 'always' : 'demand'}
     gl={{ alpha: true, antialias: true, powerPreference: 'low-power' }}>
     <ambientLight intensity={1.15}/>
     <directionalLight position={[-3, 5, 5]} intensity={2.5}/>

@@ -20,16 +20,12 @@ let container: HTMLDivElement;
 let reduced: boolean;
 let hidden: boolean;
 let preferenceChanged: (() => void) | undefined;
-let intersect: ((entries: { isIntersecting: boolean }[]) => void) | undefined;
-const disconnected = vi.fn();
 beforeEach(() => {
   vi.useFakeTimers();
   latest = undefined;
   reduced = hidden = false;
   preferenceChanged = undefined;
-  intersect = undefined;
   disposed.mockClear();
-  disconnected.mockClear();
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
   vi.stubGlobal('matchMedia', () => ({
     get matches() { return reduced; },
@@ -37,11 +33,6 @@ beforeEach(() => {
     removeEventListener: vi.fn(),
   }));
   vi.spyOn(document, 'hidden', 'get').mockImplementation(() => hidden);
-  vi.stubGlobal('IntersectionObserver', class {
-    constructor(callback: typeof intersect) { intersect = callback; }
-    observe() {}
-    disconnect() { disconnected(); }
-  });
   container = document.createElement('div');
   document.body.append(container);
   root = createRoot(container);
@@ -66,7 +57,6 @@ it('keeps a fast completed request from loading any 3D scene', async () => {
   await act(async () => root.render(<p>Completed report</p>));
   await advance(2000);
   expect(latest).toBeUndefined();
-  expect(disconnected).toHaveBeenCalledOnce();
 });
 
 it('starts reduced motion with a static illustration and allows explicit opt-in', async () => {
@@ -119,14 +109,13 @@ it('has no buttons and changes formation only when the real phase changes, even 
   expect(container.querySelector('[aria-current="step"]')?.textContent).toContain('Analyze the discussion');
 });
 
-it('suspends rendering offscreen and in background tabs without losing the scene', async () => {
+it('suspends only in hidden tabs and resumes across phase changes without remounting the viewport scene', async () => {
   await render(); await advance();
   const scene = container.querySelector('[data-testid="playground-scene"]');
-  act(() => intersect?.([{ isIntersecting: false }]));
-  expect(latest?.animate).toBe(false);
-  act(() => intersect?.([{ isIntersecting: true }]));
-  expect(latest?.animate).toBe(true);
   act(() => { hidden = true; document.dispatchEvent(new Event('visibilitychange')); });
+  expect(latest?.animate).toBe(false);
+  await render('collecting');
+  await render('analyzing');
   expect(latest?.animate).toBe(false);
   act(() => { hidden = false; document.dispatchEvent(new Event('visibilitychange')); });
   expect(latest?.animate).toBe(true);
@@ -144,14 +133,28 @@ it('immediately respects a changed system preference and restores the poster on 
   expect(disposed).toHaveBeenCalledOnce();
 });
 
-it('allows pause and resume directly on the scene without exposing buttons', async () => {
+it('ignores accidental double-clicks and lets reactions finish under repeated input', async () => {
   await render(); await advance();
-  act(() => stage().dispatchEvent(new MouseEvent('dblclick', { bubbles: true })));
-  expect(latest?.animate).toBe(false);
-  act(() => stage().dispatchEvent(new MouseEvent('dblclick', { bubbles: true })));
+  key('Enter');
+  for (let i = 0; i < 20; i++) {
+    key('Enter');
+    act(() => stage().dispatchEvent(new MouseEvent('dblclick', { bubbles: true })));
+  }
+  expect(latest?.pulse).toBe(1);
   expect(latest?.animate).toBe(true);
+  await render('collecting');
+  await render('analyzing');
+  expect(latest?.animate).toBe(true);
+  expect(disposed).not.toHaveBeenCalled();
+  await advance(1500);
+  key('Enter');
+  expect(latest?.pulse).toBe(2);
   key('Escape');
   expect(latest?.animate).toBe(false);
+  key(' ');
+  expect(latest?.animate).toBe(true);
+  act(() => stage().dispatchEvent(new KeyboardEvent('keydown', { key: ' ', repeat: true, bubbles: true })));
+  expect(latest?.animate).toBe(true);
   expect(container.querySelectorAll('button')).toHaveLength(0);
 });
 

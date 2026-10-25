@@ -163,21 +163,24 @@ scene timing is never used as live progress.
 
 ## Interactive analysis playground
 
-The live waiting view has a larger, unframed 3D illustration beside the real
-status, stacking below it on mobile. There are no visible scene buttons or
-control panel. Formations follow the real backend phase: a gentle orbit and a
-waving ghost while waiting, cards spiraling inward during collection, then two
-organized rows and a ghost inspecting them with a magnifying glass during
-analysis. They never advance on a timer. The ghost has a rounder body, arms,
-blush, shiny eyes, blinks, waves, reaching motions and nods. Taps cycle local
-hop, wink/wave and twirl reactions with ripples and sparks.
+The live waiting view has a fixed, full-viewport 3D background: a large graveyard
+globe and eighteen comment tiles spread across the page, with an expressive ghost
+roaming both axes inside the visible viewport. Foreground status, links and
+collected-comment cards stay readable and interactive. There are no visible scene
+buttons or control panel. Formations follow the real backend phase: a gentle orbit
+while waiting, cards spiraling inward during collection, then an organized field
+and a magnifying glass during analysis. They never advance on a timer. The ghost
+has arms, blush, shiny eyes, blinks, waves, reaching motions and nods. Taps cycle
+local hop, wink/wave and twirl reactions with ripples and sparks.
 
-Drag/flick rotates with momentum; tap or Enter makes the ghost react. Space or
-double-click pauses/resumes illustration motion, Escape pauses, arrow keys turn
-it, and Home resets the view. Instructions are available to screen readers and
-on keyboard focus. Horizontal touch gestures preserve vertical scrolling and
-pinch zoom. Pausing stops automatic motion and inertia while allowing direct
-turns and static pose changes when the real investigation phase changes.
+Drag/flick rotates the world with momentum; tap or Enter makes the ghost react.
+Each reaction finishes before another starts, so rapid input cannot constantly
+reset it. Clicks, including double-clicks, never pause animation. Space
+pauses/resumes, Escape pauses, arrow keys turn the world, and Home resets its
+orientation. Instructions are available to screen readers and on keyboard focus.
+Horizontal touch gestures preserve vertical scrolling and pinch zoom. Pausing
+stops automatic motion and inertia while allowing direct turns and static pose
+changes when the real investigation phase changes.
 
 This is an illustration with local controls, separate from the evidence. The
 real backend status, elapsed-view clock, milestones, collected count and comment
@@ -186,10 +189,10 @@ change scores or simulate completion. Finishing the report unmounts the scene.
 
 The scene shares the homepage's lazy Three.js chunk; its own code loads only if
 the wait lasts at least 400 ms. Reduced motion starts with a stage-specific static
-SVG, with Space/double-click as explicit opt-in. It reacts to preference changes
-and keeps a poster on graphics failure. Offscreen and background-tab motion
-suspends. Simple shared geometry,
-instanced sparks, a 1.5 pixel-ratio cap and no shadow maps, post-processing or
+SVG, with Space as explicit opt-in. It reacts to preference changes
+and keeps a poster on graphics failure. Hidden tabs suspend motion and resume on
+return; scrolling or phase/layout changes never suspend the fixed scene. Simple
+shared geometry, front-facing tiles, instanced sparks, a 1.25 pixel-ratio cap and no shadow maps, post-processing or
 external models keep rendering bounded; resources are disposed on unmount.
 This feature deploys with the website and requires no ingestion or inference
 Convex redeployment.

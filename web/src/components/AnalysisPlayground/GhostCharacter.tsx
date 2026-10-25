@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { CircleGeometry, CylinderGeometry, ExtrudeGeometry, MathUtils, MeshBasicMaterial, MeshStandardMaterial, Shape, SphereGeometry, TorusGeometry, type Group } from 'three';
 import { formationFor, type PlaygroundSceneProps } from './playground-types';
+import { ghostTravel } from './playground-motion';
 
 function bodyShape() {
   const s = new Shape();
@@ -48,7 +49,7 @@ export function GhostCharacter({ animate, phase, pulse, pointer, motion }: Pick<
   useEffect(() => { if (pulse > 0) reactionAge.current = 0; invalidate(); }, [pulse, invalidate]);
   useEffect(() => { invalidate(); }, [phase, animate, invalidate]);
 
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
     if (!root.current) return;
     if (!animate && initialized.current && lastPhase.current === phase) return;
     initialized.current = true; lastPhase.current = phase;
@@ -61,7 +62,8 @@ export function GhostCharacter({ animate, phase, pulse, pointer, motion }: Pick<
     const twirl = reaction === 0 && pulse > 0 && age < 1.4 ? MathUtils.smoothstep(age, 0, 1.4) * Math.PI * 2 : 0;
     const hello = formation === 'rest' && t % 10 < 1.8;
     const nod = formation === 'inspect' ? Math.sin(t * 1.4) * 0.07 : 0;
-    root.current.position.set(Math.sin(t * 0.55) * 0.07, 0.08 + Math.sin(t * 1.5) * 0.11 + hop * 0.48, 1.5);
+    const travel = ghostTravel(t, state.viewport.width, state.viewport.height);
+    root.current.position.set(travel.x, travel.y + hop * 0.24, 1.5);
     root.current.rotation.set(pointer.current.y * 0.09 + nod, Math.sin(motion.current.yaw) * 0.23 + Math.sin(t * 0.45) * 0.06, twirl + Math.sin(t * 0.7) * 0.06 - pointer.current.x * 0.08);
     root.current.scale.set(1.3 + hop * 0.15, 1.3 - hop * 0.16, 1.3);
     if (eyes.current) eyes.current.scale.y = MathUtils.damp(eyes.current.scale.y, t % 5.5 > 5.28 ? 0.1 : 1 + hop * 0.25, 35, dt);
@@ -77,7 +79,7 @@ export function GhostCharacter({ animate, phase, pulse, pointer, motion }: Pick<
     }
   });
 
-  return <group ref={root} position={[0, 0.08, 1.5]} scale={1.3} dispose={null}>
+  return <group ref={root} name="investigator-ghost" position={[0, 0.08, 1.5]} scale={1.3} dispose={null}>
     <mesh geometry={resources.body} material={resources.white}/>
     <group ref={leftArm} position={[-0.44, -0.04, 0.03]} rotation={[0, 0, -0.65]}>
       <mesh geometry={resources.sphere} material={resources.white} position={[0, -0.075, 0]} scale={[0.09, 0.17, 0.09]}/>
