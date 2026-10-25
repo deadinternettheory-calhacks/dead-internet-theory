@@ -156,6 +156,7 @@
 .score-explanation { grid-column: 1 / -1; min-width: 0; border-top: 1px solid var(--border); }
 .score-explanation > summary { min-height: 44px; margin: 0; padding: 12px 0; cursor: pointer; color: var(--brand); font-size: 12px; font-weight: 550; }
 .score-explanation > summary::marker { font-size: 10px; }
+.score-explanation-label { margin-left: 4px; }
 .score-explanation-content { padding: 12px 0 24px; font-size: 14px; line-height: 1.8; }
 .score-explanation .axis-list { margin-bottom: 0; }
 @media (max-width: 767px) { .report-middle { padding: 20px 18px; } .report-middle > .summary-card { padding: 0 0 24px; } .report-middle .report-findings .finding-card { padding: 20px 0 8px; } .result-card { column-gap: 18px; } }
