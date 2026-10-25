@@ -2,12 +2,14 @@ import type { RefObject } from 'react';
 import type { ProgressPhase } from '../AnalysisProgress';
 import type { GlobeMotion } from '../GraveyardGlobe/globe-motion';
 
-export const ORBITS = ['Orbit', 'Vortex', 'Wave'] as const;
+/** Formations follow real backend phases, never an animation timer. */
+export function formationFor(phase: ProgressPhase) {
+  return phase === 'collecting' ? 'gather' : phase === 'analyzing' ? 'inspect' : 'rest';
+}
 
 export interface PlaygroundSceneProps {
   animate: boolean;
   phase: ProgressPhase;
-  orbit: number;
   pulse: number;
   pointer: RefObject<{ x: number; y: number }>;
   motion: RefObject<GlobeMotion>;
