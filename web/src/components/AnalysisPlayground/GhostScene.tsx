@@ -4,7 +4,7 @@ import { GhostCharacter } from './GhostCharacter';
 import { ghostTravel } from './playground-motion';
 import type { PlaygroundSceneProps } from './playground-types';
 
-function Flight({ overlay, ...props }: PlaygroundSceneProps & { overlay: RefObject<HTMLDivElement | null> }) {
+function Flight({ overlay, ...props }: PlaygroundSceneProps & { overlay: RefObject<HTMLDivElement | null>; held?: boolean }) {
   const { invalidate } = useThree();
   const time = useRef(0);
   const first = useRef(true);
@@ -16,15 +16,15 @@ function Flight({ overlay, ...props }: PlaygroundSceneProps & { overlay: RefObje
   }, [invalidate]);
   useFrame((state, delta) => {
     if (first.current) { first.current = false; props.onReady(state.invalidate); }
-    if (props.animate) time.current += Math.min(delta, 0.05);
+    if (props.animate && !props.held) time.current += Math.min(delta, 0.05);
     const p = ghostTravel(time.current, window.innerWidth / 80, window.innerHeight / 80);
     if (overlay.current) overlay.current.style.transform = `translate3d(${p.x * 80}px, ${-p.y * 80}px, 0)`;
   });
   return <GhostCharacter {...props} roaming={false}/>;
 }
 
-/** A small transparent renderer above the document; it never intercepts page controls. */
-export default function GhostScene(props: PlaygroundSceneProps & { overlay: RefObject<HTMLDivElement | null> }) {
+/** A small transparent renderer above the document; a separate ghost-shaped button handles interaction. */
+export default function GhostScene(props: PlaygroundSceneProps & { overlay: RefObject<HTMLDivElement | null>; held?: boolean }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const element = canvas.current;

@@ -324,20 +324,23 @@ backend states, show elapsed time in the view, and let readers browse a bounded
 preview of collected comments while analysis runs. They do not use the synthetic
 walkthrough's timing, invented percentages or an estimated completion countdown.
 
-Live waiting views use a fixed, full-viewport 3D background with no visible
-scene-control buttons: a graveyard globe and illustrative comment tiles fill the
-page while a rounded, expressive ghost roams within the visible viewport in a small foreground renderer that never intercepts page controls. The companion also appears on the landing page and remains with the background after a report resolves; completion triggers a greeting/celebration pose. Actual
-backend phases drive the formations: resting orbit while queued, comment models
-spawning one by one and gathering during collection, then a rotating double helix with a traveling scan highlight
-and a magnifying glass during analysis.
-The ghost waves, blinks, reaches, nods and reacts to taps with hops, winks and
-twirls. Reactions finish before accepting another; rapid clicks never toggle
-pause. Drag/flick and keyboard interactions remain available, with Space to
-pause/resume and Escape to pause. A centered, translucent reading column replaces floating text panels; foreground text, navigation and collected
-comments remain readable and usable. The art never represents collected evidence
-or invented progress. Reduced motion, graphics fallback, hidden-tab suspension
-and deferred lazy loading keep the real investigation usable independently of
-the scene. Scrolling or a backend phase change does not suspend animation. See
+Live analyses use a fixed full-viewport globe behind the reading column,
+illustrative comment models above the column, and a rounded, expressive ghost
+above the comments. The companion also appears on the landing page and remains
+with the scene after a report resolves; completion triggers a greeting. Actual
+backend phases drive comment formations: spawning and gathering during
+collection, then a rotating double helix with a traveling scan highlight during
+analysis. The ghost waves, blinks, reaches, nods and reacts with hops, winks and
+twirls. Reactions finish before accepting another; rapid clicks never toggle pause.
+The analysis globe is passive: it has no drag, flick, hover-tilt or keyboard-turn
+controls. Only the ghost is an interactive illustration target. Click it or use
+Enter/Space to react; P pauses/resumes scene motion, Escape pauses, and clicking
+a paused ghost resumes it. Its flight holds while hovered/focused for reliable
+activation. Comment models ignore pointer events so report controls remain usable.
+The centered translucent column, reduced-motion posters, graphics fallback,
+hidden-tab suspension and lazy loading keep the actual investigation usable.
+Illustrations never represent collected evidence or invented progress, and
+scrolling or a backend phase change never suspends motion. See
 [web/README.md](web/README.md#interactive-analysis-playground).
 
 ## 11. Security, privacy, and platform access

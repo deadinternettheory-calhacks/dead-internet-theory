@@ -8,6 +8,7 @@ import type { PlaygroundSceneProps } from './playground-types';
 
 let latest: PlaygroundSceneProps | undefined;
 let latestGhost: PlaygroundSceneProps | undefined;
+let latestComments: Pick<PlaygroundSceneProps, 'animate' | 'phase' | 'onReady' | 'onFailure'> | undefined;
 const disposed = vi.fn();
 vi.mock('./PlaygroundScene', () => ({
   default: function Scene(props: PlaygroundSceneProps) {
@@ -25,6 +26,14 @@ vi.mock('./GhostScene', () => ({
   },
 }));
 
+vi.mock('./CommentScene', () => ({
+  default: function CommentScene(props: NonNullable<typeof latestComments>) {
+    latestComments = props;
+    useEffect(() => { props.onReady(() => {}); }, [props.onReady]);
+    return <div data-testid="comment-scene"/>;
+  },
+}));
+
 let root: Root;
 let container: HTMLDivElement;
 let reduced: boolean;
@@ -32,7 +41,7 @@ let hidden: boolean;
 let preferenceChanged: (() => void) | undefined;
 beforeEach(() => {
   vi.useFakeTimers();
-  latest = latestGhost = undefined;
+  latest = latestGhost = latestComments = undefined;
   reduced = hidden = false;
   preferenceChanged = undefined;
   disposed.mockClear();
@@ -59,7 +68,9 @@ const render = async (phase: ProgressPhase = 'analyzing') => act(async () => {
 });
 const advance = async (ms = 450) => act(async () => vi.advanceTimersByTimeAsync(ms));
 const stage = () => container.querySelector<HTMLElement>('.playground-stage')!;
-const key = (value: string) => act(() => stage().dispatchEvent(new KeyboardEvent('keydown', { key: value, bubbles: true, cancelable: true })));
+const ghost = () => document.querySelector<HTMLButtonElement>('.ghost-interaction')!;
+const clickGhost = () => act(() => ghost().click());
+const key = (value: string) => act(() => ghost().dispatchEvent(new KeyboardEvent('keydown', { key: value, bubbles: true, cancelable: true })));
 
 it('skips optional 3D for a route visit shorter than the lazy delay', async () => {
   await render();
@@ -75,31 +86,40 @@ it('starts reduced motion with a static illustration and allows explicit opt-in'
   await advance();
   expect(latest).toBeUndefined();
   expect(container.querySelector('.playground-poster.is-hidden')).toBeNull();
-  key(' ');
+  clickGhost();
   await advance();
   expect(latest?.animate).toBe(true);
   expect(container.querySelector('.playground-poster.is-hidden')).not.toBeNull();
 });
 
-it('pauses inertia while preserving direct keyboard turns', async () => {
+it('ignores globe gestures and page clicks while only the ghost triggers reactions', async () => {
   await render(); await advance();
-  key('ArrowRight');
-  expect(latest!.motion.current.velocityYaw).toBeGreaterThan(0);
-  key(' ');
-  expect(latest?.animate).toBe(false);
-  expect(latest!.motion.current.velocityYaw).toBe(0);
-  const yaw = latest!.motion.current.yaw;
-  key('ArrowLeft');
-  expect(latest!.motion.current.yaw).toBeLessThan(yaw);
-  expect(latest!.motion.current.velocityYaw).toBe(0);
+  const before = { ...latest!.motion.current };
+  act(() => {
+    stage().dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, clientX: 10 }));
+    stage().dispatchEvent(new MouseEvent('pointermove', { bubbles: true, clientX: 200 }));
+    stage().dispatchEvent(new MouseEvent('pointerup', { bubbles: true, clientX: 200 }));
+    stage().dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+    document.body.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true }));
+    document.body.dispatchEvent(new MouseEvent('pointerup', { bubbles: true }));
+  });
+  expect(latest!.motion.current).toEqual(before);
+  expect(latestGhost?.pulse).toBe(0);
+  expect(stage().getAttribute('aria-hidden')).toBe('true');
+  expect(stage().hasAttribute('tabindex')).toBe(false);
+  clickGhost();
+  expect(latestGhost?.pulse).toBe(1);
+  expect(latest?.pulse).toBe(0);
+  expect(latestComments?.phase).toBe('analyzing');
 });
 
-it('has no buttons and changes formation only when the real phase changes, even after minutes', async () => {
+it('has only a ghost interaction target and changes formation only when the real phase changes, even after minutes', async () => {
   await render('queued'); await advance();
   expect(container.querySelectorAll('button')).toHaveLength(0);
+  expect(document.querySelectorAll('.ghost-overlay button')).toHaveLength(1);
   expect(container.querySelector('.analysis-playground')?.getAttribute('data-formation')).toBe('rest');
-  key('Enter');
-  expect(latest?.pulse).toBe(1);
+  clickGhost();
+  expect(latestGhost?.pulse).toBe(1);
   await advance(180000);
   expect(container.textContent).toContain('3:00 in this view');
   expect(container.querySelector('[role="status"]')?.textContent).toContain('Waiting to collect public comments…');
@@ -110,7 +130,7 @@ it('has no buttons and changes formation only when the real phase changes, even 
   expect(container.querySelector('.analysis-playground')?.getAttribute('data-formation')).toBe('gather');
   await render('analysis-queued');
   expect(container.querySelector('.analysis-playground')?.getAttribute('data-formation')).toBe('rest');
-  key(' ');
+  key('p');
   await render();
   expect(latest?.phase).toBe('analyzing');
   expect(container.querySelector('.analysis-playground')?.getAttribute('data-formation')).toBe('inspect');
@@ -145,27 +165,28 @@ it('immediately respects a changed system preference and restores the poster on 
 
 it('ignores accidental double-clicks and lets reactions finish under repeated input', async () => {
   await render(); await advance();
-  key('Enter');
+  clickGhost();
   for (let i = 0; i < 20; i++) {
-    key('Enter');
-    act(() => stage().dispatchEvent(new MouseEvent('dblclick', { bubbles: true })));
+    clickGhost();
+    act(() => ghost().dispatchEvent(new MouseEvent('dblclick', { bubbles: true })));
   }
-  expect(latest?.pulse).toBe(1);
+  expect(latestGhost?.pulse).toBe(1);
   expect(latest?.animate).toBe(true);
   await render('collecting');
   await render('analyzing');
   expect(latest?.animate).toBe(true);
   expect(disposed).not.toHaveBeenCalled();
   await advance(1500);
-  key('Enter');
-  expect(latest?.pulse).toBe(2);
+  clickGhost();
+  expect(latestGhost?.pulse).toBe(2);
   key('Escape');
   expect(latest?.animate).toBe(false);
-  key(' ');
+  key('p');
   expect(latest?.animate).toBe(true);
-  act(() => stage().dispatchEvent(new KeyboardEvent('keydown', { key: ' ', repeat: true, bubbles: true })));
+  act(() => ghost().dispatchEvent(new KeyboardEvent('keydown', { key: 'p', repeat: true, bubbles: true })));
   expect(latest?.animate).toBe(true);
   expect(container.querySelectorAll('button')).toHaveLength(0);
+  expect(document.querySelectorAll('.ghost-overlay button')).toHaveLength(1);
 });
 
 it('updates the reduced-motion illustration with the actual stage without loading WebGL', async () => {
@@ -187,4 +208,23 @@ it('renders only the foreground companion on the landing page without a second w
   expect(document.querySelector('.ghost-overlay [data-testid="ghost-scene"]')).not.toBeNull();
   key('Escape');
   expect(latestGhost?.animate).toBe(false);
+});
+
+it('places noninteractive comments in their own portal and keeps the ghost accessible above them', async () => {
+  await render(); await advance();
+  expect(document.querySelector('.comment-overlay [data-testid="comment-scene"]')).not.toBeNull();
+  expect(document.querySelector('.ghost-overlay [data-testid="ghost-scene"]')).not.toBeNull();
+  expect(ghost().closest('[aria-hidden="true"]')).toBeNull();
+  expect(ghost().getAttribute('aria-label')).toBe('Make the ghost react');
+  expect(container.querySelector('[data-testid="comment-scene"]')).toBeNull();
+});
+
+it('lets a click resume a paused ghost without resetting the real investigation phase', async () => {
+  await render(); await advance();
+  key('Escape');
+  expect(latestGhost?.animate).toBe(false);
+  clickGhost();
+  expect(latestGhost?.animate).toBe(true);
+  expect(latestGhost?.pulse).toBe(1);
+  expect(latestGhost?.phase).toBe('analyzing');
 });

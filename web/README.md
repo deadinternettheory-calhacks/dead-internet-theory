@@ -134,49 +134,45 @@ scene timing is never used as live progress.
 
 ## Interactive analysis playground
 
-The live waiting view has a fixed, full-viewport 3D background: a large graveyard
-globe and eighteen comment tiles spread across the page. An expressive ghost
-roams both axes in a separate 224px foreground renderer with pointer events disabled,
-so links, forms and buttons work through it. The same companion appears on the
-landing page and stays mounted across navigation, phase changes and report completion.
-The completed scene keeps moving with a celebratory greeting; a failed request
-keeps a calm illustration. A continuous reading column with section dividers
-replaces individual floating text panels. The column is horizontally centered
-with a 94%-opacity backdrop so the modeled background remains visible; secondary
-text uses a darker tone for readability. There are no visible scene
-buttons or control panel. Formations follow the real backend phase: a gentle orbit
-while waiting, comment models spawning one by one and spiraling inward during collection, then a rotating double helix with a traveling gold scan highlight
-and a magnifying glass during analysis. They never advance on a timer. The ghost
-has arms, blush, shiny eyes, blinks, waves, reaching motions and nods. Taps cycle
-local hop, wink/wave and twirl reactions with ripples and sparks.
+The analysis view uses three layers: the passive graveyard globe behind the
+centered reading column, eighteen comment models in a pointer-transparent layer
+above the column, and the expressive ghost above the comments. The column keeps
+its 94%-opacity backdrop. There are no separate visible scene-control buttons.
+The same ghost appears on the landing page and stays mounted across navigation,
+phase changes and report completion. The world, comments and ghost remain after
+completion, with a celebratory greeting; a failed request retains a calm scene.
 
-The analysis globe uses a stronger, 90%-opacity green grid over an opaque surface,
-which hides far-side graves and grid lines. Floating comment models stay in front
-of that surface during collection and analysis.
+The analysis globe has no drag/flick, hover-tilt or arrow-key rotation. Only clicking
+the ghost (or pressing Enter/Space while it is focused) triggers reactions. Its
+flight holds on hover/focus to keep the target stable, while the character keeps
+animating. Taps cycle hop, wink/wave and twirl reactions and finish before accepting
+another. P pauses/resumes scene motion; Escape pauses. Clicking a paused/static
+ghost explicitly opts into motion and queues one reaction. Background/page clicks
+and report controls do not trigger reactions. The landing page's separate globe
+keeps its existing interactions.
 
-Drag/flick rotates the world with momentum; tap or Enter makes the ghost react.
-Each reaction finishes before another starts, so rapid input cannot constantly
-reset it. Clicks, including double-clicks, never pause animation. Space
-pauses/resumes, Escape pauses, arrow keys turn the world, and Home resets its
-orientation. Instructions are available to screen readers and on keyboard focus.
-Horizontal touch gestures preserve vertical scrolling and pinch zoom. Pausing
-stops automatic motion and inertia while allowing direct turns and static pose
-changes when the real investigation phase changes.
+Actual backend phases select the comment behavior: models spawn one by one and
+spiral inward during collection, then form a rotating double helix with a moving
+gold scan during analysis. Formations never advance on an animation timer. The
+ghost has arms, blush, shiny eyes, blinks, waves, reaching motions and nods. The
+analysis globe has a stronger 90%-opacity green grid and an opaque surface that
+hides far-side graves and lines. Foreground comments do not participate in globe
+occlusion and let pointer input through to the column.
 
-This is an illustration with local controls, separate from the evidence. The
-real backend status, elapsed-view clock, milestones, collected count and comment
-preview remain authoritative. The toy does not initiate requests, alter polling,
-change scores or simulate completion. Finishing the report keeps the scene and companion; leaving the analysis/home routes releases them.
+The real backend status, clock, milestones, collected count and preview remain
+authoritative. Illustration input never starts collection, changes polling or
+scores, or simulates completion. Native page scrolling and text selection remain
+available. Instructions and focus indication belong to the ghost itself.
 
-The scene shares the homepage's lazy Three.js chunk; its own code loads only if
-the route remains visible for at least 400 ms. Reduced motion starts with a stage-specific static
-SVG, with Space as explicit opt-in. It reacts to preference changes
-and keeps a poster on graphics failure. Hidden tabs suspend motion and resume on
-return; scrolling or phase/layout changes never suspend the fixed scene. Simple
-shared geometry, front-facing tiles, a small foreground canvas, instanced sparks and a 1.25 pixel-ratio cap and no shadow maps, post-processing or
-external models keep rendering bounded; resources are disposed on unmount.
-This feature deploys with the website and requires no ingestion or inference
-Convex redeployment.
+Optional 3D code loads after 400 ms. Reduced motion starts with static SVGs;
+activating the ghost opts in. Hidden tabs suspend all scene clocks and resume on
+return; phase/layout changes do not stop the visible scenes. Graphics failure
+keeps static art and the functioning report. Shared bounded geometry, a small
+224px ghost renderer, native-resolution foreground comments, a 1.25 pixel-ratio
+cap on the other scenes, no shadows/post-processing/external models, and disposal
+on unmount keep rendering bounded. The scene shares the homepage's Three.js code.
+This feature deploys with the website; neither ingestion nor inference requires
+redeployment.
 
 ## Routing
 
