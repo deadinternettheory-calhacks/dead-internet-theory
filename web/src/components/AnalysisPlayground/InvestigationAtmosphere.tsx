@@ -17,7 +17,8 @@ export function InvestigationAtmosphere({ children }: { children: ReactNode }) {
   const [phase, setPhase] = useState<PlaygroundPhase | null>(null);
   const { pathname, search } = useLocation();
   const home = pathname === '/';
-  const analysisRoute = pathname === '/analysis' || pathname === '/analysis/' || parsePrefixPath(pathname, search).ok;
+  const previewRoute = import.meta.env.DEV && pathname === '/dev/report';
+  const analysisRoute = previewRoute || pathname === '/analysis' || pathname === '/analysis/' || parsePrefixPath(pathname, search).ok;
   return <PhaseContext.Provider value={setPhase}>
     {children}
     {(home || analysisRoute) && <AnalysisPlayground phase={home ? 'queued' : phase ?? 'starting'} background={!home}/>}

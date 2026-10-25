@@ -7,6 +7,12 @@ body:has(.analysis-playground[data-background="true"]) .analysis-main {
   margin: 0 auto;
   --muted: #454C48;
 }
+/* Match the report preview width without changing the animation layers. */
+body:has(.analysis-playground[data-background="true"]) .analysis-main:has(.report-view) {
+  width: 100%;
+  max-width: 960px;
+  --muted: #626864;
+}
 body:has(.analysis-playground[data-background="true"]) .analysis-main::before {
   content: "";
   position: absolute;
@@ -25,8 +31,8 @@ body:has(.analysis-playground[data-background="true"]) .header {
   z-index: 3;
   background: var(--bg);
 }
-body:has(.analysis-playground[data-background="true"]) .analysis-main .card,
-body:has(.analysis-playground[data-background="true"]) .analysis-main .finding-card {
+/* Loading and error cards use the reading column; completed report cards keep their own design. */
+body:has(.analysis-playground[data-background="true"]) .analysis-main > .card {
   padding-inline: 0;
   background: transparent;
   border: 0;
