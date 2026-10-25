@@ -38,10 +38,10 @@ describe('URL-prefix investigation routing', () => {
   }
 
   it.each([
-    ['/https://www.reddit.com/r/Roms/comments/7hxzro/some_pokemon_roms/', 'https://www.reddit.com/r/Roms/comments/7hxzro/some_pokemon_roms/'],
-    ['/https://x.com/example/status/123456789', 'https://x.com/example/status/123456789'],
-    ['/https://www.youtube.com/watch?v=jDtG_pwIIv0&si=share', 'https://www.youtube.com/watch?v=jDtG_pwIIv0&si=share'],
-    ['/https://www.tiktok.com/@example/video/7653941272524115231', 'https://www.tiktok.com/@example/video/7653941272524115231'],
+    ['/https:/www.reddit.com/r/Roms/comments/7hxzro/some_pokemon_roms/', 'https://www.reddit.com/r/Roms/comments/7hxzro/some_pokemon_roms/'],
+    ['/https:/x.com/example/status/123456789', 'https://x.com/example/status/123456789'],
+    ['/https:/www.youtube.com/watch?v=jDtG_pwIIv0&si=share', 'https://www.youtube.com/watch?v=jDtG_pwIIv0&si=share'],
+    ['/https:/www.tiktok.com/@mizibor_tech/video/7676086362617056532', 'https://www.tiktok.com/@mizibor_tech/video/7676086362617056532'],
   ])('renders %s as an investigation without replacing the prefix address', async (path, sourceUrl) => {
     await renderPrefix(path);
 
@@ -60,7 +60,7 @@ describe('URL-prefix investigation routing', () => {
   });
 
   it('uses the same idempotency key after a prefix-route refresh', async () => {
-    const path = '/https://www.reddit.com/r/Roms/comments/7hxzro/some_pokemon_roms/?context=3';
+    const path = '/https:/www.tiktok.com/@mizibor_tech/video/7676086362617056532?lang=en';
     await renderPrefix(path);
     const firstKey = vi.mocked(createInvestigation).mock.calls[0][1];
 
