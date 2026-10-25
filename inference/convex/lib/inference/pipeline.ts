@@ -79,7 +79,7 @@ export async function runSequential(graph: GraphEnvelope, deps: SequentialDeps):
   const { inputs, analyzedCommentIds } = triageInputs(graph);
   const canEnrich = !!(deps.requestEnrichment && deps.getEnrichment);
   const runTriage = () => (deps.claude ? claudeTriage(deps.claude, inputs) : runToText(deps.creao, inputs, deps));
-  const triage = await runStage(runTriage, parseTriage);
+  const triage = await runStage(runTriage, outputs => parseTriage(outputs, analyzedCommentIds));
 
   const jobs: EnrichmentJob[] = [];
   const sampled = canEnrich ? enrichmentRequestFor(graph, triage) : null;

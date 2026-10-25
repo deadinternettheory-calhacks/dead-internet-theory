@@ -40,6 +40,11 @@ interface JobState {
   triageRunId?: string;
   triageCacheKey?: string;
   triage?: TriageOutput;
+  triageModel?: string;
+  triageStartedAt?: number;
+  triageCompletedAt?: number;
+  scoringStartedAt?: number;
+  scoringCompletedAt?: number;
   enrichmentIds?: string[];
   enrichmentNote?: string;
   scoringRunId?: string;
@@ -218,7 +223,7 @@ function creaoFor(graph: GraphEnvelope): CreaoClient {
 }
 
 /** With a webhook configured, polling is only a fallback. */
-const creaoPollMs = () => (process.env.CREAO_WEBHOOK_URL ? 20_000 : 5_000);
+const creaoPollMs = () => 5_000;
 
 /** Returns candidate reply texts when the run completed, null while it is still running. */
 async function pollRun(creao: CreaoClient, runId: string, elapsedMs: number): Promise<string[] | null> {
@@ -269,20 +274,27 @@ export const step = internalAction({
       const claude = claudeConfig();
       const creao = creaoFor(graph);
       const completedJobs = () => fetchCompleted(api, id, state.enrichmentIds ?? []);
-      const submitWith = (scoring: ScoringOutput | null) => submit(api, graph, state, scoring, claude, creao, save);
+      const submitWith = (scoring: ScoringOutput | null) => {
+        state.scoringCompletedAt ??= Date.now();
+        return submit(api, graph, state, scoring, creao, save);
+      };
 
       switch (job.stage as Stage) {
         case 'triage_start': {
           const { inputs, analyzedCommentIds } = triageInputs(graph);
           state.analyzedCommentIds = analyzedCommentIds;
+          state.triageModel = claude ? `claude:${claude.model}` : creao.label;
+          state.triageStartedAt ??= Date.now();
           state.triageCacheKey = await cacheKey('triage', claude ? `claude:${claude.model}` : creao.label, inputs.evidence);
           const cached = await ctx.runQuery(internal.worker.cacheGet, { key: state.triageCacheKey });
           if (cached) {
-            state.triage = parseTriage(cached);
+            state.triage = parseTriage(cached, analyzedCommentIds);
+            state.triageCompletedAt = Date.now();
             return void (await next('enrich_start'));
           }
           if (claude) {
-            state.triage = await parseWithRetries(() => claudeTriage(claude, inputs), parseTriage);
+            state.triage = await parseWithRetries(() => claudeTriage(claude, inputs), outputs => parseTriage(outputs, analyzedCommentIds));
+            state.triageCompletedAt = Date.now();
             await ctx.runMutation(internal.worker.cachePut, { key: state.triageCacheKey, stage: 'triage', output: JSON.stringify(state.triage) });
             return void (await next('enrich_start'));
           }
@@ -294,7 +306,8 @@ export const step = internalAction({
           const outputs = await pollRun(creao, state.triageRunId!, elapsed);
           if (outputs === null) return void (await next('triage_wait', creaoPollMs(), state.triageRunId));
           try {
-            state.triage = parseTriage(outputs);
+            state.triage = parseTriage(outputs, state.analyzedCommentIds);
+            state.triageCompletedAt = Date.now();
           } catch (err) {
             if (!(err instanceof ModelOutputError) || (state.triageAttempts ?? 1) >= MAX_STAGE_ATTEMPTS) throw err;
             state.triageAttempts = (state.triageAttempts ?? 1) + 1;
@@ -328,6 +341,7 @@ export const step = internalAction({
           return void (await next('scoring_start'));
         }
         case 'scoring_start': {
+          state.scoringStartedAt ??= Date.now();
           if (!needsScoring(state.triage!)) return void (await submitWith(null));
           const inputs = scoringInputs(graph, state.triage!, await completedJobs());
           state.scoringCacheKey = await cacheKey('scoring', creao.label, inputs.evidence);
@@ -343,6 +357,7 @@ export const step = internalAction({
           let scoring: ScoringOutput;
           try {
             scoring = parseScoring(outputs);
+            state.scoringCompletedAt = Date.now();
           } catch (err) {
             if (!(err instanceof ModelOutputError) || (state.scoringAttempts ?? 1) >= MAX_STAGE_ATTEMPTS) throw err;
             state.scoringAttempts = (state.scoringAttempts ?? 1) + 1;
@@ -391,11 +406,13 @@ async function submit(
   graph: GraphEnvelope,
   state: JobState,
   scoring: ScoringOutput | null,
-  claude: ClaudeConfig | null,
   creao: CreaoClient,
   save: (stage: Stage, opts?: { error?: string }) => Promise<string | null>,
 ): Promise<void> {
   state.scoring = scoring;
+  // Jobs predating model tracking used the deployed Opus default. Preserve
+  // their provenance if configuration changes while they are still scoring.
+  const triageModel = state.triageModel ?? (state.triageRunId ? creao.label : `claude:${DEFAULT_CLAUDE_MODEL}`);
   const enrichments = await fetchCompleted(api, graph.investigationId, state.enrichmentIds ?? []);
   const { submission } = assembleAnalysis({
     graph,
@@ -404,7 +421,7 @@ async function submit(
     enrichments,
     enrichmentNote: state.enrichmentNote,
     scoring,
-    modelLabel: claude ? `claude:${claude.model}+${creao.label}` : creao.label,
+    modelLabel: triageModel.startsWith('claude:') ? `${triageModel}+${creao.label}` : triageModel,
   });
   const problem = checkSubmission(submission, graph, enrichments);
   if (problem) {

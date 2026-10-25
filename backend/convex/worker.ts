@@ -77,7 +77,7 @@ export const tick = action({
             await ctx.runMutation(anyApi.jobs.settle, {
               key,
               token: job.token,
-              outcome: { state: result.state, wait: 2000 },
+              outcome: { state: result.state, wait: result.waitMs ?? 2000 },
             });
             return;
           }
@@ -182,7 +182,7 @@ export const tick = action({
                 token: job.token,
                 outcome: {
                   state: { ...result.state, historyContext: context },
-                  wait: 2000,
+                  wait: result.waitMs ?? 2000,
                 },
               });
               return;

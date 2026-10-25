@@ -178,8 +178,8 @@ for application, Apify and upstream-provider retention boundaries.
    accusatory model text. The worker checks it against the schema and every
    evidence reference, then POSTs it with a stable idempotency key.
 
-Each stage is a separately scheduled action. CREAO runs are polled every 5 s
-(every 20 s as a fallback when `CREAO_WEBHOOK_URL` is set), with a 15-minute
+Each stage is a separately scheduled action. CREAO runs are polled every 5 s,
+including the fallback when `CREAO_WEBHOOK_URL` is set, with a 15-minute
 limit per stage. A webhook call only wakes the job; the worker still fetches
 and validates the run itself, and a lease plus a per-step token stop a webhook
 and a poll from advancing the same job twice. Validated triage and scoring
@@ -190,6 +190,14 @@ runs in total. Retryable backend or CREAO errors are retried
 within that limit. Otherwise the job is marked `failed` here with its reason,
 and nothing is submitted. The v1 API has no failure-report route, so the
 backend keeps showing the analysis as running.
+
+Triage must classify every comment in its bounded input exactly once. Missing,
+duplicate or foreign IDs trigger the same bounded retry policy; a fast incomplete
+reply cannot pass as a completed classification. Candidate replies from the same
+CREAO run are checked before another run is started. Job state records the triage
+model and stage start/completion timestamps, so runtime model changes cannot
+relabel a job that already used a different model. See the
+[URL performance audit](../backend/URL-PERFORMANCE.md) for measurements and remaining options.
 
 ## Provisional rubric mapping
 

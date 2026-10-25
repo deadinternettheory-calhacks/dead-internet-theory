@@ -197,13 +197,15 @@ function parseWith<T>(schema: object, text: string, label: string): T {
 }
 
 /** Parses the first candidate reply that yields valid output; otherwise throws the first error. */
-function parseFirst<T>(schema: object, outputs: string | string[], label: string): T {
+function parseFirst<T>(schema: object, outputs: string | string[], label: string, accept?: (value: T) => void): T {
   const candidates = typeof outputs === 'string' ? [outputs] : outputs;
   if (candidates.length === 0) throw new ModelOutputError(`${label} run returned no text.`);
   let first: unknown;
   for (const text of candidates) {
     try {
-      return parseWith<T>(schema, text, label);
+      const value = parseWith<T>(schema, text, label);
+      accept?.(value);
+      return value;
     } catch (err) {
       first ??= err;
     }
@@ -211,8 +213,15 @@ function parseFirst<T>(schema: object, outputs: string | string[], label: string
   throw first;
 }
 
-export function parseTriage(outputs: string | string[]): TriageOutput {
-  return parseFirst<TriageOutput>(TRIAGE_OUTPUT_SCHEMA, outputs, 'Triage');
+export function parseTriage(outputs: string | string[], expectedCommentIds?: string[]): TriageOutput {
+  return parseFirst<TriageOutput>(TRIAGE_OUTPUT_SCHEMA, outputs, 'Triage', result => {
+    if (expectedCommentIds) {
+      const ids = new Set(result.comments.map(comment => comment.commentId));
+      if (result.comments.length !== expectedCommentIds.length || ids.size !== expectedCommentIds.length || expectedCommentIds.some(id => !ids.has(id))) {
+        throw new ModelOutputError('Triage must classify every analyzed comment exactly once.');
+      }
+    }
+  });
 }
 
 export function parseScoring(outputs: string | string[]): ScoringOutput {
