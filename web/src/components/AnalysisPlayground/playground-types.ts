@@ -2,7 +2,7 @@ import type { RefObject } from 'react';
 import type { ProgressPhase } from '../AnalysisProgress';
 import type { GlobeMotion } from '../GraveyardGlobe/globe-motion';
 
-/** Formations follow real backend phases, never an animation timer. */
+/** Formations follow live backend phases or the labeled saved-result presentation. */
 export type PlaygroundPhase = ProgressPhase | 'complete' | 'failed';
 
 export function formationFor(phase: PlaygroundPhase) {

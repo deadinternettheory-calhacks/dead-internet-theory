@@ -182,16 +182,19 @@ ghost explicitly opts into motion and queues one reaction. Background/page click
 and report controls do not trigger reactions. The landing page's separate globe
 keeps its existing interactions.
 
-Actual backend phases select the comment behavior: models spawn one by one and
+Live backend phases, or the saved-result presentation below, select the comment
+behavior: models spawn one by one and
 spiral inward during collection, then form a rotating double helix with a moving
-gold scan during analysis. Formations never advance on an animation timer. The
+gold scan during analysis. Saved-result phases use their explicit presentation
+timers; live phases follow backend status. The
 ghost has arms, blush, shiny eyes, blinks, waves, reaching motions and nods. The
 analysis globe has a stronger 90%-opacity green grid and an opaque surface that
 hides far-side graves and lines. Foreground comments do not participate in globe
 occlusion and let pointer input through to the column.
 
-The real backend status, clock, milestones, collected count and preview remain
-authoritative. Illustration input never starts collection, changes polling or
+Live backend status, clock, milestones, collected count and preview remain
+authoritative. Already-completed results use the labeled saved-result sequence
+described below. Illustration input never starts collection, changes polling or
 scores, or simulates completion. Native page scrolling and text selection remain
 available. Instructions and focus indication belong to the ghost itself.
 
@@ -209,7 +212,19 @@ redeployment.
 
 Vercel `web/vercel.json` rewrites paths to the SPA entry point for refresh and shortcut links. Prefix URLs preserve nested path and query strings. A browser does not send an unencoded `#fragment` to the server; to preserve one, encode the complete source URL as the shortcut path segment first. Hash fragments are not needed to identify an ordinary post and the raw form cannot preserve them.
 
-Repeated links can return a stored report immediately or join an existing run. Each browser retains private investigation access. Reports show the original comment-collection time and explain that reuse ends at the original 24-hour expiry.
+Repeated links can reuse a stored report or join an existing run. When the initial
+create/current-status lookup is already completed, the website first loads the
+full report and then shows **Loading saved comments** for five seconds and
+**Preparing saved analysis** for five seconds. The comment preview appears during
+the second stage, and the existing gathering/analysis illustrations follow both
+stages. Copy identifies the saved data. Navigating away clears the presentation
+timers and aborts pending reads. Failed reads show an error immediately.
+
+Work observed in progress keeps its real backend timing, including partial cache
+reuse and joining unfinished work. The presentation adds no collection or model
+runs and changes no API statuses. Each browser retains private investigation
+access. Reports show the original comment-collection time and explain that reuse
+ends at the original 24-hour expiry.
 
 ## Account review availability
 
