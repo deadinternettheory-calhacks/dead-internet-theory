@@ -6,6 +6,7 @@ import { ThreadPreviewCard } from '../../web/src/components/ThreadPreviewCard';
 import { parsePostUrl } from '../../web/src/url';
 import type { CapabilityResponse } from '../../web/src/api/contract';
 import { client } from './client';
+import { isCurrentPagePost } from './currentPage';
 import { PanelGhost } from './PanelGhost';
 import { requestWorker, STATE_KEY, validId, type SavedJob, type SavedState } from './state';
 import { useAnalysis } from './useAnalysis';
@@ -36,6 +37,7 @@ export function App() {
   const [input, setInput] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [readingPage, setReadingPage] = useState(false);
   const [restartAllowed, setRestartAllowed] = useState(false);
   const [capabilities, setCapabilities] = useState<CapabilityResponse>();
   useEffect(() => {
@@ -61,6 +63,20 @@ export function App() {
   const job = fullReport ? saved ?? (validId(reportId) ? { key: `read-${reportId}`, investigationId: reportId, sourceUrl: '', createdAt: Date.now(), expiresAt: Infinity } : undefined) : saved;
   const parsedInput = parsePostUrl(input);
   const samePending = Boolean(job && parsedInput.ok && job.sourceUrl === parsedInput.url.href && !restartAllowed);
+  async function useCurrentPage() {
+    setReadingPage(true);
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (!tab?.url || !isCurrentPagePost(tab.url)) {
+        setError('Open a public Reddit, TikTok or YouTube post or video first.');
+        return;
+      }
+      setInput(tab.url);
+      setError('');
+    } catch {
+      setError('Could not read the current tab. Paste its link instead.');
+    } finally { setReadingPage(false); }
+  }
   async function analyze(event: FormEvent) {
     event.preventDefault();
     const parsed = parsePostUrl(input);
@@ -82,8 +98,9 @@ export function App() {
         {!job && <div className="panel-welcome"><p>Check the discussion behind a public post, right here.</p><PanelGhost phase="queued"/></div>}
         <form onSubmit={event => { void analyze(event); }} className="panel-form">
           <label htmlFor="post-url">Public post link</label>
-          <div className="panel-url"><Link2 size={17} aria-hidden="true"/><input id="post-url" type="url" value={input} onChange={event => setInput(event.target.value)} placeholder="Paste a post link" required aria-describedby={error ? 'panel-error' : 'panel-platforms'}/></div>
+          <div className="panel-url"><Link2 size={17} aria-hidden="true"/><input id="post-url" type="url" value={input} onChange={event => setInput(event.target.value)} placeholder="Paste a post link" required aria-invalid={!!error} aria-describedby={error ? 'panel-error' : 'panel-platforms'}/></div>
           <button type="submit" className="primary-button" disabled={!state || submitting || samePending}>{submitting ? 'Starting…' : samePending ? 'Check already submitted' : 'Analyze post'}</button>
+          <button type="button" className="secondary-button" disabled={submitting || readingPage} onClick={() => { void useCurrentPage(); }}>Use Current Page</button>
         </form>
         <p className="panel-platforms" id="panel-platforms">Reddit · X · TikTok · YouTube{capabilities?.platforms.some(platform => platform.platform === 'x' && platform.demoLimited) && <span>X is currently a limited demo.</span>}</p>
       </>}

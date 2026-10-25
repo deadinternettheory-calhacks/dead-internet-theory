@@ -39,7 +39,12 @@ hosted policy and subsequent packages use the same source.
 Open a public Reddit, X, TikTok or YouTube post and click the toolbar ghost
 (or Ctrl+Shift+Y / Command+Shift+Y). You can also right-click a supported post
 link anywhere and choose **Analyze with Dead Internet Theory**. Review the link,
-then press **Analyze post**. Selecting a link never starts collection by itself.
+then press **Analyze post**. The secondary **Use Current Page** button directly
+below Analyze post fills the URL input from the active Reddit post, TikTok video
+or YouTube video (including supported short/share links). Home/profile pages and
+unsupported URLs show an inline error without replacing the current input.
+Selecting a link never starts collection by itself; manual entry, including X
+links, and Open full report keep their existing behavior.
 
 The panel shows real collection/analysis states and an optional collected-comment
 preview. Closing it leaves the durable investigation running; reopening resumes
@@ -98,8 +103,10 @@ saved links** removes local metadata without canceling backend work. The anonymo
 credential persists until uninstall/storage deletion. The packaged
 [privacy disclosure](public/privacy.html) describes the full data path.
 
-Permissions: `activeTab`, `sidePanel`, `contextMenus`, `storage`, and `alarms`.
-Host access is limited to the website API origin. There are no content scripts,
+Permissions: `activeTab`, `tabs`, `sidePanel`, `contextMenus`, `storage`, and `alarms`.
+The `tabs` permission supplies the active tab URL when Use Current Page is
+clicked, including after switching tabs with the panel open; it does not add
+page monitoring. Host access is limited to the website API origin. There are no content scripts,
 persistent social-site permissions, remotely loaded scripts, or browser scraping.
 
 ## Deployment
