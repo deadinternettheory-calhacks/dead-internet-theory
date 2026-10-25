@@ -56,7 +56,7 @@ source for the committed PNG toolbar icons.
 
 The manifest's public key pins the unpacked ID to
 `nodkcggcbpiolpkphjkfedhlmaallhnb`. This must match the canonical public client ID
-in [extension-client.ts](../contracts/extension-client.ts). Before store publication,
+in [extension-client.mjs](../contracts/extension-client.mjs). Before store publication,
 replace it with the store-assigned identity and update the proxy allowlist and
 package together. Changing an installed identity or removing extension storage
 also removes access to that anonymous session's saved investigation IDs.

@@ -1,4 +1,4 @@
-import { EXTENSION_CLIENT_ID, EXTENSION_SESSION_PATTERN } from '../../contracts/extension-client';
+import { EXTENSION_CLIENT_ID, EXTENSION_SESSION_PATTERN } from '../../contracts/extension-client.mjs';
 import { parsePostUrl, SUPPORTED_POST_HOSTS } from '../../web/src/url';
 import { nextExpiry, pruneState, SESSION_KEY, STATE_KEY, TTL_MS, validId, type SavedState, type WorkerRequest } from './state';
 

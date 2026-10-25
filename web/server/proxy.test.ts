@@ -1,10 +1,10 @@
 import { readdirSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { resolve, dirname, sep } from 'node:path';
 import { jwtVerify } from 'jose';
 import { describe, expect, it } from 'vitest';
 import vercel from '../vercel.json';
 import { handleProxy, requestedPath } from './proxy';
-import { EXTENSION_CLIENT_ID, EXTENSION_ID_HEADER, EXTENSION_SESSION_HEADER } from '../../contracts/extension-client';
+import { EXTENSION_CLIENT_ID, EXTENSION_ID_HEADER, EXTENSION_SESSION_HEADER } from '../../contracts/extension-client.mjs';
 
 const secret = 's'.repeat(48);
 const env = { BACKEND_BASE_URL: 'https://backend.test/', BACKEND_JWT_SECRET: secret };
@@ -31,7 +31,19 @@ describe('Vercel Function modules', () => {
     for (const dir of ['api', 'server']) {
       for (const file of readdirSync(resolve(__dirname, '..', dir)).filter(f => f.endsWith('.ts') && !f.endsWith('.test.ts') && f !== 'vitePlugin.ts')) {
         const source = readFileSync(resolve(__dirname, '..', dir, file), 'utf8');
-        for (const [, spec] of source.matchAll(/from '(\.{1,2}\/[^']+)'/g)) expect(spec, `${dir}/${file}`).toMatch(/\.js$/);
+        for (const [, spec] of source.matchAll(/from '(\.{1,2}\/[^']+)'/g)) expect(spec, `${dir}/${file}`).toMatch(/\.(?:m?js)$/);
+      }
+    }
+  });
+  it('keeps dependencies outside the web project in concrete native JavaScript files', () => {
+    const root = resolve(__dirname, '..');
+    for (const dir of ['api', 'server']) {
+      for (const file of readdirSync(resolve(root, dir)).filter(file => file.endsWith('.ts') && !file.endsWith('.test.ts') && file !== 'vitePlugin.ts')) {
+        const path = resolve(root, dir, file);
+        for (const [, spec] of readFileSync(path, 'utf8').matchAll(/from '(\.{1,2}\/[^']+)'/g)) {
+          const target = resolve(dirname(path), spec);
+          if (!target.startsWith(root + sep)) expect(readFileSync(target, 'utf8'), `${dir}/${file}: ${spec}`).toContain('export');
+        }
       }
     }
   });

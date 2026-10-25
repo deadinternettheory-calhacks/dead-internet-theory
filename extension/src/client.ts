@@ -1,4 +1,4 @@
-import { EXTENSION_CLIENT_ID, EXTENSION_ID_HEADER, EXTENSION_SESSION_HEADER, EXTENSION_SITE_ORIGIN } from '../../contracts/extension-client';
+import { EXTENSION_CLIENT_ID, EXTENSION_ID_HEADER, EXTENSION_SESSION_HEADER, EXTENSION_SITE_ORIGIN } from '../../contracts/extension-client.mjs';
 import { createApiClient } from '../../web/src/api/client';
 import { requestWorker } from './state';
 

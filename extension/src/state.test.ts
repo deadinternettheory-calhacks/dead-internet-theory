@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { createHash } from 'node:crypto';
 import manifest from '../public/manifest.json';
-import { EXTENSION_CLIENT_ID } from '../../contracts/extension-client';
+import { EXTENSION_CLIENT_ID } from '../../contracts/extension-client.mjs';
 import { MAX_JOBS, nextExpiry, pruneState, TTL_MS } from './state';
 
 describe('extension identity and data lifetime', () => {

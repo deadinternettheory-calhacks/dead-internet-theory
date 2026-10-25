@@ -3,7 +3,7 @@
 The packaged Manifest V3 client uses the existing website `/api/v1/*` frontend
 operations. Their payloads remain those in [openapi.yaml](openapi.yaml) and
 [models.schema.json](models.schema.json). No ingestion or inference operation is
-added. Public configuration is canonical in [extension-client.ts](extension-client.ts).
+added. Public configuration is canonical in [extension-client.mjs](extension-client.mjs).
 
 For every request the client supplies:
 

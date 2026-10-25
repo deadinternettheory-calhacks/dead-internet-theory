@@ -1,4 +1,4 @@
-import { EXTENSION_CLIENT_ID, EXTENSION_ID_HEADER, EXTENSION_SESSION_HEADER, EXTENSION_SESSION_PATTERN } from '../../contracts/extension-client.js';
+import { EXTENSION_CLIENT_ID, EXTENSION_ID_HEADER, EXTENSION_SESSION_HEADER, EXTENSION_SESSION_PATTERN } from '../../contracts/extension-client.mjs';
 
 const ORIGIN = `chrome-extension://${EXTENSION_CLIENT_ID}`;
 const ALLOWED_HEADERS = ['content-type', 'idempotency-key', EXTENSION_ID_HEADER.toLowerCase(), EXTENSION_SESSION_HEADER.toLowerCase()];
