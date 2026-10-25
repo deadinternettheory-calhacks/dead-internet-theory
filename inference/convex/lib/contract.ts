@@ -245,6 +245,8 @@ export interface CommentAssessment {
   rationale: string;
   evidenceRefs: string[];
   accountSignals?: AccountSignals;
+  /** Optional 0-100 estimate of how likely this comment is astroturfed, with its reasons. Uncalibrated. */
+  astroturfEstimate?: { score: number; reasons: string[] };
 }
 
 export interface ClusterAssessment {

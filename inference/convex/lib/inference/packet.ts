@@ -23,6 +23,7 @@ import {
   wordJaccard,
 } from './features';
 import type { TriageOutput } from './outputs';
+import { threadSignals, type ThreadSignals } from './signals';
 
 /** CREAO caps serialized run input at 256 KB; leave room for instructions. */
 export const MAX_EVIDENCE_BYTES = 180_000;
@@ -268,6 +269,8 @@ export interface ScoringPacket {
     largestRecommendationBurst30m: { commentIds: string[]; windowMinutes: number };
     similarPairs: { a: string; b: string; wordOverlap: number }[];
     links: { commentId: string; domains: string[]; trackingParams: string[]; shortened: boolean; discountCode: boolean; linkInBio: boolean }[];
+    /** Thread-level commercial signals measured in code (see signals.ts). */
+    thread: { sellerStyleAccounts: string[]; templatePhrases: { commentId: string; phrase: string }[]; ownerOutreach: string[]; duplicatePraise: { text: string; commentIds: string[] } | null };
   };
   authors: AuthorEvidence[];
   evidenceLevels: { discussion: true; authorHistory: boolean; coRecommenderHistory: boolean; note: string };
@@ -281,6 +284,28 @@ export function historyResults(jobs: EnrichmentJob[]): HistoryResult[] {
     for (const r of job.results ?? []) if (!byAuthor.has(r.authorId)) byAuthor.set(r.authorId, r);
   }
   return Array.from(byAuthor.values());
+}
+
+/** Recommendations sent for rubric scoring, so large video threads stay fast. */
+export const MAX_SCORING_TARGETS = 25;
+
+/**
+ * The recommendations to score: those flagged by thread signals first, then the
+ * most substantive (longest) ones, in thread order within the cap.
+ */
+export function scoringTargets(index: GraphIndex, triage: TriageOutput, thread: ThreadSignals = threadSignals(index, triage)): string[] {
+  const recommends = new Set(triage.comments.filter(c => c.recommendsProduct).map(c => c.commentId));
+  const recs = index.comments.filter(c => recommends.has(c.id));
+  if (recs.length <= MAX_SCORING_TARGETS) return recs.map(c => c.id);
+  const flagged = new Set([...thread.sellerPraise.commentIds, ...thread.templates.map(t => t.commentId), ...thread.outreach]);
+  const chosen = new Set(
+    recs
+      .slice()
+      .sort((a, b) => Number(flagged.has(b.id)) - Number(flagged.has(a.id)) || b.text.length - a.text.length)
+      .slice(0, MAX_SCORING_TARGETS)
+      .map(c => c.id),
+  );
+  return recs.filter(c => chosen.has(c.id)).map(c => c.id);
 }
 
 /** Comments the scoring stage needs: recommendations, their parents, replies to them, and the most-engaged others. */
@@ -307,7 +332,8 @@ export function buildScoringPacket(graph: GraphEnvelope, triage: TriageOutput, j
   const label = triage.subject.label;
   const results = historyResults(jobs);
   const resultByAuthor = new Map(results.map(r => [r.authorId, r]));
-  const targets = index.comments.filter(c => triageById.get(c.id)?.recommendsProduct).map(c => c.id);
+  const thread = threadSignals(index, triage);
+  const targets = scoringTargets(index, triage, thread);
   const subjectRecs = index.comments.filter(c => triageById.get(c.id)?.recommendsSubject);
 
   const timeline = subjectRecs.map(c => ({
@@ -380,6 +406,12 @@ export function buildScoringPacket(graph: GraphEnvelope, triage: TriageOutput, j
       largestRecommendationBurst30m: largestBurst(subjectRecs, 30),
       similarPairs: similarPairs.slice(0, 50),
       links: recTargets.map(c => ({ commentId: c.id, ...linkFacts(c.text) })),
+      thread: {
+        sellerStyleAccounts: thread.sellerPraise.commentIds,
+        templatePhrases: thread.templates.map(t => ({ commentId: t.commentId, phrase: t.label })),
+        ownerOutreach: thread.outreach,
+        duplicatePraise: thread.duplicates ? { text: thread.duplicates.text, commentIds: thread.duplicates.commentIds } : null,
+      },
     },
     authors,
     evidenceLevels: {

@@ -195,3 +195,13 @@ describe('account automation signals', () => {
     expect(JSON.stringify(withSignals)).not.toMatch(/\bbots?\b/i);
   });
 });
+
+describe('one-sided support', () => {
+  it('cannot carry the section score on its own', async () => {
+    const { buildTriagePacket: btp } = await import('../convex/lib/inference/packet');
+    const quiet: TriageOutput = { ...triage, comments: triage.comments.map(c => ({ ...c, stance: 'supportive' as const, recommendsProduct: null, recommendsSubject: false, realism: 'natural' as const })) };
+    const risk = assembleAnalysis({ graph, triage: quiet, analyzedCommentIds: btp(graph).analyzedCommentIds, enrichments: [], scoring: null }).submission.overallCoordinationRisk;
+    expect(risk.score).toBe(0);
+    expect(risk.explanation).toMatch(/One-sided support 100/);
+  });
+});
