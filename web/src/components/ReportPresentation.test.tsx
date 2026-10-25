@@ -72,7 +72,10 @@ it('opens relevant evidence and shows the section score without per-item caveats
   const explanation = container.querySelector<HTMLDetailsElement>('.score-explanation')!;
   expect(explanation.open).toBe(false);
   expect(explanation.querySelector('summary')?.textContent).toBe('Score explanation');
-  expect(explanation.textContent).toContain(exampleReport.index!.explanation);
+  expect(explanation.querySelectorAll('.score-breakdown > div').length).toBeGreaterThan(0);
+  expect(explanation.textContent).not.toContain('Comment-section astroturfing index:');
+  expect(explanation.querySelector('.axis-list')).toBeNull();
+  expect(explanation.textContent).toContain('Weights:');
   await act(async () => explanation.querySelector('summary')!.click());
   expect(explanation.open).toBe(true);
   expect(container.querySelector('.report-view')?.firstElementChild?.classList.contains('result-card')).toBe(true);

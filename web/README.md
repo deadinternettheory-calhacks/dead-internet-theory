@@ -206,5 +206,6 @@ presentation. This display change also works with retained reports; the separate
 inference update adds focused Claude history reviews for new analyses.
 
 The score card includes a collapsed **Score explanation** with the stored section
-score rationale and signal breakdown. The post, findings, account signals and
+score components, weights and sampling note. Detailed signal assessments stay
+under detailed analysis. Formatting uses stored values and never recalculates scores. The post, findings, account signals and
 detailed evidence share one white panel; coverage details remain below it.

@@ -159,3 +159,13 @@
 .score-explanation-content { padding: 12px 0 0; font-size: 14px; line-height: 1.8; }
 .score-explanation .axis-list { margin-bottom: 0; }
 @media (max-width: 767px) { .report-middle { padding: 20px 18px; } .report-middle > .summary-card { padding: 0 0 24px; } .report-middle .report-findings .finding-card { padding: 20px 0; } .result-card { column-gap: 18px; } }
+
+.score-breakdown { margin: 0; }
+.score-breakdown > div { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.score-breakdown dt { font-weight: 550; }
+.score-breakdown dd { margin: 0; }
+.score-breakdown dd > strong { font-variant-numeric: tabular-nums; }
+.score-breakdown small { color: var(--muted); font-weight: 400; }
+.score-breakdown dd p { margin: 2px 0 0; color: var(--muted); }
+.score-calculation-notes { margin: 16px 0; color: var(--muted); font-size: 12px; }
+@media (max-width: 767px) { .score-breakdown > div { grid-template-columns: minmax(0, 1fr); gap: 4px; } }

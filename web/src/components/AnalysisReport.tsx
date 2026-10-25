@@ -1,3 +1,4 @@
+import { scoreExplanation } from '../analysis/scoreExplanation';
 import type { Report } from '../analysis/report';
 import { SourceLink, formatTime } from './EvidenceQuote';
 import { ReportFindings } from './ReportFindings';
@@ -22,6 +23,7 @@ function Estimate({ row }: { row: Report['comments'][number] }) {
 /** Score and verdict in one card. Bands follow the rubric tiers: under 35 low, 35-54 moderate, 55+ high. */
 function ResultCard({ report }: { report: Report }) {
   const score = report.index?.score ?? null;
+  const breakdown = report.index ? scoreExplanation(report.index.explanation) : null;
   return <section className={`card result-card tone-${report.verdict.tone}`} aria-label="Result">
     <div className="result-score">{score === null ? <strong>–</strong> : <strong>{score}</strong>}<span>/ 100</span></div>
     <div className="result-text">
@@ -36,11 +38,14 @@ function ResultCard({ report }: { report: Report }) {
       <summary>Score explanation</summary>
       <div className="score-explanation-content">
       {report.index && <div className="index-note">
-        <p><strong>Astroturfing score: {report.index.score} / 100.</strong> {report.index.explanation}</p>
+        {breakdown ? <>
+          <dl className="score-breakdown">{breakdown.parts.map(part => <div key={part.label}>
+            <dt>{part.label}</dt><dd><strong>{part.score}<small>/100</small></strong><p>{part.reason}</p></dd>
+          </div>)}</dl>
+          <p className="score-calculation-notes">{breakdown.notes}</p>
+        </> : <p>{report.index.explanation}</p>}
         <Sources sources={HISTORY_CONTRAST_SOURCES}/>
       </div>}
-      <h3 className="detail-heading">Each signal we checked</h3>
-      <ul className="axis-list">{report.axes.map(x => <li key={x.axis}><strong>{x.title}: {x.score === null ? 'not measured' : `${x.score} / 100`}</strong><p>{x.explanation}</p><Sources sources={SIGNAL_SOURCES[x.axis]}/></li>)}</ul>
       {!report.index && <p>Not enough evidence to calculate a score.</p>}
       </div>
     </details>
@@ -71,6 +76,9 @@ export function AnalysisReport({ report }: { report: Report }) {
     <AccountSignals report={report}/>
 
     <EvidenceDetails>
+      <h3 className="detail-heading">Each signal we checked</h3>
+      <ul className="axis-list">{report.axes.map(x => <li key={x.axis}><strong>{x.title}: {x.score === null ? 'not measured' : `${x.score} / 100`}</strong><p>{x.explanation}</p><Sources sources={SIGNAL_SOURCES[x.axis]}/></li>)}</ul>
+
       {report.clusters.length > 0 && <>
         <h3 className="detail-heading">Groups of related comments</h3>
         <ul className="axis-list">{report.clusters.map(c => <li key={c.id}><strong>{c.size} comments</strong><p>{c.explanation}</p></li>)}</ul>
