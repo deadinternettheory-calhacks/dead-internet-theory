@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Privacy · Dead Internet Theory</title><link rel="stylesheet" href="privacy.css"></head><body><main>
+<h1>Extension privacy</h1>
+<p>Dead Internet Theory helps you inspect public social discussions for patterns of coordinated promotion.</p>
+<h2>What the extension reads</h2>
+<p>Clicking the toolbar icon reads the current tab’s URL. The right-click action reads the selected link. You can also paste a link. The extension does not read page contents, private messages, passwords, or your browsing history, and it does not automatically analyze pages.</p>
+<h2>What is sent</h2>
+<p>Pressing Analyze post sends the selected public post URL to https://www.deadinternettheory.us. The existing service retrieves public discussion data through Apify, stores application data in Convex, and uses Anthropic Claude and/or CREAO for analysis. Bounded public account histories may be sampled on supported platforms. Collection can be incomplete. Provider credentials stay on the server.</p>
+<p>The extension also requests service availability and investigation status/results from that website. Like other HTTPS requests, these requests expose network metadata such as your IP address to the hosting service. The extension adds no advertising or analytics trackers.</p>
+<h2>Local storage</h2>
+<p>A random anonymous session credential lets the extension read its own investigations. It is stored locally in the extension and is not a personal login. At most ten investigation links, IDs, request keys and expiry times are kept locally, for up to 24 hours. An expiry alarm removes expired metadata while Chrome runs; startup also removes it. Report contents and collected comments are not saved in extension storage.</p>
+<p>Clear saved links removes that local investigation metadata. It does not cancel work already running on the server or shorten the server’s retention period. Uninstalling the extension removes its local data and session credential.</p>
+<h2>Server retention</h2>
+<p>Live application reports and source data have a fixed 24-hour expiry. Reuse does not extend it. Owned Apify resources enter a deletion queue with retries. Provider internal copies, logs and backups have separate retention controls. Closing the panel does not cancel a submitted investigation.</p>
+<h2>Permissions</h2>
+<p>activeTab reads the URL when invoked; sidePanel displays the panel; contextMenus adds the link action; storage saves the anonymous session and expiring investigation metadata; alarms expires that metadata. Host access is restricted to https://www.deadinternettheory.us for analysis requests. The extension does not request persistent access to social sites.</p>
+<p>Last updated: October 25, 2026. <a href="https://www.deadinternettheory.us" target="_blank" rel="noopener noreferrer">Open Dead Internet Theory</a></p>
+</main></body></html>
