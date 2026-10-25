@@ -69,6 +69,35 @@ or settings; never commit them or put them in `VITE_*`.
 On the backend, set `INFERENCE_EVENT_URL` to `<this deployment's .convex.site URL>/events`.
 Create the CREAO agent with [creao-agent.md](creao-agent.md).
 
+### Switch the production scoring analyst
+
+From the repository root, with Node 22+ and `npm ci` already run in `inference/`:
+
+```sh
+./scripts/use-claude-analyst.sh
+./scripts/use-creao-analyst.sh
+```
+
+Run the command for the provider you want. Each reads only the scoped
+`INFERENCE_CONVEX_DEPLOY_KEY` from the private `backend/.env.server.local`
+inventory, validates that it targets the website's inference deployment
+`grandiose-barracuda-22`, checks the provider's hosted configuration, sets
+`SCORING_PROVIDER` and reads it back. No deploy, restart, or frontend update is
+required. This hosted deployment is development-class in Convex; `--prod` would
+target a different deployment.
+
+Both commands accept `--dry-run` for a read-only hosted preflight and
+`--env-file /path/to/private.env` for an alternate inventory. Secrets are never
+printed or passed as command-line arguments. Provider credentials must already
+be configured on inference; these scripts do not upload the inventory.
+
+Only scoring changes. Triage and account review keep their existing settings.
+New scoring stages use the selected provider immediately; provider calls already
+started continue. Retained reports and model caches remain reusable, and no
+ingestion settings change. Discussions without recommendations skip scoring.
+Run one switch at a time; if a network error leaves the result uncertain, rerun
+the desired command to set and verify it again.
+
 ### Production triage configuration
 
 Set `ANTHROPIC_API_KEY` on the **inference deployment** (`grandiose-barracuda-22`),
