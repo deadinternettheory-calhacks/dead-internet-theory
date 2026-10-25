@@ -61,7 +61,7 @@ or settings; never commit them or put them in `VITE_*`.
 | `CREAO_AGENT_ID` | With `cr_sk_` | The agent ID for `developer.creao.ai/v1/runs`. |
 | `CREAO_MODEL` | No | Model ID for `cr_sk_` runs. |
 | `ANTHROPIC_API_KEY` | Hosted production | Runs triage directly through the Anthropic Messages API. Without it, the worker falls back to CREAO triage; local fixtures may omit it. Timings depend on input size and provider latency. |
-| `ANTHROPIC_MODEL` | No | Claude model for triage. Default `claude-opus-5-5` at low effort. |
+| `ANTHROPIC_MODEL` | No | Claude model for triage. Default `claude-opus-5-5` at low effort; production selects tested `claude-haiku-5-5`. See the [hosted performance record](../backend/verification/2026-10-25-url-performance.md). |
 | `CREAO_WEBHOOK_SECRET` | With a webhook | Random secret that authenticates CREAO's callbacks. |
 | `CREAO_WEBHOOK_URL` | Recommended | `<this deployment's .convex.site URL>/creao-webhook?token=<CREAO_WEBHOOK_SECRET>`. CREAO calls it when a run finishes, so the worker continues at once instead of at the next poll. |
 
@@ -194,8 +194,8 @@ backend keeps showing the analysis as running.
 Triage must classify every comment in its bounded input exactly once. Missing,
 duplicate or foreign IDs trigger the same bounded retry policy; a fast incomplete
 reply cannot pass as a completed classification. Candidate replies from the same
-CREAO run are checked before another run is started. Job state records the triage
-model and stage start/completion timestamps, so runtime model changes cannot
+CREAO run are checked before another run is started. Job state records the requested
+triage model and stage start/completion timestamps, so runtime model changes cannot
 relabel a job that already used a different model. See the
 [URL performance audit](../backend/URL-PERFORMANCE.md) for measurements and remaining options.
 

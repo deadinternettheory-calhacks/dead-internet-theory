@@ -5,6 +5,13 @@ not p50/p95 guarantees. Collection coverage and the rubric remain uncalibrated.
 
 ## Measurements
 
+Merged and deployed changes and subsequent hosted checks are recorded in the
+[rollout verification](verification/2026-10-25-url-performance.md). The permitted
+cold Reddit check completed in **55.4 seconds**, including 100 classified
+comments and 30 usable history comments. That discussion needed no CREAO scoring.
+Two subsequent owners received the completed report with full validated readback
+in **698 / 682 ms**, with no additional collection or inference jobs.
+
 | Check                                               | Observation                                                                  | Meaning                                                                                                            |
 | --------------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | Completed Reddit link, two new browser owners       | POST 185 ms each; complete graph, analysis and history readback 773 / 831 ms | Retained results are reused across owners without new collection or inference jobs.                                |
@@ -36,10 +43,10 @@ additional scraping was needed and no source or model text was saved locally.
 | Reddit author history        | One batched Actor run, cached author candidate pools, default 40 candidates, 10 sampled results. Bound bytes per author and adapt oversized dataset pages; keep valid partial results from interrupted runs. | Fewer candidates or a shorter history deadline reduces coverage. Spec requires stance-stratified sampling after triage; collecting before stance classification would change that design.                      |
 | X author history             | Reuse candidates; preserve the publisher's single-concurrent-run policy.                                                                                                                                     | Free-plan run/item quotas remain the main restriction. Owner chose to retain the plan. Do not parallelize around that policy.                                                                                  |
 | YouTube / TikTok history     | Unsupported histories are skipped without a provider call.                                                                                                                                                   | Additional history sources require adapter review and live verification.                                                                                                                                       |
-| Triage                       | Direct Anthropic call, low effort, streaming structured output, bounded evidence. **Require exact comment-ID coverage before accepting or caching a reply.**                                                 | Tested Haiku 5.5 as a runtime override. Model selection affects stance judgments; retain completeness and evidence checks and record the model actually used.                                                  |
+| Triage                       | Direct Anthropic call, low effort, streaming structured output, bounded evidence. **Require exact comment-ID coverage before accepting or caching a reply.**                                                 | Production selects tested Haiku 5.5. Model selection affects stance judgments; retain completeness and evidence checks and record the requested model.                                                         |
 | Model retries                | Up to three semantic attempts; test all candidate texts from one CREAO run before paying for another. Transport errors respect backoff.                                                                      | Removing checks/retries can make failure faster but cannot create a valid report. Incomplete classification is rejected.                                                                                       |
 | CREAO scoring                | Bounded recommendation/context packet and deterministic measurements; scoring remains on CREAO as specified.                                                                                                 | Agent model/workflow latency is the main remaining model bottleneck. App-scoped run keys cannot edit the agent. Any faster configuration needs a separate measured quality check.                              |
-| CREAO completion             | Webhook wake-up is supported; **5 s fallback even when callbacks are configured**, replacing the former 20 s fallback. Step tokens and leases deduplicate wake-ups.                                          | Enable the runtime callback URL/secret and verify delivery. CREAO documents delivery as best effort; polling stays enabled.                                                                                    |
+| CREAO completion             | Webhook wake-up is configured; **5 s fallback even when callbacks are configured**, replacing the former 20 s fallback. Step tokens and leases deduplicate wake-ups.                                         | Receiver authentication passed; verify actual provider delivery on a scoring run. CREAO documents delivery as best effort; polling stays enabled.                                                              |
 | Model caching                | Validated stage replies keyed by stage, prompt, model and exact evidence for 24 hours. Full-result reuse bypasses both model stages for the same link.                                                       | Anthropic prompt caching may save repeated rubric-prefix processing/cost; it does not eliminate classification output time. Cross-link reuse of whole replies would be incorrect.                              |
 | Assembly / database          | Deterministic scoring and validation; indexed job, cache and owner lookups. Reused views derive IDs/fingerprints without copying source content.                                                             | Persistent graph reads between stages or an aggregated report endpoint could save HTTP round trips. Profile first: measured model waits are much larger.                                                       |
 | Browser report               | Immediate completed-result handling; 2.5 s status polls; show collected comments before analysis completes; fetch analysis and graph in parallel.                                                            | Push updates can save up to a poll interval. Reuse the preview graph to remove one final read. Neither shortens collection or model execution.                                                                 |
@@ -57,12 +64,14 @@ missing/duplicate/foreign classification IDs, candidate selection within a run,
 and the bounded retry limit. Existing integration checks cover shared-result
 ownership, fingerprint/history remapping, unchanged expiry and no duplicate work.
 
-Deploy the completeness guard before selecting a faster runtime model. Keep the
-default Opus model for unconfigured deployments; `ANTHROPIC_MODEL` selects the
-production override. New jobs store their actual triage model so changing that
-override cannot relabel a job still in progress. Verify one permitted cold run
-and a subsequent warm reuse after deployment; report the observed stage timings
+The completeness guard is deployed and production now selects Haiku 5.5 through
+`ANTHROPIC_MODEL`; unconfigured deployments keep the default Opus model. New jobs
+store their requested triage model so changing the override cannot relabel a job
+still in progress. A permitted cold run and subsequent warm reuse passed after
+deployment. Stage timings are recorded above and in the hosted verification,
 rather than projecting the standalone model benchmark onto the whole pipeline.
+CREAO callbacks are configured and receiver authentication passed; delivery from
+the provider remains unverified because this cold run skipped scoring.
 
 Primary provider references:
 [Claude model overview](https://platform.claude.com/docs/en/models/sonnet-5-5/overview),
