@@ -85,11 +85,11 @@ These are fit assessments. The guide says criteria can change. Check the final e
 
 ### CREAO — Best AI-First Disruptor
 
-**Priority: primary when CREAO performs core work in the demonstrated path.** The [current CREAO guide](https://community.creao.ai/CalHacks2026) requires the run share link and agent ID in the Devpost README, selection of the CREAO track, and a demo showing the agent at work. The project's references are in the [README submission section](../README.md#cal-hacks-130--creao-submission). Best AI-First Disruptor asks for a product that depends on the agent's output.
+**Priority: primary.** The [current CREAO guide](https://community.creao.ai/CalHacks2026) requires the run share link and agent ID in the Devpost README, selection of the CREAO track, and a demo showing the agent at work. The project's references are in the [README submission section](../README.md#cal-hacks-130--creao-submission). Best AI-First Disruptor asks for a product that depends on the agent's output.
 
-**Sponsor line:** “In CREAO mode, the agent performs the recommendation assessment, and the application validates and re-scores the returned rules.”
+**Sponsor line:** “CREAO performs the recommendation assessment, and the application validates and re-scores the returned rules.”
 
-**Show:** A completed run with recommendations, its CREAO scoring stage, and the corresponding stored assessment. The code now defaults both triage and scoring to direct Claude when configured; `SCORING_PROVIDER=creao` selects CREAO for scoring. Use that path for a CREAO-backed demo and show its actual agent run. Retained results reuse earlier work. Do not attribute direct Claude stages to CREAO. The CREAO API does not attest the served model. Callback authentication is verified; actual provider webhook delivery is still unverified and polling remains available.
+**Show:** A discussion with recommendations, its CREAO agent run, and the corresponding stored assessment. Explain how the application validates the agent's evidence references and recomputes final rubric scores. Use the shared run and agent ID in the README as the submission references. Retained results reuse earlier work.
 
 **Other CREAO awards:** Team Empowerment is plausible only with a demonstrated workflow for a real reviewing team; the current single-user utility is weaker evidence. One-Person Company needs an independently supported business/operator story and its actual category rules; do not infer eligibility from the award name or reframe a team build as a solo build. AI-First Disruptor is the clearest present fit.
 
