@@ -88,3 +88,11 @@ it('shows ordinary-user evidence instead of automation signs, and lists those ac
   }
   expect(rows.slice(-human.length)).toEqual(human);
 });
+it('rates comment realism like the other signals and shows each comment’s estimate', async () => {
+  await render(<AnalysisReport report={exampleReport}/>);
+  const realism = [...container.querySelectorAll('.axis-list li')].find(li => li.textContent?.startsWith('Comment realism'));
+  expect(realism?.textContent).toMatch(/Comment realism: \d+ \/ 100/);
+  expect(container.querySelector('.finding-card h3')?.textContent).toBe('Comments read like promotion');
+  const badges = [...container.querySelectorAll('.comment-estimate')].map(b => b.textContent);
+  expect(badges.some(b => /^\d+\/100/.test(b ?? ''))).toBe(true);
+});

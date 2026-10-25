@@ -92,7 +92,7 @@ export interface AnalysisSubmission {
   };
   overallCoordinationRisk: Score;
   axes: AxisAssessment[];
-  commentAssessments: { commentId: string; stance: Stance; promotionalIntentScore: number | null; rationale: string; evidenceRefs: string[]; accountSignals?: AccountSignals }[];
+  commentAssessments: { commentId: string; stance: Stance; promotionalIntentScore: number | null; rationale: string; evidenceRefs: string[]; accountSignals?: AccountSignals; astroturfEstimate?: { score: number; reasons: string[] } }[];
   clusters: { clusterId: string; commentIds: string[]; coordinationScore: number | null; explanation: string; evidenceRefs: string[] }[];
   usedEnrichmentIds: string[];
   limitations: string[];

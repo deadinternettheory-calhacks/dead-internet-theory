@@ -14,8 +14,13 @@ export interface EvidenceItem {
   source: 'discussion' | 'history';
 }
 
+/** A contract axis, or the per-comment realism roll-up computed from comment estimates. */
+export type SignalKind = AxisName | 'comment_realism';
+
+type SignalAssessment = Omit<AxisAssessment, 'axis'> & { axis: SignalKind };
+
 export interface Finding {
-  axis: AxisName;
+  axis: Exclude<SignalKind, 'disclosure_concerns'>;
   title: string;
   description: string;
   details: string;
@@ -28,6 +33,8 @@ export interface CommentRow extends EvidenceItem {
   stance: Stance;
   rationale: string;
   isRecommendation: boolean;
+  /** 0-100 astroturfing estimate for this comment, when the analysis has one. */
+  estimate: { score: number; reasons: string[] } | null;
 }
 
 export interface AccountRow {
@@ -47,7 +54,7 @@ export interface Report {
   verdict: { label: string; description: string; tone: Tone };
   index: { score: number; confidence: number | null; explanation: string } | null;
   findings: Finding[];
-  axes: { axis: AxisName; title: string; score: number | null; explanation: string; evidence: EvidenceItem[] }[];
+  axes: { axis: SignalKind; title: string; score: number | null; explanation: string; evidence: EvidenceItem[] }[];
   discussion: EvidenceItem[];
   histories: { id: string; author: string | null; status: string; comments: EvidenceItem[]; account?: AccountRow | null }[];
   /** Sampled accounts with an automation-signal index, highest first. */
@@ -59,7 +66,8 @@ export interface Report {
   inferenceVersion: string;
 }
 
-const FINDING_COPY: Record<Exclude<AxisName, 'disclosure_concerns'>, { title: string; description: string }> = {
+const FINDING_COPY: Record<Exclude<SignalKind, 'disclosure_concerns'>, { title: string; description: string }> = {
+  comment_realism: { title: 'Comments read like promotion', description: 'Many comments praising the product read as unnatural or ad-like, come from seller-style or random usernames, or reuse template phrases.' },
   semantic_coordination: { title: 'Accounts used nearly identical wording', description: 'Several accounts recommended the product with almost the same words or details.' },
   temporal_coordination: { title: 'Recommendations arrived close together', description: 'Recommendations came in a tight burst compared with the rest of the discussion.' },
   engagement_anomalies: { title: 'Accounts backed each other up', description: 'Accounts recommending the product replied to, agreed with or defended each other.' },
@@ -67,7 +75,8 @@ const FINDING_COPY: Record<Exclude<AxisName, 'disclosure_concerns'>, { title: st
   promotional_intent: { title: 'Recommendations read like promotion', description: 'The recommendations use marketing-style language, or the accounts mention the brand often elsewhere.' },
 };
 
-const AXIS_TITLE: Record<AxisName, string> = {
+const AXIS_TITLE: Record<SignalKind, string> = {
+  comment_realism: 'Comment realism',
   semantic_coordination: 'Similar wording',
   temporal_coordination: 'Timing',
   engagement_anomalies: 'Accounts backing each other',
@@ -77,6 +86,10 @@ const AXIS_TITLE: Record<AxisName, string> = {
 };
 
 /** Cutoffs follow the rubric's tiers (rubrics/product-astroturfing.md section 7), which are uncalibrated. */
+/** Mirrors inference/convex/lib/inference/section.ts: a comment at this estimate or above is suspicious; this share counts fully. */
+const SUSPICIOUS_ESTIMATE = 50;
+const FULL_SUSPICIOUS_SHARE = 0.3;
+
 /** Same cut-off as the moderate band of the section score. */
 const FINDING_MIN_SCORE = 35;
 
@@ -118,9 +131,23 @@ export function buildReport(analysis: AnalysisResource, graph: GraphEnvelope, en
     return items;
   };
 
+  // Comment realism: share of endorsing comments estimated at 50+ (same thresholds as inference/section.ts).
+  const recommendationIds = new Set(a.commentAssessments.filter(c => c.promotionalIntentScore !== null).map(c => c.commentId));
+  const endorsing = a.commentAssessments.filter(c => c.astroturfEstimate && comments.get(c.commentId)?.text.trim() && (c.stance === 'supportive' || recommendationIds.has(c.commentId)));
+  const suspicious = endorsing.filter(c => c.astroturfEstimate!.score >= SUSPICIOUS_ESTIMATE).sort((x, y) => y.astroturfEstimate!.score - x.astroturfEstimate!.score);
+  const realism: SignalAssessment | null = endorsing.length >= 5 ? {
+    axis: 'comment_realism',
+    score: Math.round(100 * Math.min(1, suspicious.length / endorsing.length / FULL_SUSPICIOUS_SHARE)),
+    confidence: null,
+    assessedCommentCount: endorsing.length,
+    explanation: `${suspicious.length} of ${endorsing.length} comments praising the product are estimated at ${SUSPICIOUS_ESTIMATE}+ out of 100, from unnatural or ad-like text, seller-style or random usernames, template phrases, store outreach and copied praise.`,
+    evidenceRefs: suspicious.map(c => c.commentId),
+  } : null;
+  const signals: SignalAssessment[] = [...(realism ? [realism] : []), ...a.axes];
+
   // Only signals in the moderate band or above count as standing out; weaker ones stay in the details.
-  const ranked = a.axes
-    .filter((x): x is AxisAssessment & { axis: Exclude<AxisName, 'disclosure_concerns'> } => x.axis !== 'disclosure_concerns' && x.score !== null && x.score >= FINDING_MIN_SCORE)
+  const ranked = signals
+    .filter((x): x is SignalAssessment & { axis: Exclude<SignalKind, 'disclosure_concerns'> } => x.axis !== 'disclosure_concerns' && x.score !== null && x.score >= FINDING_MIN_SCORE)
     .sort((x, y) => (y.score ?? 0) - (x.score ?? 0));
   // Show each quoted comment once, under the first finding that cites it.
   const shown = new Set<string>();
@@ -138,13 +165,13 @@ export function buildReport(analysis: AnalysisResource, graph: GraphEnvelope, en
     };
   });
 
-  const recommendationIds = new Set(a.commentAssessments.filter(c => c.promotionalIntentScore !== null).map(c => c.commentId));
   const rows: CommentRow[] = a.commentAssessments.flatMap(c => {
     const node = comments.get(c.commentId);
     if (!node) return [];
     return [{
       id: node.id, author: handleFor(graph, node.authorId), text: node.text, url: node.url, createdAt: node.createdAt, source: 'discussion' as const,
       stance: c.stance, rationale: c.rationale, isRecommendation: recommendationIds.has(c.commentId),
+      estimate: c.astroturfEstimate ?? null,
     }];
   });
 
@@ -171,14 +198,15 @@ export function buildReport(analysis: AnalysisResource, graph: GraphEnvelope, en
     verdict: verdictFor(score, a.subject.kind === 'unknown' ? '' : a.subject.label),
     index: score === null ? null : { score, confidence: a.overallCoordinationRisk.confidence, explanation: a.overallCoordinationRisk.explanation },
     findings,
-    axes: a.axes.map(x => ({ axis: x.axis, title: AXIS_TITLE[x.axis], score: x.score, explanation: x.explanation, evidence: evidenceFor(x.evidenceRefs) })),
+    axes: signals.map(x => ({ axis: x.axis, title: AXIS_TITLE[x.axis], score: x.score, explanation: x.explanation, evidence: evidenceFor(x.evidenceRefs) })),
     discussion: [...comments.values()].filter(c => c.contentStatus === 'visible' && c.text.trim()).map(c => ({ id: c.id, author: handleFor(graph, c.authorId), text: c.text, url: c.url, createdAt: c.createdAt, source: 'discussion' as const })),
     accounts,
     histories: enrichments.flatMap(j => (j.results ?? []).map(r => ({
       id: `${j.enrichmentId}:${r.authorId}`, author: handleFor(graph, r.authorId), status: r.status, account: accountByAuthor.get(r.authorId) ?? null,
       comments: r.comments.map(c => ({ id: c.id, author: handleFor(graph, c.authorId), text: c.text, url: c.url, createdAt: c.createdAt, source: 'history' as const })),
     }))),
-    comments: rows.sort((x, y) => Number(y.isRecommendation) - Number(x.isRecommendation)),
+    // Recommendations first, then by estimate, highest first.
+    comments: rows.sort((x, y) => Number(y.isRecommendation) - Number(x.isRecommendation) || (y.estimate?.score ?? -1) - (x.estimate?.score ?? -1)),
     clusters: a.clusters.map(c => ({ id: c.clusterId, size: c.commentIds.length, explanation: c.explanation })),
     coverage: {
       collectedAt: graph.coverage.collectedAt ?? null,

@@ -1295,7 +1295,7 @@
       "schemaVersion": "1.0.0",
       "graphRevision": 1,
       "graphFingerprint": "77f2bd8c21bcc034068d8d089c74f2e916881b7f6769f93bacf8307073be55a2",
-      "inferenceVersion": "dit-inference/0.2.0; rubric/0.3; prompts-2026-10-24e; creao-mock",
+      "inferenceVersion": "dit-inference/0.2.0; rubric/0.3; prompts-2026-10-25a; creao-mock",
       "inferredAt": "2026-10-24T06:03:00Z",
       "subject": {
         "label": "BrewMaster Mini",
@@ -1325,9 +1325,9 @@
         ]
       },
       "overallCoordinationRisk": {
-        "score": 63,
+        "score": 69,
         "confidence": 0.7,
-        "explanation": "Comment-section astroturfing index: 63/100 (High). Rubric strength 76: the top 3 recommendation(s) scored 76 (u/brewfan_22), 76 (u/crema_queen), 76 (u/daily_grind_dan) on the rubric. Coordination 55: 4 recommendations form the strongest cluster. History contrast 50: sampled supportive users mention the recommended products in 40% of their recent comments, unsupportive users in 0%; 0% of supportive and 0% of unsupportive sampled accounts were under 90 days old. One-sided support 67: 83% of comments taking a side were supportive. Weights: rubric 40%, coordination 25%, history contrast 25%, one-sided support 10%, spread over the parts that could be measured. Histories came from a random sample of 4 of 4 supportive and 2 of 2 unsupportive users.",
+        "explanation": "Comment-section astroturfing index: 69/100 (High). Rubric strength 76: the top 3 recommendation(s) scored 76 (u/brewfan_22), 76 (u/crema_queen), 76 (u/daily_grind_dan) on the rubric. Coordination 55: 4 recommendations form the strongest cluster. Comment realism 100: 3 of 6 endorsing comments are estimated at 50+ (unnatural text, seller or random usernames, template phrases, duplicates). Commercial signals 0: no seller accounts, template phrases, outreach or duplicate praise found. History contrast 50: sampled supportive users mention the recommended products in 40% of their recent comments, unsupportive users in 0%; 0% of supportive and 0% of unsupportive sampled accounts were under 90 days old. One-sided support 67: 83% of comments taking a side were supportive. Weights: comment realism 35%, coordination 20%, commercial signals 20%, rubric 15%, history contrast 10%, spread over the parts that could be measured; one-sided support adds up to 10 points only when the rest reach 15 (+7 here). Histories came from a random sample of 4 of 4 supportive and 2 of 2 unsupportive users.",
         "evidenceRefs": [
           "reddit:comment:t1_syn01",
           "reddit:comment:t1_syn02",
@@ -1435,6 +1435,12 @@
             "reddit:comment:t1_syn_a05",
             "reddit:discussion:t3_syn_espresso"
           ],
+          "astroturfEstimate": {
+            "score": 76,
+            "reasons": [
+              "Rubric 76/100"
+            ]
+          },
           "accountSignals": {
             "authorId": "reddit:author:t2_syn_a",
             "score": 63,
@@ -1481,6 +1487,12 @@
             "reddit:comment:t1_syn_b04",
             "reddit:discussion:t3_syn_espresso"
           ],
+          "astroturfEstimate": {
+            "score": 76,
+            "reasons": [
+              "Rubric 76/100"
+            ]
+          },
           "accountSignals": {
             "authorId": "reddit:author:t2_syn_b",
             "score": 63,
@@ -1525,6 +1537,12 @@
             "reddit:comment:t1_syn_c03",
             "reddit:discussion:t3_syn_espresso"
           ],
+          "astroturfEstimate": {
+            "score": 76,
+            "reasons": [
+              "Rubric 76/100"
+            ]
+          },
           "accountSignals": {
             "authorId": "reddit:author:t2_syn_c",
             "score": 63,
@@ -1565,6 +1583,10 @@
             "reddit:comment:t1_syn_d07",
             "reddit:discussion:t3_syn_espresso"
           ],
+          "astroturfEstimate": {
+            "score": 0,
+            "reasons": []
+          },
           "accountSignals": {
             "authorId": "reddit:author:t2_syn_d",
             "score": 0,
@@ -1589,6 +1611,10 @@
           "evidenceRefs": [
             "reddit:comment:t1_syn05"
           ],
+          "astroturfEstimate": {
+            "score": 0,
+            "reasons": []
+          },
           "accountSignals": {
             "authorId": "reddit:author:t2_syn_e",
             "score": 0,
@@ -1621,7 +1647,13 @@
             "reddit:comment:t1_syn_b02",
             "reddit:comment:t1_syn_b03",
             "reddit:comment:t1_syn_b04"
-          ]
+          ],
+          "astroturfEstimate": {
+            "score": 44,
+            "reasons": [
+              "Rubric 44/100"
+            ]
+          }
         },
         {
           "commentId": "reddit:comment:t1_syn07",
@@ -1630,7 +1662,11 @@
           "rationale": "Dismisses the reported problem as user error.",
           "evidenceRefs": [
             "reddit:comment:t1_syn07"
-          ]
+          ],
+          "astroturfEstimate": {
+            "score": 0,
+            "reasons": []
+          }
         },
         {
           "commentId": "reddit:comment:t1_syn08",
@@ -1640,6 +1676,10 @@
           "evidenceRefs": [
             "reddit:comment:t1_syn08"
           ],
+          "astroturfEstimate": {
+            "score": 0,
+            "reasons": []
+          },
           "accountSignals": {
             "authorId": "reddit:author:t2_syn_f",
             "score": 0,

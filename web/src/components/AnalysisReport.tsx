@@ -12,6 +12,13 @@ const PLATFORM_LABEL: Record<string, string> = { reddit: 'REDDIT', x: 'X / TWITT
 const STANCE_LABEL: Record<string, string> = { supportive: 'Supportive', critical: 'Critical', neutral: 'Neutral', mixed: 'Mixed', unclear: 'Unclear' };
 
 
+/** A comment's 0-100 astroturfing estimate, with its reasons on hover. */
+function Estimate({ row }: { row: Report['comments'][number] }) {
+  if (!row.estimate) return null;
+  const s = row.estimate.score;
+  return <span className={`comment-estimate${s >= 55 ? ' is-high' : s >= 35 ? ' is-medium' : ''}`} title={row.estimate.reasons.join(' · ') || 'No signals'}>{s}/100{row.estimate.reasons.length > 0 && <span className="comment-estimate-reasons"> · {row.estimate.reasons.join(' · ')}</span>}</span>;
+}
+
 /** Score and verdict in one card. Bands follow the rubric tiers: under 35 low, 35-54 moderate, 55+ high. */
 function ResultCard({ report }: { report: Report }) {
   const score = report.index?.score ?? null;
@@ -32,7 +39,9 @@ export function AnalysisReport({ report }: { report: Report }) {
   const { post, coverage } = report;
   const time = formatTime(post.createdAt);
   const recommendations = report.comments.filter(c => c.isRecommendation);
-  const others = report.comments.filter(c => !c.isRecommendation);
+  // Empty comments (stickers, media) carry no text to show.
+  const others = report.comments.filter(c => !c.isRecommendation && c.text.trim());
+  const emptyCount = report.comments.filter(c => !c.text.trim()).length;
   const historiesReturned = report.histories.filter(history => history.comments.length > 0).length;
   const s = coverage.sentiment;
   return <div className="report-view">
@@ -64,7 +73,7 @@ export function AnalysisReport({ report }: { report: Report }) {
       <h3 className="detail-heading">Recommendations we scored</h3>
       {recommendations.length === 0 && <p>No comments recommended a product.</p>}
       <ul className="comment-list">{recommendations.map(c => <li key={c.id} className="comment-row">
-        <p className="quote-meta">{c.author ?? 'Unknown author'} · <span className={`stance stance-${c.stance}`}>{STANCE_LABEL[c.stance]}</span></p>
+        <p className="quote-meta">{c.author ?? 'Unknown author'} · <span className={`stance stance-${c.stance}`}>{STANCE_LABEL[c.stance]}</span><Estimate row={c}/></p>
         <blockquote>{c.text}</blockquote>
         <p>{c.rationale}</p>
         <SourceLink synthetic={report.synthetic} url={c.url}>View comment</SourceLink>
@@ -72,9 +81,10 @@ export function AnalysisReport({ report }: { report: Report }) {
       {others.length > 0 && <>
         <h3 className="detail-heading">Other comments</h3>
         <ul className="comment-list">{others.map(c => <li key={c.id} className="comment-row">
-          <p className="quote-meta">{c.author ?? 'Unknown author'} · <span className={`stance stance-${c.stance}`}>{STANCE_LABEL[c.stance]}</span></p>
+          <p className="quote-meta">{c.author ?? 'Unknown author'} · <span className={`stance stance-${c.stance}`}>{STANCE_LABEL[c.stance]}</span><Estimate row={c}/></p>
           <blockquote>{c.text}</blockquote>
         </li>)}</ul>
+        {emptyCount > 0 && <p className="empty-note">{emptyCount} comment{emptyCount === 1 ? '' : 's'} with no text (stickers or media) not shown.</p>}
       </>}
       <p className="version-note">Analysis version: {report.inferenceVersion}</p>
     </EvidenceDetails>
