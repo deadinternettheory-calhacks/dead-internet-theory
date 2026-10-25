@@ -209,3 +209,6 @@ The score card includes a collapsed **Score explanation** with the stored sectio
 score components, cited usernames, supporting reasons, weights and sampling note. Detailed signal assessments stay
 under detailed analysis. Formatting uses stored values and never recalculates scores. The post, findings, account signals and
 detailed evidence share one white panel; coverage details remain below it.
+
+The header shows **How it works** on the homepage only; search and report routes
+keep the home logo without the navigation link.
