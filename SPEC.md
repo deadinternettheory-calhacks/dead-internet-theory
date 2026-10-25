@@ -326,10 +326,9 @@ walkthrough's timing, invented percentages or an estimated completion countdown.
 
 Live analyses use a fixed full-viewport globe behind the reading column,
 illustrative comment models, and a rounded, expressive ghost above the comments.
-Comments start behind the column and move fully in front after three seconds
-without activity. Pointer movement/presses, scrolling, typing or focus changes
-immediately return them behind the column; returning from a hidden tab restarts
-the delay. Layer changes preserve the running animation and real backend phase.
+Comments remain behind the reading column during activity, inactivity and report
+completion; they never rise over its text (ADR-020). Their animations continue
+to follow the real backend phase.
 The companion also appears on the landing page and remains
 with the scene after a report resolves; completion triggers a greeting. Actual
 backend phases drive comment formations: spawning and gathering during
@@ -342,7 +341,8 @@ Enter/Space to react; P pauses/resumes scene motion, Escape pauses, and clicking
 a paused ghost resumes it. Its flight continues during mouse hover and clicks;
 only keyboard focus holds its position for accessible activation (ADR-019).
 Comment models ignore pointer events so report controls remain usable.
-The centered translucent column, reduced-motion posters, graphics fallback,
+The centered column has a 640px maximum width and a translucent backdrop.
+Reduced-motion posters, graphics fallback,
 hidden-tab suspension and lazy loading keep the actual investigation usable.
 Illustrations never represent collected evidence or invented progress, and
 scrolling or a backend phase change never suspends motion. See
@@ -500,6 +500,7 @@ These entries capture project direction and the adopted v1 interface delta; they
 | ADR-017 | 2026-10-25 UTC | Requested by the owner | Lead the report with its score and verdict, then post identity and evidence. Remove the visible page title so the score leads without a Summary heading. Supersedes the post-first display order in REQ-UX-2 and section 4.2. See the [score-first delta](deltas/2026-10-25T03-37-18Z-score-first-report.md). |
 | ADR-018 | 2026-10-25 UTC | Requested by the owner after slow analyses ("add an internal switch to go between claude and creao at this stage. Turn it to claude … by default") | Rubric scoring runs as one direct Claude call with structured outputs by default (about 30 s instead of 1.5–5 min on the CREAO agent); `SCORING_PROVIDER=creao` on the inference deployment switches it back without a deploy. Supersedes the CREAO-only scoring default in ADR-008/ADR-009 and section 9; prompts, re-scoring and validation are unchanged; the analysis label records `claude-scoring:<model>`. |
 | ADR-019 | 2026-10-25 UTC | Requested by the owner | Keep the ghost roaming during mouse hover and clicks; hold its flight only for keyboard focus. Supersedes section 10.3's hover hold. See the [ghost flight delta](deltas/2026-10-25T04-14-58Z-ghost-hover-flight.md). |
+| ADR-020 | 2026-10-25 UTC | Requested by the owner | Keep illustrative comments behind the reading column indefinitely, removing the three-second idle foreground behavior from section 10.3. The ghost remains in front. See the [comment layering delta](deltas/2026-10-25T04-56-38Z-comments-behind-column.md). |
 
 
 ### 13.5 Specification change history
@@ -520,5 +521,6 @@ These entries capture project direction and the adopted v1 interface delta; they
 | 2026-10-25 UTC | Score and verdict lead the report before post identity and evidence; no visible Summary heading (ADR-017). | [Score-first report delta](deltas/2026-10-25T03-37-18Z-score-first-report.md). |
 | 2026-10-25 UTC | Scoring on Claude by default with a `SCORING_PROVIDER` switch back to CREAO (ADR-018). | No delta: a provider switch within the selected Claude/CREAO inference design. |
 | 2026-10-25 UTC | Ghost flight continues during mouse hover and clicks; keyboard focus retains a stable target (ADR-019). | [Ghost flight delta](deltas/2026-10-25T04-14-58Z-ghost-hover-flight.md). |
+| 2026-10-25 UTC | Comments remain behind the reading column indefinitely, replacing the idle foreground switch (ADR-020). | [Comment layering delta](deltas/2026-10-25T04-56-38Z-comments-behind-column.md). |
 
 Future changes that conflict with an established requirement follow [CONTRIBUTING.md](CONTRIBUTING.md): propose affected sections/rationale, obtain explicit approval, create the timestamped delta, update the spec and decision log together, and preserve the historical decision. Filling a TBD or correcting an evidence-based implementation status does not itself require a delta. The v1.0.0 contract adoption is recorded by its linked approved delta.

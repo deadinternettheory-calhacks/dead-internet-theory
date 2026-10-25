@@ -219,52 +219,6 @@ it('places noninteractive comments in their own portal and keeps the ghost acces
   expect(container.querySelector('[data-testid="comment-scene"]')).toBeNull();
 });
 
-it('raises comments after three idle seconds and immediately lowers them on report input without restarting the scene', async () => {
-  await render();
-  const comments = document.querySelector('.comment-overlay')!;
-  expect(comments.getAttribute('data-idle')).toBe('false');
-  await advance(2999);
-  expect(comments.getAttribute('data-idle')).toBe('false');
-  await advance(1);
-  expect(comments.getAttribute('data-idle')).toBe('true');
-  const scene = comments.querySelector('[data-testid="comment-scene"]');
-  for (const event of ['pointermove', 'pointerdown', 'wheel', 'keydown', 'focusin', 'scroll']) {
-    act(() => container.dispatchEvent(new Event(event, { bubbles: false })));
-    expect(comments.getAttribute('data-idle')).toBe('false');
-    await advance(2000);
-    // Continued activity must restart the delay, including nested scrolling.
-    act(() => container.dispatchEvent(new Event(event, { bubbles: false })));
-    await advance(2999);
-    expect(comments.getAttribute('data-idle')).toBe('false');
-    await advance(1);
-    expect(comments.getAttribute('data-idle')).toBe('true');
-  }
-  await render('collecting');
-  expect(comments.getAttribute('data-idle')).toBe('true');
-  expect(comments.querySelector('[data-testid="comment-scene"]')).toBe(scene);
-  expect(latestComments?.animate).toBe(true);
-  expect(latestComments?.phase).toBe('collecting');
-  expect(latestGhost?.pulse).toBe(0);
-});
-
-it('restarts the idle delay after returning to the tab and removes it when leaving analysis', async () => {
-  await act(async () => root.render(<AnalysisPlayground phase="analyzing"/>));
-  await advance(3000);
-  const comments = document.querySelector('.comment-overlay')!;
-  expect(comments.getAttribute('data-idle')).toBe('true');
-  act(() => { hidden = true; document.dispatchEvent(new Event('visibilitychange')); });
-  await advance(5000);
-  expect(comments.getAttribute('data-idle')).toBe('false');
-  act(() => { hidden = false; document.dispatchEvent(new Event('visibilitychange')); });
-  await advance(2999);
-  expect(comments.getAttribute('data-idle')).toBe('false');
-  await advance(1);
-  expect(comments.getAttribute('data-idle')).toBe('true');
-  await act(async () => root.render(<AnalysisPlayground phase="queued" background={false}/>));
-  expect(document.querySelector('.comment-overlay')).toBeNull();
-  expect(vi.getTimerCount()).toBe(0);
-});
-
 it('lets a click resume a paused ghost without resetting the real investigation phase', async () => {
   await render(); await advance();
   key('Escape');
