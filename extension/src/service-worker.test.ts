@@ -10,8 +10,8 @@ let expiry: (alarm: chrome.alarms.Alarm) => void;
 let installed: () => void;
 const sender = { id: EXTENSION_CLIENT_ID, url: `chrome-extension://${EXTENSION_CLIENT_ID}/sidepanel.html` };
 const post = 'https://www.reddit.com/r/example/comments/demo';
-const send = async <T>(value: unknown) => {
-  const result = await new Promise<{ ok: boolean; value: T }>(resolve => message(value, sender, resolve as (value: unknown) => void));
+const send = async <T>(value: unknown, source = sender) => {
+  const result = await new Promise<{ ok: boolean; value: T }>(resolve => message(value, source, resolve as (value: unknown) => void));
   expect(result.ok).toBe(true);
   return result.value;
 };
@@ -20,7 +20,7 @@ beforeEach(async () => {
   vi.resetModules(); vi.useFakeTimers(); vi.setSystemTime(1_000_000_000);
   data = {};
   vi.stubGlobal('chrome', {
-    runtime: { id: EXTENSION_CLIENT_ID, getURL: (path: string) => `chrome-extension://${EXTENSION_CLIENT_ID}/${path}`, onMessage: { addListener: (fn: typeof message) => { message = fn; } }, onInstalled: { addListener: (fn: typeof installed) => { installed = fn; } }, onStartup: { addListener: vi.fn() } },
+    runtime: { id: EXTENSION_CLIENT_ID, getURL: (path: string) => `chrome-extension://${chrome.runtime.id}/${path}`, onMessage: { addListener: (fn: typeof message) => { message = fn; } }, onInstalled: { addListener: (fn: typeof installed) => { installed = fn; } }, onStartup: { addListener: vi.fn() } },
     storage: { local: { get: vi.fn(async (key: string) => ({ [key]: structuredClone(data[key]) })), set: vi.fn(async (values: Record<string, unknown>) => { Object.assign(data, structuredClone(values)); }), setAccessLevel: vi.fn(async () => {}) } },
     alarms: { create: vi.fn(async () => {}), clear: vi.fn(async () => true), onAlarm: { addListener: (fn: typeof expiry) => { expiry = fn; } } },
     action: { onClicked: { addListener: (fn: typeof action) => { action = fn; } } },
@@ -38,6 +38,16 @@ it('serializes first-use credentials across panel/report tabs and survives a wor
   expect(vi.mocked(chrome.storage.local.set).mock.calls.filter(([values]) => SESSION_KEY in values)).toHaveLength(1);
   vi.resetModules(); await import('./service-worker');
   expect(await send<string>({ type: 'GET_SESSION' })).toBe(sessions[0]);
+});
+
+it('accepts the actual store identity while rejecting callers from another extension', async () => {
+  const id = 'p'.repeat(32);
+  Object.defineProperty(chrome.runtime, 'id', { value: id });
+  const value = await send<string>({ type: 'GET_SESSION' }, { id, url: `chrome-extension://${id}/sidepanel.html` });
+  expect(value).toMatch(/^[A-Za-z0-9_-]{43}$/);
+  const reply = vi.fn();
+  expect(message({ type: 'GET_SESSION' }, sender, reply)).toBe(false);
+  expect(reply).not.toHaveBeenCalled();
 });
 
 it('persists intent before a create, records receipts without replacing a newer check, and clears only local metadata', async () => {

@@ -1,4 +1,4 @@
-import { EXTENSION_CLIENT_ID, EXTENSION_SESSION_PATTERN } from '../../contracts/extension-client.mjs';
+import { EXTENSION_SESSION_PATTERN } from '../../contracts/extension-client.mjs';
 import { parsePostUrl, SUPPORTED_POST_HOSTS } from '../../web/src/url';
 import { nextExpiry, pruneState, SESSION_KEY, STATE_KEY, TTL_MS, validId, type SavedState, type WorkerRequest } from './state';
 
@@ -22,7 +22,6 @@ async function read() {
   return state;
 }
 async function handle(message: WorkerRequest): Promise<unknown> {
-  if (chrome.runtime.id !== EXTENSION_CLIENT_ID) throw new Error('This extension has an unexpected ID. Load the packaged extension folder.');
   if (message.type === 'GET_SESSION') {
     const stored = await chrome.storage.local.get(SESSION_KEY);
     if (typeof stored[SESSION_KEY] === 'string' && EXTENSION_SESSION_PATTERN.test(stored[SESSION_KEY])) return stored[SESSION_KEY];

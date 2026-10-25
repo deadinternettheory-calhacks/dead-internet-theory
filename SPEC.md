@@ -359,6 +359,10 @@ phases, respects reduced motion and hidden documents, and makes only local react
 A private anonymous extension credential establishes a separate owner through
 the website proxy; provider keys and signing secrets remain server-side. The
 canonical transport is [browser-extension.md](contracts/browser-extension.md).
+The client sends its installed Chrome runtime ID; the server accepts only IDs
+listed in the canonical public configuration. Packaging separates the pinned-ID
+unpacked ZIP from the keyless Chrome Web Store ZIP. After the first draft upload,
+the store-assigned ID must be added to the server allowlist before review.
 The package requests activeTab, sidePanel, contextMenus, storage and alarms, plus
 host permission for the website origin. It has no social-site content scripts.
 
