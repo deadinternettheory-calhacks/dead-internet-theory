@@ -23,6 +23,21 @@ an account is a bot, a recommendation was paid for, or a company manipulated a
 discussion. Consumer protection is the product's purpose; improved decisions
 and reduced harm still need to be evaluated.
 
+## Cal Hacks 13.0 — CREAO submission
+
+- **Shared agent run:** [Open the CREAO run](https://agent.creao.ai/share/02dddfa5410c9d0642e24f5fc8691d8c).
+- **Agent ID:** `ecc896fc-80ba-457f-9075-4c3cdb3e0bc4`.
+
+[CREAO's submission guide](https://community.creao.ai/CalHacks2026) asks for the
+run share link and agent ID in the **Devpost README**. Select the CREAO track
+and demonstrate a CREAO agent doing core work in the demo.
+
+The [CREAO integration](inference/creao-agent.md) supports recommendation rubric
+scoring through API Trigger. With an Anthropic key configured, scoring defaults
+to direct Claude; `SCORING_PROVIDER=creao` selects the CREAO scoring path. Show a discussion
+with recommendations and its agent run, since discussions without
+recommendations skip that stage.
+
 ## Data path
 
 1. **Submit a link.** The browser validates the supported URL and sends it through
@@ -46,8 +61,9 @@ and reduced harm still need to be evaluated.
    When Claude is configured, a focused review covers every returned account
    history, including on discussions with no product recommendations.
 5. **Assess the evidence.** Code measures timing, overlap, commercial patterns,
-   and available history signals. When recommendations exist, a CREAO agent
-   receives their bounded context, measurements, and rubric, and returns proposed
+   and available history signals. When recommendations exist, the configured
+   scorer (direct Claude or the CREAO agent) receives their bounded
+   context, measurements, and rubric, and returns proposed
    rule matches with evidence IDs. Code filters unsupported matches, computes
    rubric scores and comment/account/section indices, and validates the analysis
    against the canonical contract and referenced evidence.
