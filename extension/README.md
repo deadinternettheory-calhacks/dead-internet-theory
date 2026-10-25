@@ -29,6 +29,11 @@ The client uses `chrome.runtime.id` automatically; no ID-specific rebuild is nee
 The API accepts only explicitly listed IDs. A draft upload alone does not enable
 an unlisted store ID on the API.
 
+The public privacy-policy URL for the listing is
+`https://www.deadinternettheory.us/extension/privacy.html`. The website build
+publishes this extension's `public/privacy.html` and `public/privacy.css` so the
+hosted policy and subsequent packages use the same source.
+
 ## Use
 
 Open a public Reddit, X, TikTok or YouTube post and click the toolbar ghost
