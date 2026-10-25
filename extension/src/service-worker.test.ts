@@ -1,5 +1,5 @@
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
-import { EXTENSION_CLIENT_ID } from '../../contracts/extension-client';
+import { EXTENSION_CLIENT_ID } from '../../contracts/extension-client.mjs';
 import { SESSION_KEY, STATE_KEY, TTL_MS, type SavedJob, type SavedState } from './state';
 
 let data: Record<string, unknown>;
