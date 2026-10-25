@@ -20,7 +20,7 @@ export function AnalysisProgress({ phase, status, collectedCount }: { phase: Pro
       <div className="progress-copy">
         <div className="progress-status" role="status"><span className="loading-indicator" aria-hidden="true"/><h2>{status}</h2></div>
         <p>{phase === 'analyzing' || phase === 'analysis-queued' ? `${collectedCount === undefined ? 'The collected discussion is ready.' : `${collectedCount} comments collected.`} ${phase === 'analysis-queued' ? 'The discussion is waiting for analysis to begin.' : 'We’re checking the evidence for patterns. This can take a few minutes.'}` : phase === 'queued' ? 'Your request is queued for collection. This page will update when collection begins.' : phase === 'collecting' ? 'We’re retrieving public comments. The discussion will appear here when collection finishes.' : 'Connecting to the analysis service.'}</p>
-        <p className="progress-wait-invitation">Drag to spin. Tap to say hello.</p>
+        <p className="progress-wait-invitation">Click the ghost to say hello.</p>
       </div>
     </div>
     <ol className="progress-stages">{stages.map((label, index) => <li key={label} className={index < active ? 'is-done' : index === active ? 'is-current' : ''} aria-current={index === active ? 'step' : undefined}>
