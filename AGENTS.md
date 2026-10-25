@@ -37,3 +37,6 @@
   completed slice, following `CONTRIBUTING.md`.
 - Run checks appropriate to the change and report their results and any limits.
 - Update documentation when behavior, setup, or interfaces change.
+- After each requested change or pull, explicitly report whether the ingestion
+  backend and/or inference service needs redeployment, whether it was deployed,
+  and any deployment action still needed from the user.
