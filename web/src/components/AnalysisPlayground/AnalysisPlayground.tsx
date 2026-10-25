@@ -29,8 +29,7 @@ export const AnalysisPlayground = memo(function AnalysisPlayground({ phase, back
   const [ready, setReady] = useState(false);
   const [ghostReady, setGhostReady] = useState(false);
   const [commentsReady, setCommentsReady] = useState(false);
-  const [ghostHovered, setGhostHovered] = useState(false);
-  const [ghostFocused, setGhostFocused] = useState(false);
+  const [ghostKeyboardFocused, setGhostKeyboardFocused] = useState(false);
   const overlay = useRef<HTMLDivElement>(null);
   const [failed, setFailed] = useState(false);
   const [pulse, setPulse] = useState(0);
@@ -108,12 +107,12 @@ export const AnalysisPlayground = memo(function AnalysisPlayground({ phase, back
     <div className="ghost-overlay" ref={overlay} data-ready={ghostReady && !failed} data-reaction={pulse}>
       <div className={`ghost-poster${ghostReady && !failed ? ' is-hidden' : ''}`}><GhostPoster phase={phase}/></div>
       {requested && !failed && <SceneBoundary onFailure={handleFailure}><Suspense fallback={null}>
-        <GhostScene {...shared} overlay={overlay} held={ghostHovered || ghostFocused} onReady={handleGhostReady}/>
+        <GhostScene {...shared} overlay={overlay} held={ghostKeyboardFocused} onReady={handleGhostReady}/>
       </Suspense></SceneBoundary>}
       <button type="button" className="ghost-interaction" aria-label="Make the ghost react" aria-describedby={helpId}
         aria-keyshortcuts="Enter Space P Escape" disabled={failed} onClick={activateGhost}
-        onPointerEnter={() => setGhostHovered(true)} onPointerLeave={() => setGhostHovered(false)}
-        onFocus={() => setGhostFocused(true)} onBlur={() => setGhostFocused(false)}
+        onPointerDown={() => setGhostKeyboardFocused(false)}
+        onFocus={event => setGhostKeyboardFocused(event.currentTarget.matches(':focus-visible'))} onBlur={() => setGhostKeyboardFocused(false)}
         onKeyDown={event => {
           if (event.key === 'Escape') { event.preventDefault(); setPlaying(false); }
           else if (event.key.toLowerCase() === 'p' && !event.ctrlKey && !event.metaKey && !event.altKey) { event.preventDefault(); if (!event.repeat) setPlaying(p => !p); }

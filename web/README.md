@@ -159,8 +159,9 @@ completion, with a celebratory greeting; a failed request retains a calm scene.
 
 The analysis globe has no drag/flick, hover-tilt or arrow-key rotation. Only clicking
 the ghost (or pressing Enter/Space while it is focused) triggers reactions. Its
-flight holds on hover/focus to keep the target stable, while the character keeps
-animating. Taps cycle hop, wink/wave and twirl reactions and finish before accepting
+flight keeps moving during mouse hover and clicks. Keyboard focus alone holds
+the target steady for accessible activation, while the character keeps animating.
+Taps cycle hop, wink/wave and twirl reactions and finish before accepting
 another. P pauses/resumes scene motion; Escape pauses. Clicking a paused/static
 ghost explicitly opts into motion and queues one reaction. Background/page clicks
 and report controls do not trigger reactions. The landing page's separate globe
