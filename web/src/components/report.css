@@ -152,6 +152,7 @@
 .report-middle { padding: 28px; border-radius: 12px; background: var(--surface); }
 .report-middle > .summary-card { padding: 0 0 28px; margin: 0 0 28px; border: 0; border-bottom: 1px solid var(--border); border-radius: 0; box-shadow: none; }
 .report-middle .report-findings .finding-card { padding: 24px 0; margin: 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; background: transparent; box-shadow: none; }
+.report-middle .report-findings .finding-card:first-child { border-top: 0; }
 .report-middle > .evidence { padding: 0; margin: 24px 0 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; box-shadow: none; }
 .result-card { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 28px; row-gap: 18px; padding-bottom: 0; }
 .score-explanation { grid-column: 1 / -1; min-width: 0; border-top: 1px solid var(--border); }
