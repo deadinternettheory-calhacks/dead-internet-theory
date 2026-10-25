@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { buildReport, buildThreadPreview, type Report, type ThreadPreview } from '../analysis/report';
 import { ApiError, createInvestigation, forgetIdempotencyKeyFor, getAnalysis, getEnrichment, getGraph, getInvestigation, idempotencyKeyFor } from '../api/client';
-import type { EnrichmentJob, InvestigationResource } from '../api/contract';
+import type { EnrichmentJob, GraphEnvelope, InvestigationResource } from '../api/contract';
 import { AnalysisErrorState } from '../components/AnalysisPresentation';
 import { AnalysisReport } from '../components/AnalysisReport';
 import { ThreadPreviewCard } from '../components/ThreadPreviewCard';
@@ -62,9 +62,15 @@ function LiveAnalysis({ url }: { url: string }) {
     const started = Date.now();
     setView({ kind: 'loading', status: 'Starting…', phase: 'starting' });
     let preview: ThreadPreview | undefined;
+    let previewGraph: GraphEnvelope | undefined;
     let previewTried = false;
     try {
       let inv = await createInvestigation(url, idempotencyKeyFor(url));
+      // Idempotency replays the original receipt, which may still say queued
+      // after the report has finished. Read current state before any poll delay.
+      if (inv.ingestionStatus !== 'failed' && inv.analysisStatus !== 'completed' && inv.analysisStatus !== 'failed') {
+        inv = await getInvestigation(inv.investigationId);
+      }
       let replacedFixtureFailure = false;
       while (!cancelled.current) {
         // A failed fixture lookup never started a provider run. Replace it once
@@ -81,7 +87,9 @@ function LiveAnalysis({ url }: { url: string }) {
         if (inv.ingestionStatus === 'completed' && !previewTried) {
           previewTried = true;
           try {
-            preview = buildThreadPreview(await getGraph(inv.investigationId), 100);
+            const graph = await getGraph(inv.investigationId);
+            preview = buildThreadPreview(graph, 100);
+            previewGraph = graph;
           } catch {
             // The preview is optional; keep waiting for the analysis.
           }
@@ -95,7 +103,14 @@ function LiveAnalysis({ url }: { url: string }) {
         inv = await getInvestigation(inv.investigationId);
       }
       if (cancelled.current) return;
-      const [analysis, graph] = await Promise.all([getAnalysis(inv.investigationId), getGraph(inv.investigationId)]);
+      const sameGraph = previewGraph?.investigationId === inv.investigationId
+        && previewGraph.graphRevision === inv.graphRevision
+        && typeof inv.graphFingerprint === 'string'
+        && previewGraph.graphFingerprint === inv.graphFingerprint;
+      const [analysis, graph] = await Promise.all([
+        getAnalysis(inv.investigationId),
+        sameGraph ? Promise.resolve(previewGraph!) : getGraph(inv.investigationId),
+      ]);
       const enrichments: EnrichmentJob[] = await Promise.all(analysis.result.usedEnrichmentIds.map(id => getEnrichment(inv.investigationId, id)));
       if (!cancelled.current) setView({ kind: 'report', report: buildReport(analysis, graph, enrichments) });
     } catch (err) {

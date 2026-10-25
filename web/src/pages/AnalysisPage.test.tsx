@@ -4,7 +4,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { AnalysisPage } from './AnalysisPage';
-import { ApiError, createInvestigation, getGraph, getInvestigation, idempotencyKeyFor } from '../api/client';
+import { ApiError, createInvestigation, getAnalysis, getEnrichment, getGraph, getInvestigation, idempotencyKeyFor } from '../api/client';
 import { exampleData } from '../demo';
 import type { InvestigationResource } from '../api/contract';
 vi.mock('../api/client', async original => ({
@@ -12,6 +12,8 @@ vi.mock('../api/client', async original => ({
   createInvestigation: vi.fn(),
   getInvestigation: vi.fn(),
   getGraph: vi.fn(),
+  getAnalysis: vi.fn(),
+  getEnrichment: vi.fn(),
 }));
 const url = 'https://www.reddit.com/r/synthetic/comments/abc123/';
 const queued: InvestigationResource = { investigationId: 'synthetic-old', sourceUrl: url, platform: 'reddit', ingestionStatus: 'queued', analysisStatus: 'waiting_for_graph', graphRevision: null };
@@ -21,6 +23,8 @@ let container: HTMLDivElement;
 beforeEach(() => {
   vi.useFakeTimers();
   vi.resetAllMocks();
+  vi.mocked(getAnalysis).mockResolvedValue(exampleData.analysis);
+  vi.mocked(getEnrichment).mockImplementation(async (_id, eid) => exampleData.enrichments.find(e => e.enrichmentId === eid)!);
   sessionStorage.clear();
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
   container = document.createElement('div');
@@ -95,7 +99,7 @@ it('shows the collected post and comments while the analysis runs', async () => 
 
 it('does not show collection as complete or request a graph while it is queued', async () => {
   vi.mocked(createInvestigation).mockResolvedValue(queued);
-  vi.mocked(getInvestigation).mockResolvedValue({ ...queued, ingestionStatus: 'running' });
+  vi.mocked(getInvestigation).mockResolvedValueOnce(queued).mockResolvedValue({ ...queued, ingestionStatus: 'running' });
   await render();
   expect(container.textContent).toContain('Waiting to collect public comments…');
   expect(container.querySelector('[aria-current="step"]')?.textContent).toContain('Queued');
@@ -113,4 +117,39 @@ it('blames the service, not the post, and retries a refused start with a fresh r
   const retry = [...container.querySelectorAll('button')].find(b => /try again/i.test(b.textContent ?? ''))!;
   await act(async () => retry.click());
   expect(vi.mocked(createInvestigation).mock.calls[1][1]).not.toBe(key);
+});
+
+it('shows a completed report immediately when an idempotent create replays its original queued receipt', async () => {
+  vi.mocked(createInvestigation).mockResolvedValue({ ...exampleData.investigation, ingestionStatus: 'queued', analysisStatus: 'waiting_for_graph', graphRevision: null, graphFingerprint: null });
+  vi.mocked(getInvestigation).mockResolvedValue(exampleData.investigation);
+  vi.mocked(getGraph).mockResolvedValue(exampleData.graph);
+  await render();
+  // No timer advances: a refresh must not incur the 2.5-second poll delay.
+  expect(container.querySelector('.report-view')).not.toBeNull();
+  expect(createInvestigation).toHaveBeenCalledTimes(1);
+  expect(getInvestigation).toHaveBeenCalledTimes(1);
+  expect(getAnalysis).toHaveBeenCalledTimes(1);
+});
+
+it('uses the already displayed immutable graph when the same revision and fingerprint completes', async () => {
+  vi.mocked(createInvestigation).mockResolvedValue({ ...exampleData.investigation, analysisStatus: 'running' });
+  vi.mocked(getInvestigation).mockResolvedValueOnce({ ...exampleData.investigation, analysisStatus: 'running' }).mockResolvedValue(exampleData.investigation);
+  vi.mocked(getGraph).mockResolvedValue(exampleData.graph);
+  await render();
+  expect(container.textContent).toContain('Comments we collected');
+  await act(async () => vi.advanceTimersByTimeAsync(2500));
+  expect(container.querySelector('.report-view')).not.toBeNull();
+  expect(getGraph).toHaveBeenCalledTimes(1);
+});
+
+it('fetches the new graph if completion identifies a different revision instead of rendering the old preview', async () => {
+  const updated = { ...exampleData.graph, graphRevision: 2, graphFingerprint: 'sha256:' + 'b'.repeat(64), nodes: exampleData.graph.nodes.map(n => n.type === 'discussion' ? { ...n, title: 'Updated discussion' } : n) };
+  vi.mocked(createInvestigation).mockResolvedValue({ ...exampleData.investigation, analysisStatus: 'running' });
+  vi.mocked(getInvestigation).mockResolvedValueOnce({ ...exampleData.investigation, analysisStatus: 'running' }).mockResolvedValue({ ...exampleData.investigation, graphRevision: updated.graphRevision, graphFingerprint: updated.graphFingerprint });
+  vi.mocked(getGraph).mockResolvedValueOnce(exampleData.graph).mockResolvedValue(updated);
+  await render();
+  await act(async () => vi.advanceTimersByTimeAsync(2500));
+  expect(container.querySelector('.report-view')).not.toBeNull();
+  expect(container.textContent).toContain('Updated discussion');
+  expect(getGraph).toHaveBeenCalledTimes(2);
 });
