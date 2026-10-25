@@ -32,7 +32,6 @@ export function HomePage() {
   return <main className="home-main"><section className="hero home-hero"><div className="hero-content"><GraveyardGlobe/><div className="hero-details">
     <h1>Is this conversation being <span data-text="manipulated?">manipulated?</span></h1>
     <PostUrlInput onSubmit={url => navigate(`/analysis?url=${encodeURIComponent(url)}`)}/>
-    <div className="home-hero-secondary"><PlatformAvailability/></div>
     <ShortcutExplanation/>
-  </div></div>{showExplanation && <Link className="explanation-cue" to="/#how-it-works"><span>How it works</span><ArrowDown size={18} aria-hidden="true"/></Link>}</section><DemoTeaser/><HowSteps/><AboutPage/></main>;
+  </div></div><div className="home-hero-secondary"><PlatformAvailability/></div>{showExplanation && <Link className="explanation-cue" to="/#how-it-works"><span>How it works</span><ArrowDown size={18} aria-hidden="true"/></Link>}</section><DemoTeaser/><HowSteps/><AboutPage/></main>;
 }
