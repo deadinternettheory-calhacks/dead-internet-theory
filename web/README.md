@@ -141,9 +141,11 @@ so links, forms and buttons work through it. The same companion appears on the
 landing page and stays mounted across navigation, phase changes and report completion.
 The completed scene keeps moving with a celebratory greeting; a failed request
 keeps a calm illustration. A continuous reading column with section dividers
-replaces individual floating text panels. There are no visible scene
+replaces individual floating text panels. The column is horizontally centered
+with a 50%-opacity backdrop so the modeled background remains visible; secondary
+text uses a darker tone for readability. There are no visible scene
 buttons or control panel. Formations follow the real backend phase: a gentle orbit
-while waiting, cards spiraling inward during collection, then an organized field
+while waiting, comment models spawning one by one and spiraling inward during collection, then a rotating double helix with a traveling gold scan highlight
 and a magnifying glass during analysis. They never advance on a timer. The ghost
 has arms, blush, shiny eyes, blinks, waves, reaching motions and nods. Taps cycle
 local hop, wink/wave and twirl reactions with ripples and sparks.
