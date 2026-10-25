@@ -119,8 +119,8 @@
 .signal-sources cite { font-style: normal; }
 
 /* Account signals: one row per sampled account. */
-.report-accounts { margin: 22px 0 16px; }
-.report-accounts h2 { font-size: 20px; margin: 0 0 8px; }
+.report-accounts, .report-score-signals { margin: 22px 0 16px; }
+.report-accounts h2, .report-score-signals h2 { font-size: 20px; margin: 0 0 8px; }
 .report-accounts ul { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--border); }
 .report-accounts li { display: grid; grid-template-columns: minmax(120px, 180px) 92px 1fr; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
 .account-name { font-weight: 550; overflow-wrap: anywhere; }
