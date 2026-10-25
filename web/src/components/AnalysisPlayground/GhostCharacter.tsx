@@ -17,7 +17,7 @@ function bodyShape() {
 }
 
 /** Local character reactions never imply a finding or a change in job progress. */
-export function GhostCharacter({ animate, phase, pulse, pointer, motion, idle = false }: { idle?: boolean } & Pick<PlaygroundSceneProps, 'animate' | 'phase' | 'pulse' | 'pointer' | 'motion'>) {
+export function GhostCharacter({ animate, phase, pulse, pointer, motion }: Pick<PlaygroundSceneProps, 'animate' | 'phase' | 'pulse' | 'pointer' | 'motion'>) {
   const { invalidate } = useThree();
   const root = useRef<Group>(null);
   const eyes = useRef<Group>(null);
@@ -60,9 +60,9 @@ export function GhostCharacter({ animate, phase, pulse, pointer, motion, idle = 
     const hop = age < 1.2 ? Math.sin(Math.min(1, age / 1.2) * Math.PI) * Math.exp(-age * 0.5) : 0;
     const wink = reaction === 2 && age < 1.35;
     const twirl = reaction === 0 && pulse > 0 && age < 1.4 ? MathUtils.smoothstep(age, 0, 1.4) * Math.PI * 2 : 0;
-    const hello = !idle && formation === 'rest' && t % 10 < 1.8;
+    const hello = formation === 'rest' && t % 10 < 1.8;
     const nod = formation === 'inspect' ? Math.sin(t * 1.4) * 0.07 : 0;
-    const travel = idle ? { x: 0, y: Math.sin(t * 1.3) * 0.08 } : ghostTravel(t, state.viewport.width, state.viewport.height);
+    const travel = ghostTravel(t, state.viewport.width, state.viewport.height);
     root.current.position.set(travel.x, travel.y + hop * 0.24, 1.5);
     root.current.rotation.set(pointer.current.y * 0.09 + nod, Math.sin(motion.current.yaw) * 0.23 + Math.sin(t * 0.45) * 0.06, twirl + Math.sin(t * 0.7) * 0.06 - pointer.current.x * 0.08);
     root.current.scale.set(1.3 + hop * 0.15, 1.3 - hop * 0.16, 1.3);

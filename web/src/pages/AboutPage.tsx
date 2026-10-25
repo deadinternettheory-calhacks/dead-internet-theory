@@ -1,9 +1,6 @@
-import { IdleGhost } from '../components/AnalysisPlayground/IdleGhost';
-
 export function AboutPage() {
   return <section className="how-it-works" id="how-it-works" aria-labelledby="how-it-works-heading">
     <h2 id="how-it-works-heading">How it works</h2>
-    <IdleGhost/>
     <section className="about-section">
       <h3>What is Dead Internet Theory?</h3>
       <p>Dead Internet Theory suggests that much of today's internet is driven by bots and AI-generated content rather than real people. Our website helps you investigate suspicious activity and find signs of manipulation.</p>

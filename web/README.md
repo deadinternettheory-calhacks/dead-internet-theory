@@ -173,8 +173,3 @@ Convex redeployment.
 Vercel `web/vercel.json` rewrites paths to the SPA entry point for refresh and shortcut links. Prefix URLs preserve nested path and query strings. A browser does not send an unencoded `#fragment` to the server; to preserve one, encode the complete source URL as the shortcut path segment first. Hash fragments are not needed to identify an ordinary post and the raw form cannot preserve them.
 
 Repeated links can return a stored report immediately or join an existing run. Each browser retains private investigation access. Reports show the original comment-collection time and explain that reuse ends at the original 24-hour expiry.
-
-The How it works FAQ reuses the actual 3D ghost model in its empty desktop gutter.
-The decoration is absolutely positioned, hides below 1024px, and disables its
-hover and blink animation for reduced-motion preferences. It loads only when visible
-and pauses in background tabs. It adds no layout height.

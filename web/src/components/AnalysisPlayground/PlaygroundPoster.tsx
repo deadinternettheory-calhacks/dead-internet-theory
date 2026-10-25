@@ -1,4 +1,3 @@
-import { GhostIllustration } from './GhostIllustration';
 import type { ProgressPhase } from '../AnalysisProgress';
 import { formationFor } from './playground-types';
 
@@ -34,7 +33,14 @@ export function PlaygroundPoster({ phase }: { phase: ProgressPhase }) {
       <path d="M-6-6h24M-6 1h17M-19 9h36" stroke={i===1?'#EAF1ED':'#B0C4B6'} strokeWidth="2.5" strokeLinecap="round"/>
     </g>)}
     <g transform="translate(280 176) scale(1.8)">
-      <GhostIllustration waving={formation === 'rest'}/>
+      <ellipse cx="-32" cy="4" rx="7" ry="14" transform={`rotate(${formation === 'rest' ? 135 : 35} -32 4)`} fill="#FFFFFF" stroke="#D4DFD5"/>
+      <ellipse cx="32" cy="4" rx="7" ry="14" transform="rotate(-35 32 4)" fill="#FFFFFF" stroke="#D4DFD5"/>
+      <path d="M-29 25V-9a29 29 0 0 1 58 0v34q0 10-10 0t-10 1Q0 42-9 26q-5-9-10-1t-10 0Z" fill="#FFFFFF" stroke="#D4DFD5" strokeWidth="1.5"/>
+      <ellipse cx="-10" cy="-9" rx="4.5" ry="6.5" fill="#284D43"/>
+      <ellipse cx="10" cy="-9" rx="4.5" ry="6.5" fill="#284D43"/>
+      <circle cx="-11.5" cy="-11" r="1.4" fill="#FFFFFF"/><circle cx="8.5" cy="-11" r="1.4" fill="#FFFFFF"/>
+      <ellipse cx="-20" cy="2" rx="5" ry="2.7" fill="#DDAF9E"/><ellipse cx="20" cy="2" rx="5" ry="2.7" fill="#DDAF9E"/>
+      <path d="M-7 5q7 10 14 0" stroke="#284D43" strokeWidth="2.5" strokeLinecap="round"/>
       {formation === 'inspect' && <g className="ghost-poster-lens" transform="translate(19 0)">
         <circle r="12" fill="#D4DFD5" fillOpacity=".18" stroke="#A86518" strokeWidth="3"/>
         <path d="M9 9l10 12" stroke="#284D43" strokeWidth="5" strokeLinecap="round"/>
