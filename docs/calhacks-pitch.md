@@ -59,7 +59,7 @@ The guide recommends preparing two minutes and requires a live demo (printed pp.
 
 If the run is still pending, keep it visible and use the completed report for inspection. A recording can show the full cold path with its elapsed time disclosed. Do not time a reused report as fresh inference. Do not promise a live CREAO run on a discussion without recommendations: that path correctly skips scoring.
 
-The public `/example` is now a stored real r/BuyItForLife knife discussion with replaced account/comment identifiers and recorded model replies. It is not synthetic, fresh collection, or confirmed ground truth for astroturfing. The synthetic espresso case remains a test fixture. Older verification notes describing a synthetic public example predate this change; use [the current example implementation](../web/src/pages/ExamplePage.tsx), [fixture provenance](../inference/README.md#website-example-and-test-fixtures), and [retention exception](../backend/RETENTION.md#public-example-exception).
+The public `/example` is now a stored real TikTok product video's comment section (a foldable night light) with usernames replaced by made-up names of the same kind, replaced comment identifiers and recorded model replies. It is not synthetic, fresh collection, or confirmed ground truth for astroturfing. The synthetic espresso case remains a test fixture. Older verification notes describing a synthetic public example predate this change; use [the current example implementation](../web/src/pages/ExamplePage.tsx), [fixture provenance](../inference/README.md#website-example-and-test-fixtures), and [retention exception](../backend/RETENTION.md#public-example-exception).
 
 ## Sponsor priorities
 
@@ -161,7 +161,7 @@ For general prizes, the best narratives are People-First Social Impact, Technica
 | “Is it accurate?” | No validated accuracy study yet. Operational/schema checks establish a functioning pipeline, not detection quality. Next is a labeled evaluation with benign fan communities and commercial discussions, reporting false positives and separating related discussions across evaluation splits. |
 | “What do you keep?” | Live application records have fixed 24-hour expiry; owned Apify artifacts have a deletion queue with retries. Provider internal copies/backups have separate controls. The anonymized public example is an approved longer-lived exception. |
 
-Current section weights in [section.ts](../inference/convex/lib/inference/section.ts) are comment realism 35%, coordination 20%, commercial signals 20%, recommendation rubric 15%, and history contrast 10%, renormalized over measurable parts. One-sided support adds at most ten points after a minimum base threshold. These are design choices, not learned or validated weights. The older mapping table in `inference/README.md` has stale weights; use the implementation and ADR-013 for current behavior.
+Current section weights in [section.ts](../inference/convex/lib/inference/section.ts) are comment realism 30%, low-effort support 15%, coordination (including copied praise) 15%, commercial signals 20%, recommendation rubric 10%, and history contrast 10%, renormalized over measurable parts. One-sided support adds at most ten points after a minimum base threshold. These are design choices, not learned or validated weights; see the mapping table in `inference/README.md` and ADR-015.
 
 ## Preparation before judging
 

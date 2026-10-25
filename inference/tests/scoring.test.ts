@@ -81,6 +81,15 @@ describe('caps and validation', () => {
     expect(s.capsApplied).toContain('K4');
   });
 
+  it('K4 does not hold back platforms without commenter histories', () => {
+    const tiktok: EvidenceAvailability = { ...threadOnly, platform: 'tiktok' };
+    const s = scoreComment(proposal(['C1', 'C4', 'T1', 'T3', 'T4', 'T5', 'X1', 'X2', 'X3']), tiktok, known);
+    expect(s.score).toBe(81);
+    expect(s.capsApplied).not.toContain('K4');
+    // Without a coordination (C) signal the score still stays below 75.
+    expect(scoreComment(proposal(['T1', 'T3', 'T4', 'T5', 'X1', 'X2', 'X3']), tiktok, known).score).toBeLessThanOrEqual(54);
+  });
+
   it('K5 caps disclosed promotion at 15', () => {
     const s = scoreComment(proposal(['C1', 'C4', 'B1'], ['E1']), fullHistory, known);
     expect(s.score).toBe(15);

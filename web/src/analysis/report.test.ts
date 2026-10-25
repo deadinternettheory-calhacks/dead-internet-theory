@@ -70,15 +70,16 @@ describe('analysis report', () => {
 
 describe('real example', () => {
   const report = buildReport(exampleData.analysis, exampleData.graph, exampleData.enrichments);
-  it('treats the example as a real thread that links to its source', () => {
+  it('treats the example as a real thread that links to its source, with every username replaced', () => {
     expect(report.synthetic).toBe(false);
-    expect(report.post.url).toMatch(/^https:\/\/www\.reddit\.com\/r\/BuyItForLife\/comments\/zq4rbu\//);
-    expect(report.discussion.every(c => c.url === null && (c.author === null || /^u\/(commenter\d+|original_poster)$/.test(c.author)))).toBe(true);
+    expect(report.post.url).toMatch(/^https:\/\/www\.tiktok\.com\/@[\w.]+\/video\/\d+$/);
+    // Made-up names keep their kind: ordinary, shop-like, platform default or random string.
+    expect(report.discussion.every(c => c.url === null && (c.author === null || /^(commenter\d+|example[a-z]+\d+|user\d{13}|[b-z]{9}\d{5})$/.test(c.author)))).toBe(true);
   });
 
-  it('names one specific product and scores the genuine thread low', () => {
-    expect(report.subject).toMatch(/Wüsthof/);
-    expect(report.verdict.tone).toBe('low');
-    expect(report.index!.score).toBeLessThan(35);
+  it('names the product and scores the flood of copied praise high', () => {
+    expect(report.subject).toMatch(/night light/i);
+    expect(report.index!.score).toBeGreaterThanOrEqual(70);
+    expect(report.histories).toEqual([]);
   });
 });

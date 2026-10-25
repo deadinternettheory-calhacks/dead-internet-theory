@@ -46,7 +46,7 @@ export function EvidenceExplorer({ report, mode: controlledMode, onModeChange, o
 
   return <section className={`evidence-explorer mode-${mode}`} aria-label="Interactive evidence explorer" onClickCapture={onInteraction} onFocusCapture={onInteraction}>
     <div className="explorer-toolbar" role="group" aria-label="Evidence views">
-      {MODES.map(({ id, label, icon: Icon }) => <button key={id} type="button" aria-pressed={mode === id} onClick={() => changeMode(id)}><Icon size={15} aria-hidden="true"/>{label}</button>)}
+      {MODES.filter(m => m.id !== 'history' || report.histories.length).map(({ id, label, icon: Icon }) => <button key={id} type="button" aria-pressed={mode === id} onClick={() => changeMode(id)}><Icon size={15} aria-hidden="true"/>{label}</button>)}
       <span className="explorer-count">{report.discussion.length} visible comments</span>
     </div>
     <div className="explorer-body" key={mode}>

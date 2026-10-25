@@ -1,0 +1,3169 @@
+{
+  "schemaVersion": "1.0.0",
+  "analysisId": "anl_example_tiktok",
+  "investigationId": "inv_example_tiktok",
+  "storedAt": "2026-10-25T01:00:05Z",
+  "result": {
+    "schemaVersion": "1.0.0",
+    "graphRevision": 1,
+    "graphFingerprint": "0a1261273b8a632e40b8ff7228ba1ea83c2499d44276d8184a2be892dd67aff7",
+    "inferenceVersion": "dit-inference/0.2.0; rubric/0.4; prompts-2026-10-25a; recorded:claude-haiku-5-5+creao-app-trigger",
+    "inferredAt": "2026-10-25T01:00:00Z",
+    "subject": {
+      "label": "Portable foldable night light with warm light and USB charge",
+      "kind": "product",
+      "confidence": 0.8,
+      "evidenceRefs": [
+        "tiktok:discussion:7669788981508197663"
+      ]
+    },
+    "sentiment": {
+      "population": "retrieved_comments",
+      "method": "census_of_retrieved",
+      "analyzedCommentCount": 100,
+      "counts": {
+        "supportive": 73,
+        "critical": 0,
+        "neutral": 11,
+        "mixed": 0,
+        "unclear": 16
+      },
+      "weighted": false,
+      "limitations": [
+        "Counts describe analyzed comments, not unique people.",
+        "The retrieved comments may not be every comment in the discussion."
+      ]
+    },
+    "overallCoordinationRisk": {
+      "score": 79,
+      "confidence": 0.45,
+      "explanation": "Comment-section astroturfing index: 79/100 (Very high). Rubric strength 0: the top 3 recommendation(s) scored 0 (commenter13), 0 (commenter16), 0 (examplefinds2) on the rubric. Coordination 100: 31 supportive comments repeat another account's short text (\"nice\" ×10, \"good\" ×7, \"lo quiero\" ×3, \"wow\" ×3). Comment realism 73: 16 of 73 endorsing comments are estimated at 50+ (unnatural text, seller or random usernames, template phrases, duplicates). Low-effort support 100: 67 of 73 supportive comments are three words or fewer or generic praise, and 9 comment(s) are nonsense filler (93%; half is ordinary, 90% counts fully). Commercial signals 51: 20 of 74 accounts praising or asking about the product have shop-style names; 1 comment(s) fish for the store owner. History contrast not measured: this platform does not give access to commenter histories, so it is left out and the other parts carry its weight. One-sided support 100: 100% of comments taking a side were supportive. Weights: comment realism 30%, low-effort support 15%, coordination 15%, commercial signals 20%, rubric 10%, history contrast 10%, spread over the parts that could be measured; one-sided support adds up to 10 points only when the rest reach 15 (+10 here). No user histories were sampled.",
+      "evidenceRefs": [
+        "tiktok:comment:example_c013",
+        "tiktok:comment:example_c016",
+        "tiktok:comment:example_c019",
+        "tiktok:comment:example_c014",
+        "tiktok:comment:example_c027",
+        "tiktok:comment:example_c044",
+        "tiktok:comment:example_c060",
+        "tiktok:comment:example_c069",
+        "tiktok:comment:example_c075",
+        "tiktok:comment:example_c088",
+        "tiktok:comment:example_c015",
+        "tiktok:comment:example_c042",
+        "tiktok:comment:example_c017",
+        "tiktok:comment:example_c004",
+        "tiktok:comment:example_c006",
+        "tiktok:comment:example_c018",
+        "tiktok:comment:example_c021",
+        "tiktok:comment:example_c022",
+        "tiktok:comment:example_c024",
+        "tiktok:comment:example_c026",
+        "tiktok:comment:example_c035",
+        "tiktok:comment:example_c045",
+        "tiktok:comment:example_c007",
+        "tiktok:comment:example_c008",
+        "tiktok:comment:example_c009",
+        "tiktok:comment:example_c011",
+        "tiktok:comment:example_c012",
+        "tiktok:comment:example_c023",
+        "tiktok:comment:example_c031",
+        "tiktok:comment:example_c036",
+        "tiktok:comment:example_c046",
+        "tiktok:comment:example_c047"
+      ]
+    },
+    "axes": [
+      {
+        "axis": "promotional_intent",
+        "score": 51,
+        "confidence": 0.3,
+        "assessedCommentCount": 25,
+        "explanation": "Promotional intent: measured in the thread: 20 of 74 accounts praising or asking about the product have shop-style names; 1 comment(s) fish for the store owner.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c007",
+          "tiktok:comment:example_c019",
+          "tiktok:comment:example_c023",
+          "tiktok:comment:example_c031",
+          "tiktok:comment:example_c036",
+          "tiktok:comment:example_c044",
+          "tiktok:comment:example_c046",
+          "tiktok:comment:example_c047",
+          "tiktok:comment:example_c048",
+          "tiktok:comment:example_c049",
+          "tiktok:comment:example_c051",
+          "tiktok:comment:example_c059",
+          "tiktok:comment:example_c062",
+          "tiktok:comment:example_c076",
+          "tiktok:comment:example_c078",
+          "tiktok:comment:example_c080",
+          "tiktok:comment:example_c083",
+          "tiktok:comment:example_c089",
+          "tiktok:comment:example_c094",
+          "tiktok:comment:example_c096",
+          "tiktok:comment:example_c024"
+        ]
+      },
+      {
+        "axis": "semantic_coordination",
+        "score": 100,
+        "confidence": 0.3,
+        "assessedCommentCount": 31,
+        "explanation": "Similar wording across accounts: 31 supportive comments repeat another account's short text (\"nice\" ×10, \"good\" ×7, \"lo quiero\" ×3, \"wow\" ×3).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c014",
+          "tiktok:comment:example_c027",
+          "tiktok:comment:example_c044",
+          "tiktok:comment:example_c060",
+          "tiktok:comment:example_c069",
+          "tiktok:comment:example_c075",
+          "tiktok:comment:example_c088",
+          "tiktok:comment:example_c015",
+          "tiktok:comment:example_c042",
+          "tiktok:comment:example_c017",
+          "tiktok:comment:example_c028",
+          "tiktok:comment:example_c030",
+          "tiktok:comment:example_c033",
+          "tiktok:comment:example_c039",
+          "tiktok:comment:example_c054",
+          "tiktok:comment:example_c057",
+          "tiktok:comment:example_c074",
+          "tiktok:comment:example_c077",
+          "tiktok:comment:example_c083",
+          "tiktok:comment:example_c029",
+          "tiktok:comment:example_c071",
+          "tiktok:comment:example_c034",
+          "tiktok:comment:example_c065",
+          "tiktok:comment:example_c092",
+          "tiktok:comment:example_c053",
+          "tiktok:comment:example_c068",
+          "tiktok:comment:example_c073",
+          "tiktok:comment:example_c055",
+          "tiktok:comment:example_c070",
+          "tiktok:comment:example_c076",
+          "tiktok:comment:example_c087"
+        ]
+      },
+      {
+        "axis": "temporal_coordination",
+        "score": null,
+        "confidence": null,
+        "assessedCommentCount": 0,
+        "explanation": "Timing: not assessed; no evaluable rubric rules or no scored recommendations.",
+        "evidenceRefs": []
+      },
+      {
+        "axis": "account_anomalies",
+        "score": 23,
+        "confidence": 0.3,
+        "assessedCommentCount": 2,
+        "explanation": "Account patterns: highest for the recommendation by commenter84. X6: Comment contains awkward English phrasing ('so usefully') and unclear abbreviation ('rnn'), suggesting possible non-native LLM composition. Index = share of this axis's rubric points that fired.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c085"
+        ]
+      },
+      {
+        "axis": "engagement_anomalies",
+        "score": 38,
+        "confidence": 0.3,
+        "assessedCommentCount": 2,
+        "explanation": "Interaction patterns: highest for the recommendation by exampleshop14. T4: Short, low-effort two-word comment with 82 likes, outranking more detailed recommendations in engagement. Index = share of this axis's rubric points that fired.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c076"
+        ]
+      },
+      {
+        "axis": "disclosure_concerns",
+        "score": null,
+        "confidence": null,
+        "assessedCommentCount": 25,
+        "explanation": "Not scored: the rubric cannot measure undisclosed sponsorship directly. No recommendation disclosed a commercial tie.",
+        "evidenceRefs": []
+      }
+    ],
+    "commentAssessments": [
+      {
+        "commentId": "tiktok:comment:example_c001",
+        "stance": "neutral",
+        "promotionalIntentScore": null,
+        "rationale": "Asks about price, which is not an endorsement.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c001"
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c002",
+        "stance": "unclear",
+        "promotionalIntentScore": null,
+        "rationale": "Random digits with no content about the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c002"
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c003",
+        "stance": "neutral",
+        "promotionalIntentScore": null,
+        "rationale": "Asks where to buy, not an endorsement.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c003"
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c004",
+        "stance": "unclear",
+        "promotionalIntentScore": null,
+        "rationale": "Unrelated, nonsensical phrase under this post.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c004"
+        ],
+        "astroturfEstimate": {
+          "score": 45,
+          "reasons": [
+            "Nonsense filler (typical bot padding)",
+            "Random-looking username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c005",
+        "stance": "unclear",
+        "promotionalIntentScore": null,
+        "rationale": "Emoji-laden remark about paint, unrelated to the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c005"
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c006",
+        "stance": "unclear",
+        "promotionalIntentScore": null,
+        "rationale": "Vietnamese remark about a cute item from a shop, not clearly about the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c006"
+        ],
+        "astroturfEstimate": {
+          "score": 30,
+          "reasons": [
+            "Nonsense filler (typical bot padding)"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c007",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Expresses wanting the product shown in the post.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c007"
+        ],
+        "astroturfEstimate": {
+          "score": 50,
+          "reasons": [
+            "Generic praise",
+            "Seller-style username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c008",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Short praise for the product shown.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c008"
+        ],
+        "astroturfEstimate": {
+          "score": 10,
+          "reasons": [
+            "Generic praise"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c009",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Generic praise reaction to the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c009"
+        ],
+        "astroturfEstimate": {
+          "score": 10,
+          "reasons": [
+            "Generic praise"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c010",
+        "stance": "unclear",
+        "promotionalIntentScore": null,
+        "rationale": "Meaningless single word.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c010"
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c011",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Generic praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c011"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Default username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c012",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Generic praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c012"
+        ],
+        "astroturfEstimate": {
+          "score": 10,
+          "reasons": [
+            "Generic praise"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c013",
+        "stance": "supportive",
+        "promotionalIntentScore": 10,
+        "rationale": "Short generic recommendation with no specific detail, balanced by widespread product appeal across the discussion. Rubric 0/100 (Minimal; low evidence confidence). Signals: X5 +4: Comment contains generic praise with no specific, costly-to-fake detail. Exculpatory: E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T2, T3, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c013",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 10,
+          "reasons": [
+            "Generic praise"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c014",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "One-word praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c014"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c015",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Short Spanish praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c015"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c016",
+        "stance": "supportive",
+        "promotionalIntentScore": 0,
+        "rationale": "Recommendation with specific use-case detail indicating genuine experience, supported by broad product appeal. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E3 -10: Comment names a specific, costly-to-fake use case: comfort for others sleeping in the room. E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c016",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c017",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Short praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c017"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c018",
+        "stance": "unclear",
+        "promotionalIntentScore": null,
+        "rationale": "Unrelated remark in another language, not about the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c018"
+        ],
+        "astroturfEstimate": {
+          "score": 30,
+          "reasons": [
+            "Nonsense filler (typical bot padding)"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c019",
+        "stance": "supportive",
+        "promotionalIntentScore": 10,
+        "rationale": "Very low-effort single-word recommendation, balanced by widespread product popularity. Rubric 0/100 (Minimal; low evidence confidence). Signals: X5 +4: Single-word exclamation with no specific detail or timeline. Exculpatory: E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c019",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 50,
+          "reasons": [
+            "Generic praise",
+            "Seller-style username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c020",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Emoji reply agreeing with parent praise.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c020"
+        ],
+        "astroturfEstimate": {
+          "score": 10,
+          "reasons": [
+            "Generic praise"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c021",
+        "stance": "neutral",
+        "promotionalIntentScore": null,
+        "rationale": "Odd remark that does not engage with the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c021"
+        ],
+        "astroturfEstimate": {
+          "score": 30,
+          "reasons": [
+            "Nonsense filler (typical bot padding)"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c022",
+        "stance": "unclear",
+        "promotionalIntentScore": null,
+        "rationale": "Unrelated exclamation in another language.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c022"
+        ],
+        "astroturfEstimate": {
+          "score": 30,
+          "reasons": [
+            "Nonsense filler (typical bot padding)"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c023",
+        "stance": "supportive",
+        "promotionalIntentScore": 10,
+        "rationale": "Generic positive comment, balanced by broad appeal across the discussion. Rubric 0/100 (Minimal; low evidence confidence). Signals: X5 +4: Generic praise with no specific, costly-to-fake detail or experience. Exculpatory: E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c023",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 50,
+          "reasons": [
+            "Generic praise",
+            "Seller-style username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c024",
+        "stance": "unclear",
+        "promotionalIntentScore": null,
+        "rationale": "Off-topic question about online stores that does not fit the post.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c024"
+        ],
+        "astroturfEstimate": {
+          "score": 55,
+          "reasons": [
+            "Nonsense filler (typical bot padding)",
+            "Store-owner outreach"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c025",
+        "stance": "supportive",
+        "promotionalIntentScore": 10,
+        "rationale": "Minimal low-effort recommendation repeated across multiple accounts, countered by popularity across diverse recommenders. Rubric 0/100 (Minimal; low evidence confidence). Signals: X5 +4: Generic two-word comment with no specific detail or costly-to-fake information. Exculpatory: E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c025",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 10,
+          "reasons": [
+            "Generic praise"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c026",
+        "stance": "unclear",
+        "promotionalIntentScore": null,
+        "rationale": "Unrelated phrase that does not fit the post.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c026"
+        ],
+        "astroturfEstimate": {
+          "score": 45,
+          "reasons": [
+            "Nonsense filler (typical bot padding)",
+            "Random-looking username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c027",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "One-word praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c027"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c028",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Generic praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c028"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c029",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Generic praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c029"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c030",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Generic praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c030"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c031",
+        "stance": "supportive",
+        "promotionalIntentScore": 10,
+        "rationale": "Generic low-effort recommendation, balanced by widespread product popularity. Rubric 0/100 (Minimal; low evidence confidence). Signals: X5 +4: Generic expression of want with no specific detail or timeline. Exculpatory: E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c031",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 40,
+          "reasons": [
+            "Seller-style username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c032",
+        "stance": "unclear",
+        "promotionalIntentScore": null,
+        "rationale": "Deleted or empty comment.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c032"
+        ]
+      },
+      {
+        "commentId": "tiktok:comment:example_c033",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Generic praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c033"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c034",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Emoji reaction praising the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c034"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c035",
+        "stance": "unclear",
+        "promotionalIntentScore": null,
+        "rationale": "Garbled phrase that does not fit the post.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c035"
+        ],
+        "astroturfEstimate": {
+          "score": 45,
+          "reasons": [
+            "Nonsense filler (typical bot padding)",
+            "Random-looking username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c036",
+        "stance": "supportive",
+        "promotionalIntentScore": 10,
+        "rationale": "Very low-effort emoji recommendation, offset by broad product appeal. Rubric 0/100 (Minimal; low evidence confidence). Signals: X5 +4: Emoji-based praise with no specific detail or experience described. Exculpatory: E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c036",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 50,
+          "reasons": [
+            "Generic praise",
+            "Seller-style username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c037",
+        "stance": "unclear",
+        "promotionalIntentScore": null,
+        "rationale": "Deleted or empty comment.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c037"
+        ]
+      },
+      {
+        "commentId": "tiktok:comment:example_c038",
+        "stance": "supportive",
+        "promotionalIntentScore": 0,
+        "rationale": "Recommendation of Portable foldable night light with warm light and USB charge assessed with the rubric. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E3 -10: Comment provides specific use case: moments when a portable lamp is needed, with concrete explanation. E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c038",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c039",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "One-word praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c039"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c040",
+        "stance": "neutral",
+        "promotionalIntentScore": null,
+        "rationale": "Asks how the product gets power, a neutral question.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c040"
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c041",
+        "stance": "supportive",
+        "promotionalIntentScore": 10,
+        "rationale": "Minimal low-effort recommendation, balanced by broad product appeal. Rubric 0/100 (Minimal; low evidence confidence). Signals: X5 +4: Generic single word with emoji, no specific detail or experience. Exculpatory: E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c041",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 10,
+          "reasons": [
+            "Generic praise"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c042",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Short praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c042"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c043",
+        "stance": "supportive",
+        "promotionalIntentScore": 10,
+        "rationale": "Generic recommendation, balanced by widespread product popularity. Rubric 0/100 (Minimal; low evidence confidence). Signals: X5 +4: Generic praise with no specific detail or costly-to-fake information. Exculpatory: E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c043",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 10,
+          "reasons": [
+            "Generic praise"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c044",
+        "stance": "supportive",
+        "promotionalIntentScore": 10,
+        "rationale": "Minimal one-word recommendation, countered by broad product appeal. Rubric 0/100 (Minimal; low evidence confidence). Signals: X5 +4: Single-word comment with no specific detail, timeline or costly-to-fake information. Exculpatory: E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c044",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 60,
+          "reasons": [
+            "Generic praise",
+            "Seller-style username",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c045",
+        "stance": "unclear",
+        "promotionalIntentScore": null,
+        "rationale": "Unrelated question in another language about a bootcamp.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c045"
+        ],
+        "astroturfEstimate": {
+          "score": 30,
+          "reasons": [
+            "Nonsense filler (typical bot padding)"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c046",
+        "stance": "supportive",
+        "promotionalIntentScore": 10,
+        "rationale": "Generic recommendation, balanced by widespread product popularity. Rubric 0/100 (Minimal; low evidence confidence). Signals: X5 +4: Generic expression with no specific detail or costly-to-fake information. Exculpatory: E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c046",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 50,
+          "reasons": [
+            "Generic praise",
+            "Seller-style username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c047",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Says they love it, generic praise.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c047"
+        ],
+        "astroturfEstimate": {
+          "score": 50,
+          "reasons": [
+            "Generic praise",
+            "Seller-style username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c048",
+        "stance": "supportive",
+        "promotionalIntentScore": 10,
+        "rationale": "Generic low-effort recommendation, balanced by widespread product popularity. Rubric 0/100 (Minimal; low evidence confidence). Signals: X5 +4: Generic two-word praise with no specific detail. Exculpatory: E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c048",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 50,
+          "reasons": [
+            "Generic praise",
+            "Seller-style username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c049",
+        "stance": "neutral",
+        "promotionalIntentScore": null,
+        "rationale": "Asks about battery operation, a neutral question.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c049"
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c050",
+        "stance": "neutral",
+        "promotionalIntentScore": null,
+        "rationale": "Asks how to purchase, not an endorsement.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c050"
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c051",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Short Portuguese approval of the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c051"
+        ],
+        "astroturfEstimate": {
+          "score": 50,
+          "reasons": [
+            "Generic praise",
+            "Seller-style username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c052",
+        "stance": "supportive",
+        "promotionalIntentScore": 0,
+        "rationale": "Direct personal preference with product name, supported by widespread product appeal. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E3 -10: Personal endorsement naming the product specifically with direct preference statement. E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c052",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 10,
+          "reasons": [
+            "Generic praise"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c053",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Says they want the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c053"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c054",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Generic praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c054"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c055",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "One-word praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c055"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c056",
+        "stance": "neutral",
+        "promotionalIntentScore": null,
+        "rationale": "Vague reaction that does not endorse anything.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c056"
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c057",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Generic praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c057"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c058",
+        "stance": "unclear",
+        "promotionalIntentScore": null,
+        "rationale": "Greeting with flowers, no product content.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c058"
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c059",
+        "stance": "supportive",
+        "promotionalIntentScore": 10,
+        "rationale": "Comment with unclear or corrupted text, balanced by widespread product popularity. Rubric 0/100 (Minimal; low evidence confidence). Signals: X5 +4: Unclear phrasing with possible corrupted text; no clear specific detail. Exculpatory: E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c059",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 40,
+          "reasons": [
+            "Seller-style username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c060",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "One-word praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c060"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c061",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Says they like it, generic.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c061"
+        ],
+        "astroturfEstimate": {
+          "score": 10,
+          "reasons": [
+            "Generic praise"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c062",
+        "stance": "supportive",
+        "promotionalIntentScore": 0,
+        "rationale": "Personal enthusiasm, supported by widespread product popularity. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E3 -10: Personal enthusiastic endorsement with direct emotional expression. E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c062",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 50,
+          "reasons": [
+            "Generic praise",
+            "Seller-style username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c063",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Short statement of love for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c063"
+        ],
+        "astroturfEstimate": {
+          "score": 10,
+          "reasons": [
+            "Generic praise"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c064",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "One-word praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c064"
+        ],
+        "astroturfEstimate": {
+          "score": 10,
+          "reasons": [
+            "Generic praise"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c065",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Generic reaction praising the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c065"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c066",
+        "stance": "neutral",
+        "promotionalIntentScore": null,
+        "rationale": "Says interesting, a lukewarm reaction without endorsement.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c066"
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c067",
+        "stance": "supportive",
+        "promotionalIntentScore": 0,
+        "rationale": "Recommendation with specific use case detail, supported by widespread product popularity. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E3 -10: Comment provides specific use case: suitable for the night on a balcony. E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c067",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c068",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Says they want the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c068"
+        ],
+        "astroturfEstimate": {
+          "score": 30,
+          "reasons": [
+            "Generic praise",
+            "Default username",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c069",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "One-word praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c069"
+        ],
+        "astroturfEstimate": {
+          "score": 35,
+          "reasons": [
+            "Generic praise",
+            "Random-looking username",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c070",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "One-word praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c070"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c071",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Generic praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c071"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c072",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Short praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c072"
+        ],
+        "astroturfEstimate": {
+          "score": 10,
+          "reasons": [
+            "Generic praise"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c073",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Says they want the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c073"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c074",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "One-word praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c074"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c075",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "One-word praise replying to a parent praise.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c075"
+        ],
+        "astroturfEstimate": {
+          "score": 30,
+          "reasons": [
+            "Generic praise",
+            "Default username",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c076",
+        "stance": "supportive",
+        "promotionalIntentScore": 10,
+        "rationale": "Short low-effort comment with disproportionately high engagement, offset by widespread product popularity. Rubric 0/100 (Minimal; low evidence confidence). Signals: T4 +5: Short, low-effort two-word comment with 82 likes, outranking more detailed recommendations in engagement. X5 +4: Generic praise with no specific detail. Exculpatory: E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c076",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 60,
+          "reasons": [
+            "Generic praise",
+            "Seller-style username",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c077",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "One-word praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c077"
+        ],
+        "astroturfEstimate": {
+          "score": 30,
+          "reasons": [
+            "Generic praise",
+            "Default username",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c078",
+        "stance": "supportive",
+        "promotionalIntentScore": 0,
+        "rationale": "Recommendation with specific use case, supported by widespread product popularity. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E3 -10: Specific use case mentioned: for desk use. E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c078",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 40,
+          "reasons": [
+            "Seller-style username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c079",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Single word reaction, lightly supportive of the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c079"
+        ],
+        "astroturfEstimate": {
+          "score": 10,
+          "reasons": [
+            "Generic praise"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c080",
+        "stance": "supportive",
+        "promotionalIntentScore": 10,
+        "rationale": "Very low-effort emoji response, balanced by widespread product popularity. Rubric 0/100 (Minimal; low evidence confidence). Signals: X5 +4: Single-word emoji exclamation with no specific detail. Exculpatory: E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c080",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 50,
+          "reasons": [
+            "Generic praise",
+            "Seller-style username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c081",
+        "stance": "unclear",
+        "promotionalIntentScore": null,
+        "rationale": "Truncated reaction with no clear product content.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c081"
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c082",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Emoji-only reaction of approval.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c082"
+        ],
+        "astroturfEstimate": {
+          "score": 10,
+          "reasons": [
+            "Generic praise"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c083",
+        "stance": "supportive",
+        "promotionalIntentScore": 10,
+        "rationale": "Minimal one-word recommendation, balanced by widespread product appeal. Rubric 0/100 (Minimal; low evidence confidence). Signals: X5 +4: Single-word generic praise, repeated across multiple target comments. Exculpatory: E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c083",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 60,
+          "reasons": [
+            "Generic praise",
+            "Seller-style username",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c084",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Emoji-only approval of the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c084"
+        ],
+        "astroturfEstimate": {
+          "score": 10,
+          "reasons": [
+            "Generic praise"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c085",
+        "stance": "supportive",
+        "promotionalIntentScore": 10,
+        "rationale": "Awkward phrasing suggests non-native composition, balanced by widespread product popularity. Rubric 0/100 (Minimal; low evidence confidence). Signals: X6 +3: Comment contains awkward English phrasing ('so usefully') and unclear abbreviation ('rnn'), suggesting possible non-native LLM composition. X5 +4: Generic use case with no specific detail. Exculpatory: E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c085",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c086",
+        "stance": "unclear",
+        "promotionalIntentScore": null,
+        "rationale": "Deleted or empty comment.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c086"
+        ]
+      },
+      {
+        "commentId": "tiktok:comment:example_c087",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Short praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c087"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c088",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "One-word praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c088"
+        ],
+        "astroturfEstimate": {
+          "score": 30,
+          "reasons": [
+            "Generic praise",
+            "Default username",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c089",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "One-word value remark, favorable to the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c089"
+        ],
+        "astroturfEstimate": {
+          "score": 50,
+          "reasons": [
+            "Generic praise",
+            "Seller-style username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c090",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Emoji-only reaction of approval.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c090"
+        ],
+        "astroturfEstimate": {
+          "score": 10,
+          "reasons": [
+            "Generic praise"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c091",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "One-word praise for the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c091"
+        ],
+        "astroturfEstimate": {
+          "score": 10,
+          "reasons": [
+            "Generic praise"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c092",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "One-word reaction praising the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c092"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Same text as other accounts"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c093",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "One-word approval of the product.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c093"
+        ],
+        "astroturfEstimate": {
+          "score": 20,
+          "reasons": [
+            "Generic praise",
+            "Default username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c094",
+        "stance": "supportive",
+        "promotionalIntentScore": 0,
+        "rationale": "Personal enthusiasm, supported by widespread product popularity. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E3 -10: Personal enthusiastic endorsement with direct emotional expression. E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c094",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 50,
+          "reasons": [
+            "Generic praise",
+            "Seller-style username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c095",
+        "stance": "neutral",
+        "promotionalIntentScore": null,
+        "rationale": "Asks whether the light is warm or white, a neutral question.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c095"
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c096",
+        "stance": "supportive",
+        "promotionalIntentScore": 0,
+        "rationale": "Personal enthusiasm, supported by widespread product popularity. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E3 -10: Personal enthusiastic endorsement with direct emotional expression. E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c096",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 50,
+          "reasons": [
+            "Generic praise",
+            "Seller-style username"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c097",
+        "stance": "neutral",
+        "promotionalIntentScore": null,
+        "rationale": "Asks how to buy the product, not an endorsement.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c097"
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c098",
+        "stance": "supportive",
+        "promotionalIntentScore": null,
+        "rationale": "Short praise replying to the buying question.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c098"
+        ],
+        "astroturfEstimate": {
+          "score": 10,
+          "reasons": [
+            "Generic praise"
+          ]
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c099",
+        "stance": "neutral",
+        "promotionalIntentScore": null,
+        "rationale": "Asks about international shipping, a neutral question.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c099"
+        ],
+        "astroturfEstimate": {
+          "score": 0,
+          "reasons": []
+        }
+      },
+      {
+        "commentId": "tiktok:comment:example_c100",
+        "stance": "supportive",
+        "promotionalIntentScore": 0,
+        "rationale": "Balanced assessment with qualified praise, supported by widespread product popularity. Rubric 0/100 (Minimal; low evidence confidence). No rubric signals fired. Exculpatory: E3 -10: Two-part response showing some judgment: 'Not bad' acknowledges potential concerns, 'very good' provides qualified praise. E5 -10: Many unrelated accounts recommend this product across the discussion over a long period. Unknown for lack of data: C1, C2, C3, C4, C5, C6, B1, B2, B3, B4, B5, B6, B7, B8, B9, T1, T2, T3, T4, T5, X1, X2, X3, X4, X6, X7, E2, E4, E7.",
+        "evidenceRefs": [
+          "tiktok:comment:example_c100",
+          "tiktok:discussion:7669788981508197663"
+        ],
+        "astroturfEstimate": {
+          "score": 10,
+          "reasons": [
+            "Generic praise"
+          ]
+        }
+      }
+    ],
+    "clusters": [],
+    "inferredEdges": [
+      {
+        "from": "tiktok:comment:example_c007",
+        "to": "tiktok:comment:example_c085",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.33,
+        "explanation": "The two recommendations share 33% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c007",
+          "tiktok:comment:example_c085"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c011",
+        "to": "tiktok:comment:example_c017",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c011",
+          "tiktok:comment:example_c017"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c011",
+        "to": "tiktok:comment:example_c028",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c011",
+          "tiktok:comment:example_c028"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c011",
+        "to": "tiktok:comment:example_c030",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c011",
+          "tiktok:comment:example_c030"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c011",
+        "to": "tiktok:comment:example_c033",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c011",
+          "tiktok:comment:example_c033"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c011",
+        "to": "tiktok:comment:example_c034",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c011",
+          "tiktok:comment:example_c034"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c011",
+        "to": "tiktok:comment:example_c039",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c011",
+          "tiktok:comment:example_c039"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c011",
+        "to": "tiktok:comment:example_c054",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c011",
+          "tiktok:comment:example_c054"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c011",
+        "to": "tiktok:comment:example_c057",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c011",
+          "tiktok:comment:example_c057"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c011",
+        "to": "tiktok:comment:example_c065",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c011",
+          "tiktok:comment:example_c065"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c011",
+        "to": "tiktok:comment:example_c074",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c011",
+          "tiktok:comment:example_c074"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c011",
+        "to": "tiktok:comment:example_c077",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c011",
+          "tiktok:comment:example_c077"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c011",
+        "to": "tiktok:comment:example_c083",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c011",
+          "tiktok:comment:example_c083"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c011",
+        "to": "tiktok:comment:example_c092",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c011",
+          "tiktok:comment:example_c092"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c012",
+        "to": "tiktok:comment:example_c029",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c012",
+          "tiktok:comment:example_c029"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c012",
+        "to": "tiktok:comment:example_c071",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c012",
+          "tiktok:comment:example_c071"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c014",
+        "to": "tiktok:comment:example_c025",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c014",
+          "tiktok:comment:example_c025"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c014",
+        "to": "tiktok:comment:example_c027",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c014",
+          "tiktok:comment:example_c027"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c014",
+        "to": "tiktok:comment:example_c044",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c014",
+          "tiktok:comment:example_c044"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c014",
+        "to": "tiktok:comment:example_c060",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c014",
+          "tiktok:comment:example_c060"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c014",
+        "to": "tiktok:comment:example_c069",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c014",
+          "tiktok:comment:example_c069"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c014",
+        "to": "tiktok:comment:example_c072",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c014",
+          "tiktok:comment:example_c072"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c014",
+        "to": "tiktok:comment:example_c075",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c014",
+          "tiktok:comment:example_c075"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c014",
+        "to": "tiktok:comment:example_c088",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c014",
+          "tiktok:comment:example_c088"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c014",
+        "to": "tiktok:comment:example_c100",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c014",
+          "tiktok:comment:example_c100"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c015",
+        "to": "tiktok:comment:example_c042",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c015",
+          "tiktok:comment:example_c042"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c015",
+        "to": "tiktok:comment:example_c043",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.67,
+        "explanation": "The two recommendations share 67% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c015",
+          "tiktok:comment:example_c043"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c015",
+        "to": "tiktok:comment:example_c048",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.33,
+        "explanation": "The two recommendations share 33% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c015",
+          "tiktok:comment:example_c048"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c015",
+        "to": "tiktok:comment:example_c076",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.33,
+        "explanation": "The two recommendations share 33% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c015",
+          "tiktok:comment:example_c076"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c015",
+        "to": "tiktok:comment:example_c087",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.33,
+        "explanation": "The two recommendations share 33% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c015",
+          "tiktok:comment:example_c087"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c015",
+        "to": "tiktok:comment:example_c093",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c015",
+          "tiktok:comment:example_c093"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c017",
+        "to": "tiktok:comment:example_c028",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c017",
+          "tiktok:comment:example_c028"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c017",
+        "to": "tiktok:comment:example_c030",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c017",
+          "tiktok:comment:example_c030"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c017",
+        "to": "tiktok:comment:example_c033",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c017",
+          "tiktok:comment:example_c033"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c017",
+        "to": "tiktok:comment:example_c039",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c017",
+          "tiktok:comment:example_c039"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c017",
+        "to": "tiktok:comment:example_c054",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c017",
+          "tiktok:comment:example_c054"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c017",
+        "to": "tiktok:comment:example_c057",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c017",
+          "tiktok:comment:example_c057"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c017",
+        "to": "tiktok:comment:example_c074",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c017",
+          "tiktok:comment:example_c074"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c017",
+        "to": "tiktok:comment:example_c077",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c017",
+          "tiktok:comment:example_c077"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c017",
+        "to": "tiktok:comment:example_c083",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c017",
+          "tiktok:comment:example_c083"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c025",
+        "to": "tiktok:comment:example_c027",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c025",
+          "tiktok:comment:example_c027"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c025",
+        "to": "tiktok:comment:example_c044",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c025",
+          "tiktok:comment:example_c044"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c025",
+        "to": "tiktok:comment:example_c060",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c025",
+          "tiktok:comment:example_c060"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c025",
+        "to": "tiktok:comment:example_c069",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c025",
+          "tiktok:comment:example_c069"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c025",
+        "to": "tiktok:comment:example_c072",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c025",
+          "tiktok:comment:example_c072"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c025",
+        "to": "tiktok:comment:example_c075",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c025",
+          "tiktok:comment:example_c075"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c025",
+        "to": "tiktok:comment:example_c088",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c025",
+          "tiktok:comment:example_c088"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c025",
+        "to": "tiktok:comment:example_c100",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c025",
+          "tiktok:comment:example_c100"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c027",
+        "to": "tiktok:comment:example_c044",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c027",
+          "tiktok:comment:example_c044"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c027",
+        "to": "tiktok:comment:example_c060",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c027",
+          "tiktok:comment:example_c060"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c027",
+        "to": "tiktok:comment:example_c069",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c027",
+          "tiktok:comment:example_c069"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c027",
+        "to": "tiktok:comment:example_c072",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c027",
+          "tiktok:comment:example_c072"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c027",
+        "to": "tiktok:comment:example_c075",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c027",
+          "tiktok:comment:example_c075"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c027",
+        "to": "tiktok:comment:example_c088",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c027",
+          "tiktok:comment:example_c088"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c027",
+        "to": "tiktok:comment:example_c100",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c027",
+          "tiktok:comment:example_c100"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c028",
+        "to": "tiktok:comment:example_c030",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c028",
+          "tiktok:comment:example_c030"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c028",
+        "to": "tiktok:comment:example_c033",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c028",
+          "tiktok:comment:example_c033"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c028",
+        "to": "tiktok:comment:example_c039",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c028",
+          "tiktok:comment:example_c039"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c028",
+        "to": "tiktok:comment:example_c054",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c028",
+          "tiktok:comment:example_c054"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c028",
+        "to": "tiktok:comment:example_c057",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c028",
+          "tiktok:comment:example_c057"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c028",
+        "to": "tiktok:comment:example_c074",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c028",
+          "tiktok:comment:example_c074"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c028",
+        "to": "tiktok:comment:example_c077",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c028",
+          "tiktok:comment:example_c077"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c028",
+        "to": "tiktok:comment:example_c083",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c028",
+          "tiktok:comment:example_c083"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c029",
+        "to": "tiktok:comment:example_c071",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c029",
+          "tiktok:comment:example_c071"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c030",
+        "to": "tiktok:comment:example_c033",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c030",
+          "tiktok:comment:example_c033"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c030",
+        "to": "tiktok:comment:example_c039",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c030",
+          "tiktok:comment:example_c039"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c030",
+        "to": "tiktok:comment:example_c054",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c030",
+          "tiktok:comment:example_c054"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c030",
+        "to": "tiktok:comment:example_c057",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c030",
+          "tiktok:comment:example_c057"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c030",
+        "to": "tiktok:comment:example_c074",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c030",
+          "tiktok:comment:example_c074"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c030",
+        "to": "tiktok:comment:example_c077",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c030",
+          "tiktok:comment:example_c077"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c030",
+        "to": "tiktok:comment:example_c083",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c030",
+          "tiktok:comment:example_c083"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c031",
+        "to": "tiktok:comment:example_c046",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.33,
+        "explanation": "The two recommendations share 33% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c031",
+          "tiktok:comment:example_c046"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c033",
+        "to": "tiktok:comment:example_c039",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c033",
+          "tiktok:comment:example_c039"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c033",
+        "to": "tiktok:comment:example_c054",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c033",
+          "tiktok:comment:example_c054"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c033",
+        "to": "tiktok:comment:example_c057",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c033",
+          "tiktok:comment:example_c057"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c033",
+        "to": "tiktok:comment:example_c074",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c033",
+          "tiktok:comment:example_c074"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c033",
+        "to": "tiktok:comment:example_c077",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c033",
+          "tiktok:comment:example_c077"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c033",
+        "to": "tiktok:comment:example_c083",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c033",
+          "tiktok:comment:example_c083"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c034",
+        "to": "tiktok:comment:example_c065",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c034",
+          "tiktok:comment:example_c065"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c034",
+        "to": "tiktok:comment:example_c092",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c034",
+          "tiktok:comment:example_c092"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c039",
+        "to": "tiktok:comment:example_c054",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c039",
+          "tiktok:comment:example_c054"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c039",
+        "to": "tiktok:comment:example_c057",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c039",
+          "tiktok:comment:example_c057"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c039",
+        "to": "tiktok:comment:example_c074",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c039",
+          "tiktok:comment:example_c074"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c039",
+        "to": "tiktok:comment:example_c077",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c039",
+          "tiktok:comment:example_c077"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c039",
+        "to": "tiktok:comment:example_c083",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c039",
+          "tiktok:comment:example_c083"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c042",
+        "to": "tiktok:comment:example_c043",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.67,
+        "explanation": "The two recommendations share 67% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c042",
+          "tiktok:comment:example_c043"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c042",
+        "to": "tiktok:comment:example_c048",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.33,
+        "explanation": "The two recommendations share 33% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c042",
+          "tiktok:comment:example_c048"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c042",
+        "to": "tiktok:comment:example_c076",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.33,
+        "explanation": "The two recommendations share 33% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c042",
+          "tiktok:comment:example_c076"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c042",
+        "to": "tiktok:comment:example_c087",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.33,
+        "explanation": "The two recommendations share 33% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c042",
+          "tiktok:comment:example_c087"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c042",
+        "to": "tiktok:comment:example_c093",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c042",
+          "tiktok:comment:example_c093"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c043",
+        "to": "tiktok:comment:example_c093",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.33,
+        "explanation": "The two recommendations share 33% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c043",
+          "tiktok:comment:example_c093"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c044",
+        "to": "tiktok:comment:example_c060",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c044",
+          "tiktok:comment:example_c060"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c044",
+        "to": "tiktok:comment:example_c069",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c044",
+          "tiktok:comment:example_c069"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c044",
+        "to": "tiktok:comment:example_c072",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c044",
+          "tiktok:comment:example_c072"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c044",
+        "to": "tiktok:comment:example_c075",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c044",
+          "tiktok:comment:example_c075"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c044",
+        "to": "tiktok:comment:example_c088",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c044",
+          "tiktok:comment:example_c088"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c044",
+        "to": "tiktok:comment:example_c100",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c044",
+          "tiktok:comment:example_c100"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c048",
+        "to": "tiktok:comment:example_c076",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.33,
+        "explanation": "The two recommendations share 33% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c048",
+          "tiktok:comment:example_c076"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c048",
+        "to": "tiktok:comment:example_c087",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.33,
+        "explanation": "The two recommendations share 33% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c048",
+          "tiktok:comment:example_c087"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c053",
+        "to": "tiktok:comment:example_c068",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c053",
+          "tiktok:comment:example_c068"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c053",
+        "to": "tiktok:comment:example_c073",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c053",
+          "tiktok:comment:example_c073"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c054",
+        "to": "tiktok:comment:example_c057",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c054",
+          "tiktok:comment:example_c057"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c054",
+        "to": "tiktok:comment:example_c074",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c054",
+          "tiktok:comment:example_c074"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c054",
+        "to": "tiktok:comment:example_c077",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c054",
+          "tiktok:comment:example_c077"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c054",
+        "to": "tiktok:comment:example_c083",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c054",
+          "tiktok:comment:example_c083"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c055",
+        "to": "tiktok:comment:example_c070",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c055",
+          "tiktok:comment:example_c070"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c057",
+        "to": "tiktok:comment:example_c074",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c057",
+          "tiktok:comment:example_c074"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c057",
+        "to": "tiktok:comment:example_c077",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c057",
+          "tiktok:comment:example_c077"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c057",
+        "to": "tiktok:comment:example_c083",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c057",
+          "tiktok:comment:example_c083"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c060",
+        "to": "tiktok:comment:example_c069",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c060",
+          "tiktok:comment:example_c069"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c060",
+        "to": "tiktok:comment:example_c072",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c060",
+          "tiktok:comment:example_c072"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c060",
+        "to": "tiktok:comment:example_c075",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c060",
+          "tiktok:comment:example_c075"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c060",
+        "to": "tiktok:comment:example_c088",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c060",
+          "tiktok:comment:example_c088"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c060",
+        "to": "tiktok:comment:example_c100",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c060",
+          "tiktok:comment:example_c100"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c062",
+        "to": "tiktok:comment:example_c094",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.33,
+        "explanation": "The two recommendations share 33% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c062",
+          "tiktok:comment:example_c094"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c065",
+        "to": "tiktok:comment:example_c092",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c065",
+          "tiktok:comment:example_c092"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c068",
+        "to": "tiktok:comment:example_c073",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c068",
+          "tiktok:comment:example_c073"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c069",
+        "to": "tiktok:comment:example_c072",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c069",
+          "tiktok:comment:example_c072"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c069",
+        "to": "tiktok:comment:example_c075",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c069",
+          "tiktok:comment:example_c075"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c069",
+        "to": "tiktok:comment:example_c088",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c069",
+          "tiktok:comment:example_c088"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c069",
+        "to": "tiktok:comment:example_c100",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c069",
+          "tiktok:comment:example_c100"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c072",
+        "to": "tiktok:comment:example_c075",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c072",
+          "tiktok:comment:example_c075"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c072",
+        "to": "tiktok:comment:example_c088",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c072",
+          "tiktok:comment:example_c088"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c072",
+        "to": "tiktok:comment:example_c100",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c072",
+          "tiktok:comment:example_c100"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c074",
+        "to": "tiktok:comment:example_c077",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c074",
+          "tiktok:comment:example_c077"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c074",
+        "to": "tiktok:comment:example_c083",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c074",
+          "tiktok:comment:example_c083"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c075",
+        "to": "tiktok:comment:example_c088",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c075",
+          "tiktok:comment:example_c088"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c075",
+        "to": "tiktok:comment:example_c100",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c075",
+          "tiktok:comment:example_c100"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c076",
+        "to": "tiktok:comment:example_c087",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c076",
+          "tiktok:comment:example_c087"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c077",
+        "to": "tiktok:comment:example_c083",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 1,
+        "explanation": "The two recommendations share 100% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c077",
+          "tiktok:comment:example_c083"
+        ]
+      },
+      {
+        "from": "tiktok:comment:example_c088",
+        "to": "tiktok:comment:example_c100",
+        "type": "SEMANTICALLY_SIMILAR",
+        "strength": 0.5,
+        "explanation": "The two recommendations share 50% of their content words (deterministic word-overlap measure).",
+        "evidenceRefs": [
+          "tiktok:comment:example_c088",
+          "tiktok:comment:example_c100"
+        ]
+      }
+    ],
+    "usedEnrichmentIds": [],
+    "limitations": [
+      "4 recommendation comment(s) were not scored by the model and were left out of the rubric results.",
+      "25 of 73 recommendations were scored with the rubric (flagged and most detailed first).",
+      "This platform does not give access to commenters’ histories. Missing history counts neither for nor against astroturfing: history-based checks are left out of every score, and confidence is low.",
+      "Video caption metadata only; no audiovisual analysis or cross-video commenter histories.",
+      "Configured comment cap reached; graph is partial.",
+      "2 comments have unavailable parents; native parents preserved without dangling edges.",
+      "Some source times are estimated or unavailable.",
+      "Usernames and comment IDs are replaced with made-up ones of the same kind (shop-like, random, default or ordinary); comment text is unchanged."
+    ]
+  }
+}

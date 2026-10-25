@@ -1,6 +1,6 @@
 # Scoring product recommendations in comment sections for astroturfing
 
-Status: proposal, version 0.3. Covers Reddit, X (Twitter), YouTube and TikTok.
+Status: proposal, version 0.4. Covers Reddit, X (Twitter), YouTube and TikTok.
 The weights are expert priors drawn from the literature review
 [Detecting Astroturfing in Reddit Comments](https://claude.ai/artifact/SPMpbsXfLqjoAu4RwCcSUe).
 They have not been fitted or validated on labeled data (see
@@ -84,13 +84,14 @@ commenter's history.
 | --- | --- | --- | --- | --- |
 | Reddit | T, A, C | All | 100 | High |
 | X | T, A, C (history is often `partial`) | All except E4 | 100 | High; one level lower when history is `partial` |
-| YouTube | T only | C1, C4, T1, T3–T5, X, E1, E3, E5, E6 | 74 | Low |
-| TikTok | T only | C1, C4, T1, T3–T5, X, E1, E3, E5, E6 | 74 | Low |
+| YouTube | T only | C1, C4, T1, T3–T5, X, E1, E3, E5, E6 | 100 | Low |
+| TikTok | T only | C1, C4, T1, T3–T5, X, E1, E3, E5, E6 | 100 | Low |
 
 **YouTube and TikTok.** Commenter history is not modelled. Do not request it.
-Every rule that needs level A or C is `unknown`, which caps the score at 74
-under K4 and fixes confidence at Low. This reflects missing evidence, not lower
-suspicion: say so in the summary. The strongest usable signals are copy-paste
+Every rule that needs level A or C is `unknown` and is left out, and
+confidence is fixed at Low. Missing history counts neither for nor against
+astroturfing: it never raises or lowers a score, and K4 does not ask for a
+family B signal on these platforms. The strongest usable signals are copy-paste
 wording across commenters (C1) and bursts of recommendations (C4).
 
 **X.** History comes from author and date search, which can miss posts. When a
@@ -213,8 +214,9 @@ Apply in order after summing.
 - **K3 Breadth gate for High.** A score of 55 or more requires signals from at
   least two families, at least one of them C or B. Otherwise cap at 54.
 - **K4 Breadth gate for Very high.** A score of 75 or more requires at least one
-  C signal and at least one B signal. Otherwise cap at 74. Because family B
-  needs history, YouTube and TikTok comments never exceed 74.
+  C signal and at least one B signal. Otherwise cap at 74. Family B needs
+  commenter history, which YouTube and TikTok do not provide, so on those
+  platforms K4 requires only the C signal (K3 still requires two families).
 - **K5 Disclosure cap.** If E1 applies, cap at 15.
 - **K6 Final range.** Clamp the score to 0–100.
 
@@ -352,8 +354,8 @@ home workouts going live, six comments praise the same protein brand with the
 same three claims and a discount code, while other comments discuss the
 workout. Signals: C1 +25, C4 +10, T1 +8, X1 +8, X2 +6. Sum 57; K3 is met (C
 and T). Score 57, High, Low confidence. The summary notes that commenter
-histories are not modelled on YouTube, so the score cannot reach Very high and
-rests on discussion evidence alone.
+histories are not available on YouTube, so the score rests on discussion
+evidence alone; the missing histories neither raise nor lower it.
 
 ## Sources
 

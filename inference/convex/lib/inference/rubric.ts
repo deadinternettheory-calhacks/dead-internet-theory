@@ -1,5 +1,5 @@
 // Machine-readable copy of the rule table in rubrics/product-astroturfing.md
-// (proposal v0.3). The model only chooses which rules fire and cites evidence;
+// (proposal v0.4). The model only chooses which rules fire and cites evidence;
 // points, caps, tiers and confidence are recomputed here. tests/rubric.test.ts
 // checks this table against the Markdown so the two cannot drift.
 //
@@ -7,7 +7,7 @@
 // v1 contract axes. It is unvalidated; see backend/README.md.
 import type { AxisName, Platform } from '../contract';
 
-export const RUBRIC_VERSION = '0.3';
+export const RUBRIC_VERSION = '0.4';
 
 export type Family = 'C' | 'B' | 'T' | 'X' | 'E';
 /** Evidence level a rule needs: T discussion, A author history, C co-recommender history. */
@@ -65,6 +65,13 @@ export const RULES: Rule[] = [
 ];
 
 export const RULES_BY_ID: ReadonlyMap<string, Rule> = new Map(RULES.map(r => [r.id, r]));
+
+/**
+ * Whether commenter histories, and so family B, exist on this platform. Where
+ * they do not (YouTube, TikTok), missing history is neither evidence for nor
+ * against astroturfing, so gates that ask for a B signal do not apply.
+ */
+export const hasAccountHistory = (platform: Platform): boolean => RULES.some(r => r.family === 'B' && r.platforms.includes(platform));
 
 export type Tier = 'Minimal' | 'Low' | 'Moderate' | 'High' | 'Very high';
 export type RubricConfidence = 'Low' | 'Medium' | 'High';

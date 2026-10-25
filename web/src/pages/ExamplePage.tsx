@@ -18,8 +18,8 @@ export function ExamplePage() {
   }
   return <main className="demo-page">
     <div className="demo-page-top"><TransitionLink className="back-link" to="/">← Check a post</TransitionLink></div>
-    <header className="demo-page-heading"><div><h1>Follow the evidence.</h1><p>A real Reddit thread, analyzed.</p></div><GraveyardGlobe compact/></header>
-    <div className="demo-source"><span>THE QUESTION</span><p>{report.post.text}</p><small>r/BuyItForLife · {report.discussion.length} comments · names hidden{report.post.url && <> · <a className="text-link" href={report.post.url} target="_blank" rel="noopener noreferrer">Original <ArrowUpRight size={13} aria-hidden="true"/></a></>}</small></div>
+    <header className="demo-page-heading"><div><h1>Follow the evidence.</h1><p>A real TikTok comment section, analyzed.</p></div><GraveyardGlobe compact/></header>
+    <div className="demo-source"><span>THE VIDEO</span><p>{report.post.text}</p><small>TikTok · {report.discussion.length} comments · names replaced{report.post.url && <> · <a className="text-link" href={report.post.url} target="_blank" rel="noopener noreferrer">Original <ArrowUpRight size={13} aria-hidden="true"/></a></>}</small></div>
     <DemoExperience report={report} autoplay={params.get('play') === '1'} onOpenReport={openReport}/>
     <details className="demo-full-report" id="full-report" ref={fullReport}><summary><div><h2>Full report</h2></div><ArrowRight size={20} aria-hidden="true"/></summary><div className="demo-full-report-content"><AnalysisReport report={report}/></div></details>
     <section className="demo-bottom-cta"><div><h2>Check your own post.</h2></div><TransitionLink className="primary-button link-button" to="/">Check a post <ArrowRight size={17} aria-hidden="true"/></TransitionLink></section>

@@ -1,7 +1,8 @@
 // Runs the inference pipeline with recorded model replies and writes:
-// - the website example: a real r/BuyItForLife thread (usernames and comment IDs
-//   replaced) with the Claude triage and CREAO scoring replies recorded from a
-//   live run (fixtures/example-reddit-knife);
+// - the website example: a real TikTok product video's comments (usernames
+//   replaced with made-up ones of the same kind, comment IDs replaced) with the
+//   Claude triage and CREAO scoring replies recorded from a live run
+//   (fixtures/example-tiktok-nightlight);
 // - the synthetic espresso test fixture's expected output.
 // Usage: npm run demo (write) or npm run demo:check (verify).
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
@@ -15,7 +16,7 @@ import { SYNTHETIC_SOURCE_URL } from '../convex/lib/fixtures';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const fixtureDir = resolve(here, '../fixtures/synthetic-espresso');
-const exampleDir = resolve(here, '../fixtures/example-reddit-knife');
+const exampleDir = resolve(here, '../fixtures/example-tiktok-nightlight');
 const webFixture = resolve(here, '../../web/src/demo/example-report.json');
 const webTestFixture = resolve(here, '../../web/src/test/synthetic-espresso-report.json');
 const read = <T>(name: string): T => JSON.parse(readFileSync(resolve(fixtureDir, name), 'utf8')) as T;
@@ -26,19 +27,20 @@ export { SYNTHETIC_SOURCE_URL };
 export async function buildExample() {
   const readEx = <T>(name: string): T => JSON.parse(readFileSync(resolve(exampleDir, name), 'utf8')) as T;
   const graph = readEx<GraphEnvelope>('graph.json');
-  const job = readEx<EnrichmentJob>('enrichment-completed.json');
   const creao = new MockCreaoClient({ triage: JSON.stringify(readEx('triage-response.json')), scoring: JSON.stringify(readEx('scoring-response.json')) });
   // The replies came from Claude (triage) and the CREAO agent (scoring); label the analysis accordingly.
-  Object.defineProperty(creao, 'label', { value: 'recorded:claude-opus-5-5+creao-app-trigger' });
+  Object.defineProperty(creao, 'label', { value: 'recorded:claude-haiku-5-5+creao-app-trigger' });
+  // TikTok gives no access to commenter histories, so none are requested.
+  const noHistories = async (): Promise<EnrichmentJob> => { throw new Error('TikTok has no commenter histories'); };
   const result = await runSequential(graph, {
     creao,
-    requestEnrichment: async () => job,
-    getEnrichment: async () => job,
+    requestEnrichment: noHistories,
+    getEnrichment: noHistories,
     sleep: async () => {},
-    inferredAt: '2026-10-24T20:40:00Z',
+    inferredAt: '2026-10-25T01:00:00Z',
   });
   const root = graph.nodes.find(n => n.id === graph.rootId) as { url: string };
-  const analysis: AnalysisResource = { schemaVersion: '1.0.0', analysisId: 'anl_example_knife', investigationId: graph.investigationId, storedAt: '2026-10-24T20:40:05Z', result: result.submission };
+  const analysis: AnalysisResource = { schemaVersion: '1.0.0', analysisId: 'anl_example_tiktok', investigationId: graph.investigationId, storedAt: '2026-10-25T01:00:05Z', result: result.submission };
   const investigation: InvestigationResource = {
     schemaVersion: '1.0.0',
     investigationId: graph.investigationId,
@@ -48,8 +50,8 @@ export async function buildExample() {
     analysisStatus: 'completed',
     graphRevision: graph.graphRevision,
     graphFingerprint: graph.graphFingerprint,
-    createdAt: '2026-10-24T20:10:47Z',
-    updatedAt: '2026-10-24T20:40:05Z',
+    createdAt: '2026-10-25T00:57:05Z',
+    updatedAt: '2026-10-25T01:00:05Z',
   };
   assertModel('AnalysisResource', analysis);
   assertModel('InvestigationResource', investigation);

@@ -44,8 +44,8 @@ it('shows missing data honestly and only opens https links for real reports', as
   expect(container.querySelector('a')).toBeNull();
   await click('Timing');
   expect(container.textContent).toContain('There are no usable comment timestamps');
-  await click('History');
-  expect(container.textContent).toContain('No account-history samples');
+  // Without history samples (TikTok, YouTube) the History view is not offered.
+  expect([...container.querySelectorAll('button')].some(b => b.textContent === 'History')).toBe(false);
   await render({ ...report, discussion: [{ ...report.discussion[0], url: 'https://www.reddit.com/real-comment' }] });
   await click('Thread');
   expect(container.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');

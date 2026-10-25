@@ -4,7 +4,7 @@
 // applies caps K1-K6 itself.
 import type { Platform } from '../contract';
 import type { ProposedAccount, ProposedAssessment, ProposedSignal } from './outputs';
-import { RULES } from './rubric';
+import { RULES, hasAccountHistory } from './rubric';
 import {
   actionFor,
   RULES_BY_ID,
@@ -136,7 +136,8 @@ export function scoreComment(
   };
   if (!families.has('C') && !families.has('B') && !families.has('T')) cap('K2', 25);
   if (!(families.size >= 2 && (families.has('C') || families.has('B')))) cap('K3', 54);
-  if (!(families.has('C') && families.has('B'))) cap('K4', 74);
+  // K4 asks for account-history evidence (B) only where the platform has histories.
+  if (!(families.has('C') && (families.has('B') || !hasAccountHistory(availability.platform)))) cap('K4', 74);
   const disclosed = exculpatory.some(s => s.id === 'E1') || proposal.label === 'disclosed_promotion';
   if (disclosed) cap('K5', 15);
   score = Math.min(100, Math.max(0, score));
