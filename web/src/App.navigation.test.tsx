@@ -97,17 +97,12 @@ describe('homepage How it works navigation', () => {
     expect(scrollIntoView).toHaveBeenCalled();
   });
 
-  it('starts the demo at the top and focuses its heading', () => {
-    renderApp();
-    const link = container.querySelector<HTMLAnchorElement>('.header-play-demo')!;
-    expect(container.querySelector('.home-play-demo')).toBeNull();
-    expect(link.previousElementSibling?.textContent).toBe('How it works');
-    expect(link.getAttribute('aria-label')).toBe('Play demo');
-    act(() => link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 })));
-    expect(window.location.pathname).toBe('/example');
-    expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'instant' });
-    expect(document.activeElement?.textContent).toBe('Follow the evidence.');
-    expect(container.textContent).toContain('A real TikTok comment section');
+  it('removes demo entry points and redirects old demo URLs home', () => {
+    renderApp('/example?play=1');
+    expect(window.location.pathname).toBe('/');
+    expect(container.querySelector('a[href*="/example"]')).toBeNull();
+    expect(container.textContent).not.toContain('Play demo');
+    expect(container.querySelector('.home-hero h1')).not.toBeNull();
   });
 
   it('keeps the headline readable while isolating its emphasis', () => {
