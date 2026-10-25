@@ -8,7 +8,12 @@ export function parsePostUrl(value:string):UrlResult {
 export function parsePrefixPath(pathname:string,search=''):UrlResult {
  const raw=pathname.startsWith('/')?pathname.slice(1):pathname;
  try {
-   const target=/^https?:\/\//i.test(raw)?raw:decodeURIComponent(raw);
+   const decoded=/^https?:\/\//i.test(raw)?raw:decodeURIComponent(raw);
+   // Browsers can canonicalize an unencoded nested URL from /https://host to
+   // /https:/host. Restore only that missing scheme slash; parsePostUrl still
+   // performs the full protocol, credential, port, and allowlisted-host checks.
+   const normalized=/^(https?):\/([A-Za-z0-9].*)$/i.exec(decoded);
+   const target=normalized ? `${normalized[1]}://${normalized[2]}` : decoded;
    if(!/^https?:\/\//i.test(target)) return {ok:false,reason:'invalid'};
    return parsePostUrl(target+search);
  } catch { return {ok:false,reason:'invalid'}; }

@@ -26,6 +26,15 @@ describe('post URL validation',()=>{
  it('rejects double-encoded input as a bad URL',()=>expect(parsePostUrl(encodeURIComponent('https://reddit.com/r/a/comments/b')).ok).toBe(false));
 });
 describe('raw prefix parsing',()=>{
+ it.each([
+  ['/https:/www.reddit.com/r/Roms/comments/7hxzro/some_pokemon_roms/', 'reddit'],
+  ['/https:/x.com/example/status/123456789', 'x'],
+  ['/https:/www.tiktok.com/@mizibor_tech/video/7676086362617056532', 'tiktok'],
+  ['/https:/www.youtube.com/watch?v=jDtG_pwIIv0', 'youtube'],
+ ])('restores the browser-normalized shortcut path for %s', (path, platform) => {
+  const result = parsePrefixPath(path);
+  expect(result.ok && result.platform).toBe(platform);
+ });
  it('preserves a YouTube video query through a raw prefix route',()=>{const result=parsePrefixPath('/https://www.youtube.com/watch','?v=jDtG_pwIIv0&si=share');expect(result.ok&&result.platform).toBe('youtube');expect(result.ok&&result.url.searchParams.get('v')).toBe('jDtG_pwIIv0')});
  it('recognizes an encoded TikTok prefix route',()=>{const result=parsePrefixPath('/'+encodeURIComponent('https://www.tiktok.com/@example/video/7653941272524115231'));expect(result.ok&&result.platform).toBe('tiktok')});
  it('extracts nested protocol/path/query',()=>{const result=parsePrefixPath('/https://reddit.com/r/a/comments/b?context=3');expect(result.ok&&result.url.href).toBe('https://reddit.com/r/a/comments/b?context=3')});
